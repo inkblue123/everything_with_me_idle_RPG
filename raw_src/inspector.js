@@ -20,12 +20,12 @@ if (document.querySelector("input#" + window._w_foul) == null && typeof chrome !
     _w_bout.src = chrome.runtime.getURL("/scripts/inspector.js");
     (document.head || document.documentElement).appendChild(_w_bout);
 } else if (!window._w_clamor) {
-    window._w_clamor = function() {
+    window._w_clamor = function () {
         let _w_dismay = [];
         let _w_coop = {};
         const _w_hymn = /(['"\s\n\r])[^'"\s\n\r]*?\.(apng|bmp|gif|ico|cur|jpg|jpeg|jfif|pjpeg|pjp|png|svg|tif|tiff|webp)(\?[^'"\s\n\r]*)?(?=['"\s\n\r])/gi;
-        let _w_kennel = function(_w_tilt) {
-            _w_tilt && _w_tilt.forEach((function(item) {
+        let _w_kennel = function (_w_tilt) {
+            _w_tilt && _w_tilt.forEach((function (item) {
                 let _w_candor = item.replace(/[\\'"\s\n\r]+/gi, "");
                 if (!_w_coop[_w_candor]) {
                     _w_coop[_w_candor] = true;
@@ -34,8 +34,8 @@ if (document.querySelector("input#" + window._w_foul) == null && typeof chrome !
             }));
         };
         XMLHttpRequest.prototype.realSend = XMLHttpRequest.prototype.send;
-        XMLHttpRequest.prototype.send = function(value) {
-            this.addEventListener("load", (function() {
+        XMLHttpRequest.prototype.send = function (value) {
+            this.addEventListener("load", (function () {
                 if (!this.responseType || this.responseType === "text") {
                     let _w_tilt = this.responseText.replace(/[<>]/gi, '"').match(_w_hymn);
                     _w_kennel(_w_tilt);
@@ -44,20 +44,20 @@ if (document.querySelector("input#" + window._w_foul) == null && typeof chrome !
             this.realSend(value);
         };
         const _w_revue = window.fetch;
-        window.fetch = function() {
+        window.fetch = function () {
             return new Promise(((resolve, reject) => {
-                _w_revue.apply(this, arguments).then((function(response) {
-                    response.clone && response.clone().text().then((function(_w_flak) {
+                _w_revue.apply(this, arguments).then((function (response) {
+                    response.clone && response.clone().text().then((function (_w_flak) {
                         let _w_tilt = _w_flak.replace(/[<>]/gi, '"').match(_w_hymn);
                         _w_kennel(_w_tilt);
                     }));
                     resolve(response);
-                })).catch((function(response) {
+                })).catch((function (response) {
                     reject(response);
                 }));
             }));
         };
-        setInterval((function() {
+        setInterval((function () {
             let _w_tire = document.getElementById(_w_foul);
             if (_w_tire && _w_tire.value && _w_tire.value.length > 0 && _w_tire.value == _w_foul && _w_dismay.length > 0) {
                 _w_tire.value = JSON.stringify(_w_dismay);
@@ -65,7 +65,7 @@ if (document.querySelector("input#" + window._w_foul) == null && typeof chrome !
             }
         }), 512);
         return {
-            _w_cipher: function() {
+            _w_cipher: function () {
                 return _w_dismay.length;
             }
         };
