@@ -1,0 +1,227 @@
+结构体有哪些
+
+
+skl                     技能
+quest                   任务
+furniture               家具
+effect                  buff
+weather                 天气
+sector                  没有战斗的场景
+area                    战斗场景
+vendor                  商人
+act                     练级行为
+rcp                     合成行为以及配方
+abl                     攻击行为
+creature                敌人对象
+you                     玩家对象
+eqp，wpn，sld，acc      装备
+item                    物品
+ttl                     文本
+dom                     推测是游戏ui窗口
+
+
+|---------------------------------------------|
+
+global
+内容极杂，不能理解
+{
+}
+
+|---------------------------------------------|
+
+dom
+看不懂
+{
+    dom.loading = addElement(document.body, "div");
+    dom.loading.style.zIndex = 9997;
+    dom.loading.style.width = "100%";
+    dom.loading.style.height = "100%";
+    dom.loading.style.position = "absolute";
+    dom.loading.style.backgroundColor = "lightgrey";
+    dom.loading.style.margin = -8;
+    dom.loadingt = addElement(document.body, "div");
+    dom.loadingt.style.zIndex = 9998;
+    dom.loadingt.innerHTML = "LOADING";
+    dom.loadingt.style.textAlign = "center";
+    dom.loadingt.style.top = window.innerHeight / 2 - 50;
+    dom.loadingt.style.fontSize = "4em";
+    dom.loadingt.style.position = "absolute";
+    dom.loadingt.style.left = window.innerWidth / 2 - 150;
+}
+该不会是游戏ui窗口吧，很有可能
+
+|---------------------------------------------|
+
+ttl 
+有108个function Title(id)
+每个Title的id不一样，从0-107
+具体内容是一些长篇的文本，对话，剧情等
+所以实际上ttl就是一个容器，里面每个元素的结构是Title
+function Title(id) {
+  this.name;
+  this.id = id || 0;
+  this.desc;
+  this.have = false;
+  this.tget = false;
+  this.rar = 1;
+  this.onGet = function () {};
+}
+同时每个结构还有一个名称，在定义的时候new的，
+有别于结构中的this.name字段，后面使用调用的是new时使用的名称，推测是变量名（）
+
+|---------------------------------------------|
+
+weather
+本质是一个容器，每个元素的结构是Weather
+function Weather(id) {
+  this.name = "?";
+  this.id = id || -1;
+  this.ontick = function () {};
+}
+weather里的具体的元素有14个，都是天气
+
+|---------------------------------------------|
+
+callback
+只有一个元素callback.onDeath，这个元素只有一个函数callback.onDeath.fire
+
+
+
+|---------------------------------------------|
+
+time
+结构是function Time()，普通的时间结构
+
+
+|---------------------------------------------|
+
+effect
+结构是function Effect()
+元素有29个，看的出来是各种buff
+
+|---------------------------------------------|
+
+furniture
+结构是function Furniture()
+元素14个，具体是游戏内的家具，比如床，壁炉，猫，书架
+
+|---------------------------------------------|
+
+quest
+看到现在，对于开头定义的各个Object，实际上应该都是容器，里面装着同名类型的元素
+quest容器里装着5个元素，每个结构是function Quest()
+分别是
+test                测试
+Firewood Gathering  柴火采集
+First Hunt          初次狩猎
+Guarding Duty       警卫职责
+Monster Eradication 怪物根除
+具体到游戏里是各种任务
+比如quest.grds1，警卫职责，完成之后通过quest.grds1.rwd()函数给予65块钱和3000经验
+
+
+|---------------------------------------------|
+
+skl
+技能容器，含有60个元素，显然是60种技能
+结构是function Skill()
+结构里的use()大概是用来增幅玩家属性的接口
+mlstn是描述，鼠标移动到技能上之后显示的窗口会提示各个等级的加成
+
+
+|---------------------------------------------|
+
+item
+各种物品，结构是function Item()
+有351种
+
+
+|---------------------------------------------|
+
+eqp，wpn，sld，acc
+都是function Eqp()结构
+其中eqp是防具，wpn是武器，sld是盾牌，acc是饰品
+
+|---------------------------------------------|
+
+you
+function You()结构，只有一个对象，显然是玩家
+
+|---------------------------------------------|
+
+creature
+function Creature() 结构
+各种敌人，有38种，实际上有很多是虚的啦，只有名称和描述，没有属性相关的内容
+
+|---------------------------------------------|
+
+abl
+function Ability(id)结构
+对应游戏内的攻击方式，具体比如说二连击模式，1.1倍伤害模式，1.2倍伤害模式
+
+|---------------------------------------------|
+
+effector
+function Effector()结构
+不明所以的东西，有两个对象，一个是暗灰色，一个是金色
+可能是给钱的图标加一个这个属性，然后当作银币和金币吧
+
+|---------------------------------------------|
+
+area
+function Area()结构
+游戏内的场景，比如道场，广场，西部森林，市场等
+每个场景里的pop里装着敌人对象，也就是说在某地打怪就是从pop里随机出敌人来的
+
+|---------------------------------------------|
+
+sector
+function Sector()结构
+也是场景，只不过是没有战斗的场景
+主要装的是离开函数，进入函数，移动函数
+
+|---------------------------------------------|
+
+container
+function Container(id)结构
+信息太少
+
+|---------------------------------------------|
+
+rcp
+function Recipe()结构
+各种合成配方，游戏内是烤肉，煎蛋，做吊坠，做武器的行为，
+
+|---------------------------------------------|
+
+vendor
+function Vendor()结构
+游戏内的各个商人
+
+|---------------------------------------------|
+
+act
+function Action()
+游戏内的练级行为
+比如执行了“跑”，就会增加跑步经验，减少精力
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
