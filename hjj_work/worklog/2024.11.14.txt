@@ -1,24 +1,25 @@
 结构体有哪些
 
-
-skl                     技能
-quest                   任务
 furniture               家具
-effect                  buff
+skl                     技能
+ttl                     文本
 weather                 天气
+effect                  buff
+quest                   任务
 sector                  没有战斗的场景
 area                    战斗场景
-vendor                  商人
 act                     练级行为
 rcp                     合成行为以及配方
 abl                     攻击行为
 creature                敌人对象
-you                     玩家对象
 eqp，wpn，sld，acc      装备
+you                     玩家对象
 item                    物品
-ttl                     文本
+
+
 dom                     推测是游戏ui窗口
 
+vendor                  商人
 
 |---------------------------------------------|
 

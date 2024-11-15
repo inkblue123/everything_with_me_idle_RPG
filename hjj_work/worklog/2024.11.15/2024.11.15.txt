@@ -1,0 +1,59 @@
+试图拆分main.js，把其中常用的对象变成js，然后由main调用
+
+最开始时，我希望在main.js中使用
+import { myhello } from "./hello.js";
+相当于html调用main.js，然后由main.js调用其他.js 
+发现这样做是不行的
+原因是html调用main.js有几种方式，
+
+
+
+
+原始代码的调用方式中没有加修饰符号，
+  <script src="main.js"></script>
+
+这种情况下，想要在main.js中调用其他js，需要借用document
+document.write('<script src="hello.js"></script>');
+
+大概意思是从 main.js 给 上级(.HTML) 发送一个请求，要求写一行语句，语句内容为<script src="hello.js"></script>
+
+本质上就是在html里加了两行<script，引用js的情况是并列在一起
+不清楚能不能再深一层，懒得尝试了
+
+
+
+
+我的想法是通过树状引用js，需要在html的引用时添加一个参数
+  <script type="module" src="main.js"></script>
+关键是  type="module"
+
+这样引用就符合ECMAScript6(ES6)架构什么的，就可以用import了
+
+hello.js里使用
+export { myhello };
+用来从js里导出函数、对象、变量等等
+
+main.js里使用
+import { myhello } from "./hello.js";
+表示要从./hello.js里导入花括号里的东西，
+
+或者用
+import * as hello_js from './hello.js';
+然后用
+hello_js.myhello()
+来调用
+后面这种方式相当于全部导出，全部存到了hello_js对象里
+
+ES6的引用方法对于js的要求比较严格，源代码里没有符合严格模式的语法要改正
+
+
+abl
+act
+effect
+effector
+quest
+time
+ttl
+weather
+
+
