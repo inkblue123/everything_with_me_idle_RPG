@@ -10095,6 +10095,27 @@ dom.sl_s.addEventListener('click', () => { save(); let j = addElement(dom.sl, 's
 dom.sl_l = addElement(dom.sl, 'span', null, 'sl'); dom.sl_l.innerHTML = 'load';
 dom.sl_l.addEventListener('click', () => load(null, true));
 dom.sl_extra = addElement(dom.sl, 'span', null, 'sl'); dom.sl_extra.style.borderLeft = 'none'; dom.sl_extra.innerHTML = '<span style="color:crimson">game not saved!</span>';
+
+dom.speed_rate = addElement(dom.sl, 'span', null, 'sl'); dom.speed_rate.innerHTML = 
+dom.speed_rate.innerHTML = `
+  <label for="time_rate">倍速:</label>
+  <select id="time_rate">
+    <option value="0.5">×0.5</option>
+    <option value="1" selected>×1</option>
+    <option value="2">×2</option>
+    <option value="5">×5</option>
+    <option value="10">×10</option>
+  </select>
+`
+dom.speed_rate.style.position = 'fixed'; dom.speed_rate.style.width = 'auto'; dom.speed_rate.style.right = '210px'; dom.speed_rate.style.bottom = '1px';
+dom.speed_rate.style.paddingRight = '20px';
+global.speed_rate = 1;
+const selectElement = document.getElementById('time_rate');
+selectElement.addEventListener('change', function() {
+  global.speed_rate = selectElement.value || 1; // 默认倍速为1
+});
+
+
 dom.autosve = addElement(dom.sl, 'span', null, 'sl'); dom.autosve.innerHTML = 'Autosave';
 dom.autosve.style.position = 'fixed'; dom.autosve.style.width = 'auto'; dom.autosve.style.right = '139px'; dom.autosve.style.bottom = '1px';
 dom.autosve.style.paddingRight = '20px';
@@ -10104,7 +10125,7 @@ dom.autosves.addEventListener('click', function () {
   global.flags.autosave = !global.flags.autosave;
   if (global.flags.autosave === true) timers.autos = setInterval(function () { save(true); }, 30000); else clearInterval(timers.autos)
 });
-dom.sl_h = addElement(dom.sl, 'span', null, 'sl'); dom.sl_h.innerHTML = '>>'; dom.sl_h.style.right = '214px'; dom.sl_h.style.position = 'fixed'; dom.sl_h.style.width = 'auto'; dom.sl_h.style.bottom = '1px';
+dom.sl_h = addElement(dom.sl, 'span', null, 'sl'); dom.sl_h.innerHTML = '>>'; dom.sl_h.style.right = '324px'; dom.sl_h.style.position = 'fixed'; dom.sl_h.style.width = 'auto'; dom.sl_h.style.bottom = '1px';
 dom.sl_h.addEventListener('click', () => {
   dom.sl.style.display = 'none'; if (dom.sl_h_n) empty(dom.sl_h_n);
   dom.sl_h_n = addElement(document.body, 'span', null, 'sl'); dom.sl_h_n.innerHTML = '<<';
@@ -14234,7 +14255,7 @@ function ontick() {
 }
 
 (function update() {
-  setTimeout(function () { update(); ontick(); }, 1000 / global.fps);
+  setTimeout(function () { update(); ontick(); }, 1000/global.speed_rate / global.fps);
 })();
 
 function select(arr) {
