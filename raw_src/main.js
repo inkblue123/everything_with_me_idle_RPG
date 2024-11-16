@@ -13009,7 +13009,7 @@ chss.trd.sl = function (b, x) {
     let ttxt; if (c > HOUR) ttxt = (c / HOUR << 0) + '</span> hours to finish'; else ttxt = (c << 0) + '</span> minutes to finish';
     dom.trd.innerHTML = 'You are reading <span style="color:orange">' + b.name + '</span><br>It will take you about <span style="color:lime">' + ttxt;
     if (++b.data.timep >= b.cmax) { clearInterval(timers.rdng); clearInterval(timers.rdngdots); global.stat.rdttl++; global.flags.rdng = false; for (let gg in chss) if (chss[gg].id === global.lst_loc) chss[gg].sl(); b.use(); reduce(b); b.data.timep = 0; }
-  }, 1000);
+  }, 1000/global.speed_rate);
   chs('"Stop reading"', false).addEventListener('click', () => {
     clearInterval(timers.rdng); clearInterval(timers.rdngdots); global.flags.rdng = false; for (let gg in chss) if (chss[gg].id === global.lst_loc) chss[gg].sl();
   });
