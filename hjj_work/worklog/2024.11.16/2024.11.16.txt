@@ -1,0 +1,80 @@
+尝试理解代码
+
+index.html的945开始，把main的所有内容声明和定义出来了
+
+
+main.js：281行，给浏览器加了一个事件
+当"load"，也就是全部内容加载完成之后，执行后面的load()函数
+通过这种方式来主动读取存档，开始运行
+
+main.js：542行
+要么输入dt，就是存档文件，要么从浏览器的本地存储（localStorage）中获取一个名为 "v0.3" 的值
+
+//向parent_element里新增一个elem元素
+function addElement(parent_element, elem, id, cls) {
+    let newelem = document.createElement(elem);
+    if (id) newelem.id = id;
+    if (cls) newelem.className = cls;
+    parent_element.appendChild(newelem);
+    return newelem;
+}
+
+//往cont容器里放一个thing
+function addToContainer(cont, thing, am, data) {
+    let it = thing;
+    if (thing.slot) 
+        it = deepCopy(thing);
+    let r = {
+        item: it, 
+        am: am || 1, 
+        data: data || thing.data, 
+        dp: thing.slot ? thing.dp : 0 };
+    if (r.item.slot) r.data.uid = ++global.uid;
+    cont.c.push(r);
+    if (global.menuo == 3)
+        rendertrunkitem(dom.invp2, r.item, { right: true, nit: { item: r.item, data: r.data, am: r.am, dp: r.dp } });
+    return r;
+}
+
+1086行的if只在load函数里有，首次加载存档时这里一定是否
+然后就会进循环，往home.trunk里放了6个物品
+这六个物品从定义里看并不认识，没法推测功能，
+home也不是好好定义出来的结构
+这个if只运行一次，后续给global.flags.stbxinifld赋true之后就进不来了
+不知道干嘛的
+在家里真的有一个容器是装了这么六个物品
+所以这块内容应该是最开始创建存档时用来初始化家里用的
+
+
+1095调了一下背景颜色
+
+1118如果监测到了存档里的自动存档开关启动了，就在ui里把自动存档框勾选上
+然后启动自动存档的函数
+
+1129是读取存档完成，撤掉遮挡在屏幕上的“加载中”界面
+
+
+
+跳过阅读代码，开挂
+怪物的掉落物和概率写在怪物本身的属性里
+对于道场的假人，总共有三个
+15398是训练假人
+木刀        原本概率1%，现在改成了10%
+护手绷带    原本概率3%，现在改成了30%
+15430是稻草假人
+稻草        原本概率0.85%，现在改成了85%
+治疗草      原本概率2%  现在改成了20%
+15449是木制假人
+道场裤子
+亚麻背心
+香蕉
+竹训练剑
+
+道场回收装备的框框绑定了具体的回收事件
+在24425行，按了按钮就会开始算金额
+
+在52行加了两个变量，用来调节物品倍率和回收倍率
+
+
+
+
