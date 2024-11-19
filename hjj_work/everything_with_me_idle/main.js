@@ -1,9 +1,10 @@
-var dom = new Object();
-var global = new Object();
-var listen = new Object();
+// var dom = new Object();
+// var global = new Object();
+import { global } from "./import/Global.js";
+import { dom, addElement } from "./import/DOM.js";
+
 var w_manager = new Object();
 var creature = new Object();
-var offline = new Object();
 var effect = new Object();
 var wpn = new Object();
 var eqp = new Object();
@@ -26,16 +27,15 @@ var test = new Object();
 var callback = new Object();
 var effector = new Object();
 var planner = new Object();
-plans = [[], [], []];
+var plans = [[], [], []];
 var sector = new Object();
 var sectors = [];
-var check = new Object();
 var checksd = [];
 var inv = [];
 var furn = [];
 var qsts = [];
 var dar = [[], [], [], [], []];
-you = new Object();
+var you = new Object();
 var home = new Object();
 eqp.dummy = {};
 var container = new Object();
@@ -47,241 +47,13 @@ const WEEK = 10080;
 const HOUR = 60;
 const SILVER = 100;
 const GOLD = 10000;
-let tempt = new Date();
+// let tempt = new Date();
 //道场装备回收倍率
 var Recycling_times = 1;
 //道场敌人物品掉落倍率
 var dummy_drop = 1;
 
-global.home_loc = 111;
-global.lst_sve = "?";
-global.ver = 470;
-global.sm = 1;
-global.rm = 0;
-global.bg_g = global.bg_r = global.bg_b = 255;
-global.s_l = 0;
-global.spnew = 0;
-global.vsnew = 10;
-global.uid = 1;
-global.wdwidx = 0;
-global.menuo = 0;
-global.lastmsgc = 0;
-global.sinv = [];
-global.srcp = [];
-global.drdata = {};
-global.lw_op = 0;
-global.zone_a_p = [];
-global.rec_d = [];
-global.e_e = [];
-global.e_em = [];
-global.titles = [];
-global.titlese = [];
 var acts = [];
-global.tstcr = [];
-global.atkdftm = [-1, -1, -1];
-global.atkdfty = [-1, -1];
-global.atkdftydt = {};
-global.current_m;
-global.current_z;
-global.current_l;
-global.stat = {
-    tick: 0,
-    akills: 0,
-    fooda: 0,
-    foodb: 0,
-    foodal: 0,
-    foodt: 0,
-    ftried: 0,
-    moneyg: 0,
-    die_p: 0,
-    die_p_t: 0,
-    ivtntdj: 0,
-    athme: 0,
-    athmec: 0,
-    slvs: 0,
-    lgtstk: 0,
-    moneysp: 0,
-    shppnt: 0,
-    exptotl: 0,
-    seed1: ((Math.random() * 7e7) << 7) % 7 & 7,
-    igtttl: 0,
-    msts: [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-    ],
-    msks: [0, 0, 0, 0, 0, 0, 0],
-    sttime:
-        tempt.getFullYear() +
-        "/" +
-        (tempt.getMonth() + 1) +
-        "/" +
-        tempt.getDate() +
-        " " +
-        tempt.getHours() +
-        ":" +
-        (tempt.getMinutes() >= 10 ? tempt.getMinutes() : "0" + tempt.getMinutes()) +
-        ":" +
-        (tempt.getSeconds() > 10 ? tempt.getSeconds() : "0" + tempt.getSeconds()),
-    buyt: 0,
-    rdttl: 0,
-    dsst: 0,
-    thrt: 0,
-    crftt: 0,
-    deadt: 0,
-    smovet: 0,
-    timeslp: 0,
-    misst: 0,
-    dodgt: 0,
-    potnst: 0,
-    medst: 0,
-    plst: 0,
-    jcom: 0,
-    qstc: 0,
-    popt: 0,
-    dsct: 0,
-    bloodt: 0,
-    rdgtttl: 0,
-    cat_c: 0,
-    dmgdt: 0,
-    dmgrt: 0,
-    onesht: 0,
-    pts: 0,
-    gsvs: 0,
-    hbhbsld: 0,
-    wsnburst: 50,
-    wsnrest: 50,
-    indkill: 0,
-    coldnt: 0,
-    lastver: global.ver,
-};
-global.hit_a = 0;
-global.hit_b = 0;
-global.timescale = 1;
-global.keytarget;
-global.offline_evil_index = 1;
-global.flags = {
-    btl: false,
-    m_freeze: false,
-    msd: false,
-    m_blh: false,
-    crti: false,
-    to_pause: false,
-    civil: true,
-    sleepmode: false,
-    loadstate: false,
-    eshake: false,
-    msgtm: false,
-    grd_s: true,
-    inside: true,
-    israin: false,
-    issnow: false,
-    iscold: false,
-    bstu: false,
-    blken: false,
-    rtcrutch: false,
-    savestate: false,
-    expatv: false,
-    gameone: false,
-    tmmode: 1,
-    ssngaijin: true,
-    rptbncgt: false,
-};
-global.spirits = 100;
-global.bestiary = [{ a: false }];
-global.shortcuts = [];
-global.msgs_max = 36;
-global.text = new Object();
-global.text.nt = [
-    "K",
-    "M",
-    "B",
-    "T",
-    "Qa",
-    "Qi",
-    "Sx",
-    "Sp",
-    "Oc",
-    "No",
-    "De",
-    "Un",
-    "DDe",
-    "TDe",
-    "QaDe",
-    "QiDe",
-    "Lc",
-];
-global.fps = 1;
-global.text.wecs = [
-    ["grey", "inherit"],
-    ["white", "inherit"],
-    ["cyan", "cyan"],
-    ["lime", "green"],
-    ["yellow", "red"],
-    ["orange", "orange"],
-    ["purple", "white"],
-];
-global.text.lunarp = [
-    ["🌑", "New Moon"],
-    ["🌒", "Waxing Crescent Moon"],
-    ["🌓", "First Quarter Moon"],
-    ["🌔", "Waxing Gibbous Moon"],
-    ["🌕", "Full Moon"],
-    ["🌖", "Waning Gibbous Moon"],
-    ["🌗", "Last Quarter Moon"],
-    ["🌘", "Waning Crescent Moon"],
-];
-global.text.eranks = [
-    "???",
-    "--G",
-    "-G",
-    "G",
-    "G+",
-    "-F",
-    "F",
-    "F+",
-    "-E",
-    "E",
-    "E+",
-    "-D",
-    "D",
-    "D+",
-    "-C",
-    "C",
-    "C+",
-    "-B",
-    "B",
-    "B+",
-    "--A",
-    "-A",
-    "A",
-    "A+",
-    "A++",
-    "--S",
-    "-S",
-    "S",
-    "S+",
-    "S++",
-    "--SS",
-    "-SS",
-    "SS",
-    "SS+",
-    "SS++",
-    "--SSS",
-    "-SSS",
-    "SSS",
-    "SSS+",
-    "SSS++",
-];
-dom.dseparator = '<div class="dseparator">　</div>';
-dom.coincopper = '<small style="color:rgb(255, 116, 63)">●</small>';
-dom.coinsilver = '<small style="color:rgb(192, 192, 192)">●</small>';
-dom.coingold = '<small style="color:rgb(255, 215, 0)">●</small>';
 
 window.addEventListener("load", () => {
     load();
@@ -535,22 +307,6 @@ function save(lvr) {
     if (!lvr) msg("Game Saved", "cyan");
     return str;
 }
-
-dom.loading = addElement(document.body, "div");
-// dom.loading.style.zIndex = 9997;
-// dom.loading.style.width = "100%";
-// dom.loading.style.height = "100%";
-// dom.loading.style.position = "absolute";
-// dom.loading.style.backgroundColor = "lightgrey";
-// dom.loading.style.margin = -8;
-dom.loadingt = addElement(document.body, "div");
-// dom.loadingt.style.zIndex = 9998;
-// dom.loadingt.innerHTML = "LOADING";
-// dom.loadingt.style.textAlign = "center";
-// dom.loadingt.style.top = window.innerHeight / 2 - 50;
-// dom.loadingt.style.fontSize = "4em";
-// dom.loadingt.style.position = "absolute";
-// dom.loadingt.style.left = window.innerWidth / 2 - 150;
 
 function load(dt) {
     var str = dt || window.localStorage.getItem("v0.3");
@@ -1906,7 +1662,7 @@ function Time() {
     this.year = 0;
 }
 
-time = new Time();
+var time = new Time();
 time.minute = 338144100;
 global.text.d_l = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 global.text.d_s = ["Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat.", "Sun."];
@@ -20134,8 +19890,8 @@ dom.ct_bt4_61b = addElement(dom.ct_bt4_6,'input',null,'opt_v'); dom.ct_bt4_61b.t
 dom.ct_bt4_61b.addEventListener('click',()=>{global.flags.msgtm=!global.flags.msgtm});*/
 
 dom.gmsgs = addElement(document.body, "div", "gmsgs");
-dom.mstt = addElement(dom.gmsgs, "div", "mstt");
 if (!global.flags.aw_u) dom.gmsgs.style.display = "none";
+dom.mstt = addElement(dom.gmsgs, "div", "mstt");
 dom.mstt.style.textAlign = "center";
 dom.mstt.innerHTML = "m e s s a g e　　　l o g";
 dom.mstt.style.fontSize = "1.1em";
@@ -20506,7 +20262,7 @@ function update_m() {
     dom.d9m.update();
 }
 
-testz = new Area();
+var testz = new Area();
 testz.apop = 4000;
 testz.bpop = 6000;
 testz.vsize = 10000;
@@ -23090,7 +22846,7 @@ function m_update() {
     dom.mn_3.innerHTML = "●" + ((you.wealth / 100) % 100 << 0);
     dom.mn_4.innerHTML = "●" + (you.wealth % 100 << 0);
 }
-
+//根据f的值向dom.ctr_2也就是默认主界面中添加一行ui，用来显示文本
 function chs(txt, f, c, bc, iconx, icony, size, ignore, slimsize) {
     if (f === true) {
         clr_chs();
@@ -24241,30 +23997,31 @@ function Chs() {
     this.onScout = function () {};
     this.sector = [];
 }
-
+//整个游戏最开场时的初始界面
 chss.t1 = new Chs();
 chss.t1.id = 101;
 chss.t1.sl = function () {
-    global.lst_loc = 101;
+    global.lst_loc = 101; //用全局变量记录当前位置，方便回来
     global.flags.inside = true;
-    d_loc("Dojo, training area");
+    d_loc("Dojo, training area"); //给所处位置窗口修改文本
     chs("???: Kid", true);
     chs('"..."', false).addEventListener("click", function () {
         global.time += DAY;
-        appear(dom.ctr_1);
+        appear(dom.ctr_1); //渐变显示天气时间窗口
         chs("???: Quit daydreaming", true);
         chs('"?"', false).addEventListener("click", function () {
-            appear(dom.d0);
+            appear(dom.d0); //渐变显示角色属性窗口
             chs("???: You have training to complete", true);
             chs('"!"', false).addEventListener("click", function () {
-                appear(dom.inv_ctx);
-                appear(dom.d_lct);
+                appear(dom.inv_ctx); //左下角的物品窗口
+                appear(dom.d_lct); //主界面的左上角，所处位置窗口
                 chs("???: Grab your stuff and get to it", true);
                 chs('"..."', false).addEventListener("click", function () {
-                    appear(dom.ct_ctrl);
-                    smove(chss.tdf, false);
-                    giveItem(wpn.stk1);
-                    giveItem(item.hrb1, 15);
+                    appear(dom.ct_ctrl); //主界面正下，工艺、技能、动作、设置的一行
+                    appear(dom.gmsgs); //显示消息日志窗口
+                    smove(chss.tdf, false); //移动到下一个场景
+                    giveItem(wpn.stk1); //给与一个棍子
+                    giveItem(item.hrb1, 15); //给予15个治疗草
                     global.flags.aw_u = true;
                 });
             });
@@ -24284,11 +24041,6 @@ chss.tdf.id = 102;
 chss.tdf.sl = function () {
     global.lst_loc = 102;
     global.flags.inside = true;
-    clr_chs();
-    if (!global.flags.dmap) {
-        appear(dom.gmsgs);
-        global.flags.dmap = true;
-    }
     chs('"Select the difficulty"', true);
     if (!global.flags.tr1_win)
         chs('"Easiest"', false).addEventListener("click", function () {
@@ -24484,13 +24236,13 @@ chss.t3.sl = () => {
                         for (let a in inv) {
                             if (inv[a].id === wpn.knf1.id && you.eqp[0].data.uid !== inv[a].data.uid) {
                                 stash.push(inv[a]);
-                                dlr += 1 * dummy_drop;
+                                dlr += 1 * Recycling_times;
                             }
                         }
                         for (let a in inv) {
                             if (inv[a].id === wpn.wsrd2.id && you.eqp[0].data.uid !== inv[a].data.uid) {
                                 stash.push(inv[a]);
-                                dlr += 3 * dummy_drop;
+                                dlr += 3 * Recycling_times;
                             }
                         }
                         for (let a in inv) {
@@ -24499,7 +24251,7 @@ chss.t3.sl = () => {
                                 for (let b in you.eqp) if (you.eqp[b].data.uid === inv[a].data.uid) verify = false;
                                 if (verify === true) {
                                     stash.push(inv[a]);
-                                    dlr += 1 * dummy_drop;
+                                    dlr += 1 * Recycling_times;
                                 }
                             }
                         }
@@ -24509,7 +24261,7 @@ chss.t3.sl = () => {
                                 for (let b in you.eqp) if (you.eqp[b].data.uid === inv[a].data.uid) verify = false;
                                 if (verify === true) {
                                     stash.push(inv[a]);
-                                    dlr += 1 * dummy_drop;
+                                    dlr += 1 * Recycling_times;
                                 }
                             }
                         }
@@ -24519,7 +24271,7 @@ chss.t3.sl = () => {
                                 for (let b in you.eqp) if (you.eqp[b].data.uid === inv[a].data.uid) verify = false;
                                 if (verify === true) {
                                     stash.push(inv[a]);
-                                    dlr += 1 * dummy_drop;
+                                    dlr += 1 * Recycling_times;
                                 }
                             }
                         }
@@ -24529,7 +24281,7 @@ chss.t3.sl = () => {
                                 for (let b in you.eqp) if (you.eqp[b].data.uid === inv[a].data.uid) verify = false;
                                 if (verify === true) {
                                     stash.push(inv[a]);
-                                    dlr += 1 * dummy_drop;
+                                    dlr += 1 * Recycling_times;
                                 }
                             }
                         }
@@ -28227,12 +27979,13 @@ function formatw(a) {
     }
     return a;
 }
-
+//给主界面左上角的位置窗口修改文本
+//还改了global.current_l，这个东西意义不明
 function d_loc(text) {
     let txt;
     if (global.flags.inside === true) txt = "|" + text + "|";
     else txt = text;
-    dom.d_lctt.innerHTML = txt;
+    dom.d_lctt.innerHTML = txt; //主界面左上角的位置窗口
     global.current_l.locn = text;
 }
 
@@ -28442,7 +28195,7 @@ function objempty(obj) {
 
 function kill(obj) {
     obj = null;
-    delete obj;
+    // delete obj;
 }
 
 function effAct_test() {
@@ -29265,14 +29018,6 @@ planner.zrespawn.f = function () {
     }
 };
 addPlan(planner.zrespawn);
-
-function addElement(parent_element, elem, id, cls) {
-    let newelem = document.createElement(elem);
-    if (id) newelem.id = id;
-    if (cls) newelem.className = cls;
-    parent_element.appendChild(newelem);
-    return newelem;
-}
 
 function deepCopy(o) {
     let copy = o,
