@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>6 Part Split Page</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body,
+            html {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+            }
+
+            .container {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr; /* 3 columns */
+                grid-template-rows: 1fr 1fr; /* 2 rows */
+                grid-gap: 0;
+                width: 100vw;
+                height: 100vh;
+            }
+
+            .section {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-size: 24px;
+            }
+
+            /* Assign different background colors to each section */
+            .section:nth-child(1) {
+                background-color: #ff5733;
+            }
+            .section:nth-child(2) {
+                background-color: #33ff57;
+            }
+            .section:nth-child(3) {
+                background-color: #3357ff;
+            }
+            .section:nth-child(4) {
+                background-color: #ff33a1;
+            }
+            .section:nth-child(5) {
+                background-color: #ff8c33;
+            }
+            .section:nth-child(6) {
+                background-color: #33fff9;
+            }
+        </style>
+    </head>
+    <body>
+        <script type="module" src="main.js"></script>
+    </body>
+</html>

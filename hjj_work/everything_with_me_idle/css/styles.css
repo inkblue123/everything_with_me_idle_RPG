@@ -1,0 +1,73 @@
+/* 设置页面和容器的基本样式 */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+}
+/* 容纳所有显示元素的容器，游戏主界面 */
+.game_page {
+    display: grid;
+    /* grid-template-columns: 1fr 2fr; */
+    /* grid-gap: 0; */
+    width: 100vw;
+    height: 100vh;
+}
+
+/* 一般用在游戏上半部分，战斗时使用 */
+.page_2section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 0;
+    /* width: 100vw;
+    height: 100vh; */
+}
+
+/* 其他时候使用的，横向三部分分割容器 */
+.page_3section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 0;
+    /* width: 100vw;
+    height: 100vh; */
+}
+
+/* 设置每个区域的样式 */
+.section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+}
+
+/* 分配每个区域的背景颜色 */
+/* .section:nth-child(1) {
+    background-color: #ff5733;
+}
+
+.section:nth-child(2) {
+    background-color: #33ff57;
+}
+
+.section:nth-child(3) {
+    background-color: #3357ff;
+}
+
+.section:nth-child(4) {
+    background-color: #ff33a1;
+}
+
+.section:nth-child(5) {
+    background-color: #ff8c33;
+}
+
+.section:nth-child(6) {
+    background-color: #33fff9;
+} */
+
+/* DeepPink */
