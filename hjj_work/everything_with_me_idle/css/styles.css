@@ -10,16 +10,23 @@ html {
     background-color: #f4f4f4;
 }
 /* 容纳所有显示元素的容器，游戏主界面 */
-.game_page {
+.main_page {
     display: grid;
-    /* grid-template-columns: 1fr 2fr; */
+    grid-template-columns: 1fr 2fr;
     /* grid-gap: 0; */
     width: 100vw;
-    height: 100vh;
+    height: 95vh;
 }
 
-/* 一般用在游戏上半部分，战斗时使用 */
-.page_2section {
+/* 每行1列的布局 */
+.page_columns_1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 0;
+}
+
+/* 每行2列的布局，两列宽度比例1：2 */
+.page_columns_12 {
     display: grid;
     grid-template-columns: 1fr 2fr;
     grid-gap: 0;
@@ -27,8 +34,17 @@ html {
     height: 100vh; */
 }
 
-/* 其他时候使用的，横向三部分分割容器 */
-.page_3section {
+/* 每行2列的布局，两列宽度比例1：2 */
+.page_columns_11 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0;
+    /* width: 100vw;
+    height: 100vh; */
+}
+
+/* 每行3列的布局，每列宽度一样 */
+.page_columns_111 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 0;
@@ -43,6 +59,17 @@ html {
     align-items: center;
     color: white;
     font-size: 24px;
+    border: 3px solid #797691;
+}
+
+/* 设置每个区域的样式 */
+.option_page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 100vw;
+    height: 5vh;
 }
 
 /* 分配每个区域的背景颜色 */
