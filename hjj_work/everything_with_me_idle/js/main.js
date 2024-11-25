@@ -1,4 +1,5 @@
 import { dom, addElement } from "./Dom.js";
+import { player } from "./Player.js";
 
 window.addEventListener("load", () => {
     dom.InitGameDomNomal();

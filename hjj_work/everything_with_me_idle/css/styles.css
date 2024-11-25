@@ -62,7 +62,7 @@ html {
     border: 3px solid #797691;
 }
 
-/* 设置每个区域的样式 */
+/* 游戏底部的设置区域的布局 */
 .option_page {
     display: flex;
     justify-content: center;
@@ -71,30 +71,5 @@ html {
     width: 100vw;
     height: 5vh;
 }
-
-/* 分配每个区域的背景颜色 */
-/* .section:nth-child(1) {
-    background-color: #ff5733;
-}
-
-.section:nth-child(2) {
-    background-color: #33ff57;
-}
-
-.section:nth-child(3) {
-    background-color: #3357ff;
-}
-
-.section:nth-child(4) {
-    background-color: #ff33a1;
-}
-
-.section:nth-child(5) {
-    background-color: #ff8c33;
-}
-
-.section:nth-child(6) {
-    background-color: #33fff9;
-} */
 
 /* DeepPink */

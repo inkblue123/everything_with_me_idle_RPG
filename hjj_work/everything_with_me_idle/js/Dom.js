@@ -52,6 +52,9 @@ dom.combat_setting.textContent = "战斗规划界面";
 dom.combat = crtElement("div", null, "section", "", "#33fff9");
 dom.combat.textContent = "战斗界面";
 
+//创建布局
+//整个项目先分成上下两部分，上95%是游戏主体，下5%是设置
+//游戏主体左侧三分之一是玩家相关，右侧三分之二是游戏的各种事件
 dom.game_dom = crtElement("div", null, "main_page", "");
 
 dom.game_left = crtElement("div", null, "page_columns_1", "none");
@@ -64,6 +67,9 @@ dom.game_up_nomal = crtElement("div", null, "page_columns_11", "none");
 dom.game_down_nomal = crtElement("div", null, "page_columns_11", "none");
 
 dom.option_dom = crtElement("div", null, "option_page", "");
+
+//创建小组件
+// dom.HP_bar = crtElement("div", null, "option_page", "");
 
 // UI设计
 dom.main_dom = addElement(document.body, "div", null, "page_columns_1");
