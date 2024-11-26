@@ -19,83 +19,113 @@ function addElement(parent_element, elem, id, cls) {
 }
 
 // 创建出所有需要的界面
-dom.player_attribute = crtElement("div", null, "section", "", "#000000");
-dom.player_attribute.textContent = "角色属性界面";
+{
+    dom.player_attribute = crtElement("div", "player_attribute", null, "", "#000000");
+    // dom.player_attribute.textContent = "角色属性界面";
 
-dom.player_equipment = crtElement("div", null, "section", "none", "#0000ff");
-dom.player_equipment.textContent = "角色装备界面";
+    dom.player_equipment = crtElement("div", "backpack", null, "none", "#0000ff");
+    dom.player_equipment.textContent = "角色装备界面";
 
-dom.backpack = crtElement("div", null, "section", "", "#00ff00");
-dom.backpack.textContent = "背包物品界面";
+    dom.backpack = crtElement("div", null, "section", "", "#00ff00");
+    dom.backpack.textContent = "背包物品界面";
 
-dom.skill = crtElement("div", null, "section", "none", "#ff0000");
-dom.skill.textContent = "技能列表界面";
+    dom.skill = crtElement("div", null, "section", "none", "#ff0000");
+    dom.skill.textContent = "技能列表界面";
 
-dom.library = crtElement("div", null, "section", "none", "#00ffff");
-dom.library.textContent = "图鉴界面";
+    dom.library = crtElement("div", null, "section", "none", "#00ffff");
+    dom.library.textContent = "图鉴界面";
 
-dom.control = crtElement("div", null, "section", "", "#ff00ff");
-dom.control.textContent = "玩家控制界面";
+    dom.control = crtElement("div", null, "section", "", "#ff00ff");
+    dom.control.textContent = "玩家控制界面";
 
-dom.create = crtElement("div", null, "section", "", "#ffff00");
-dom.create.textContent = "合成制作界面";
+    dom.create = crtElement("div", null, "section", "", "#ffff00");
+    dom.create.textContent = "合成制作界面";
 
-dom.map = crtElement("div", null, "section", "", "#33fff9");
-dom.map.textContent = "地图界面";
+    dom.map = crtElement("div", null, "section", "", "#33fff9");
+    dom.map.textContent = "地图界面";
 
-dom.remenber = crtElement("div", null, "section", "", "#3357ff");
-dom.remenber.textContent = "脑海界面";
+    dom.remenber = crtElement("div", null, "section", "", "#3357ff");
+    dom.remenber.textContent = "脑海界面";
 
-dom.combat_setting = crtElement("div", null, "section", "", "#ff33a1");
-dom.combat_setting.textContent = "战斗规划界面";
+    dom.combat_setting = crtElement("div", null, "section", "", "#ff33a1");
+    dom.combat_setting.textContent = "战斗规划界面";
 
-dom.combat = crtElement("div", null, "section", "", "#33fff9");
-dom.combat.textContent = "战斗界面";
+    dom.combat = crtElement("div", null, "section", "", "#33fff9");
+    dom.combat.textContent = "战斗界面";
+}
 
 //创建布局
-//整个项目先分成上下两部分，上95%是游戏主体，下5%是设置
-//游戏主体左侧三分之一是玩家相关，右侧三分之二是游戏的各种事件
-dom.game_dom = crtElement("div", null, "main_page", "");
+{
+    //整个项目先分成上下两部分，上95%是游戏主体，下5%是设置
+    //游戏主体左侧三分之一是玩家相关，右侧三分之二是游戏的各种事件
+    dom.game_dom = crtElement("div", null, "main_page", "");
 
-dom.game_left = crtElement("div", null, "page_columns_1", "none");
-dom.game_right = crtElement("div", null, "page_columns_1", "none");
-//战斗时位于游戏上半部分的容器
-dom.game_up_combat = crtElement("div", null, "page_columns_1", "none");
-//平时位于游戏上半部分的容器
-dom.game_up_nomal = crtElement("div", null, "page_columns_11", "none");
-//平时位于游戏上半部分的容器
-dom.game_down_nomal = crtElement("div", null, "page_columns_11", "none");
+    dom.game_left = crtElement("div", null, "page_rows_11", "none");
+    dom.game_right = crtElement("div", null, "page_rows_11", "none");
+    //战斗时位于游戏上半部分的容器
+    dom.game_up_combat = crtElement("div", null, "page_columns_1", "none");
+    //平时位于游戏上半部分的容器
+    dom.game_up_nomal = crtElement("div", null, "page_columns_11", "none");
+    //平时位于游戏上半部分的容器
+    dom.game_down_nomal = crtElement("div", null, "page_columns_11", "none");
 
-dom.option_dom = crtElement("div", null, "option_page", "");
+    dom.option_dom = crtElement("div", null, "option_page", "");
+}
 
 //创建小组件
-// dom.HP_bar = crtElement("div", null, "option_page", "");
+{
+    //血条组件
+    dom.HP_bar = crtElement("div", "HP_bar", null, "");
+    dom.HP_frame = addElement(dom.HP_bar, "div", "HP_frame", null); //血条中，条的外框
+    dom.HP_current = addElement(dom.HP_frame, "div", "HP_current", null); //血条中央，长度随当前血量变化的色块
+    dom.HP_number = addElement(dom.HP_bar, "div", "HP_number", null); //血条上显示的数字，表示当前血量具体数值
 
-// UI设计
-dom.main_dom = addElement(document.body, "div", null, "page_columns_1");
+    //蓝条组件
+    dom.MP_bar = crtElement("div", "MP_bar", null, "");
+    dom.MP_frame = addElement(dom.MP_bar, "div", "MP_frame", null); //条的外框
+    dom.MP_current = addElement(dom.MP_frame, "div", "MP_current", null); //长度随当前蓝量变化的色块
+    dom.MP_number = addElement(dom.MP_bar, "div", "MP_number", null); //显示的数字，表示当前蓝量具体数值
 
-dom.main_dom.appendChild(dom.game_dom);
+    //精力组件
+    dom.ENP_bar = crtElement("div", "ENP_bar", null, "");
+    dom.ENP_frame = addElement(dom.ENP_bar, "div", "ENP_frame", null); //条的外框
+    dom.ENP_current = addElement(dom.ENP_frame, "div", "ENP_current", null); //长度随当前精力变化的色块
+    dom.ENP_number = addElement(dom.ENP_bar, "div", "ENP_number", null); //显示的数字，表示当前精力具体数值
 
-dom.game_dom.appendChild(dom.game_left);
-dom.game_dom.appendChild(dom.game_right);
+    //属性展示组件
+}
 
-dom.game_left.appendChild(dom.player_attribute);
-dom.game_left.appendChild(dom.backpack);
+// 向布局中插入合适的元素，实现游戏界面
+{
+    dom.main_dom = addElement(document.body, "div", null, "page_columns_1");
 
-dom.game_right.appendChild(dom.game_up_combat);
-dom.game_right.appendChild(dom.game_up_nomal);
-dom.game_right.appendChild(dom.game_down_nomal);
+    dom.main_dom.appendChild(dom.game_dom);
 
-dom.game_up_combat.appendChild(dom.combat);
+    dom.game_dom.appendChild(dom.game_left);
+    dom.game_dom.appendChild(dom.game_right);
 
-dom.game_up_nomal.appendChild(dom.remenber);
-dom.game_up_nomal.appendChild(dom.map);
+    dom.game_left.appendChild(dom.player_attribute);
+    dom.game_left.appendChild(dom.backpack);
 
-dom.game_down_nomal.appendChild(dom.control);
-dom.game_down_nomal.appendChild(dom.create);
-dom.game_down_nomal.appendChild(dom.combat_setting);
+    dom.game_right.appendChild(dom.game_up_combat);
+    dom.game_right.appendChild(dom.game_up_nomal);
+    dom.game_right.appendChild(dom.game_down_nomal);
 
-dom.main_dom.appendChild(dom.option_dom);
+    dom.game_up_combat.appendChild(dom.combat);
+
+    dom.game_up_nomal.appendChild(dom.remenber);
+    dom.game_up_nomal.appendChild(dom.map);
+
+    dom.game_down_nomal.appendChild(dom.control);
+    dom.game_down_nomal.appendChild(dom.create);
+    dom.game_down_nomal.appendChild(dom.combat_setting);
+
+    dom.main_dom.appendChild(dom.option_dom);
+
+    dom.player_attribute.appendChild(dom.HP_bar);
+    dom.player_attribute.appendChild(dom.MP_bar);
+    dom.player_attribute.appendChild(dom.ENP_bar);
+}
 
 //向游戏布局中填充战斗时的默认界面
 dom.InitGameDomCombat = function () {

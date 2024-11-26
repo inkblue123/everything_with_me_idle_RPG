@@ -4,8 +4,13 @@ class Player {
     constructor() {
         this.name = "me"; //角色名称
         //战斗最终属性
-        this.health_point = 100; //血量
-        this.energy_point = 100; //精力
+        this.health_max = 100; //最大血量上限
+        this.health_point = 100; //当前血量
+        this.magic_max = 100; //最大魔力上限
+        this.magic_point = 100; //当前魔力
+        this.energy_max = 100; //最大精力上限
+        this.energy_point = 100; //当前精力
+
         this.attack = 10; //攻击力
         this.precision = 10; //精准
         this.critical_chance = 1; //暴击率，百分制，具体计算时会除以100
@@ -28,6 +33,6 @@ class Player {
     init() {}
 }
 
-const player = new Player();
+var player = new Player();
 
 export { player };

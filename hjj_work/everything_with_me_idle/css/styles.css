@@ -22,14 +22,29 @@ html {
 .page_columns_1 {
     display: grid;
     grid-template-columns: 1fr;
-    grid-gap: 0;
+    /* grid-template-rows: 1fr 1fr; */
+    /* grid-gap: 0; */
+}
+/* 每行1列的布局 */
+.page_rows_11 {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 100%;
+    /* grid-gap: 0; */
+}
+/* 每行1列的布局 */
+.page_rows_111 {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 100%;
+    /* grid-gap: 0; */
 }
 
 /* 每行2列的布局，两列宽度比例1：2 */
 .page_columns_12 {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    grid-gap: 0;
+    /* grid-gap: 0; */
     /* width: 100vw;
     height: 100vh; */
 }
@@ -38,7 +53,6 @@ html {
 .page_columns_11 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 0;
     /* width: 100vw;
     height: 100vh; */
 }
@@ -47,7 +61,6 @@ html {
 .page_columns_111 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 0;
     /* width: 100vw;
     height: 100vh; */
 }
@@ -58,8 +71,28 @@ html {
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 24px;
+    /* font-size: 24px; */
     border: 3px solid #797691;
+}
+/* 角色属性界面的样式 */
+#player_attribute {
+    display: block;
+    grid-template-columns: 1fr; /* 单列布局 */
+    grid-template-rows: auto; /* 行高自适应，子元素大小固定 */
+    /* color: white; */
+    /* font-size: 24px; */
+    /* height: 50%; */
+    border: 3px solid #797691; /* 内框 */
+}
+/* 背包物品界面的样式 */
+#backpack {
+    display: grid;
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* color: white; */
+    /* font-size: 24px; */
+    /* height: 50%; */
+    border: 3px solid #797691; /* 内框 */
 }
 
 /* 游戏底部的设置区域的布局 */
@@ -70,6 +103,99 @@ html {
     color: white;
     width: 100vw;
     height: 5vh;
+}
+/* 血条组件：最大的父元素 */
+#HP_bar {
+    display: grid;
+    position: relative; /* 设置所有子元素相对于它进行定位 */
+    width: 100%; /* 宽度为整个窗口的85% */
+    height: 45px; /* 高度固定为15px */
+}
+/* 血条组件：血条外框的样式 */
+#HP_frame {
+    margin: auto; /* 居中显示 */
+    margin-top: 30px; /* 和上边的元素距离30px */
+    width: 85%; /* 宽度为整个窗口的85% */
+    height: 15px; /* 高度固定为15px */
+    outline: 2px solid rgb(201, 16, 16); /* 外框 */
+    background-color: rgba(255, 46, 46, 0.3);
+}
+/* 血条组件：血条中央，长度随当前血量变化的色块 */
+#HP_current {
+    height: 15px;
+    background-color: rgb(255, 0, 0);
+}
+/* 血条组件：显示的数字 */
+#HP_number {
+    position: absolute; /* 启动绝对定位 */
+    width: 100%;
+    top: 30px; /**/
+    line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    color: white;
+}
+/* 蓝条组件：最大的父元素 */
+#MP_bar {
+    display: grid;
+    position: relative; /* 设置所有子元素相对于它进行定位 */
+    width: 100%; /* 宽度为整个窗口的85% */
+    height: 25px; /* 高度固定为15px */
+}
+/* 蓝条组件：外框的样式 */
+#MP_frame {
+    margin: auto; /* 居中显示 */
+    margin-top: 10px; /* 和上边的元素距离 */
+    width: 85%;
+    height: 15px; /* 高度固定为15px */
+    outline: 2px solid rgb(0, 0, 127); /* 外框 */
+    background-color: rgba(0, 0, 255, 0.3);
+}
+/* 蓝条组件：血条中央，长度随当前血量变化的色块 */
+#MP_current {
+    height: 15px;
+    background-color: rgb(15, 15, 255);
+}
+/* 蓝条组件：显示的数字 */
+#MP_number {
+    position: absolute; /* 启动绝对定位 */
+    width: 100%;
+    top: 10px; /**/
+    line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    color: white;
+}
+/* 精力条组件：最大的父元素 */
+#ENP_bar {
+    display: grid;
+    position: relative; /* 设置所有子元素相对于它进行定位 */
+    width: 100%; /* 宽度为整个窗口的85% */
+    height: 25px; /* 高度固定为15px */
+}
+/* 精力条组件：血条外框的样式 */
+#ENP_frame {
+    margin: auto; /* 居中显示 */
+    margin-top: 10px; /* 和上边的元素距离30px */
+    width: 85%; /* 宽度为整个窗口的85% */
+    height: 15px; /* 高度固定为15px */
+    outline: 2px solid rgb(0, 127, 0); /* 外框 */
+    background-color: rgba(0, 255, 0, 0.3);
+}
+/* 精力条组件：血条中央，长度随当前血量变化的色块 */
+#ENP_current {
+    height: 15px;
+    background-color: rgb(0, 196, 0);
+}
+/* 精力条组件：显示的数字 */
+#ENP_number {
+    position: absolute; /* 启动绝对定位 */
+    width: 100%;
+    top: 10px; /**/
+    line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    color: white;
 }
 
 /* DeepPink */
