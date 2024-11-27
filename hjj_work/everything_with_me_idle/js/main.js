@@ -1,5 +1,5 @@
 import { dom, addElement } from "./Dom.js";
-import { update_HP, update_MP, update_ENP } from "./Function.js";
+import { update_HP, update_MP, update_ENP, update_attribute_show } from "./Function.js";
 import { player } from "./Player.js";
 
 window.addEventListener("load", () => {
@@ -7,6 +7,7 @@ window.addEventListener("load", () => {
     update_HP();
     update_MP();
     update_ENP();
+    update_attribute_show();
 });
 var button1 = addElement(dom.option_dom, "button");
 button1.innerHTML = "战斗时的ui";

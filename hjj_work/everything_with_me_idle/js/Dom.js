@@ -93,6 +93,15 @@ function addElement(parent_element, elem, id, cls) {
     dom.ENP_number = addElement(dom.ENP_bar, "div", "ENP_number", null); //显示的数字，表示当前精力具体数值
 
     //属性展示组件
+    dom.attribute_show = crtElement("div", "attribute_show", "page_columns_11", "");
+    dom.combat_attribute_show = addElement(dom.attribute_show, "div", "combat_attribute_show", "page_grid_9"); //条的外框
+    dom.Player_attribute_show = addElement(dom.attribute_show, "div", "Player_attribute_show", "page_grid_9"); //条的外框
+    // dom.combat_attribute_show = crtElement("div", "combat_attribute_show", "page_grid_9", "");
+    // dom.Player_attribute_show = crtElement("div", "Player_attribute_show", "page_grid_9", "");
+    for (let i = 0; i < 9; i++) {
+        addElement(dom.combat_attribute_show, "div", null, "state_show"); //条的外框
+        addElement(dom.Player_attribute_show, "div", null, "state_show"); //条的外框
+    }
 }
 
 // 向布局中插入合适的元素，实现游戏界面
@@ -125,6 +134,7 @@ function addElement(parent_element, elem, id, cls) {
     dom.player_attribute.appendChild(dom.HP_bar);
     dom.player_attribute.appendChild(dom.MP_bar);
     dom.player_attribute.appendChild(dom.ENP_bar);
+    dom.player_attribute.appendChild(dom.attribute_show);
 }
 
 //向游戏布局中填充战斗时的默认界面

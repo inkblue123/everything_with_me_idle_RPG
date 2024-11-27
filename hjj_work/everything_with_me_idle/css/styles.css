@@ -64,6 +64,14 @@ html {
     /* width: 100vw;
     height: 100vh; */
 }
+/* 3*3的网格布局 */
+.page_grid_9 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    /* width: 100vw;
+    height: 100vh; */
+}
 
 /* 设置每个区域的样式 */
 .section {
@@ -170,8 +178,8 @@ html {
 #ENP_bar {
     display: grid;
     position: relative; /* 设置所有子元素相对于它进行定位 */
-    width: 100%; /* 宽度为整个窗口的85% */
-    height: 25px; /* 高度固定为15px */
+    width: 100%;
+    height: 25px;
 }
 /* 精力条组件：血条外框的样式 */
 #ENP_frame {
@@ -196,6 +204,26 @@ html {
     font-size: 15px; /*文本大小*/
     text-align: center;
     color: white;
+}
+
+/* 属性展示表格父元素 */
+#attribute_show {
+    display: grid;
+    margin: auto;
+    gap: 0px 20px;
+    width: 85%; /* 宽度为整个窗口的85% */
+    height: 70px; /* 高度固定为15px */
+}
+
+.state_show {
+    background-color: rgb(255, 255, 255);
+    font-size: 15px; /*文本大小*/
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 100vw;
+    height: 5vh; */
 }
 
 /* DeepPink */
