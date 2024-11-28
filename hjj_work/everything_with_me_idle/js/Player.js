@@ -2,7 +2,7 @@
 
 class Player {
     constructor() {
-        this.name = "me"; //角色名称
+        this.name = "我"; //角色名称
         //战斗最终属性
         this.health_max = 100; //最大血量上限
         this.health_point = 100; //当前血量

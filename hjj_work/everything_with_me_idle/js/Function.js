@@ -24,23 +24,33 @@ function update_ENP() {
 function update_attribute_show() {
     const Player_att = document.getElementById("attribute_show");
 
-    Player_att.children[0].children[0].innerText = `${player.attack}攻击`;
-    Player_att.children[0].children[1].innerText = `${player.precision}精准`;
-    Player_att.children[0].children[2].innerText = `${player.critical_chance}暴击率`;
-    Player_att.children[0].children[3].innerText = `${player.critical_damage}暴击伤害`;
-    Player_att.children[0].children[4].innerText = `${player.attack_speed}攻速`;
-    Player_att.children[0].children[5].innerText = `${player.defense}防御`;
-    Player_att.children[0].children[6].innerText = `${player.evade}闪避`;
-    Player_att.children[0].children[7].innerText = `${player.resistance_point}抵抗力`;
-    Player_att.children[0].children[8].innerText = `${player.move_speed}移动速度`;
+    Player_att.children[0].children[0].innerText = `攻击\n${player.attack}`;
+    Player_att.children[0].children[1].innerText = `精准\n${player.precision}`;
+    Player_att.children[0].children[2].innerText = `暴击率\n${player.critical_chance}`;
+    Player_att.children[0].children[3].innerText = `暴击伤害\n${player.critical_damage}`;
+    Player_att.children[0].children[4].innerText = `攻速\n${player.attack_speed}`;
+    Player_att.children[0].children[5].innerText = `防御\n${player.defense}`;
+    Player_att.children[0].children[6].innerText = `闪避\n${player.evade}`;
+    Player_att.children[0].children[7].innerText = `抵抗力\n${player.resistance_point}`;
+    Player_att.children[0].children[8].innerText = `移动速度\n${player.move_speed}`;
 
-    Player_att.children[1].children[0].innerText = `${player.physique}体格`;
-    Player_att.children[1].children[1].innerText = `${player.Meridians}经脉`;
-    Player_att.children[1].children[2].innerText = `${player.power}力量`;
-    Player_att.children[1].children[3].innerText = `${player.agile}敏捷`;
-    Player_att.children[1].children[4].innerText = `${player.technique}技巧`;
-    Player_att.children[1].children[5].innerText = `${player.intelligence}智力`;
-    Player_att.children[1].children[6].innerText = `${player.soul}魂魄`;
+    Player_att.children[1].children[0].innerText = `体格\n${player.physique}`;
+    Player_att.children[1].children[1].innerText = `魂魄\n${player.soul}`;
+    Player_att.children[1].children[2].innerText = `经脉\n${player.Meridians}`;
+    Player_att.children[1].children[3].innerText = `力量\n${player.power}`;
+    Player_att.children[1].children[4].innerText = `敏捷\n${player.agile}`;
+    Player_att.children[1].children[5].innerText = `技巧\n${player.technique}`;
+    Player_att.children[1].children[6].innerText = `智力\n${player.intelligence}`;
 }
 
-export { update_HP, update_MP, update_ENP, update_attribute_show };
+function update_player_name() {
+    const name_input = document.getElementById("Player_name");
+    if (name_input.value.toString().trim().length > 0) {
+        player.name = name_input.value;
+    } else {
+        player.name = "我";
+    }
+    name_input.value = player.name;
+}
+
+export { update_HP, update_MP, update_ENP, update_attribute_show, update_player_name };

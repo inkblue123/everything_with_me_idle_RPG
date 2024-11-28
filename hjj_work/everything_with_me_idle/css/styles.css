@@ -19,6 +19,12 @@ html {
 }
 
 /* 每行1列的布局 */
+.page_auto_columns {
+    display: grid;
+    /* 自动调整列数，每列至少100px，最大宽度为可用空间 */
+    grid-template-columns: repeat(auto-fit, 1fr);
+}
+/* 每行1列的布局 */
 .page_columns_1 {
     display: grid;
     grid-template-columns: 1fr;
@@ -49,7 +55,7 @@ html {
     height: 100vh; */
 }
 
-/* 每行2列的布局，两列宽度比例1：2 */
+/* 每行2列的布局，两列宽度比例1：1 */
 .page_columns_11 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -72,6 +78,11 @@ html {
     /* width: 100vw;
     height: 100vh; */
 }
+/* 单行无限填充的布局 */
+.page_flex {
+    display: flex;
+    flex-wrap: nowrap; /* 防止换行 */
+}
 
 /* 设置每个区域的样式 */
 .section {
@@ -93,14 +104,30 @@ html {
     border: 3px solid #797691; /* 内框 */
 }
 /* 背包物品界面的样式 */
-#backpack {
-    display: grid;
-    /* justify-content: center; */
-    /* align-items: center; */
+#player_equipment {
+    display: flex;
+    flex-wrap: nowrap; /* 防止换行 */
     /* color: white; */
     /* font-size: 24px; */
     /* height: 50%; */
     border: 3px solid #797691; /* 内框 */
+}
+/* 角色名：父元素 */
+#Player_name_div {
+    top: 5px;
+    height: 20px;
+}
+/* 角色名文本框 */
+#Player_name {
+    text-align: center;
+    width: 120px;
+    height: 20px;
+    margin: auto;
+    border: 0px;
+    background-color: #3a4e75;
+    color: white;
+    line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
+    font-size: 20px;
 }
 
 /* 游戏底部的设置区域的布局 */
@@ -117,12 +144,12 @@ html {
     display: grid;
     position: relative; /* 设置所有子元素相对于它进行定位 */
     width: 100%; /* 宽度为整个窗口的85% */
-    height: 45px; /* 高度固定为15px */
+    height: 15px; /* 高度固定为15px */
+    margin-top: 10px; /* 和上边的元素距离30px */
 }
 /* 血条组件：血条外框的样式 */
 #HP_frame {
-    margin: auto; /* 居中显示 */
-    margin-top: 30px; /* 和上边的元素距离30px */
+    margin: 0% auto; /* 居中显示 */
     width: 85%; /* 宽度为整个窗口的85% */
     height: 15px; /* 高度固定为15px */
     outline: 2px solid rgb(201, 16, 16); /* 外框 */
@@ -137,7 +164,6 @@ html {
 #HP_number {
     position: absolute; /* 启动绝对定位 */
     width: 100%;
-    top: 30px; /**/
     line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
     font-size: 15px; /*文本大小*/
     text-align: center;
@@ -147,13 +173,13 @@ html {
 #MP_bar {
     display: grid;
     position: relative; /* 设置所有子元素相对于它进行定位 */
+    margin-top: 10px; /* 和上边的元素距离 */
     width: 100%; /* 宽度为整个窗口的85% */
-    height: 25px; /* 高度固定为15px */
+    height: 15px; /* 高度固定为15px */
 }
 /* 蓝条组件：外框的样式 */
 #MP_frame {
-    margin: auto; /* 居中显示 */
-    margin-top: 10px; /* 和上边的元素距离 */
+    margin: 0% auto; /* 左右居中显示 */
     width: 85%;
     height: 15px; /* 高度固定为15px */
     outline: 2px solid rgb(0, 0, 127); /* 外框 */
@@ -168,7 +194,6 @@ html {
 #MP_number {
     position: absolute; /* 启动绝对定位 */
     width: 100%;
-    top: 10px; /**/
     line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
     font-size: 15px; /*文本大小*/
     text-align: center;
@@ -178,13 +203,13 @@ html {
 #ENP_bar {
     display: grid;
     position: relative; /* 设置所有子元素相对于它进行定位 */
+    margin-top: 10px;
     width: 100%;
-    height: 25px;
+    height: 15px;
 }
 /* 精力条组件：血条外框的样式 */
 #ENP_frame {
-    margin: auto; /* 居中显示 */
-    margin-top: 10px; /* 和上边的元素距离30px */
+    margin: 0% auto; /* 左右居中显示 */
     width: 85%; /* 宽度为整个窗口的85% */
     height: 15px; /* 高度固定为15px */
     outline: 2px solid rgb(0, 127, 0); /* 外框 */
@@ -199,7 +224,6 @@ html {
 #ENP_number {
     position: absolute; /* 启动绝对定位 */
     width: 100%;
-    top: 10px; /**/
     line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
     font-size: 15px; /*文本大小*/
     text-align: center;
@@ -208,22 +232,28 @@ html {
 
 /* 属性展示表格父元素 */
 #attribute_show {
-    display: grid;
+    /* display: grid; */
     margin: auto;
-    gap: 0px 20px;
-    width: 85%; /* 宽度为整个窗口的85% */
-    height: 70px; /* 高度固定为15px */
+    margin-top: 20px; /* 和上边的元素距离30px */
+    gap: 0px 5px;
+    width: 90%; /* 宽度为整个窗口的85% */
+}
+
+/* 属性展示表格父元素 */
+#combat_attribute_show {
+    /* margin: auto; */
+    gap: 5px;
+    /* width: 85%;  */
+}
+/* 属性展示表格父元素 */
+#Player_attribute_show {
+    /* margin: auto; */
+    gap: 5px;
+    /* width: 85%;  */
 }
 
 .state_show {
     background-color: rgb(255, 255, 255);
     font-size: 15px; /*文本大小*/
-    /* display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    width: 100vw;
-    height: 5vh; */
+    border: 2px solid #797691; /* 内框 */
 }
-
-/* DeepPink */

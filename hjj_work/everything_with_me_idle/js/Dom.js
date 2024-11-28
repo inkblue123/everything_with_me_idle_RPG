@@ -1,3 +1,5 @@
+import { update_player_name } from "./Function.js";
+
 var dom = new Object();
 
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
@@ -23,7 +25,7 @@ function addElement(parent_element, elem, id, cls) {
     dom.player_attribute = crtElement("div", "player_attribute", null, "", "#000000");
     // dom.player_attribute.textContent = "角色属性界面";
 
-    dom.player_equipment = crtElement("div", "backpack", null, "none", "#0000ff");
+    dom.player_equipment = crtElement("div", "player_equipment", null, "none", "#0000ff");
     dom.player_equipment.textContent = "角色装备界面";
 
     dom.backpack = crtElement("div", null, "section", "", "#00ff00");
@@ -72,8 +74,16 @@ function addElement(parent_element, elem, id, cls) {
     dom.option_dom = crtElement("div", null, "option_page", "");
 }
 
-//创建小组件
+//创建左上角，角色属性展示界面内的小组件
 {
+    //角色名
+    // <input type = "text" id = "character_name_field">
+    dom.Player_name_div = crtElement("div", "Player_name_div", "page_columns_1", "");
+    dom.Player_name = addElement(dom.Player_name_div, "input", "Player_name", null); //血条中，条的外框
+    // dom.Player_name = crtElement("input", "Player_name", null, "");
+    dom.Player_name.type = "text";
+    dom.Player_name.value = "text";
+
     //血条组件
     dom.HP_bar = crtElement("div", "HP_bar", null, "");
     dom.HP_frame = addElement(dom.HP_bar, "div", "HP_frame", null); //血条中，条的外框
@@ -92,16 +102,32 @@ function addElement(parent_element, elem, id, cls) {
     dom.ENP_current = addElement(dom.ENP_frame, "div", "ENP_current", null); //长度随当前精力变化的色块
     dom.ENP_number = addElement(dom.ENP_bar, "div", "ENP_number", null); //显示的数字，表示当前精力具体数值
 
+    //容纳玩家属性+玩家装备的布局
+    dom.attr_equip_div = crtElement("div", null, "page_columns_11", "");
+
     //属性展示组件
     dom.attribute_show = crtElement("div", "attribute_show", "page_columns_11", "");
-    dom.combat_attribute_show = addElement(dom.attribute_show, "div", "combat_attribute_show", "page_grid_9"); //条的外框
-    dom.Player_attribute_show = addElement(dom.attribute_show, "div", "Player_attribute_show", "page_grid_9"); //条的外框
-    // dom.combat_attribute_show = crtElement("div", "combat_attribute_show", "page_grid_9", "");
-    // dom.Player_attribute_show = crtElement("div", "Player_attribute_show", "page_grid_9", "");
+    dom.combat_attribute_show = addElement(dom.attribute_show, "div", "combat_attribute_show", "page_grid_9");
+    dom.Player_attribute_show = addElement(dom.attribute_show, "div", "Player_attribute_show", "page_grid_9");
     for (let i = 0; i < 9; i++) {
         addElement(dom.combat_attribute_show, "div", null, "state_show"); //条的外框
         addElement(dom.Player_attribute_show, "div", null, "state_show"); //条的外框
     }
+    //角色装备栏
+    dom.equipment_show = crtElement("div", "equipment_show", "page_flex", "");
+    for (let i = 0; i < 4; i++) {
+        // addElement(dom.combat_attribute_show, "div", null, "state_show"); //条的外框
+        // addElement(dom.Player_attribute_show, "div", null, "state_show"); //条的外框
+    }
+    //切换属性和装备栏的按钮
+    dom.Player_attr_switch_div = crtElement("div", null, "page_columns_12", "");
+    dom.PA_switch_div = addElement(dom.Player_attr_switch_div, "div", null, "page_columns_1");
+    dom.EQP_switch_div = addElement(dom.Player_attr_switch_div, "div", null, "page_flex");
+    dom.PA_switch_button = addElement(dom.PA_switch_div, "button", null, null);
+    for (let i = 0; i < 4; i++) {
+        addElement(dom.EQP_switch_div, "button", null, null);
+    }
+    //
 }
 
 // 向布局中插入合适的元素，实现游戏界面
@@ -131,10 +157,19 @@ function addElement(parent_element, elem, id, cls) {
 
     dom.main_dom.appendChild(dom.option_dom);
 
+    dom.player_attribute.appendChild(dom.Player_name_div);
     dom.player_attribute.appendChild(dom.HP_bar);
     dom.player_attribute.appendChild(dom.MP_bar);
     dom.player_attribute.appendChild(dom.ENP_bar);
     dom.player_attribute.appendChild(dom.attribute_show);
+    dom.player_attribute.appendChild(dom.Player_attr_switch_div);
+}
+
+//为部分组件插入各种触发事件
+{
+    // const Player_name = document.querySelector("#Player_name");
+    // Player_name.addEventListener("change", update_player_name);
+    dom.Player_name.addEventListener("change", update_player_name);
 }
 
 //向游戏布局中填充战斗时的默认界面
