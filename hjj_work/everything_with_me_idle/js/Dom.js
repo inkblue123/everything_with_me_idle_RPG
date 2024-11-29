@@ -12,12 +12,34 @@ function crtElement(elem, id, cls, sty_display, sty_BGC) {
     return newdom;
 }
 //向parent_element中添加一个元素，赋予id或者classname
-function addElement(parent_element, elem, id, cls) {
+function addElement(parent_element, elem, id, cls, sty_display) {
     let newelem = document.createElement(elem);
     if (id) newelem.id = id;
     if (cls) newelem.className = cls;
+    if (sty_display) newelem.style.display = sty_display;
     parent_element.appendChild(newelem);
     return newelem;
+}
+//向parent_element中添加一个radio
+function addElement_radio(parent_element, id, name, textContent) {
+    let newradio = document.createElement("input");
+    newradio.type = "radio";
+    if (id) newradio.id = id;
+    if (name) newradio.name = name;
+    parent_element.appendChild(newradio);
+    let newlabel = document.createElement("label");
+    newlabel.setAttribute("for", id);
+    if (textContent) newlabel.textContent = textContent;
+    parent_element.appendChild(newlabel);
+    return newradio;
+}
+//向指定id的radio绑定一个label
+function addradio_label(parent_element, id, textContent) {
+    let newlabel = document.createElement("label");
+    newlabel.setAttribute("for", id);
+    if (textContent) newlabel.textContent = textContent;
+    parent_element.appendChild(newlabel);
+    return newlabel;
 }
 
 // 创建出所有需要的界面
@@ -74,39 +96,35 @@ function addElement(parent_element, elem, id, cls) {
     dom.option_dom = crtElement("div", null, "option_page", "");
 }
 
-//创建左上角，角色属性展示界面内的小组件
+//创建左上角，角色属性展示界面内的详细组件
 {
+    //展示角色血条和名称的布局;
+    dom.bar_div = crtElement("div", "bar_div", "page_columns_1", "");
     //角色名
-    // <input type = "text" id = "character_name_field">
-    dom.Player_name_div = crtElement("div", "Player_name_div", "page_columns_1", "");
+    dom.Player_name_div = addElement(dom.bar_div, "div", "Player_name_div", "page_columns_1"); //血条中，条的外框
     dom.Player_name = addElement(dom.Player_name_div, "input", "Player_name", null); //血条中，条的外框
-    // dom.Player_name = crtElement("input", "Player_name", null, "");
     dom.Player_name.type = "text";
     dom.Player_name.value = "text";
-
     //血条组件
-    dom.HP_bar = crtElement("div", "HP_bar", null, "");
+    dom.HP_bar = addElement(dom.bar_div, "div", "HP_bar", null, "");
     dom.HP_frame = addElement(dom.HP_bar, "div", "HP_frame", null); //血条中，条的外框
     dom.HP_current = addElement(dom.HP_frame, "div", "HP_current", null); //血条中央，长度随当前血量变化的色块
     dom.HP_number = addElement(dom.HP_bar, "div", "HP_number", null); //血条上显示的数字，表示当前血量具体数值
-
     //蓝条组件
-    dom.MP_bar = crtElement("div", "MP_bar", null, "");
+    dom.MP_bar = addElement(dom.bar_div, "div", "MP_bar", null, "");
     dom.MP_frame = addElement(dom.MP_bar, "div", "MP_frame", null); //条的外框
     dom.MP_current = addElement(dom.MP_frame, "div", "MP_current", null); //长度随当前蓝量变化的色块
     dom.MP_number = addElement(dom.MP_bar, "div", "MP_number", null); //显示的数字，表示当前蓝量具体数值
-
     //精力组件
-    dom.ENP_bar = crtElement("div", "ENP_bar", null, "");
+    dom.ENP_bar = addElement(dom.bar_div, "div", "ENP_bar", null, "");
     dom.ENP_frame = addElement(dom.ENP_bar, "div", "ENP_frame", null); //条的外框
     dom.ENP_current = addElement(dom.ENP_frame, "div", "ENP_current", null); //长度随当前精力变化的色块
     dom.ENP_number = addElement(dom.ENP_bar, "div", "ENP_number", null); //显示的数字，表示当前精力具体数值
 
     //容纳玩家属性+玩家装备的布局
-    dom.attr_equip_div = crtElement("div", null, "page_columns_11", "");
-
+    dom.attr_equip_div = crtElement("div", null, "page_columns_1", "");
     //属性展示组件
-    dom.attribute_show = crtElement("div", "attribute_show", "page_columns_11", "");
+    dom.attribute_show = addElement(dom.attr_equip_div, "div", "attribute_show", "page_columns_11", "");
     dom.combat_attribute_show = addElement(dom.attribute_show, "div", "combat_attribute_show", "page_grid_9");
     dom.Player_attribute_show = addElement(dom.attribute_show, "div", "Player_attribute_show", "page_grid_9");
     for (let i = 0; i < 9; i++) {
@@ -114,18 +132,21 @@ function addElement(parent_element, elem, id, cls) {
         addElement(dom.Player_attribute_show, "div", null, "state_show"); //条的外框
     }
     //角色装备栏
-    dom.equipment_show = crtElement("div", "equipment_show", "page_flex", "");
+    dom.equipment_show = addElement(dom.attr_equip_div, "div", "equipment_show", "page_flex", "none");
     for (let i = 0; i < 4; i++) {
         // addElement(dom.combat_attribute_show, "div", null, "state_show"); //条的外框
         // addElement(dom.Player_attribute_show, "div", null, "state_show"); //条的外框
     }
+
     //切换属性和装备栏的按钮
-    dom.Player_attr_switch_div = crtElement("div", null, "page_columns_12", "");
-    dom.PA_switch_div = addElement(dom.Player_attr_switch_div, "div", null, "page_columns_1");
-    dom.EQP_switch_div = addElement(dom.Player_attr_switch_div, "div", null, "page_flex");
-    dom.PA_switch_button = addElement(dom.PA_switch_div, "button", null, null);
+    dom.Player_attr_switch_div = crtElement("div", "Player_attr_switch_div", "page_columns_12", "");
+    dom.PA_switch_div = addElement(dom.Player_attr_switch_div, "div", "PA_switch_div", "page_columns_1");
+    dom.PA_switch_button = addElement(dom.PA_switch_div, "button", null, "PA_switch_button");
+    dom.PA_switch_button.innerHTML = `属性\n展示`;
+    dom.EQP_switch_div = addElement(dom.Player_attr_switch_div, "div", null, "page_auto_columns");
     for (let i = 0; i < 4; i++) {
-        addElement(dom.EQP_switch_div, "button", null, null);
+        let EQP_switch_radio_div = addElement(dom.EQP_switch_div, "div", null, "EQP_switch_radio_div");
+        addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, "EQP_switch", `装备栏\n${i + 1}`);
     }
     //
 }
@@ -157,11 +178,12 @@ function addElement(parent_element, elem, id, cls) {
 
     dom.main_dom.appendChild(dom.option_dom);
 
-    dom.player_attribute.appendChild(dom.Player_name_div);
-    dom.player_attribute.appendChild(dom.HP_bar);
-    dom.player_attribute.appendChild(dom.MP_bar);
-    dom.player_attribute.appendChild(dom.ENP_bar);
-    dom.player_attribute.appendChild(dom.attribute_show);
+    // dom.player_attribute.appendChild(dom.Player_name_div);
+    // dom.player_attribute.appendChild(dom.HP_bar);
+    // dom.player_attribute.appendChild(dom.MP_bar);
+    // dom.player_attribute.appendChild(dom.ENP_bar);
+    dom.player_attribute.appendChild(dom.bar_div);
+    dom.player_attribute.appendChild(dom.attr_equip_div);
     dom.player_attribute.appendChild(dom.Player_attr_switch_div);
 }
 
