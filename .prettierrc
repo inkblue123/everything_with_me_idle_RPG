@@ -1,0 +1,10 @@
+semi: true  # 在语句末尾加分号
+singleQuote: true  # 使用单引号而非双引号
+trailingComma: es5  # 在对象和数组的最后一个元素后加逗号
+tabWidth: 4  # 每个缩进级别使用两个空格
+useTabs: false  # 使用空格（而不是 tab）来缩进
+bracketSpacing: true  # 在对象字面量的括号内添加空格
+jsxBracketSameLine: false  # 在 JSX 元素的闭合标签处另起一行
+printWidth: 120  # 每行最大字符数
+arrowParens: always  # 箭头函数的参数始终加括号
+
