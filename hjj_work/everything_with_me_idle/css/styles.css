@@ -297,7 +297,7 @@ html {
     position: relative;
 }
 /* 装备栏选择多选框，多选的圆点 */
-.EQP_switch_radio_div input[type="radio"] {
+.EQP_switch_radio_div input[type='radio'] {
     /*清楚默认样式*/
     appearance: none;
     /* -webkit-appearance: none; */
@@ -327,14 +327,24 @@ html {
     background-color: #fff;
 }
 /* 装备栏选择多选框，选中之后，圆点的样式 */
-.EQP_switch_radio_div input[type="radio"]:checked {
+.EQP_switch_radio_div input[type='radio']:checked {
     opacity: 0;
 }
 /* 装备栏选择多选框，选中之后，圆点绑定的文本的样式 */
-.EQP_switch_radio_div input[type="radio"]:checked + label {
+.EQP_switch_radio_div input[type='radio']:checked + label {
     color: #fff;
     background-color: #3597db;
 }
+
+/* 属性展示表格父元素 */
+#equipment_show {
+    /* display: grid; */
+    margin: auto;
+    margin-top: 20px; /* 和上边的元素距离30px */
+    gap: 0px 5px;
+    width: 90%; /* 宽度为整个窗口的85% */
+}
+
 /* 装备栏选择多选框，选中之后，圆点绑定的文本上额外显示的元素 */
 /* .EQP_switch_radio_div input[type="radio"]:checked + label::after {
     content: "";

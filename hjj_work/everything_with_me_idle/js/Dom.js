@@ -1,4 +1,4 @@
-import { update_player_name } from "./Function.js";
+import { update_player_name, change_PA_EQP } from "./Function.js";
 
 var dom = new Object();
 
@@ -21,11 +21,12 @@ function addElement(parent_element, elem, id, cls, sty_display) {
     return newelem;
 }
 //向parent_element中添加一个radio
-function addElement_radio(parent_element, id, name, textContent) {
+function addElement_radio(parent_element, id, name, value, textContent) {
     let newradio = document.createElement("input");
     newradio.type = "radio";
     if (id) newradio.id = id;
     if (name) newradio.name = name;
+    if (value) newradio.value = value;
     parent_element.appendChild(newradio);
     let newlabel = document.createElement("label");
     newlabel.setAttribute("for", id);
@@ -134,8 +135,18 @@ function addradio_label(parent_element, id, textContent) {
     //角色装备栏
     dom.equipment_show = addElement(dom.attr_equip_div, "div", "equipment_show", "page_flex", "none");
     for (let i = 0; i < 4; i++) {
-        // addElement(dom.combat_attribute_show, "div", null, "state_show"); //条的外框
-        // addElement(dom.Player_attribute_show, "div", null, "state_show"); //条的外框
+        let EQP_i = addElement(dom.equipment_show, "div", null, "page_columns_11", "");
+        let EQP_left = addElement(EQP_i, "div", null, "page_columns_111", "");
+        let EQP_right = addElement(EQP_i, "div", null, "page_columns_11", "");
+        for (let j = 0; j < 3; j++) {
+            addElement(EQP_left, "div", null, "page_rows_111", "");
+        }
+        addElement(EQP_left.children[0], "button", null, null, "");
+        for (let j = 0; j < 4; j++) {
+            addElement(EQP_left.children[1], "button", null, null, "");
+        }
+        let test = addElement(EQP_left.children[2], "button", null, null, "");
+        test.innerHTML = `装备栏\n${i + 1}`;
     }
 
     //切换属性和装备栏的按钮
@@ -143,11 +154,12 @@ function addradio_label(parent_element, id, textContent) {
     dom.PA_switch_div = addElement(dom.Player_attr_switch_div, "div", "PA_switch_div", "page_columns_1");
     dom.PA_switch_button = addElement(dom.PA_switch_div, "button", null, "PA_switch_button");
     dom.PA_switch_button.innerHTML = `属性\n展示`;
-    dom.EQP_switch_div = addElement(dom.Player_attr_switch_div, "div", null, "page_auto_columns");
+    dom.EQP_switch_div = addElement(dom.Player_attr_switch_div, "div", "EQP_switch_div", "page_auto_columns");
     for (let i = 0; i < 4; i++) {
         let EQP_switch_radio_div = addElement(dom.EQP_switch_div, "div", null, "EQP_switch_radio_div");
-        addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, "EQP_switch", `装备栏\n${i + 1}`);
+        addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, "EQP_switch", `EQP_${i + 1}`, `装备栏\n${i + 1}`);
     }
+    dom.EQP_switch_div.children[0].children[0].checked = true;
     //
 }
 
@@ -178,10 +190,6 @@ function addradio_label(parent_element, id, textContent) {
 
     dom.main_dom.appendChild(dom.option_dom);
 
-    // dom.player_attribute.appendChild(dom.Player_name_div);
-    // dom.player_attribute.appendChild(dom.HP_bar);
-    // dom.player_attribute.appendChild(dom.MP_bar);
-    // dom.player_attribute.appendChild(dom.ENP_bar);
     dom.player_attribute.appendChild(dom.bar_div);
     dom.player_attribute.appendChild(dom.attr_equip_div);
     dom.player_attribute.appendChild(dom.Player_attr_switch_div);
@@ -189,9 +197,10 @@ function addradio_label(parent_element, id, textContent) {
 
 //为部分组件插入各种触发事件
 {
-    // const Player_name = document.querySelector("#Player_name");
-    // Player_name.addEventListener("change", update_player_name);
     dom.Player_name.addEventListener("change", update_player_name);
+    dom.PA_switch_button.onclick = function () {
+        change_PA_EQP();
+    };
 }
 
 //向游戏布局中填充战斗时的默认界面

@@ -53,4 +53,31 @@ function update_player_name() {
     name_input.value = player.name;
 }
 
-export { update_HP, update_MP, update_ENP, update_attribute_show, update_player_name };
+function change_PA_EQP() {
+    const attribute_show = document.getElementById("attribute_show");
+    const equipment_show = document.getElementById("equipment_show");
+
+    if (attribute_show.style.display == "") {
+        //如果显示了属性界面，则切换成装备栏
+        attribute_show.style.display = "none";
+        equipment_show.style.display = "";
+        let i = 0;
+        let check_num = 0;
+        const radios = document.querySelectorAll('input[name="EQP_switch"]');
+        for (const radio of radios) {
+            if (radio.checked) {
+                equipment_show.children[i].style.display = "";
+                // alert('Selected option: ' + radio.value);
+                // return; // 找到一个选中的按钮后可以结束循环
+            } else {
+                equipment_show.children[i].style.display = "none";
+            }
+            i++;
+        }
+    } else {
+        attribute_show.style.display = "";
+        equipment_show.style.display = "none";
+    }
+}
+
+export { update_HP, update_MP, update_ENP, update_attribute_show, update_player_name, change_PA_EQP };
