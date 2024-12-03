@@ -1,28 +1,28 @@
-import { player } from "./Player.js";
+import { player } from './Player.js';
 
 function update_HP() {
-    const HP_bar = document.getElementById("HP_bar");
+    const HP_bar = document.getElementById('HP_bar');
 
     HP_bar.children[0].children[0].style.width = `${(player.health_point / player.health_max) * 100}%`;
     HP_bar.children[1].innerText = `${Math.floor(player.health_point)}/${Math.ceil(player.health_max)} 生命`;
 }
 
 function update_MP() {
-    const MP_bar = document.getElementById("MP_bar");
+    const MP_bar = document.getElementById('MP_bar');
 
     MP_bar.children[0].children[0].style.width = `${(player.magic_point / player.magic_max) * 100}%`;
     MP_bar.children[1].innerText = `${Math.floor(player.magic_point)}/${Math.ceil(player.magic_max)} 魔力`;
 }
 
 function update_ENP() {
-    const ENP_bar = document.getElementById("ENP_bar");
+    const ENP_bar = document.getElementById('ENP_bar');
 
     ENP_bar.children[0].children[0].style.width = `${(player.energy_point / player.energy_max) * 100}%`;
     ENP_bar.children[1].innerText = `${Math.floor(player.energy_point)}/${Math.ceil(player.energy_max)} 精力`;
 }
 
 function update_attribute_show() {
-    const Player_att = document.getElementById("attribute_show");
+    const Player_att = document.getElementById('attribute_show');
 
     Player_att.children[0].children[0].innerText = `攻击\n${player.attack}`;
     Player_att.children[0].children[1].innerText = `精准\n${player.precision}`;
@@ -44,40 +44,57 @@ function update_attribute_show() {
 }
 
 function update_player_name() {
-    const name_input = document.getElementById("Player_name");
+    const name_input = document.getElementById('Player_name');
     if (name_input.value.toString().trim().length > 0) {
         player.name = name_input.value;
     } else {
-        player.name = "我";
+        player.name = '我';
     }
     name_input.value = player.name;
 }
+//点击“属性展示”按钮之后，显示出或者隐藏属性展示界面
+function change_PA() {
+    const attribute_show = document.getElementById('attribute_show');
+    const equipment_show = document.getElementById('equipment_show');
 
-function change_PA_EQP() {
-    const attribute_show = document.getElementById("attribute_show");
-    const equipment_show = document.getElementById("equipment_show");
-
-    if (attribute_show.style.display == "") {
+    if (attribute_show.style.display == '') {
         //如果显示了属性界面，则切换成装备栏
-        attribute_show.style.display = "none";
-        equipment_show.style.display = "";
+        attribute_show.style.display = 'none';
+        equipment_show.style.display = '';
         let i = 0;
         let check_num = 0;
         const radios = document.querySelectorAll('input[name="EQP_switch"]');
         for (const radio of radios) {
             if (radio.checked) {
-                equipment_show.children[i].style.display = "";
+                equipment_show.children[i].style.display = '';
                 // alert('Selected option: ' + radio.value);
                 // return; // 找到一个选中的按钮后可以结束循环
             } else {
-                equipment_show.children[i].style.display = "none";
+                equipment_show.children[i].style.display = 'none';
             }
             i++;
         }
     } else {
-        attribute_show.style.display = "";
-        equipment_show.style.display = "none";
+        attribute_show.style.display = '';
+        equipment_show.style.display = 'none';
+    }
+}
+//点击某个“装备栏”按钮之后，装备栏的切换
+function change_EQP(EQP_value) {
+    const attribute_show = document.getElementById('attribute_show');
+    const equipment_show = document.getElementById('equipment_show');
+
+    if (attribute_show.style.display == '') {
+        //如果当前显示了属性界面，则不操作
+        return;
+    }
+    if (equipment_show.style.display == '') {
+        //如果当前显示了装备栏界面，则切换到对应的装备栏上
+        for (let i = 0; i < 4; i++) {
+            equipment_show.children[i].style.display = 'none';
+        }
+        equipment_show.children[EQP_value].style.display = '';
     }
 }
 
-export { update_HP, update_MP, update_ENP, update_attribute_show, update_player_name, change_PA_EQP };
+export { update_HP, update_MP, update_ENP, update_attribute_show, update_player_name, change_PA, change_EQP };
