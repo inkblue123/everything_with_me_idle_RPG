@@ -39,8 +39,8 @@ function update_attribute_show() {
     Player_att.children[1].children[2].innerText = `经脉\n${player.Meridians}`;
     Player_att.children[1].children[3].innerText = `力量\n${player.power}`;
     Player_att.children[1].children[4].innerText = `敏捷\n${player.agile}`;
-    Player_att.children[1].children[5].innerText = `技巧\n${player.technique}`;
-    Player_att.children[1].children[6].innerText = `智力\n${player.intelligence}`;
+    Player_att.children[1].children[5].innerText = `智力\n${player.intelligence}`;
+    Player_att.children[1].children[6].innerText = `技巧\n${player.technique}`;
 }
 
 function update_player_name() {
