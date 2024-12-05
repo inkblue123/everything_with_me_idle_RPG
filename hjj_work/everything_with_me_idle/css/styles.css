@@ -17,6 +17,15 @@ html {
     width: 100vw;
     height: 95vh;
 }
+/* 游戏底部的设置区域的布局 */
+.option_page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 100vw;
+    height: 5vh;
+}
 
 /* 每行1列的布局 */
 .page_auto_columns {

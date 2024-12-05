@@ -1,26 +1,26 @@
 import { player } from './Player.js';
-
+//更新血条上的数值
 function update_HP() {
     const HP_bar = document.getElementById('HP_bar');
 
     HP_bar.children[0].children[0].style.width = `${(player.health_point / player.health_max) * 100}%`;
     HP_bar.children[1].innerText = `${Math.floor(player.health_point)}/${Math.ceil(player.health_max)} 生命`;
 }
-
+//更新魔力条上的数值
 function update_MP() {
     const MP_bar = document.getElementById('MP_bar');
 
     MP_bar.children[0].children[0].style.width = `${(player.magic_point / player.magic_max) * 100}%`;
     MP_bar.children[1].innerText = `${Math.floor(player.magic_point)}/${Math.ceil(player.magic_max)} 魔力`;
 }
-
+//更新精力条上的数值
 function update_ENP() {
     const ENP_bar = document.getElementById('ENP_bar');
 
     ENP_bar.children[0].children[0].style.width = `${(player.energy_point / player.energy_max) * 100}%`;
     ENP_bar.children[1].innerText = `${Math.floor(player.energy_point)}/${Math.ceil(player.energy_max)} 精力`;
 }
-
+//更新属性展示表格中的数值
 function update_attribute_show() {
     const Player_att = document.getElementById('attribute_show');
 
@@ -42,7 +42,7 @@ function update_attribute_show() {
     Player_att.children[1].children[5].innerText = `智力\n${player.intelligence}`;
     Player_att.children[1].children[6].innerText = `技巧\n${player.technique}`;
 }
-
+//更新角色名
 function update_player_name() {
     const name_input = document.getElementById('Player_name');
     if (name_input.value.toString().trim().length > 0) {
@@ -96,5 +96,55 @@ function change_EQP(EQP_value) {
         equipment_show.children[EQP_value].style.display = '';
     }
 }
+//切换背包、技能、图鉴的按钮
+function change_BP_SK_IB(button_id) {
+    const BP_div = document.getElementById('BP_div');
+    const SK_div = document.getElementById('SK_div');
+    const IB_div = document.getElementById('IB_div');
+    if (button_id == 'BP_switch_button') {
+        BP_div.style.display = '';
+        SK_div.style.display = 'none';
+        IB_div.style.display = 'none';
+    }
+    if (button_id == 'SK_switch_button') {
+        BP_div.style.display = 'none';
+        SK_div.style.display = '';
+        IB_div.style.display = 'none';
+    }
+    if (button_id == 'IB_switch_button') {
+        BP_div.style.display = 'none';
+        SK_div.style.display = 'none';
+        IB_div.style.display = '';
+    }
+}
 
-export { update_HP, update_MP, update_ENP, update_attribute_show, update_player_name, change_PA, change_EQP };
+//点击了隐藏下拉框的按钮之后，展示和关闭下拉框的动画
+function show_dropdown_table(table_id) {
+    const dropdownTable = document.getElementById(table_id);
+    // 切换表格的显示/隐藏状态
+    if (dropdownTable.style.display === 'block') {
+        // 如果表格已经显示，则折叠它
+        dropdownTable.style.maxHeight = '0';
+        setTimeout(() => {
+            dropdownTable.style.display = 'none';
+        }, 500); // 等待动画完成后隐藏
+    } else {
+        // 如果表格没有显示，则展开它
+        dropdownTable.style.display = 'block';
+        setTimeout(() => {
+            dropdownTable.style.maxHeight = '300px'; // 最大高度需要根据内容调整
+        }, 10); // 让显示状态先更新，再触发动画
+    }
+}
+
+export {
+    update_HP,
+    update_MP,
+    update_ENP,
+    update_attribute_show,
+    update_player_name,
+    change_PA,
+    change_EQP,
+    change_BP_SK_IB,
+    show_dropdown_table,
+};

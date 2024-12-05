@@ -1,3 +1,16 @@
+/* 角色属性界面的样式 */
+#player_attribute {
+    display: grid;
+    /* 单列布局 */
+    /* grid-template-columns: 1fr; */
+    /* grid-template-rows: repeat(auto-fit, minmax(95px, 1fr)); */
+    /* grid-template-rows: auto; */
+    /* color: white; */
+    /* font-size: 24px; */
+    /* height: 50%; */
+    border: 3px solid #797691; /* 内框 */
+}
+
 /* 展示角色血条的div的样式 */
 #bar_div {
     color: white;
@@ -25,15 +38,6 @@
     font-size: 20px;
 }
 
-/* 游戏底部的设置区域的布局 */
-.option_page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    width: 100vw;
-    height: 5vh;
-}
 /* 血条组件：最大的父元素 */
 #HP_bar {
     display: grid;
@@ -142,17 +146,7 @@
     height: 200px;
     /* border: 3px solid #797691; 内框 */
 }
-/* 角色属性界面的样式 */
-#player_attribute {
-    display: grid;
-    grid-template-columns: 1fr; /* 单列布局 */
-    /* grid-template-rows: repeat(auto-fit, minmax(95px, 1fr)); */
-    /* grid-template-rows: auto; */
-    /* color: white; */
-    /* font-size: 24px; */
-    /* height: 50%; */
-    border: 3px solid #797691; /* 内框 */
-}
+
 /* 背包物品界面的样式 */
 #player_equipment {
     display: flex;
