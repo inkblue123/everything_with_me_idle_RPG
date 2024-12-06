@@ -1,4 +1,11 @@
-import { update_player_name, change_PA, change_EQP, change_BP_SK_IB, show_dropdown_table } from './Function.js';
+import {
+    update_player_name,
+    change_PA,
+    change_EQP,
+    change_BP_SK_IB,
+    show_dropdown_table,
+    // show_dropdown_table2,
+} from './Function.js';
 
 var dom = new Object();
 
@@ -145,7 +152,7 @@ function addElement_radio(parent_element, id, name, value, textContent) {
     dom.PA_switch_button.innerHTML = `属性\n展示`;
     dom.EQP_switch_div = addElement(dom.Player_attr_switch_div, 'div', 'EQP_switch_div', 'page_auto_columns');
     for (let i = 0; i < 4; i++) {
-        let EQP_switch_radio_div = addElement(dom.EQP_switch_div, 'div', null, 'EQP_switch_radio_div');
+        let EQP_switch_radio_div = addElement(dom.EQP_switch_div, 'div', 'EQP_switch_radio_div', 'radio_div');
         addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, 'EQP_switch', `${i}`, `装备栏\n${i + 1}`);
     }
     dom.EQP_switch_div.children[0].children[0].checked = true;
@@ -208,7 +215,7 @@ function addElement_radio(parent_element, id, name, value, textContent) {
         dom.BP_CSB_D_button.innerHTML = `战斗消耗品`;
         dom.BP_CSB_O_button = addElement(dom.BP_CSB_droptable, 'button', 'BP_CSB_O_button', 'dropdown_button_2');
         dom.BP_CSB_O_button.innerHTML = `生活消耗品`;
-        //
+        //右侧具体的背包物品
         dom.BP_value_div = addElement(dom.BP_div, 'div', 'BP_value_div', null);
     }
     //技能窗口
@@ -222,6 +229,14 @@ function addElement_radio(parent_element, id, name, value, textContent) {
         // 根基技能
         dom.SK_basic_button = addElement(dom.SK_classification_div, 'button', 'SK_basic_button', 'dropdown_button_1');
         dom.SK_basic_button.innerHTML = `根基技能`;
+        dom.SK_basic_droptable = addElement(dom.SK_classification_div, 'div', 'SK_basic_droptable', 'dropdown_table');
+        dom.SK_basic_all_button = addElement(
+            dom.SK_basic_droptable,
+            'button',
+            'SK_basic_all_button',
+            'dropdown_button_2'
+        );
+        dom.SK_basic_all_button.innerHTML = `全部`;
         //战斗技能
         dom.SK_combat_button = addElement(dom.SK_classification_div, 'button', 'SK_combat_button', 'dropdown_button_1');
         dom.SK_combat_button.innerHTML = `战斗技能`;
@@ -278,15 +293,95 @@ function addElement_radio(parent_element, id, name, value, textContent) {
         // 主动技能
         dom.SK_active_button = addElement(dom.SK_classification_div, 'button', 'SK_active_button', 'dropdown_button_1');
         dom.SK_active_button.innerHTML = `主动技能`;
+        dom.SK_active_droptable = addElement(dom.SK_classification_div, 'div', 'SK_active_droptable', 'dropdown_table');
+        dom.SK_active_all_button = addElement(
+            dom.SK_active_droptable,
+            'button',
+            'SK_active_all_button',
+            'dropdown_button_2'
+        );
+        dom.SK_active_all_button.innerHTML = `全部`;
         // 特殊功法
         dom.SK_super_button = addElement(dom.SK_classification_div, 'button', 'SK_super_button', 'dropdown_button_1');
         dom.SK_super_button.innerHTML = `特殊功法`;
+        dom.SK_super_droptable = addElement(dom.SK_classification_div, 'div', 'SK_super_droptable', 'dropdown_table');
+        dom.SK_super_all_button = addElement(
+            dom.SK_super_droptable,
+            'button',
+            'SK_super_all_button',
+            'dropdown_button_2'
+        );
+        dom.SK_super_all_button.innerHTML = `全部`;
         //
         dom.SK_value_div = addElement(dom.SK_div, 'div', 'SK_value_div', null);
     }
+    // 图鉴窗口
+    {
+        // 左侧的分类下拉表格界面
+        dom.IB_scroll_box = addElement(dom.IB_div, 'div', 'IB_scroll_box', 'overflow_y_div');
+        dom.IB_classification_div = addElement(dom.IB_scroll_box, 'div', 'IB_classification_div', 'classification_div');
+        // 全部
+        dom.IB_ALL_button = addElement(dom.IB_classification_div, 'button', 'IB_ALL_button', 'dropdown_button_1');
+        dom.IB_ALL_button.innerHTML = `全部`;
+        // 物品
+        dom.IB_item_button = addElement(dom.IB_classification_div, 'button', 'IB_item_button', 'dropdown_button_1');
+        dom.IB_item_button.innerHTML = `物品`;
+        dom.IB_item_droptable = addElement(dom.IB_classification_div, 'div', 'IB_item_droptable', 'dropdown_table');
+        dom.IB_item_all_button = addElement(dom.IB_item_droptable, 'button', 'IB_item_all_button', 'dropdown_button_2');
+        dom.IB_item_all_button.innerHTML = `全部`;
+        dom.IB_item_W_button = addElement(dom.IB_item_droptable, 'button', 'IB_item_W_button', 'dropdown_button_2');
+        dom.IB_item_W_button.innerHTML = `武器装备`;
+        dom.IB_item_A_button = addElement(dom.IB_item_droptable, 'button', 'IB_item_A_button', 'dropdown_button_2');
+        dom.IB_item_A_button.innerHTML = `消耗品`;
+        dom.IB_item_D_button = addElement(dom.IB_item_droptable, 'button', 'IB_item_D_button', 'dropdown_button_2');
+        dom.IB_item_D_button.innerHTML = `材料`;
+        //技能
+        dom.IB_skill_button = addElement(dom.IB_classification_div, 'button', 'IB_skill_button', 'dropdown_button_1');
+        dom.IB_skill_button.innerHTML = `技能`;
+        dom.IB_skill_droptable = addElement(dom.IB_classification_div, 'div', 'IB_skill_droptable', 'dropdown_table');
+        dom.IB_skill_all_button = addElement(
+            dom.IB_skill_droptable,
+            'button',
+            'IB_skill_all_button',
+            'dropdown_button_2'
+        );
+        dom.IB_skill_all_button.innerHTML = `全部`;
+        dom.IB_skill_W_button = addElement(dom.IB_skill_droptable, 'button', 'IB_skill_W_button', 'dropdown_button_2');
+        dom.IB_skill_W_button.innerHTML = `根基技能`;
+        dom.IB_skill_A_button = addElement(dom.IB_skill_droptable, 'button', 'IB_skill_A_button', 'dropdown_button_2');
+        dom.IB_skill_A_button.innerHTML = `战斗技能`;
+        dom.IB_skill_D_button = addElement(dom.IB_skill_droptable, 'button', 'IB_skill_D_button', 'dropdown_button_2');
+        dom.IB_skill_D_button.innerHTML = `生活技能`;
+        dom.IB_skill_O_button = addElement(dom.IB_skill_droptable, 'button', 'IB_skill_O_button', 'dropdown_button_2');
+        dom.IB_skill_O_button.innerHTML = `主动技能`;
+        dom.IB_skill_B_button = addElement(dom.IB_skill_droptable, 'button', 'IB_skill_O_button', 'dropdown_button_2');
+        dom.IB_skill_B_button.innerHTML = `特殊功法`;
+        // 敌人
+        dom.IB_enemy_button = addElement(dom.IB_classification_div, 'button', 'IB_enemy_button', 'dropdown_button_1');
+        dom.IB_enemy_button.innerHTML = `敌人`;
+        dom.IB_enemy_droptable = addElement(dom.IB_classification_div, 'div', 'IB_enemy_droptable', 'dropdown_table');
+        dom.IB_enemy_all_button = addElement(
+            dom.IB_enemy_droptable,
+            'button',
+            'IB_enemy_all_button',
+            'dropdown_button_2'
+        );
+        dom.IB_enemy_all_button.innerHTML = `全部`;
+        // 事件
+        dom.IB_event_button = addElement(dom.IB_classification_div, 'button', 'IB_event_button', 'dropdown_button_1');
+        dom.IB_event_button.innerHTML = `事件`;
+        dom.IB_event_droptable = addElement(dom.IB_classification_div, 'div', 'IB_event_droptable', 'dropdown_table');
+        dom.IB_event_all_button = addElement(
+            dom.IB_event_droptable,
+            'button',
+            'IB_event_all_button',
+            'dropdown_button_2'
+        );
+        dom.IB_event_all_button.innerHTML = `全部`;
+        //
+        dom.IB_value_div = addElement(dom.IB_div, 'div', 'IB_value_div', null);
+    }
 
-    // dom.bar_div = crtElement('div', 'bar_div', 'page_columns_1', '');
-    // dom.Player_name_div = addElement(dom.bar_div, 'div', 'Player_name_div', 'page_columns_1'); //血条中，条的外框
     dom.backpack.appendChild(dom.BP_SK_IB_switch);
     dom.backpack.appendChild(dom.BP_SK_IB_div);
 }
@@ -352,17 +447,39 @@ function addElement_radio(parent_element, id, name, value, textContent) {
         dom.IB_switch_button.onclick = function () {
             change_BP_SK_IB(this.id);
         };
+        //展开隐藏的分类按钮
         dom.BP_EQP_button.onclick = function () {
-            show_dropdown_table('BP_EQP_droptable');
+            show_dropdown_table('BP_classification_div', 'BP_EQP_droptable');
         };
         dom.BP_CSB_button.onclick = function () {
-            show_dropdown_table('BP_CSB_droptable');
+            show_dropdown_table('BP_classification_div', 'BP_CSB_droptable');
+        };
+        dom.SK_basic_button.onclick = function () {
+            show_dropdown_table('SK_classification_div', 'SK_basic_droptable');
         };
         dom.SK_combat_button.onclick = function () {
-            show_dropdown_table('SK_combat_droptable');
+            show_dropdown_table('SK_classification_div', 'SK_combat_droptable');
         };
         dom.SK_life_button.onclick = function () {
-            show_dropdown_table('SK_life_droptable');
+            show_dropdown_table('SK_classification_div', 'SK_life_droptable');
+        };
+        dom.SK_active_button.onclick = function () {
+            show_dropdown_table('SK_classification_div', 'SK_active_droptable');
+        };
+        dom.SK_super_button.onclick = function () {
+            show_dropdown_table('SK_classification_div', 'SK_super_droptable');
+        };
+        dom.IB_item_button.onclick = function () {
+            show_dropdown_table('IB_classification_div', 'IB_item_droptable');
+        };
+        dom.IB_skill_button.onclick = function () {
+            show_dropdown_table('IB_classification_div', 'IB_skill_droptable');
+        };
+        dom.IB_enemy_button.onclick = function () {
+            show_dropdown_table('IB_classification_div', 'IB_enemy_droptable');
+        };
+        dom.IB_event_button.onclick = function () {
+            show_dropdown_table('IB_classification_div', 'IB_event_droptable');
         };
     }
 }

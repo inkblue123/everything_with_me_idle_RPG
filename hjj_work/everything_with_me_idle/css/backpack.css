@@ -62,22 +62,8 @@
     background-color: #1100ff;
     /* height: 90%; */
 }
-/* 内容过高会启动竖直滚动条的div */
-.overflow_y_div {
-    /* flex: 1; */
-    position: relative;
-    overflow-y: auto; /* 启用竖直滚动 */
-    /* max-height: 320px; */
-}
+
 /* 背包物品界面左侧的分类部分 */
-.classification_div {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    width: 100%;
-    /* height: 100%; */
-}
 /* 容纳具体图鉴内容的div */
 #BP_value_div {
     /* display: grid;
