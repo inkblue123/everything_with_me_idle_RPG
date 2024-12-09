@@ -5,6 +5,7 @@
     /* color: white; */
     /* height: 90%; */
     background-color: #00ff00;
+    box-sizing: border-box;
     border: 3px solid #797691; /* 内框 */
 }
 /* 容纳切换背包、技能、图鉴三个按钮的div */
@@ -88,6 +89,13 @@
     width: 80%;
     cursor: pointer;
 }
+/* 启动隐藏下拉表格的按钮，第三级 */
+.dropdown_button_3 {
+    padding: 10px;
+    font-size: 15px;
+    width: 60%;
+    cursor: pointer;
+}
 /* 初始隐藏下拉表格 */
 .dropdown_table {
     display: none;
@@ -96,8 +104,47 @@
     overflow: hidden;
     max-height: 0;
 }
+/* 物品栏界面，容纳具体物品的div */
+#BP_value_div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* 自动换行 */
+    /* 元素之间的间距 */
+    /* gap: 10px;  */
+}
+/* 物品栏界面内具体的一个物品 */
+.BP_value {
+    /* 每行两个元素 */
+    /* width: calc(50% - 5px);  */
+    width: 50%;
+    background-color: #ffffff;
+    /* color: white; */
+    /* padding: 20px; */
+    text-align: center;
+    /* border-radius: 8px; */
+    box-sizing: border-box;
+    /* transition: transform 0.3s; */
+    border: 2px solid #797691; /* 内框 */
+}
 
-/* justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-} */
+/* 装备栏选择多选框，和圆点绑定的文本 */
+#BP_switch_radio_div label {
+    /* 水平居中 */
+    /* justify-content: center;  */
+    /* 垂直居中 */
+    /* align-items: center;  */
+    width: 50px;
+    height: 50px;
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    border-radius: 5px;
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+}
+/* 装备栏选择多选框，选中之后，圆点绑定的文本的样式 */
+#BP_switch_radio_div input[type='radio']:checked + label {
+    color: #fff;
+    background-color: #3597db;
+}

@@ -1,46 +1,48 @@
 import { player } from './Player.js';
+import { items } from './Item.js';
+import { addElement } from './Dom/Dom_function.js';
 //更新血条上的数值
-function update_HP() {
+function update_HP(p_player) {
     const HP_bar = document.getElementById('HP_bar');
 
-    HP_bar.children[0].children[0].style.width = `${(player.health_point / player.health_max) * 100}%`;
-    HP_bar.children[1].innerText = `${Math.floor(player.health_point)}/${Math.ceil(player.health_max)} 生命`;
+    HP_bar.children[0].children[0].style.width = `${(p_player.health_point / p_player.health_max) * 100}%`;
+    HP_bar.children[1].innerText = `${Math.floor(p_player.health_point)}/${Math.ceil(p_player.health_max)} 生命`;
 }
 //更新魔力条上的数值
-function update_MP() {
+function update_MP(p_player) {
     const MP_bar = document.getElementById('MP_bar');
 
-    MP_bar.children[0].children[0].style.width = `${(player.magic_point / player.magic_max) * 100}%`;
-    MP_bar.children[1].innerText = `${Math.floor(player.magic_point)}/${Math.ceil(player.magic_max)} 魔力`;
+    MP_bar.children[0].children[0].style.width = `${(p_player.magic_point / p_player.magic_max) * 100}%`;
+    MP_bar.children[1].innerText = `${Math.floor(p_player.magic_point)}/${Math.ceil(p_player.magic_max)} 魔力`;
 }
 //更新精力条上的数值
-function update_ENP() {
+function update_ENP(p_player) {
     const ENP_bar = document.getElementById('ENP_bar');
 
-    ENP_bar.children[0].children[0].style.width = `${(player.energy_point / player.energy_max) * 100}%`;
-    ENP_bar.children[1].innerText = `${Math.floor(player.energy_point)}/${Math.ceil(player.energy_max)} 精力`;
+    ENP_bar.children[0].children[0].style.width = `${(p_player.energy_point / p_player.energy_max) * 100}%`;
+    ENP_bar.children[1].innerText = `${Math.floor(p_player.energy_point)}/${Math.ceil(p_player.energy_max)} 精力`;
 }
 //更新属性展示表格中的数值
-function update_attribute_show() {
+function update_attribute_show(p_player) {
     const Player_att = document.getElementById('attribute_show');
 
-    Player_att.children[0].children[0].innerText = `攻击\n${player.attack}`;
-    Player_att.children[0].children[1].innerText = `精准\n${player.precision}`;
-    Player_att.children[0].children[2].innerText = `暴击率\n${player.critical_chance}`;
-    Player_att.children[0].children[3].innerText = `暴击伤害\n${player.critical_damage}`;
-    Player_att.children[0].children[4].innerText = `攻速\n${player.attack_speed}`;
-    Player_att.children[0].children[5].innerText = `防御\n${player.defense}`;
-    Player_att.children[0].children[6].innerText = `闪避\n${player.evade}`;
-    Player_att.children[0].children[7].innerText = `抵抗力\n${player.resistance_point}`;
-    Player_att.children[0].children[8].innerText = `移动速度\n${player.move_speed}`;
+    Player_att.children[0].children[0].innerText = `攻击\n${p_player.attack}`;
+    Player_att.children[0].children[1].innerText = `精准\n${p_player.precision}`;
+    Player_att.children[0].children[2].innerText = `暴击率\n${p_player.critical_chance}`;
+    Player_att.children[0].children[3].innerText = `暴击伤害\n${p_player.critical_damage}`;
+    Player_att.children[0].children[4].innerText = `攻速\n${p_player.attack_speed}`;
+    Player_att.children[0].children[5].innerText = `防御\n${p_player.defense}`;
+    Player_att.children[0].children[6].innerText = `闪避\n${p_player.evade}`;
+    Player_att.children[0].children[7].innerText = `抵抗力\n${p_player.resistance_point}`;
+    Player_att.children[0].children[8].innerText = `移动速度\n${p_player.move_speed}`;
 
-    Player_att.children[1].children[0].innerText = `体格\n${player.physique}`;
-    Player_att.children[1].children[1].innerText = `魂魄\n${player.soul}`;
-    Player_att.children[1].children[2].innerText = `经脉\n${player.Meridians}`;
-    Player_att.children[1].children[3].innerText = `力量\n${player.power}`;
-    Player_att.children[1].children[4].innerText = `敏捷\n${player.agile}`;
-    Player_att.children[1].children[5].innerText = `智力\n${player.intelligence}`;
-    Player_att.children[1].children[6].innerText = `技巧\n${player.technique}`;
+    Player_att.children[1].children[0].innerText = `体格\n${p_player.physique}`;
+    Player_att.children[1].children[1].innerText = `魂魄\n${p_player.soul}`;
+    Player_att.children[1].children[2].innerText = `经脉\n${p_player.Meridians}`;
+    Player_att.children[1].children[3].innerText = `力量\n${p_player.power}`;
+    Player_att.children[1].children[4].innerText = `敏捷\n${p_player.agile}`;
+    Player_att.children[1].children[5].innerText = `智力\n${p_player.intelligence}`;
+    Player_att.children[1].children[6].innerText = `技巧\n${p_player.technique}`;
 }
 //更新角色名
 function update_player_name() {
@@ -153,25 +155,42 @@ function show_dropdown_table(classification_div, table_id) {
     }
 }
 //更新左下角的背包物品栏中的元素
-function update_BP(button_id) {
-    const BP_div = document.getElementById('BP_div');
-    const SK_div = document.getElementById('SK_div');
-    const IB_div = document.getElementById('IB_div');
-    if (button_id == 'BP_switch_button') {
-        BP_div.style.display = '';
-        SK_div.style.display = 'none';
-        IB_div.style.display = 'none';
+function update_BP_value() {
+    let BP_value_div = document.getElementById('BP_value_div');
+    BP_value_div.replaceChildren(); //清空现有背包内展示的物品
+
+    //遍历玩家的每个物品
+    let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
+    for (let play_item_id of arr) {
+        if (items[play_item_id] === undefined) {
+            //玩家拥有的物品不在数据库中，应该清除
+            delete player.backpack_items[play_item_id];
+        } else {
+            //根据玩家拥有的个数，在背包界面中添加元素
+            let aitem_num = player.backpack_items[play_item_id].num;
+            do {
+                let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
+                if (aitem_num >= items[play_item_id].maxStack) {
+                    aitem.innerHTML = `${items[play_item_id].name} : 数量${items[play_item_id].maxStack}`;
+                    aitem_num -= items[play_item_id].maxStack;
+                } else {
+                    aitem.innerHTML = `${items[play_item_id].name} : 数量${aitem_num}`;
+                    aitem_num = 0;
+                }
+            } while (aitem_num > 0);
+        }
     }
-    if (button_id == 'SK_switch_button') {
-        BP_div.style.display = 'none';
-        SK_div.style.display = '';
-        IB_div.style.display = 'none';
+}
+
+//测试
+function printf_play_item() {
+    //测试
+    let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
+    console.log('玩家此时拥有%d种物品', arr.length);
+    for (let play_item_id of arr) {
+        console.log('玩家拥有%d号物品%d个', play_item_id, player.backpack_items[play_item_id].num);
     }
-    if (button_id == 'IB_switch_button') {
-        BP_div.style.display = 'none';
-        SK_div.style.display = 'none';
-        IB_div.style.display = '';
-    }
+    console.log('\n');
 }
 
 export {
@@ -184,5 +203,6 @@ export {
     change_EQP,
     change_BP_SK_IB,
     show_dropdown_table,
-    // show_dropdown_table2,
+    update_BP_value,
+    printf_play_item,
 };

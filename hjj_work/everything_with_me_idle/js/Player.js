@@ -37,23 +37,27 @@ class Player {
         this.soul = 10; //魂魄
 
         this.backpack_items = new Object();
+        this.backpack_items[1] = new Player_Item(1);
+        this.backpack_items[1].num = 10;
+        this.backpack_items[2] = new Player_Item(2);
+        this.backpack_items[2].num = 2;
     }
 
     init() {}
 
     Player_get_item(id, num) {
         //判断玩家身上有无该物品，没有就创建，有就添加数量
-        if (typeof this.backpack_items[id] == 'undefined') {
+        if (this.backpack_items[id] === undefined) {
             this.backpack_items[id] = new Player_Item(id);
         }
         this.backpack_items[id].num += num;
 
-        //测试
-        let arr = Object.keys(this.backpack_items); //将拥有的物品的key转换成一个数组
-        console.log('玩家此时拥有%d种物品', arr.length);
-        for (let play_item_id of arr) {
-            console.log('玩家拥有%d号物品%d个', play_item_id, this.backpack_items[play_item_id].num);
-        }
+        // //测试
+        // let arr = Object.keys(this.backpack_items); //将拥有的物品的key转换成一个数组
+        // console.log('玩家此时拥有%d种物品', arr.length);
+        // for (let play_item_id of arr) {
+        //     console.log('玩家拥有%d号物品%d个', play_item_id, this.backpack_items[play_item_id].num);
+        // }
     }
 }
 
