@@ -124,7 +124,7 @@ dom.LoadPlayerData = function (player) {
     update_MP(player);
     update_ENP(player);
     update_attribute_show(player);
-    update_BP_value();
+    update_BP_value('all');
 };
 
 export { dom };

@@ -127,24 +127,57 @@
     border: 2px solid #797691; /* 内框 */
 }
 
-/* 装备栏选择多选框，和圆点绑定的文本 */
-#BP_switch_radio_div label {
-    /* 水平居中 */
-    /* justify-content: center;  */
-    /* 垂直居中 */
-    /* align-items: center;  */
-    width: 50px;
-    height: 50px;
+/* 背包物品分类单选按钮，和圆点绑定的文本 */
+/* 100%宽度 */
+.BP_switch_radio_div_1 label {
+    padding: 10px 0;
+    width: 100%;
+    /* cursor: pointer; */
+    /* height: 50px; */
     font-size: 15px; /*文本大小*/
     text-align: center;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     /* 让文本按照换行符换行，同时保留空格 */
     white-space: pre-wrap;
     color: #000;
     background-color: #fff;
+    box-sizing: border-box;
+    border: 2px solid #797691; /* 内框 */
 }
-/* 装备栏选择多选框，选中之后，圆点绑定的文本的样式 */
-#BP_switch_radio_div input[type='radio']:checked + label {
+/* 80%宽度 */
+.BP_switch_radio_div_2 label {
+    padding: 10px 0;
+    width: 80%;
+    /* cursor: pointer; */
+    /* height: 50px; */
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    /* border-radius: 5px; */
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 2px solid #797691; /* 内框 */
+}
+/* 60%宽度 */
+.BP_switch_radio_div_3 label {
+    padding: 10px 0;
+    width: 60%;
+    /* cursor: pointer; */
+    /* height: 50px; */
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    /* border-radius: 5px; */
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 2px solid #797691; /* 内框 */
+}
+/* 背包物品分类单选按钮，选中之后，圆点绑定的文本的样式 */
+/* .BP_switch_radio_div_1 input[type='radio']:checked + label {
     color: #fff;
     background-color: #3597db;
-}
+} */

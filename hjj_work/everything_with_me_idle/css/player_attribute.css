@@ -249,8 +249,13 @@
 
     border: 2px solid #797691; /* 内框 */
 }
+/* 背包物品分类单选按钮 */
+.EQP_switch_radio_div {
+    margin: auto;
+}
+
 /* 装备栏选择多选框，和圆点绑定的文本 */
-#EQP_switch_radio_div label {
+.EQP_switch_radio_div label {
     /* 水平居中 */
     /* justify-content: center;  */
     /* 垂直居中 */
@@ -266,7 +271,7 @@
     background-color: #fff;
 }
 /* 装备栏选择多选框，选中之后，圆点绑定的文本的样式 */
-#EQP_switch_radio_div input[type='radio']:checked + label {
+.EQP_switch_radio_div input[type='radio']:checked + label {
     color: #fff;
     background-color: #3597db;
 }

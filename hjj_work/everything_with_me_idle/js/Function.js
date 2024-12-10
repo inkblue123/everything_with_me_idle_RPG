@@ -1,5 +1,5 @@
 import { player } from './Player.js';
-import { items } from './Item.js';
+import { items } from './Data/Item.js';
 import { addElement } from './Dom/Dom_function.js';
 //更新血条上的数值
 function update_HP(p_player) {
@@ -155,9 +155,10 @@ function show_dropdown_table(classification_div, table_id) {
     }
 }
 //更新左下角的背包物品栏中的元素
-function update_BP_value() {
+function update_BP_value(BP_type) {
     let BP_value_div = document.getElementById('BP_value_div');
     BP_value_div.replaceChildren(); //清空现有背包内展示的物品
+    let type_switch = BP_type_handle(BP_type); //获取应该展示的物品类别
 
     //遍历玩家的每个物品
     let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
@@ -165,7 +166,8 @@ function update_BP_value() {
         if (items[play_item_id] === undefined) {
             //玩家拥有的物品不在数据库中，应该清除
             delete player.backpack_items[play_item_id];
-        } else {
+        } else if (Item_type_handle(type_switch, items[play_item_id].type)) {
+            //玩家拥有的物品属于当前过滤规则，允许展示
             //根据玩家拥有的个数，在背包界面中添加元素
             let aitem_num = player.backpack_items[play_item_id].num;
             do {
@@ -178,8 +180,124 @@ function update_BP_value() {
                     aitem_num = 0;
                 }
             } while (aitem_num > 0);
+        } else {
+            // 玩家拥有的物品不属于当前启动的过滤规则，不显示
         }
     }
+}
+
+//将物品类型转义成能适应的全部类型，方便判断物品类型
+function BP_type_handle(BP_type) {
+    var BP_item_type = [];
+    if (BP_type === undefined) {
+        return BP_item_type;
+    }
+    switch (BP_type) {
+        case 'all':
+            BP_item_type.push('item');
+            BP_item_type.push('weapon');
+            BP_item_type.push('armor');
+            BP_item_type.push('deputy');
+            BP_item_type.push('ornament');
+            BP_item_type.push('Restore_CSB');
+            BP_item_type.push('buff_CSB');
+            BP_item_type.push('combat_CSB');
+            BP_item_type.push('life_CSB');
+            BP_item_type.push('raw_MTR');
+            BP_item_type.push('process_MTR');
+            BP_item_type.push('finish_MTR');
+            BP_item_type.push('other_MTR');
+            break;
+        case 'EQP_all':
+            BP_item_type.push('weapon');
+            BP_item_type.push('armor');
+            BP_item_type.push('deputy');
+            BP_item_type.push('ornament');
+            break;
+        case 'EQP_W':
+            BP_item_type.push('weapon');
+            break;
+        case 'EQP_A':
+            BP_item_type.push('armor');
+            break;
+        case 'EQP_D':
+            BP_item_type.push('deputy');
+            break;
+        case 'EQP_O':
+            BP_item_type.push('ornament');
+            break;
+        case 'CSB_all':
+            BP_item_type.push('Restore_CSB');
+            BP_item_type.push('buff_CSB');
+            BP_item_type.push('combat_CSB');
+            BP_item_type.push('life_CSB');
+            break;
+        case 'CSB_R':
+            BP_item_type.push('Restore_CSB');
+            break;
+        case 'CSB_B':
+            BP_item_type.push('buff_CSB');
+            break;
+        case 'CSB_C':
+            BP_item_type.push('combat_CSB');
+            break;
+        case 'CSB_L':
+            BP_item_type.push('life_CSB');
+            break;
+        case 'MTR_all':
+            BP_item_type.push('raw_MTR');
+            BP_item_type.push('process_MTR');
+            BP_item_type.push('finish_MTR');
+            BP_item_type.push('other_MTR');
+            break;
+        case 'MTR_R':
+            BP_item_type.push('raw_MTR');
+            break;
+        case 'MTR_P':
+            BP_item_type.push('process_MTR');
+            break;
+        case 'MTR_F':
+            BP_item_type.push('finish_MTR');
+            break;
+        case 'MTR_O':
+            BP_item_type.push('other_MTR');
+            break;
+
+        default:
+            break;
+    }
+
+    return BP_item_type;
+}
+
+//判断物品类型中是否在指定过滤条件内
+function Item_type_handle(type_switch, items_type) {
+    for (let item_T of items_type) {
+        if (type_switch.includes(item_T)) return true;
+    }
+    return false;
+}
+
+//根据玩家背包物品获得负重
+function get_BP_weight() {
+    var BP_weight = 0;
+    let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
+    for (let play_item_id of arr) {
+        if (items[play_item_id] === undefined) {
+            //玩家拥有的物品不在数据库中，应该清除
+            delete player.backpack_items[play_item_id];
+        } else {
+            //玩家拥有的物品属于当前过滤规则，允许展示
+            //根据玩家拥有的个数，在背包界面中添加元素
+            let aitem_num = player.backpack_items[play_item_id].num;
+            BP_weight += Math.floor(aitem_num / items[play_item_id].maxStack);
+            if (aitem_num % items[play_item_id].maxStack != 0) {
+                BP_weight++;
+            }
+        }
+    }
+    console.log('玩家当前背包负重%d', BP_weight);
+    return BP_weight;
 }
 
 //测试
@@ -205,4 +323,5 @@ export {
     show_dropdown_table,
     update_BP_value,
     printf_play_item,
+    get_BP_weight,
 };

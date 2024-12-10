@@ -1,5 +1,5 @@
 import { crtElement, addElement } from './Dom_function.js';
-import { update_HP, update_MP, update_ENP, update_BP_value, printf_play_item } from '../Function.js';
+import { update_HP, update_MP, update_ENP, update_BP_value, printf_play_item, get_BP_weight } from '../Function.js';
 import { player } from '../Player.js';
 
 var Option = crtElement('div', null, 'option_page', '');
@@ -41,11 +41,12 @@ var Option = crtElement('div', null, 'option_page', '');
     var button5 = addElement(Option, 'button');
     button5.innerHTML = '给予玩家一个1号物品';
     button5.onclick = function () {
-        printf_play_item();
+        // printf_play_item();
         player.Player_get_item(1, 1);
+        // printf_play_item();
+        update_BP_value('all');
         printf_play_item();
-        update_BP_value();
-        printf_play_item();
+        get_BP_weight();
     };
 
     var button5 = addElement(Option, 'button');
@@ -54,7 +55,7 @@ var Option = crtElement('div', null, 'option_page', '');
         printf_play_item();
         player.Player_get_item(10, 1);
         printf_play_item();
-        update_BP_value();
+        update_BP_value('all');
         printf_play_item();
     };
 }

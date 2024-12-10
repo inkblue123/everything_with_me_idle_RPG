@@ -106,8 +106,8 @@ html {
 
 /* 单选框 */
 .radio_div {
-    display: inline-block;
-    margin: auto;
+    /* display: inline-block; */
+    /* margin: auto; */
     position: relative;
 }
 /* 单选框，表示是否选中的圆点 */

@@ -62,7 +62,7 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
     PA_switch_button.innerHTML = `属性\n展示`;
     var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', 'page_auto_columns');
     for (let i = 0; i < 4; i++) {
-        var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', 'EQP_switch_radio_div', 'radio_div');
+        var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'radio_div EQP_switch_radio_div');
         addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, 'EQP_switch', `${i}`, `装备栏\n${i + 1}`);
     }
     //默认激活第一个装备栏
