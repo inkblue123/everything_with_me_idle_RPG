@@ -39,10 +39,10 @@ var Option = crtElement('div', null, 'option_page', '');
     };
 
     var button5 = addElement(Option, 'button');
-    button5.innerHTML = '给予玩家一个1号物品';
+    button5.innerHTML = '给予一个橡木原木';
     button5.onclick = function () {
         // printf_play_item();
-        player.Player_get_item(1, 1);
+        player.Player_get_item('Oak_logs', 1);
         // printf_play_item();
         update_BP_value('all');
         printf_play_item();
@@ -50,7 +50,7 @@ var Option = crtElement('div', null, 'option_page', '');
     };
 
     var button5 = addElement(Option, 'button');
-    button5.innerHTML = '给予玩家一个10号物品';
+    button5.innerHTML = '给予玩家一个未定义物品';
     button5.onclick = function () {
         printf_play_item();
         player.Player_get_item(10, 1);

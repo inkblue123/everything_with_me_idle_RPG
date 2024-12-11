@@ -37,10 +37,10 @@ class Player {
         this.soul = 10; //魂魄
 
         this.backpack_items = new Object();
-        this.backpack_items[1] = new Player_Item(1);
-        this.backpack_items[1].num = 10;
-        this.backpack_items[2] = new Player_Item(2);
-        this.backpack_items[2].num = 2;
+        this.backpack_items['Oak_logs'] = new Player_Item(1);
+        this.backpack_items['Oak_logs'].num = 10;
+        this.backpack_items['wood_sword'] = new Player_Item(2);
+        this.backpack_items['wood_sword'].num = 2;
     }
 
     init() {}
