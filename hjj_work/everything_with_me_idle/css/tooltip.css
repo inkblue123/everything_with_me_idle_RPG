@@ -1,0 +1,27 @@
+#tooltip {
+    position: absolute;
+    border: solid 5px lightgrey;
+    outline: solid 3px black;
+    background: linear-gradient(90deg, #333, #111);
+    width: 320px;
+    height: auto;
+    text-align: center;
+    box-shadow: 8px 8px rgba(220, 20, 60, 0.8);
+    /* font: 0.9em Microsoft YaHei; */
+    color: white;
+    padding: 6px;
+    z-index: 99999;
+}
+/* 标题 */
+#title {
+    /* padding-bottom: 5; */
+    border-bottom: solid 1px darkgrey;
+    /* line-height: 15px; */
+    font-size: 15px;
+}
+/* 提示框内容 */
+#d_t {
+    /* padding-top: 5; */
+    /* line-height: 15px; */
+    font-size: 15px;
+}

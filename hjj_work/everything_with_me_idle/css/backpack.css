@@ -121,10 +121,10 @@
     /* color: white; */
     /* padding: 20px; */
     text-align: center;
-    /* border-radius: 8px; */
     box-sizing: border-box;
-    /* transition: transform 0.3s; */
     border: 2px solid #797691; /* 内框 */
+    /* 文本不可选中 */
+    user-select: none;
 }
 
 /* 背包物品分类单选按钮，和圆点绑定的文本 */

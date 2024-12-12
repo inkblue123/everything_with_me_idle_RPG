@@ -11,6 +11,7 @@ import { crtElement, addElement, addElement_radio } from './Dom_function.js';
 import { Player_attribute } from './player_attribute.js';
 import { Backpack } from './Backpack.js';
 import { Option } from './Option.js';
+import { Tooltip } from './Tooltip.js';
 
 var dom = new Object();
 
@@ -22,6 +23,8 @@ var dom = new Object();
     dom.backpack = Backpack;
     //设置界面
     dom.option_dom = Option;
+    //游离于游戏布局之上，跟随鼠标的小窗口
+    dom.tooltip = Tooltip;
 
     dom.control = crtElement('div', null, 'section', '', '#ff00ff');
     dom.control.textContent = '玩家控制界面';
@@ -84,8 +87,7 @@ var dom = new Object();
     dom.game_down_nomal.appendChild(dom.combat_setting);
 
     dom.main_dom.appendChild(dom.option_dom);
-
-    //左上角的角色属性装备界面
+    dom.main_dom.appendChild(dom.tooltip);
 }
 
 //向游戏布局中填充战斗时的默认界面

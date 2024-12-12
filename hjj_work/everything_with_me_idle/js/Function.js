@@ -1,6 +1,6 @@
 import { player } from './Player.js';
 import { items } from './Data/Item.js';
-import { addElement } from './Dom/Dom_function.js';
+import { addElement, addBP_value } from './Dom/Dom_function.js';
 //更新血条上的数值
 function update_HP(p_player) {
     const HP_bar = document.getElementById('HP_bar');
@@ -171,12 +171,11 @@ function update_BP_value(BP_type) {
             //根据玩家拥有的个数，在背包界面中添加元素
             let aitem_num = player.backpack_items[play_item_id].num;
             do {
-                let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
                 if (aitem_num >= items[play_item_id].maxStack) {
-                    aitem.innerHTML = `${items[play_item_id].name} : 数量${items[play_item_id].maxStack}`;
+                    addBP_value(items[play_item_id].name, items[play_item_id].maxStack, play_item_id);
                     aitem_num -= items[play_item_id].maxStack;
                 } else {
-                    aitem.innerHTML = `${items[play_item_id].name} : 数量${aitem_num}`;
+                    addBP_value(items[play_item_id].name, aitem_num, play_item_id);
                     aitem_num = 0;
                 }
             } while (aitem_num > 0);

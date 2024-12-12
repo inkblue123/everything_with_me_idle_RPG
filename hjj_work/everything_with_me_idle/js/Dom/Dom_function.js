@@ -31,4 +31,40 @@ function addElement_radio(parent_element, id, name, value, textContent) {
     return newradio;
 }
 
-export { crtElement, addElement, addElement_radio };
+// 向背包物品界面中添加一个物品
+function addBP_value(name, num, item_id) {
+    let BP_value_div = document.getElementById('BP_value_div');
+    let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
+    aitem.innerHTML = `${name} x${num}`;
+    add_mousemove(aitem, 'item', item_id);
+}
+
+// 向目标组件添加鼠标移动显示小窗口的功能
+function add_mousemove(target_div, tip_type, tip_value) {
+    // 获取目标元素和小窗口
+    let tooltip = document.getElementById('tooltip');
+
+    // 鼠标移入目标元素时显示小窗口
+    target_div.addEventListener('mouseenter', () => {
+        tooltip.InitTip(tip_type, tip_value); // 初始化小窗口内容并显示小窗口
+    });
+
+    // 鼠标移动时更新小窗口位置
+    target_div.addEventListener('mousemove', (event) => {
+        tooltip.MoveTip(event); //移动小窗口
+    });
+
+    // 鼠标移出目标元素时隐藏小窗口
+    target_div.addEventListener('mouseleave', () => {
+        tooltip.CloseTip(); //清空小窗口
+    });
+}
+
+//删除一个div中所有元素
+function empty_dom(dom) {
+    while (dom.lastChild) {
+        dom.removeChild(dom.lastChild);
+    }
+}
+
+export { crtElement, addElement, addElement_radio, addBP_value, empty_dom };
