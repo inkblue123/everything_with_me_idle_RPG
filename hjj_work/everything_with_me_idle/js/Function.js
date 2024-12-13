@@ -172,10 +172,12 @@ function update_BP_value(BP_type) {
             let aitem_num = player.backpack_items[play_item_id].num;
             do {
                 if (aitem_num >= items[play_item_id].maxStack) {
-                    addBP_value(items[play_item_id].name, items[play_item_id].maxStack, play_item_id);
+                    addBP_value(player.backpack_items[play_item_id], items[play_item_id].maxStack);
+                    // addBP_value(items[play_item_id].name, items[play_item_id].maxStack, play_item_id);
                     aitem_num -= items[play_item_id].maxStack;
                 } else {
-                    addBP_value(items[play_item_id].name, aitem_num, play_item_id);
+                    addBP_value(player.backpack_items[play_item_id], aitem_num);
+                    // addBP_value(items[play_item_id].name, aitem_num, play_item_id);
                     aitem_num = 0;
                 }
             } while (aitem_num > 0);
@@ -193,25 +195,12 @@ function BP_type_handle(BP_type) {
     }
     switch (BP_type) {
         case 'all':
-            BP_item_type.push('item');
-            BP_item_type.push('weapon');
-            BP_item_type.push('armor');
-            BP_item_type.push('deputy');
-            BP_item_type.push('ornament');
-            BP_item_type.push('Restore_CSB');
-            BP_item_type.push('buff_CSB');
-            BP_item_type.push('combat_CSB');
-            BP_item_type.push('life_CSB');
-            BP_item_type.push('raw_MTR');
-            BP_item_type.push('process_MTR');
-            BP_item_type.push('finish_MTR');
-            BP_item_type.push('other_MTR');
+            BP_item_type.push('equipment');
+            BP_item_type.push('consumable');
+            BP_item_type.push('material');
             break;
         case 'EQP_all':
-            BP_item_type.push('weapon');
-            BP_item_type.push('armor');
-            BP_item_type.push('deputy');
-            BP_item_type.push('ornament');
+            BP_item_type.push('equipment');
             break;
         case 'EQP_W':
             BP_item_type.push('weapon');
@@ -226,10 +215,7 @@ function BP_type_handle(BP_type) {
             BP_item_type.push('ornament');
             break;
         case 'CSB_all':
-            BP_item_type.push('Restore_CSB');
-            BP_item_type.push('buff_CSB');
-            BP_item_type.push('combat_CSB');
-            BP_item_type.push('life_CSB');
+            BP_item_type.push('consumable');
             break;
         case 'CSB_R':
             BP_item_type.push('Restore_CSB');
@@ -244,10 +230,7 @@ function BP_type_handle(BP_type) {
             BP_item_type.push('life_CSB');
             break;
         case 'MTR_all':
-            BP_item_type.push('raw_MTR');
-            BP_item_type.push('process_MTR');
-            BP_item_type.push('finish_MTR');
-            BP_item_type.push('other_MTR');
+            BP_item_type.push('material');
             break;
         case 'MTR_R':
             BP_item_type.push('raw_MTR');

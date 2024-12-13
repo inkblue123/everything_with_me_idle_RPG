@@ -12,16 +12,19 @@
     padding: 6px;
     z-index: 99999;
 }
-/* 标题 */
-#title {
-    /* padding-bottom: 5; */
+/* 文本 */
+#lable {
     border-bottom: solid 1px darkgrey;
-    /* line-height: 15px; */
     font-size: 15px;
 }
-/* 提示框内容 */
-#d_t {
-    /* padding-top: 5; */
-    /* line-height: 15px; */
+/* 去掉了下部的横线的文本 */
+#lable_end {
     font-size: 15px;
+}
+/* 左边显示类型，右边显示具体内容的div*/
+#TLV_div {
+    display: flex;
+    /* font-size: 15px; */
+    /* 占据一整行，类型在左，内容在右 */
+    justify-content: space-between;
 }

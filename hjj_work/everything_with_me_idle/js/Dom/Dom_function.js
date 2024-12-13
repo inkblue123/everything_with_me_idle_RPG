@@ -1,3 +1,5 @@
+import { items } from '../Data/Item.js';
+
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
     let newdom = document.createElement(elem);
@@ -32,11 +34,19 @@ function addElement_radio(parent_element, id, name, value, textContent) {
 }
 
 // 向背包物品界面中添加一个物品
-function addBP_value(name, num, item_id) {
+// function addBP_value(name, num, item_id) {
+//     let BP_value_div = document.getElementById('BP_value_div');
+//     let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
+//     aitem.innerHTML = `${name} x${num}`;
+//     add_mousemove(aitem, 'item', item_id);
+// }
+function addBP_value(player_item, num) {
     let BP_value_div = document.getElementById('BP_value_div');
     let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
+    let name = items[player_item.id].name;
     aitem.innerHTML = `${name} x${num}`;
-    add_mousemove(aitem, 'item', item_id);
+    aitem.Data = player_item;
+    add_mousemove(aitem, 'item', player_item);
 }
 
 // 向目标组件添加鼠标移动显示小窗口的功能
