@@ -199,49 +199,46 @@ function BP_type_handle(BP_type) {
             BP_item_type.push('consumable');
             BP_item_type.push('material');
             break;
-        case 'EQP_all':
+        case 'EQP_all': //武器装备，全部
             BP_item_type.push('equipment');
             break;
-        case 'EQP_W':
+        case 'EQP_W': //武器装备，武器
             BP_item_type.push('weapon');
             break;
-        case 'EQP_A':
+        case 'EQP_A': //武器装备，防具
             BP_item_type.push('armor');
             break;
-        case 'EQP_D':
+        case 'EQP_D': //武器装备，副手
             BP_item_type.push('deputy');
             break;
-        case 'EQP_O':
+        case 'EQP_O': //武器装备，饰品
             BP_item_type.push('ornament');
             break;
-        case 'CSB_all':
+        case 'CSB_all': //可使用物品，全部
             BP_item_type.push('consumable');
             break;
-        case 'CSB_R':
-            BP_item_type.push('Restore_CSB');
+        case 'CSB_F': //可使用物品，可食用物品
+            BP_item_type.push('food_CSB');
             break;
-        case 'CSB_B':
-            BP_item_type.push('buff_CSB');
+        case 'CSB_A': //可使用物品，弹药
+            BP_item_type.push('ammo_CSB');
             break;
-        case 'CSB_C':
-            BP_item_type.push('combat_CSB');
-            break;
-        case 'CSB_L':
+        case 'CSB_L': //可使用物品，生活消耗品
             BP_item_type.push('life_CSB');
             break;
-        case 'MTR_all':
+        case 'MTR_all': //材料，全部
             BP_item_type.push('material');
             break;
-        case 'MTR_R':
+        case 'MTR_R': //材料，自然材料
             BP_item_type.push('raw_MTR');
             break;
-        case 'MTR_P':
+        case 'MTR_P': //材料，人工材料
             BP_item_type.push('process_MTR');
             break;
-        case 'MTR_F':
+        case 'MTR_F': //材料，成品
             BP_item_type.push('finish_MTR');
             break;
-        case 'MTR_O':
+        case 'MTR_O': //材料，其他物品
             BP_item_type.push('other_MTR');
             break;
 

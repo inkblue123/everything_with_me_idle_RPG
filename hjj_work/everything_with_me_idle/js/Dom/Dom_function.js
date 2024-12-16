@@ -34,12 +34,6 @@ function addElement_radio(parent_element, id, name, value, textContent) {
 }
 
 // 向背包物品界面中添加一个物品
-// function addBP_value(name, num, item_id) {
-//     let BP_value_div = document.getElementById('BP_value_div');
-//     let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
-//     aitem.innerHTML = `${name} x${num}`;
-//     add_mousemove(aitem, 'item', item_id);
-// }
 function addBP_value(player_item, num) {
     let BP_value_div = document.getElementById('BP_value_div');
     let aitem = addElement(BP_value_div, 'div', null, 'BP_value');

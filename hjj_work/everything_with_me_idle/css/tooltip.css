@@ -13,18 +13,26 @@
     z-index: 99999;
 }
 /* 文本 */
-#lable {
+.lable {
     border-bottom: solid 1px darkgrey;
     font-size: 15px;
 }
 /* 去掉了下部的横线的文本 */
-#lable_end {
+.lable_end {
     font-size: 15px;
 }
 /* 左边显示类型，右边显示具体内容的div*/
-#TLV_div {
+.TLV_div {
     display: flex;
-    /* font-size: 15px; */
     /* 占据一整行，类型在左，内容在右 */
     justify-content: space-between;
+}
+/* 左边显示类型，右边显示具体内容的div*/
+.TLV_left {
+    font-size: 15px;
+}
+/* 左边显示类型，右边显示具体内容的div*/
+.TLV_right {
+    font-size: 15px;
+    text-align: right;
 }
