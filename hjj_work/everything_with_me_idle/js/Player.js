@@ -46,10 +46,6 @@ class Player {
 
         this.backpack_items = new Object();
         this.init();
-        // this.backpack_items['Oak_logs'] = new Player_Item('Oak_logs');
-        // this.backpack_items['Oak_logs'].num = 10;
-        // this.backpack_items['wood_sword'] = new Player_Item('wood_sword');
-        // this.backpack_items['wood_sword'].num = 2;
     }
 
     init() {
