@@ -1,5 +1,5 @@
 'use strict';
-import { items } from './Data/Item.js';
+import { items } from './Data/Item/Item.js';
 
 class Player_Item {
     constructor(id) {

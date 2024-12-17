@@ -1,5 +1,5 @@
 import { player } from './Player.js';
-import { items } from './Data/Item.js';
+import { items } from './Data/Item/Item.js';
 import { addElement, addBP_value } from './Dom/Dom_function.js';
 //更新血条上的数值
 function update_HP(p_player) {

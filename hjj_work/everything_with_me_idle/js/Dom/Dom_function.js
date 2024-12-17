@@ -1,4 +1,4 @@
-import { items } from '../Data/Item.js';
+import { items } from '../Data/Item/Item.js';
 
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {

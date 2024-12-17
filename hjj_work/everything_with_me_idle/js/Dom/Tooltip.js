@@ -1,7 +1,7 @@
 import { crtElement, addElement, empty_dom } from './Dom_function.js';
 import { update_HP, update_MP, update_ENP, update_BP_value, printf_play_item, get_BP_weight } from '../Function.js';
-import { items } from '../Data/Item.js';
-import { texts } from '../Data/Text.js';
+import { items } from '../Data/Item/Item.js';
+import { texts } from '../Data/Text/Text.js';
 
 //跟随鼠标，当鼠标移动到特定元素上时显示出来，充当提示窗口
 var Tooltip = crtElement('div', 'tooltip', null, 'none');
@@ -91,108 +91,38 @@ function show_equipment(player_item) {
 }
 //武器类型详情展示
 function show_equipment_type(player_item) {
-    let equipment_type_div = addElement(Tooltip, 'div', null, 'TLV_div');
-    let E_type = addElement(equipment_type_div, 'div', null, 'TLV_left');
-    E_type.innerHTML = '装备类型：';
-    let E_value = addElement(equipment_type_div, 'div', null, 'TLV_right');
+    let type_and_rarity_div = addElement(Tooltip, 'div', null, 'TLV_div');
+    //类型展示
+    let type_div = addElement(type_and_rarity_div, 'div', null, 'TLV_div');
+    let T_type = addElement(type_div, 'div', null, 'TLV_left');
+    T_type.innerHTML = '装备类型：';
+    let T_value = addElement(type_div, 'div', null, 'TLV_right');
     let type_describe = addElement(Tooltip, 'div', null, 'lable');
+    //稀有度展示
+    let rarity_div = addElement(type_and_rarity_div, 'div', null, 'TLV_div');
+    let R_type = addElement(rarity_div, 'div', null, 'TLV_left');
+    R_type.innerHTML = '稀有度：';
+    let R_value = addElement(rarity_div, 'div', null, 'TLV_right');
+    // R_value.innerHTML = player_item.rarity;
 
     let type_ch = '';
     let type_num = items[player_item.id].equipment_type.length;
-    for (let a_type of items[player_item.id].equipment_type) {
-        switch (a_type) {
-            case 'dagger':
-                type_ch += '匕首，';
-                type_describe.innerHTML = '';
-                break;
-            case 'sword':
-                type_ch += '剑，';
-                type_describe.innerHTML = texts[a_type].type_desc;
-                break;
-            case 'battle_axe':
-                type_ch += '战斧，';
-                break;
-            case 'long_handled':
-                type_ch += '长柄武器，';
-                break;
-            case 'gloves':
-                type_ch += '拳套，';
-                break;
-            case 'sticks':
-                type_ch += '棍棒，';
-                break;
-            case 'hammers':
-                type_ch += '大锤，';
-                break;
-            case 'whips':
-                type_ch += '鞭子，';
-                break;
-            case 'bow':
-                type_ch += '弓，';
-                break;
-            case 'crossbow':
-                type_ch += '弩，';
-                break;
-            case 'hand_gun':
-                type_ch += '手弩，';
-                break;
-            case 'spray_gun':
-                type_ch += '喷枪，';
-                break;
-            case 'boomerang':
-                type_ch += '回旋武器，';
-                break;
-            case 'throw':
-                type_ch += '投掷工具，';
-                break;
-            case 'putmagic_core':
-                type_ch += '施法核心，';
-                break;
-            case 'zhenfa_core':
-                type_ch += '阵法核心，';
-                break;
-            case 'magic_core':
-                type_ch += '法术核心，';
-                break;
-            case 'spread_core':
-                type_ch += '扩散核心，';
-                break;
-            case 'summon_core':
-                type_ch += '召唤核心，';
-                break;
-            case 'helmet':
-                type_ch += '头盔，';
-                break;
-            case 'chest_armor':
-                type_ch += '胸甲，';
-                break;
-            case 'leg_armor':
-                type_ch += '腿甲，';
-                break;
-            case 'shoes':
-                type_ch += '鞋子，';
-                break;
-            case 'deputy':
-                type_ch += '副手装备，';
-                break;
-            case 'ornament':
-                type_ch += '饰品，';
-                break;
-
-            default:
-                type_num--;
-                break;
-        }
-    }
     if (type_num == 0) {
         type_ch = '错误武器类型';
     } else if (type_num == 1) {
-        type_ch = type_ch.substring(0, type_ch.length - 1);
-    } else if (type_num == 1) {
+        //单种类武器
+        let e_type = items[player_item.id].equipment_type[0]; //获取这唯一的武器类型
+        type_ch = texts[e_type].type_name; //获取类型名称
+        type_describe.innerHTML = texts[e_type].type_desc; //展示武器类型的描述
+    } else if (type_num > 1) {
+        //复合类型武器
+        for (let e_type of items[player_item.id].equipment_type) {
+            type_ch = type_ch + texts[e_type].type_name + '，';
+        }
         type_ch = type_ch.substring(0, type_ch.length - 1);
         type_describe.innerHTML = '同时拥有' + type_ch + '的特性';
     }
-    E_value.innerHTML = type_ch;
+    T_value.innerHTML = type_ch;
 
     return true;
 }
