@@ -106,7 +106,7 @@ class Equipment extends Item {
         if (single_hand.includes(e_type)) {
             this.wearing_position.push('main_hand'); //这件装备可以放在主手位置
         } else if (both_hand.includes(e_type)) {
-            this.wearing_position.push('main_hand'); //这件装备可以放在主手位置
+            this.wearing_position.push('main_hand_two'); //这件装备可以放在主手位置
             this.two_handed_flag = true; //这件装备属于双手武器
         } else if (e_type == 'helmet') {
             this.wearing_position.push('head'); //这件装备可以放在头部
@@ -135,6 +135,7 @@ class Equipment extends Item {
 function init_Item_Equipment(items) {
     //近战武器
     {
+        //木剑
         items['wood_sword'] = new Equipment('wood_sword');
         items['wood_sword'].init_Item_other(1, ['weapon']); //堆叠数量，物品大分类
         items['wood_sword'].init_Equipment('sword'); //物品小分类，是否特制

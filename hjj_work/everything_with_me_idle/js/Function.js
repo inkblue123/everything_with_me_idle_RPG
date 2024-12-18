@@ -1,6 +1,6 @@
 import { player } from './Player.js';
 import { items } from './Data/Item/Item.js';
-import { addElement, addBP_value } from './Dom/Dom_function.js';
+import { addElement, addBP_item, addBP_equipment } from './Dom/Dom_function.js';
 //更新血条上的数值
 function update_HP(p_player) {
     const HP_bar = document.getElementById('HP_bar');
@@ -167,20 +167,27 @@ function update_BP_value(BP_type) {
             //玩家拥有的物品不在数据库中，应该清除
             delete player.backpack_items[play_item_id];
         } else if (Item_type_handle(type_switch, items[play_item_id].type)) {
+            if (items[play_item_id].type.includes('equipment')) {
+                addBP_equipment(player.backpack_items[play_item_id]);
+            }
+            if (items[play_item_id].type.includes('material')) {
+                addBP_item(player.backpack_items[play_item_id]);
+            }
+
             //玩家拥有的物品属于当前过滤规则，允许展示
             //根据玩家拥有的个数，在背包界面中添加元素
-            let aitem_num = player.backpack_items[play_item_id].num;
-            do {
-                if (aitem_num >= items[play_item_id].maxStack) {
-                    addBP_value(player.backpack_items[play_item_id], items[play_item_id].maxStack);
-                    // addBP_value(items[play_item_id].name, items[play_item_id].maxStack, play_item_id);
-                    aitem_num -= items[play_item_id].maxStack;
-                } else {
-                    addBP_value(player.backpack_items[play_item_id], aitem_num);
-                    // addBP_value(items[play_item_id].name, aitem_num, play_item_id);
-                    aitem_num = 0;
-                }
-            } while (aitem_num > 0);
+            // let aitem_num = player.backpack_items[play_item_id].num;
+            // do {
+            //     if (aitem_num >= items[play_item_id].maxStack) {
+            //         addBP_value(player.backpack_items[play_item_id], items[play_item_id].maxStack);
+            //         // addBP_value(items[play_item_id].name, items[play_item_id].maxStack, play_item_id);
+            //         aitem_num -= items[play_item_id].maxStack;
+            //     } else {
+            //         addBP_value(player.backpack_items[play_item_id], aitem_num);
+            //         // addBP_value(items[play_item_id].name, aitem_num, play_item_id);
+            //         aitem_num = 0;
+            //     }
+            // } while (aitem_num > 0);
         } else {
             // 玩家拥有的物品不属于当前启动的过滤规则，不显示
         }

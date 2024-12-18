@@ -2,13 +2,13 @@
     position: absolute;
     border: solid 5px lightgrey;
     outline: solid 3px black;
-    background: linear-gradient(90deg, #333, #111);
+    background: linear-gradient(90deg, #ffffff, #ebebeb);
     width: 320px;
     height: auto;
     text-align: center;
     box-shadow: 8px 8px rgba(220, 20, 60, 0.8);
     /* font: 0.9em Microsoft YaHei; */
-    color: white;
+    color: rgb(0, 0, 0);
     padding: 6px;
     z-index: 99999;
 }

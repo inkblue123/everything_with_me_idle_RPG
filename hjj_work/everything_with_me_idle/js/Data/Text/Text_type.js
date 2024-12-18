@@ -1,17 +1,7 @@
-class Text {
-    constructor(id) {
-        this.id = id; //唯一id
-        //设置多种类型的文本是为了预防同id的情况
-        this.item_name; //物品名称
-        this.item_desc; //物品描述
+import { Text } from './Text_class.js';
 
-        this.type_name; //类型名称
-        this.type_desc; //类型描述
-    }
-}
-
-//初始化文本数据库中与类型相关的文本
-function init_Text_type(texts) {
+//武器装备类型描述
+function Equipment_type(texts) {
     //近战武器类型，锋利
     texts['dagger'] = new Text('dagger');
     texts['dagger'].type_name = '匕首';
@@ -95,5 +85,101 @@ function init_Text_type(texts) {
     texts['ornament'].type_name = '饰品';
     texts['ornament'].type_desc = '只能放在饰品槽的装备';
 }
+//武器装备稀有度描述
+function Equipment_rarity(texts) {
+    texts['damaged'] = new Text('damaged');
+    texts['damaged'].rarity_name = '破损';
+    texts['damaged'].type_desc = '完全不可使用的破损装备，也许有高人能回收利用，不然就只能卖掉了';
+    texts['damaged'].rarity_color = '#838383';
+    texts['ordinary'] = new Text('ordinary');
+    texts['ordinary'].rarity_name = '普通';
+    texts['ordinary'].rarity_color = '#000000';
+    texts['excellent'] = new Text('excellent');
+    texts['excellent'].rarity_name = '优良';
+    texts['excellent'].rarity_color = '#00c400';
+    texts['rare'] = new Text('rare');
+    texts['rare'].rarity_name = '稀有';
+    texts['rare'].rarity_color = '#1100ff';
+    texts['epic'] = new Text('epic');
+    texts['epic'].rarity_name = '史诗';
+    texts['epic'].rarity_color = '#7c00ff';
+    texts['legendary'] = new Text('legendary');
+    texts['legendary'].rarity_name = '传说';
+    texts['legendary'].rarity_color = '#ff0000';
+}
+//武器装备的可装备位置描述
+function Equipment_wearing_position(texts) {
+    texts['main_hand'] = new Text('main_hand');
+    texts['main_hand'].wearing_name = '主手';
+    texts['main_hand'].wearing_desc = '这件装备只可放在主手位置';
+    texts['main_hand_two'] = new Text('main_hand_two');
+    texts['main_hand_two'].wearing_name = '双手';
+    texts['main_hand_two'].wearing_desc = '这件装备需要双手共持';
+    texts['head'] = new Text('head');
+    texts['head'].wearing_name = '头部';
+    texts['head'].wearing_desc = '这件装备可以穿戴在头部';
+    texts['chest'] = new Text('chest');
+    texts['chest'].wearing_name = '胸部';
+    texts['chest'].wearing_desc = '这件装备可以穿戴在胸部';
+    texts['legs'] = new Text('legs');
+    texts['legs'].wearing_name = '腿部';
+    texts['legs'].wearing_desc = '这件装备可以穿戴在腿部';
+    texts['feet'] = new Text('feet');
+    texts['feet'].wearing_name = '脚部';
+    texts['feet'].wearing_desc = '这件装备可以穿戴在脚部';
+    texts['ornament'] = new Text('ornament');
+    texts['ornament'].wearing_name = '饰品';
+    texts['ornament'].wearing_desc = '这件装备可以放在饰品位置';
+    texts['deputy'] = new Text('deputy');
+    texts['deputy'].wearing_name = '副手';
+    texts['deputy'].wearing_desc = '这件装备可以放在副手';
+}
+//属性名称描述
+function attr_type(texts) {
+    texts['attack'] = new Text('attack');
+    texts['attack'].attr_name = '攻击力';
+    texts['precision'] = new Text('precision');
+    texts['precision'].attr_name = '精准';
+    texts['critical_chance'] = new Text('critical_chance');
+    texts['critical_chance'].attr_name = '暴击率';
+    texts['critical_damage'] = new Text('critical_damage');
+    texts['critical_damage'].attr_name = '暴击伤害';
+    texts['attack_speed'] = new Text('attack_speed');
+    texts['attack_speed'].attr_name = '攻击速度';
+    texts['defense'] = new Text('defense');
+    texts['defense'].attr_name = '防御';
+    texts['evade'] = new Text('evade');
+    texts['evade'].attr_name = '闪避';
+    texts['resistance_point'] = new Text('resistance_point');
+    texts['resistance_point'].attr_name = '抵抗力';
+    texts['move_speed'] = new Text('move_speed');
+    texts['move_speed'].attr_name = '移动速度';
 
+    texts['physique'] = new Text('physique');
+    texts['physique'].attr_name = '体格';
+    texts['Meridians'] = new Text('Meridians');
+    texts['Meridians'].attr_name = '经脉';
+    texts['soul'] = new Text('soul');
+    texts['soul'].attr_name = '魂魄';
+    texts['power'] = new Text('power');
+    texts['power'].attr_name = '力量';
+    texts['agile'] = new Text('agile');
+    texts['agile'].attr_name = '敏捷';
+    texts['intelligence'] = new Text('intelligence');
+    texts['intelligence'].attr_name = '智力';
+    texts['technique'] = new Text('technique');
+    texts['technique'].attr_name = '技巧';
+}
+
+//初始化文本数据库中与类型相关的文本
+function init_Text_type(texts) {
+    //武器装备类型描述
+    Equipment_type(texts);
+    //武器装备稀有度描述
+    Equipment_rarity(texts);
+    //武器装备的可装备位置描述
+    Equipment_wearing_position(texts);
+    //属性名称描述
+    attr_type(texts);
+}
 export { init_Text_type };

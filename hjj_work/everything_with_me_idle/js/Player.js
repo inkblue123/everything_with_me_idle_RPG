@@ -7,7 +7,7 @@ class Player_Item {
         this.num = 0; //玩家拥有该物品总数
     }
 }
-class Player_Equipment extends Player_Item {
+class Player_Item_E extends Player_Item {
     constructor(id) {
         super(id);
         //针对武器装备，当前物品的稀有度
@@ -38,19 +38,23 @@ class Player {
         //角色固有属性
         this.physique = 10; //体格
         this.Meridians = 10; //经脉
+        this.soul = 10; //魂魄
         this.power = 10; //力量
         this.agile = 10; //敏捷
-        this.technique = 10; //技巧
         this.intelligence = 10; //智力
-        this.soul = 10; //魂魄
-
+        this.technique = 10; //技巧
+        //背包物品
         this.backpack_items = new Object();
+        //穿戴的装备
+        this.worn_EQP = new Object();
+
         this.init();
     }
 
     init() {
         this.Player_get_item('Oak_logs', 10);
-        this.Player_get_item('wood_sword', 2, 0);
+        this.Player_get_item('wood_sword', 1, 'damaged');
+        this.Player_get_item('wood_sword', 2, 'ordinary');
     }
     //给玩家添加num个物品
     Player_get_item(id, num, equip_rarity) {
@@ -61,29 +65,32 @@ class Player {
         }
         //要添加的物品如果是武器装备，则必须要有稀有度，否则给予0稀有度物品
         if (items[id].type.includes('equipment')) {
-            if (typeof equip_rarity != 'number' || equip_rarity > 5) {
+            if (!equip_rarity) {
                 //稀有度参数异常，默认给0稀有度物品
-                equip_rarity = 0;
+                equip_rarity = 'damaged';
             }
-        }
-        if (this.backpack_items[id] === undefined) {
-            //判断玩家身上有无该物品，没有就创建，有就添加数量
-            if (items[id].type.includes('equipment')) {
-                this.backpack_items[id] = new Player_Equipment(id);
-                this.backpack_items[id].rarity[equip_rarity] = num;
-                this.backpack_items[id].num = num;
-            } else {
-                this.backpack_items[id] = new Player_Item(id);
-                this.backpack_items[id].num = num;
-            }
+            //为玩家添加武器装备
+            this.Player_get_Equipment(id, num, equip_rarity);
         } else {
-            if (items[id].type.includes('equipment')) {
-                this.backpack_items[id].rarity[equip_rarity] += num;
-                this.backpack_items[id].num += num;
-            } else {
-                this.backpack_items[id].num += num;
+            if (this.backpack_items[id] === undefined) {
+                this.backpack_items[id] = new Player_Item(id);
+                this.backpack_items[id].num = 0;
             }
+            this.backpack_items[id].num += num;
         }
+    }
+    Player_get_Equipment(id, num, equip_rarity) {
+        if (this.backpack_items[id] === undefined) {
+            //判断玩家身上有无该物品，没有就创建
+            this.backpack_items[id] = new Player_Item_E(id);
+            this.backpack_items[id].rarity[equip_rarity] = 0;
+        } else if (this.backpack_items[id].rarity[equip_rarity] === undefined) {
+            //判断需要添加的稀有度是否存在，不存在就创建
+            this.backpack_items[id].rarity[equip_rarity] = 0;
+        }
+
+        this.backpack_items[id].rarity[equip_rarity] += num;
+        this.backpack_items[id].num += num;
     }
 }
 

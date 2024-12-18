@@ -52,7 +52,7 @@ Tooltip.CloseTip = function () {
     empty_dom(this); //清空内容
 };
 
-//传入玩家的一个物品对象，展示物品的详细信息
+//传入玩家的一个物品拷贝对象，展示这个物品的详细信息
 function init_item_tip(player_item) {
     //展示物品的名称和描述
     if (!show_item_name_description(player_item)) {
@@ -83,14 +83,19 @@ function show_item_name_description(player_item) {
 }
 
 //针对武器装备，追加展示稀有度，详细类型，可装备位置
-function show_equipment(player_item) {
-    //武器类型详情展示
-    show_equipment_type(player_item);
+function show_equipment(show_item) {
+    //装备类型详情展示
+    let show_item_rarity = show_equipment_type(show_item);
+    if (show_item_rarity == 'damaged') {
+        //展示的物品是破损稀有度的装备，已经展示完毕
+        return;
+    }
+    show_equipment_wearing_position(show_item);
 
     return true;
 }
-//武器类型详情展示
-function show_equipment_type(player_item) {
+//装备类型详情展示
+function show_equipment_type(show_item) {
     let type_and_rarity_div = addElement(Tooltip, 'div', null, 'TLV_div');
     //类型展示
     let type_div = addElement(type_and_rarity_div, 'div', null, 'TLV_div');
@@ -103,38 +108,54 @@ function show_equipment_type(player_item) {
     let R_type = addElement(rarity_div, 'div', null, 'TLV_left');
     R_type.innerHTML = '稀有度：';
     let R_value = addElement(rarity_div, 'div', null, 'TLV_right');
-    // R_value.innerHTML = player_item.rarity;
-
+    let show_item_rarity;
+    for (show_item_rarity in show_item.rarity) {
+        R_value.innerHTML = texts[show_item_rarity].rarity_name;
+        rarity_div.style.color = texts[show_item_rarity].rarity_color;
+    }
     let type_ch = '';
-    let type_num = items[player_item.id].equipment_type.length;
+    //武器类型获取，类型描述展示
+    let type_num = items[show_item.id].equipment_type.length;
     if (type_num == 0) {
         type_ch = '错误武器类型';
     } else if (type_num == 1) {
         //单种类武器
-        let e_type = items[player_item.id].equipment_type[0]; //获取这唯一的武器类型
+        let e_type = items[show_item.id].equipment_type[0]; //获取这唯一的武器类型
         type_ch = texts[e_type].type_name; //获取类型名称
         type_describe.innerHTML = texts[e_type].type_desc; //展示武器类型的描述
     } else if (type_num > 1) {
         //复合类型武器
-        for (let e_type of items[player_item.id].equipment_type) {
+        for (let e_type of items[show_item.id].equipment_type) {
             type_ch = type_ch + texts[e_type].type_name + '，';
         }
         type_ch = type_ch.substring(0, type_ch.length - 1);
         type_describe.innerHTML = '同时拥有' + type_ch + '的特性';
     }
     T_value.innerHTML = type_ch;
+    if (show_item_rarity == 'damaged') {
+        //破损武器描述
+        type_describe.innerHTML = texts[show_item_rarity].type_desc;
+        return 'damaged';
+    }
 
     return true;
 }
-
-//判断物品类型
-function switch_Item_type(player_item) {
-    let item_id = player_item.id;
-
-    for (let item_T of items_type) {
-        if (type_switch.includes(item_T)) return true;
+//可装备位置展示
+function show_equipment_wearing_position(show_item) {
+    let item_id = show_item.id;
+    let wearing_position_lable = addElement(Tooltip, 'div', null, 'lable');
+    if (items[item_id].wearing_position.length == 1) {
+        let wearing = items[item_id].wearing_position[0];
+        wearing_position_lable.innerHTML = texts[wearing].wearing_desc;
+    } else {
+        let wearing_ch = '这件装备可以放在';
+        for (let wearing of items[item_id].wearing_position) {
+            wearing_ch = wearing_ch + texts[wearing].wearing_name + '、';
+        }
+        wearing_ch = wearing_ch.substring(0, wearing_ch.length - 1);
+        wearing_ch += '位置上';
+        wearing_position_lable.innerHTML = wearing_ch;
     }
-    return false;
 }
 
 export { Tooltip };
