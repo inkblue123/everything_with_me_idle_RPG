@@ -121,11 +121,11 @@ dom.InitGameDomNomal = function () {
 };
 
 //用玩家信息初始化界面内的信息
-dom.LoadPlayerData = function (player) {
-    update_HP(player);
-    update_MP(player);
-    update_ENP(player);
-    update_attribute_show(player);
+dom.LoadPlayerData = function () {
+    update_HP();
+    update_MP();
+    update_ENP();
+    update_attribute_show();
     update_BP_value('all');
 };
 

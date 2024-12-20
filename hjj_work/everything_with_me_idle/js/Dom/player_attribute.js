@@ -41,7 +41,7 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
     //角色装备栏
     var equipment_show = addElement(attr_equip_div, 'div', 'equipment_show', 'page_columns_1', 'none');
     for (let i = 0; i < 4; i++) {
-        var EQP_i = addElement(equipment_show, 'div', null, 'page_columns_11', '');
+        var EQP_i = addElement(equipment_show, 'div', `EQP_column_${i + 1}`, 'page_columns_11', '');
         var EQP_left = addElement(EQP_i, 'div', null, 'page_columns_111', ''); //装备栏左侧，角色的4个防具和主副手
         var EQP_arms_div = addElement(EQP_left, 'div', 'EQP_arms_div', null, '');
         var EQP_Armor_div = addElement(EQP_left, 'div', 'EQP_Armor_div', null, '');
@@ -63,7 +63,7 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
     var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', 'page_auto_columns');
     for (let i = 0; i < 4; i++) {
         var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'radio_div EQP_switch_radio_div');
-        addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, 'EQP_switch', `${i}`, `装备栏\n${i + 1}`);
+        addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, 'EQP_switch', `EQP_column_${i + 1}`, `装备栏\n${i + 1}`);
     }
     //默认激活第一个装备栏
     EQP_switch_div.children[0].children[0].checked = true;

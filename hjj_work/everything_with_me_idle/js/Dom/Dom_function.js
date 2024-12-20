@@ -1,5 +1,7 @@
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
+import { player } from '../Player.js';
+import { update_BP_value } from '../Function.js';
 
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
@@ -70,17 +72,23 @@ function addBP_equipment(player_item) {
             if (maxStack == 1) {
                 aitem.innerHTML = `${name}`;
                 aitem.Data.rarity[i] = maxStack;
+                aitem.Data.num = maxStack;
                 player_E_rarity_num -= maxStack;
             } else if (player_E_rarity_num >= maxStack) {
                 aitem.innerHTML = `${name} x${maxStack}`;
                 aitem.Data.rarity[i] = maxStack;
+                aitem.Data.num = maxStack;
                 player_E_rarity_num -= maxStack;
             } else {
                 aitem.innerHTML = `${name} x${player_E_rarity_num}`;
                 aitem.Data.rarity[i] = player_E_rarity_num;
+                aitem.Data.num = player_E_rarity_num;
                 player_E_rarity_num = 0;
             }
+            //给背包中的物品添加鼠标移动上去显示提示的效果
             add_mousemove(aitem, 'item', aitem.Data);
+            //对于装备，添加鼠标点击可以穿戴到身上的效果
+            BPEQP_add_click(aitem, 'item', aitem.Data);
         }
     }
 }
@@ -106,14 +114,20 @@ function add_mousemove(target_div, tip_type, tip_value) {
     });
 }
 
-// 向目标组件添加鼠标点击穿戴到身上的功能
-function add_click(target_div, tip_type, tip_value) {
+// 向背包界面中的装备元素添加鼠标点击穿戴到身上的功能
+function BPEQP_add_click(target_div, tip_type, tip_value) {
     // 鼠标移入目标元素时显示小窗口
     target_div.addEventListener('click', () => {
         //从玩家背包中去掉要穿戴的物品
+        let keys = Object.keys(tip_value.rarity);
+        let rarity = keys[0];
+        player.Player_lose_Equipment(tip_value.id, tip_value.num, rarity);
         //获取并切换到当前激活的装备栏
         //将要穿戴的物品放到目前激活的装备栏的指定位置
+
+        //获取背包界面当前激活的过滤条件
         //刷新背包界面
+        update_BP_value('all');
     });
 }
 

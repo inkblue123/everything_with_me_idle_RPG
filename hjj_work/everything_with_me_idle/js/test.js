@@ -1,8 +1,8 @@
 import { addElement } from './Dom/Dom_function.js';
-// import { player } from './Player.js';
+import { player } from './Player.js';
 import { update_HP, update_MP, update_ENP } from './Function.js';
 
-function add_test_button(dom, player) {
+function add_test_button(dom) {
     var button1 = addElement(dom.option_dom, 'button');
     button1.innerHTML = '战斗时的ui';
     button1.onclick = function () {
@@ -22,7 +22,7 @@ function add_test_button(dom, player) {
         } else {
             player.health_point += 10;
         }
-        update_HP(player);
+        update_HP();
     };
 
     var button4 = addElement(dom.option_dom, 'button');
@@ -33,7 +33,7 @@ function add_test_button(dom, player) {
         } else {
             player.health_point -= 10;
         }
-        update_HP(player);
+        update_HP();
     };
 
     var button5 = addElement(dom.option_dom, 'button');

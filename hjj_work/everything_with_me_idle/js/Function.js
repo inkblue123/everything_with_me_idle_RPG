@@ -2,47 +2,47 @@ import { player } from './Player.js';
 import { items } from './Data/Item/Item.js';
 import { addElement, addBP_item, addBP_equipment } from './Dom/Dom_function.js';
 //更新血条上的数值
-function update_HP(p_player) {
+function update_HP() {
     const HP_bar = document.getElementById('HP_bar');
 
-    HP_bar.children[0].children[0].style.width = `${(p_player.health_point / p_player.health_max) * 100}%`;
-    HP_bar.children[1].innerText = `${Math.floor(p_player.health_point)}/${Math.ceil(p_player.health_max)} 生命`;
+    HP_bar.children[0].children[0].style.width = `${(player.health_point / player.health_max) * 100}%`;
+    HP_bar.children[1].innerText = `${Math.floor(player.health_point)}/${Math.ceil(player.health_max)} 生命`;
 }
 //更新魔力条上的数值
-function update_MP(p_player) {
+function update_MP() {
     const MP_bar = document.getElementById('MP_bar');
 
-    MP_bar.children[0].children[0].style.width = `${(p_player.magic_point / p_player.magic_max) * 100}%`;
-    MP_bar.children[1].innerText = `${Math.floor(p_player.magic_point)}/${Math.ceil(p_player.magic_max)} 魔力`;
+    MP_bar.children[0].children[0].style.width = `${(player.magic_point / player.magic_max) * 100}%`;
+    MP_bar.children[1].innerText = `${Math.floor(player.magic_point)}/${Math.ceil(player.magic_max)} 魔力`;
 }
 //更新精力条上的数值
-function update_ENP(p_player) {
+function update_ENP() {
     const ENP_bar = document.getElementById('ENP_bar');
 
-    ENP_bar.children[0].children[0].style.width = `${(p_player.energy_point / p_player.energy_max) * 100}%`;
-    ENP_bar.children[1].innerText = `${Math.floor(p_player.energy_point)}/${Math.ceil(p_player.energy_max)} 精力`;
+    ENP_bar.children[0].children[0].style.width = `${(player.energy_point / player.energy_max) * 100}%`;
+    ENP_bar.children[1].innerText = `${Math.floor(player.energy_point)}/${Math.ceil(player.energy_max)} 精力`;
 }
 //更新属性展示表格中的数值
-function update_attribute_show(p_player) {
+function update_attribute_show() {
     const Player_att = document.getElementById('attribute_show');
 
-    Player_att.children[0].children[0].innerText = `攻击\n${p_player.attack}`;
-    Player_att.children[0].children[1].innerText = `精准\n${p_player.precision}`;
-    Player_att.children[0].children[2].innerText = `暴击率\n${p_player.critical_chance}`;
-    Player_att.children[0].children[3].innerText = `暴击伤害\n${p_player.critical_damage}`;
-    Player_att.children[0].children[4].innerText = `攻速\n${p_player.attack_speed}`;
-    Player_att.children[0].children[5].innerText = `防御\n${p_player.defense}`;
-    Player_att.children[0].children[6].innerText = `闪避\n${p_player.evade}`;
-    Player_att.children[0].children[7].innerText = `抵抗力\n${p_player.resistance_point}`;
-    Player_att.children[0].children[8].innerText = `移动速度\n${p_player.move_speed}`;
+    Player_att.children[0].children[0].innerText = `攻击\n${player.attack}`;
+    Player_att.children[0].children[1].innerText = `精准\n${player.precision}`;
+    Player_att.children[0].children[2].innerText = `暴击率\n${player.critical_chance}`;
+    Player_att.children[0].children[3].innerText = `暴击伤害\n${player.critical_damage}`;
+    Player_att.children[0].children[4].innerText = `攻速\n${player.attack_speed}`;
+    Player_att.children[0].children[5].innerText = `防御\n${player.defense}`;
+    Player_att.children[0].children[6].innerText = `闪避\n${player.evade}`;
+    Player_att.children[0].children[7].innerText = `抵抗力\n${player.resistance_point}`;
+    Player_att.children[0].children[8].innerText = `移动速度\n${player.move_speed}`;
 
-    Player_att.children[1].children[0].innerText = `体格\n${p_player.physique}`;
-    Player_att.children[1].children[1].innerText = `魂魄\n${p_player.soul}`;
-    Player_att.children[1].children[2].innerText = `经脉\n${p_player.Meridians}`;
-    Player_att.children[1].children[3].innerText = `力量\n${p_player.power}`;
-    Player_att.children[1].children[4].innerText = `敏捷\n${p_player.agile}`;
-    Player_att.children[1].children[5].innerText = `智力\n${p_player.intelligence}`;
-    Player_att.children[1].children[6].innerText = `技巧\n${p_player.technique}`;
+    Player_att.children[1].children[0].innerText = `体格\n${player.physique}`;
+    Player_att.children[1].children[1].innerText = `魂魄\n${player.soul}`;
+    Player_att.children[1].children[2].innerText = `经脉\n${player.Meridians}`;
+    Player_att.children[1].children[3].innerText = `力量\n${player.power}`;
+    Player_att.children[1].children[4].innerText = `敏捷\n${player.agile}`;
+    Player_att.children[1].children[5].innerText = `智力\n${player.intelligence}`;
+    Player_att.children[1].children[6].innerText = `技巧\n${player.technique}`;
 }
 //更新角色名
 function update_player_name() {
@@ -63,19 +63,13 @@ function change_PA() {
         //如果显示了属性界面，则切换成装备栏
         attribute_show.style.display = 'none';
         equipment_show.style.display = '';
-        let i = 0;
-        let check_num = 0;
-        const radios = document.querySelectorAll('input[name="EQP_switch"]');
-        for (const radio of radios) {
-            if (radio.checked) {
-                equipment_show.children[i].style.display = '';
-                // alert('Selected option: ' + radio.value);
-                // return; // 找到一个选中的按钮后可以结束循环
-            } else {
-                equipment_show.children[i].style.display = 'none';
-            }
-            i++;
+        //隐藏所有装备栏
+        for (let EQP_column of equipment_show.children) {
+            EQP_column.style.display = 'none';
         }
+        //寻找当前激活的装备栏，并显示它
+        let active_EQP_id = get_active_EQP();
+        document.getElementById(active_EQP_id).style.display = '';
     } else {
         attribute_show.style.display = '';
         equipment_show.style.display = 'none';
@@ -87,17 +81,28 @@ function change_EQP(EQP_value) {
     const equipment_show = document.getElementById('equipment_show');
 
     if (attribute_show.style.display == '') {
-        //如果当前显示了属性界面，则不操作
-        return;
+        //如果当前显示了属性界面，则切换成装备栏
+        attribute_show.style.display = 'none';
+        equipment_show.style.display = '';
     }
-    if (equipment_show.style.display == '') {
-        //如果当前显示了装备栏界面，则切换到对应的装备栏上
-        for (let i = 0; i < 4; i++) {
-            equipment_show.children[i].style.display = 'none';
+
+    //切换到当前激活的的装备栏上
+    for (let EQP_column of equipment_show.children) {
+        EQP_column.style.display = 'none';
+    }
+    document.getElementById(EQP_value).style.display = '';
+}
+//获取当前激活的装备栏的id
+function get_active_EQP() {
+    const radios = document.querySelectorAll('input[name="EQP_switch"]');
+    for (const radio of radios) {
+        if (radio.checked) {
+            // 找到一个选中的按钮后可以结束循环
+            return radio.value;
         }
-        equipment_show.children[EQP_value].style.display = '';
     }
 }
+
 //切换背包、技能、图鉴的按钮
 function change_BP_SK_IB(button_id) {
     const BP_div = document.getElementById('BP_div');
@@ -173,21 +178,6 @@ function update_BP_value(BP_type) {
             if (items[play_item_id].type.includes('material')) {
                 addBP_item(player.backpack_items[play_item_id]);
             }
-
-            //玩家拥有的物品属于当前过滤规则，允许展示
-            //根据玩家拥有的个数，在背包界面中添加元素
-            // let aitem_num = player.backpack_items[play_item_id].num;
-            // do {
-            //     if (aitem_num >= items[play_item_id].maxStack) {
-            //         addBP_value(player.backpack_items[play_item_id], items[play_item_id].maxStack);
-            //         // addBP_value(items[play_item_id].name, items[play_item_id].maxStack, play_item_id);
-            //         aitem_num -= items[play_item_id].maxStack;
-            //     } else {
-            //         addBP_value(player.backpack_items[play_item_id], aitem_num);
-            //         // addBP_value(items[play_item_id].name, aitem_num, play_item_id);
-            //         aitem_num = 0;
-            //     }
-            // } while (aitem_num > 0);
         } else {
             // 玩家拥有的物品不属于当前启动的过滤规则，不显示
         }
@@ -273,8 +263,6 @@ function get_BP_weight() {
             //玩家拥有的物品不在数据库中，应该清除
             delete player.backpack_items[play_item_id];
         } else {
-            //玩家拥有的物品属于当前过滤规则，允许展示
-            //根据玩家拥有的个数，在背包界面中添加元素
             let aitem_num = player.backpack_items[play_item_id].num;
             BP_weight += Math.floor(aitem_num / items[play_item_id].maxStack);
             if (aitem_num % items[play_item_id].maxStack != 0) {
