@@ -1,6 +1,7 @@
 import { addElement } from './Function/Dom_function.js';
 import { player } from './Player.js';
-import { update_HP, update_MP, update_ENP } from './Function/Function.js';
+import { update_MP, update_ENP } from './Function/Function.js';
+import { update_HP } from './Function/Update_func.js';
 
 function add_test_button(dom) {
     var button1 = addElement(dom.option_dom, 'button');

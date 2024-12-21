@@ -1,5 +1,6 @@
 import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
-import { update_player_name, change_PA, change_EQP, show_active_EQP } from '../Function/Function.js';
+import { change_PA, show_active_EQP } from '../Function/Function.js';
+import { update_player_name } from '../Function/Update_func.js';
 
 var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000');
 

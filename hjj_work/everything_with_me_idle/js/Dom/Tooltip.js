@@ -1,12 +1,4 @@
 import { crtElement, addElement, empty_dom } from '../Function/Dom_function.js';
-import {
-    update_HP,
-    update_MP,
-    update_ENP,
-    update_BP_value,
-    printf_play_item,
-    get_BP_weight,
-} from '../Function/Function.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 

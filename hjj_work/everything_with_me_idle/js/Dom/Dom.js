@@ -1,12 +1,4 @@
-import {
-    update_HP,
-    update_MP,
-    update_ENP,
-    update_attribute_show,
-    update_player_name,
-    update_BP_value,
-} from '../Function/Function.js';
-import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
+import { crtElement, addElement } from '../Function/Dom_function.js';
 
 import { Player_attribute } from './player_attribute.js';
 import { Backpack } from './Backpack.js';
@@ -118,15 +110,6 @@ dom.InitGameDomNomal = function () {
 
     dom.create.style.display = '';
     dom.combat_setting.style.display = 'none';
-};
-
-//用玩家信息初始化界面内的信息
-dom.LoadPlayerData = function () {
-    update_HP();
-    update_MP();
-    update_ENP();
-    update_attribute_show();
-    update_BP_value('all');
 };
 
 export { dom };
