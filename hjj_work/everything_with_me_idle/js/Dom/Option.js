@@ -1,5 +1,12 @@
-import { crtElement, addElement } from './Dom_function.js';
-import { update_HP, update_MP, update_ENP, update_BP_value, printf_play_item, get_BP_weight } from '../Function.js';
+import { crtElement, addElement } from '../Function/Dom_function.js';
+import {
+    update_HP,
+    update_MP,
+    update_ENP,
+    update_BP_value,
+    printf_play_item,
+    get_BP_weight,
+} from '../Function/Function.js';
 import { player } from '../Player.js';
 
 var Option = crtElement('div', null, 'option_page', '');

@@ -1,6 +1,7 @@
-import { player } from './Player.js';
-import { items } from './Data/Item/Item.js';
-import { addElement, addBP_item, addBP_equipment } from './Dom/Dom_function.js';
+import { player } from '../Player.js';
+import { items } from '../Data/Item/Item.js';
+import { addElement } from './Dom_function.js';
+import { texts } from '../Data/Text/Text.js';
 //更新血条上的数值
 function update_HP() {
     const HP_bar = document.getElementById('HP_bar');
@@ -37,8 +38,8 @@ function update_attribute_show() {
     Player_att.children[0].children[8].innerText = `移动速度\n${player.move_speed}`;
 
     Player_att.children[1].children[0].innerText = `体格\n${player.physique}`;
-    Player_att.children[1].children[1].innerText = `魂魄\n${player.soul}`;
-    Player_att.children[1].children[2].innerText = `经脉\n${player.Meridians}`;
+    Player_att.children[1].children[1].innerText = `经脉\n${player.Meridians}`;
+    Player_att.children[1].children[2].innerText = `魂魄\n${player.soul}`;
     Player_att.children[1].children[3].innerText = `力量\n${player.power}`;
     Player_att.children[1].children[4].innerText = `敏捷\n${player.agile}`;
     Player_att.children[1].children[5].innerText = `智力\n${player.intelligence}`;
@@ -63,13 +64,6 @@ function change_PA() {
         //如果显示了属性界面，则切换成装备栏
         attribute_show.style.display = 'none';
         equipment_show.style.display = '';
-        //隐藏所有装备栏
-        for (let EQP_column of equipment_show.children) {
-            EQP_column.style.display = 'none';
-        }
-        //寻找当前激活的装备栏，并显示它
-        let active_EQP_id = get_active_EQP();
-        document.getElementById(active_EQP_id).style.display = '';
     } else {
         attribute_show.style.display = '';
         equipment_show.style.display = 'none';
@@ -102,7 +96,29 @@ function get_active_EQP() {
         }
     }
 }
-
+//显示当前激活的装备栏
+function show_active_EQP() {
+    const radios = document.querySelectorAll('input[name="EQP_switch"]');
+    let EQP_value;
+    // 找到当前激活的装备栏的id
+    for (const radio of radios) {
+        if (radio.checked) {
+            EQP_value = radio.value;
+        }
+    }
+    const attribute_show = document.getElementById('attribute_show');
+    const equipment_show = document.getElementById('equipment_show');
+    //如果当前显示了属性界面，则切换成装备栏
+    if (attribute_show.style.display == '') {
+        attribute_show.style.display = 'none';
+        equipment_show.style.display = '';
+    }
+    //切换到当前激活的的装备栏上
+    for (let EQP_column of equipment_show.children) {
+        EQP_column.style.display = 'none';
+    }
+    document.getElementById(EQP_value).style.display = '';
+}
 //切换背包、技能、图鉴的按钮
 function change_BP_SK_IB(button_id) {
     const BP_div = document.getElementById('BP_div');
@@ -124,7 +140,6 @@ function change_BP_SK_IB(button_id) {
         IB_div.style.display = '';
     }
 }
-
 //点击了隐藏下拉框的按钮之后，展示当前按钮相关的下拉框，隐藏其他下拉框
 function show_dropdown_table(classification_div, table_id) {
     const dropdownTable = document.getElementById(table_id);
@@ -165,7 +180,7 @@ function update_BP_value(BP_type) {
     BP_value_div.replaceChildren(); //清空现有背包内展示的物品
     let type_switch = BP_type_handle(BP_type); //获取应该展示的物品类别
 
-    //遍历玩家的每个物品
+    //遍历玩家的每个物品，按照物品的最大堆叠数量，显示到左下的背包中
     let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
     for (let play_item_id of arr) {
         if (items[play_item_id] === undefined) {
@@ -183,7 +198,6 @@ function update_BP_value(BP_type) {
         }
     }
 }
-
 //将物品类型转义成能适应的全部类型，方便判断物品类型
 function BP_type_handle(BP_type) {
     var BP_item_type = [];
@@ -245,7 +259,6 @@ function BP_type_handle(BP_type) {
 
     return BP_item_type;
 }
-
 //判断物品类型中是否在指定过滤条件内
 function Item_type_handle(type_switch, items_type) {
     for (let item_T of items_type) {
@@ -253,7 +266,6 @@ function Item_type_handle(type_switch, items_type) {
     }
     return false;
 }
-
 //根据玩家背包物品获得负重
 function get_BP_weight() {
     var BP_weight = 0;
@@ -272,6 +284,112 @@ function get_BP_weight() {
     }
     console.log('玩家当前背包负重%d', BP_weight);
     return BP_weight;
+}
+// 向背包物品界面中添加一个物品
+function addBP_item(player_item) {
+    let maxStack = items[player_item.id].maxStack;
+    let player_item_num = player_item.num;
+    while (player_item_num) {
+        let BP_value_div = document.getElementById('BP_value_div');
+        let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
+        let name = items[player_item.id].name;
+        aitem.Data = JSON.parse(JSON.stringify(player_item));
+        if (player_item_num >= maxStack) {
+            aitem.innerHTML = `${name} x${maxStack}`;
+            player_item_num -= maxStack;
+        } else {
+            aitem.innerHTML = `${name} x${player_item_num}`;
+            player_item_num = 0;
+        }
+        add_mousemove(aitem, 'item', aitem.Data);
+    }
+}
+//向背包界面展示玩家的一种武器装备
+function addBP_equipment(player_item) {
+    let maxStack = items[player_item.id].maxStack;
+    //遍历玩家此种装备的每一个稀有度
+    for (let i in player_item.rarity) {
+        let player_E_rarity_num = player_item.rarity[i];
+        while (player_E_rarity_num) {
+            //当某个稀有度有数量，就展示到背包里
+            let BP_value_div = document.getElementById('BP_value_div');
+            let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
+            aitem.style.color = texts[i].rarity_color;
+            let name = items[player_item.id].name;
+            aitem.Data = JSON.parse(JSON.stringify(player_item));
+            aitem.Data.rarity = [];
+            if (maxStack == 1) {
+                aitem.innerHTML = `${name}`;
+                aitem.Data.rarity[i] = maxStack;
+                aitem.Data.num = maxStack;
+                player_E_rarity_num -= maxStack;
+            } else if (player_E_rarity_num >= maxStack) {
+                aitem.innerHTML = `${name} x${maxStack}`;
+                aitem.Data.rarity[i] = maxStack;
+                aitem.Data.num = maxStack;
+                player_E_rarity_num -= maxStack;
+            } else {
+                aitem.innerHTML = `${name} x${player_E_rarity_num}`;
+                aitem.Data.rarity[i] = player_E_rarity_num;
+                aitem.Data.num = player_E_rarity_num;
+                player_E_rarity_num = 0;
+            }
+            //给背包中的物品添加鼠标移动上去显示提示的效果
+            add_mousemove(aitem, 'item', aitem.Data);
+            //对于装备，添加鼠标点击可以穿戴到身上的效果
+            BPEQP_add_click(aitem, 'item', aitem.Data);
+        }
+    }
+}
+// 向目标组件添加鼠标移动显示小窗口的功能
+function add_mousemove(target_div, tip_type, tip_value) {
+    // 获取目标元素和小窗口
+    let tooltip = document.getElementById('tooltip');
+
+    // 鼠标移入目标元素时显示小窗口
+    target_div.addEventListener('mouseenter', () => {
+        tooltip.InitTip(tip_type, tip_value); // 初始化小窗口内容并显示小窗口
+    });
+
+    // 鼠标移动时更新小窗口位置
+    target_div.addEventListener('mousemove', (event) => {
+        tooltip.MoveTip(event); //移动小窗口
+    });
+
+    // 鼠标移出目标元素时隐藏小窗口
+    target_div.addEventListener('mouseleave', () => {
+        tooltip.CloseTip(); //清空小窗口
+    });
+}
+// 向背包界面中的装备元素添加鼠标点击穿戴到身上的功能
+function BPEQP_add_click(target_div, tip_type, tip_value) {
+    // 鼠标移入目标元素时显示小窗口
+    target_div.addEventListener('click', () => {
+        //从玩家背包中去掉要穿戴的物品
+        let keys = Object.keys(tip_value.rarity);
+        let rarity = keys[0];
+        player.Player_lose_Equipment(tip_value.id, tip_value.num, rarity);
+        //切换到当前激活的装备栏
+        show_active_EQP();
+        //将要穿戴的物品放到目前激活的装备栏的指定位置
+
+        //获取背包界面当前激活的过滤条件
+        let BP_type = get_BP_type();
+        //刷新背包界面
+        update_BP_value(BP_type);
+    });
+}
+
+//获取背包界面激活的过滤条件
+function get_BP_type() {
+    //测试
+    const radios = document.querySelectorAll('input[name="BP_switch"]');
+    for (const radio of radios) {
+        if (radio.checked) {
+            // 找到一个选中的按钮后可以结束循环
+            return radio.value;
+        }
+    }
 }
 
 //测试
@@ -298,4 +416,5 @@ export {
     update_BP_value,
     printf_play_item,
     get_BP_weight,
+    show_active_EQP,
 };

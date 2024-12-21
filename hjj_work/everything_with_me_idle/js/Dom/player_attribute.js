@@ -1,5 +1,5 @@
-import { crtElement, addElement, addElement_radio } from './Dom_function.js';
-import { update_player_name, change_PA, change_EQP } from '../Function.js';
+import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
+import { update_player_name, change_PA, change_EQP, show_active_EQP } from '../Function/Function.js';
 
 var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000');
 
@@ -87,8 +87,9 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
     const radios = Player_attribute.querySelectorAll('input[type="radio"][name="EQP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
-            change_EQP(this.value);
+            show_active_EQP();
         });
     });
 }
+
 export { Player_attribute };

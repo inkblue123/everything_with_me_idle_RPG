@@ -5,8 +5,8 @@ import {
     update_attribute_show,
     update_player_name,
     update_BP_value,
-} from '../Function.js';
-import { crtElement, addElement, addElement_radio } from './Dom_function.js';
+} from '../Function/Function.js';
+import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
 
 import { Player_attribute } from './player_attribute.js';
 import { Backpack } from './Backpack.js';

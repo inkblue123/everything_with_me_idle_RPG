@@ -51,11 +51,7 @@ class Player {
         this.init();
     }
 
-    init() {
-        this.Player_get_item('Oak_logs', 10);
-        this.Player_get_item('wood_sword', 1, 'damaged');
-        this.Player_get_item('wood_sword', 2, 'ordinary');
-    }
+    init() {}
     //给玩家添加num个物品
     Player_get_item(id, num, equip_rarity) {
         if (items[id] === undefined) {

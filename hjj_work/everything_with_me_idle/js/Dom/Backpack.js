@@ -1,5 +1,5 @@
-import { crtElement, addElement, addElement_radio } from './Dom_function.js';
-import { show_dropdown_table, change_BP_SK_IB, update_BP_value } from '../Function.js';
+import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
+import { show_dropdown_table, change_BP_SK_IB, update_BP_value } from '../Function/Function.js';
 
 var Backpack = crtElement('div', 'backpack', null, '');
 

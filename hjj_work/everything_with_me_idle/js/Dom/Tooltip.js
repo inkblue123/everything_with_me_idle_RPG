@@ -1,5 +1,12 @@
-import { crtElement, addElement, empty_dom } from './Dom_function.js';
-import { update_HP, update_MP, update_ENP, update_BP_value, printf_play_item, get_BP_weight } from '../Function.js';
+import { crtElement, addElement, empty_dom } from '../Function/Dom_function.js';
+import {
+    update_HP,
+    update_MP,
+    update_ENP,
+    update_BP_value,
+    printf_play_item,
+    get_BP_weight,
+} from '../Function/Function.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 
@@ -8,6 +15,8 @@ var Tooltip = crtElement('div', 'tooltip', null, 'none');
 
 // 初始化小窗口内容并显示小窗口
 Tooltip.InitTip = function (type, value) {
+    this.CloseTip();
+
     this.style.display = 'block';
     if (type == 'item') {
         //初始化物品介绍内容
