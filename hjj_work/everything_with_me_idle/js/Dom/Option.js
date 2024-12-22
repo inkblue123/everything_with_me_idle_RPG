@@ -1,6 +1,7 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 import { update_HP, update_BP_value } from '../Function/Update_func.js';
-import { printf_play_item, get_BP_weight } from '../Function/Function.js';
+import { printf_play_item } from '../Function/Function.js';
+import { get_BP_weight } from '../Function/Get_dom_status_func.js';
 import { player } from '../Player.js';
 
 var Option = crtElement('div', null, 'option_page', '');
@@ -45,7 +46,7 @@ var Option = crtElement('div', null, 'option_page', '');
         // printf_play_item();
         player.Player_get_item('Oak_logs', 1);
         // printf_play_item();
-        update_BP_value('all');
+        update_BP_value();
         printf_play_item();
         get_BP_weight();
     };
@@ -56,7 +57,7 @@ var Option = crtElement('div', null, 'option_page', '');
         printf_play_item();
         player.Player_get_item(10, 1);
         printf_play_item();
-        update_BP_value('all');
+        update_BP_value();
         printf_play_item();
     };
 }

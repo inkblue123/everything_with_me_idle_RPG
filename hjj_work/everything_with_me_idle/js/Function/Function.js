@@ -1,5 +1,6 @@
 import { player } from '../Player.js';
 import { items } from '../Data/Item/Item.js';
+import { get_EQP_switch } from './Get_dom_status_func.js';
 
 //点击“属性展示”按钮之后，显示出或者隐藏属性展示界面
 function change_PA() {
@@ -18,14 +19,6 @@ function change_PA() {
 }
 //显示当前激活的装备栏
 function show_active_EQP() {
-    const radios = document.querySelectorAll('input[name="EQP_switch"]');
-    let EQP_value;
-    // 找到当前激活的装备栏的id
-    for (const radio of radios) {
-        if (radio.checked) {
-            EQP_value = radio.value;
-        }
-    }
     const attribute_show = document.getElementById('attribute_show');
     const equipment_show = document.getElementById('equipment_show');
     //如果当前显示了属性界面，则切换成装备栏
@@ -37,6 +30,7 @@ function show_active_EQP() {
     for (let EQP_column of equipment_show.children) {
         EQP_column.style.display = 'none';
     }
+    let EQP_value = get_EQP_switch();
     document.getElementById(EQP_value).style.display = '';
 }
 //切换背包、技能、图鉴的按钮
@@ -95,26 +89,6 @@ function show_dropdown_table(classification_div, table_id) {
     }
 }
 
-//根据玩家背包物品获得负重
-function get_BP_weight() {
-    var BP_weight = 0;
-    let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
-    for (let play_item_id of arr) {
-        if (items[play_item_id] === undefined) {
-            //玩家拥有的物品不在数据库中，应该清除
-            delete player.backpack_items[play_item_id];
-        } else {
-            let aitem_num = player.backpack_items[play_item_id].num;
-            BP_weight += Math.floor(aitem_num / items[play_item_id].maxStack);
-            if (aitem_num % items[play_item_id].maxStack != 0) {
-                BP_weight++;
-            }
-        }
-    }
-    console.log('玩家当前背包负重%d', BP_weight);
-    return BP_weight;
-}
-
 //测试
 function printf_play_item() {
     //测试
@@ -131,6 +105,5 @@ export {
     change_BP_SK_IB, //
     show_dropdown_table, //
     printf_play_item, //
-    get_BP_weight, //
     show_active_EQP, ///
 };

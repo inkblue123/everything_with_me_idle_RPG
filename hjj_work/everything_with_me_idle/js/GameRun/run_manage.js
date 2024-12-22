@@ -34,7 +34,7 @@ function update_game() {
     update_MP();
     update_ENP();
     update_attribute_show();
-    update_BP_value('all');
+    update_BP_value();
 }
 
 export { update_game };

@@ -1,6 +1,8 @@
 import { player } from '../Player.js';
 import { items } from '../Data/Item/Item.js';
 import { addElement } from './Dom_function.js';
+import { get_BP_type } from './Get_dom_status_func.js';
+import { show_active_EQP } from './Function.js';
 import { texts } from '../Data/Text/Text.js';
 //更新血条上的数值
 function update_HP() {
@@ -34,9 +36,11 @@ function update_player_name() {
     name_input.value = player.name;
 }
 //更新左下角的背包物品栏中的元素
-function update_BP_value(BP_type) {
+function update_BP_value() {
     let BP_value_div = document.getElementById('BP_value_div');
     BP_value_div.replaceChildren(); //清空现有背包内展示的物品
+
+    let BP_type = get_BP_type(); //获取应该展示的物品类别
     let type_switch = BP_type_handle(BP_type); //获取应该展示的物品类别
 
     //遍历玩家的每个物品，按照物品的最大堆叠数量，显示到左下的背包中
@@ -56,29 +60,6 @@ function update_BP_value(BP_type) {
             // 玩家拥有的物品不属于当前启动的过滤规则，不显示
         }
     }
-}
-//显示当前激活的装备栏
-function show_active_EQP() {
-    const radios = document.querySelectorAll('input[name="EQP_switch"]');
-    let EQP_value;
-    // 找到当前激活的装备栏的id
-    for (const radio of radios) {
-        if (radio.checked) {
-            EQP_value = radio.value;
-        }
-    }
-    const attribute_show = document.getElementById('attribute_show');
-    const equipment_show = document.getElementById('equipment_show');
-    //如果当前显示了属性界面，则切换成装备栏
-    if (attribute_show.style.display == '') {
-        attribute_show.style.display = 'none';
-        equipment_show.style.display = '';
-    }
-    //切换到当前激活的的装备栏上
-    for (let EQP_column of equipment_show.children) {
-        EQP_column.style.display = 'none';
-    }
-    document.getElementById(EQP_value).style.display = '';
 }
 
 //将物品类型转义成能适应的全部类型，方便判断物品类型
@@ -237,27 +218,13 @@ function BPEQP_add_click(target_div, tip_type, tip_value) {
         show_active_EQP();
         //将要穿戴的物品放到目前激活的装备栏的指定位置
 
-        //获取背包界面当前激活的过滤条件
-        let BP_type = get_BP_type();
         //刷新背包界面
-        update_BP_value(BP_type);
+        update_BP_value();
 
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口
     });
-}
-
-//获取背包界面激活的过滤条件
-function get_BP_type() {
-    //测试
-    const radios = document.querySelectorAll('input[name="BP_switch"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            // 找到一个选中的按钮后可以结束循环
-            return radio.value;
-        }
-    }
 }
 
 export { update_HP, update_MP, update_ENP, update_player_name, update_BP_value };

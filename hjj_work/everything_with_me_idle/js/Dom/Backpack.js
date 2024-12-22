@@ -215,19 +215,19 @@ var Backpack = crtElement('div', 'backpack', null, '');
     BP_EQP_button.onclick = function () {
         //点击就激活武器装备分类下的“全部”过滤条件
         BP_EQP_all_radio_div.children[0].checked = true;
-        update_BP_value('EQP_all');
+        update_BP_value();
         show_dropdown_table('BP_classification_div', 'BP_EQP_droptable');
     };
     BP_CSB_button.onclick = function () {
         //点击就激活消耗品分类下的“全部”过滤条件
         BP_CSB_all_radio_div.children[0].checked = true;
-        update_BP_value('CSB_all');
+        update_BP_value();
         show_dropdown_table('BP_classification_div', 'BP_CSB_droptable');
     };
     BP_MTR_button.onclick = function () {
         //点击就激活消耗品分类下的“全部”过滤条件
         BP_MTR_all_radio_div.children[0].checked = true;
-        update_BP_value('MTR_all');
+        update_BP_value();
         show_dropdown_table('BP_classification_div', 'BP_MTR_droptable');
     };
 
@@ -268,7 +268,7 @@ var Backpack = crtElement('div', 'backpack', null, '');
     const radios = Backpack.querySelectorAll('input[type="radio"][name="BP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
-            update_BP_value(this.value);
+            update_BP_value();
         });
     });
 }
