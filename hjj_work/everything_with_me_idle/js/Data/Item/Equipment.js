@@ -1,5 +1,6 @@
 import { texts } from '../Text/Text.js';
 import { Item } from './Item_class.js';
+import { types } from '../Type.js';
 
 //物品的大类别枚举
 const Item_type = Object.freeze({
@@ -54,23 +55,6 @@ const equipment_type = Object.freeze({
     //饰品
     Ornament: 'ornament', //饰品
 });
-//单手
-var single_hand = [
-    'dagger',
-    'sword',
-    'sticks',
-    'whips',
-    'hand_gun',
-    'throw',
-    'boomerang',
-    'putmagic_core',
-    'zhenfa_core',
-    'magic_core',
-    'spread_core',
-    'summon_core',
-];
-//双手
-var both_hand = ['battle_axe', 'long_handled', 'hammers', 'gloves', 'bow', 'crossbow', 'spray_gun'];
 
 //可穿戴部位
 const wearing_position_type = Object.freeze({
@@ -103,9 +87,9 @@ class Equipment extends Item {
     init_Equipment(e_type, special) {
         this.equipment_type.push(e_type);
         //为装备预设穿戴位置
-        if (single_hand.includes(e_type)) {
+        if (types.single_hand.includes(e_type)) {
             this.wearing_position.push('main_hand'); //这件装备可以放在主手位置
-        } else if (both_hand.includes(e_type)) {
+        } else if (types.both_hand.includes(e_type)) {
             this.wearing_position.push('main_hand_two'); //这件装备可以放在主手位置
             this.two_handed_flag = true; //这件装备属于双手武器
         } else if (e_type == 'helmet') {

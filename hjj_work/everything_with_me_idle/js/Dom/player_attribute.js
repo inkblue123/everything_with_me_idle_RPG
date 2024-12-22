@@ -44,9 +44,9 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
     for (let i = 0; i < 4; i++) {
         var EQP_i = addElement(equipment_show, 'div', `EQP_column_${i + 1}`, 'page_columns_11', '');
         var EQP_left = addElement(EQP_i, 'div', null, 'page_columns_111', ''); //装备栏左侧，角色的4个防具和主副手
-        var EQP_arms_div = addElement(EQP_left, 'div', 'EQP_arms_div', null, '');
-        var EQP_Armor_div = addElement(EQP_left, 'div', 'EQP_Armor_div', null, '');
-        var EQP_arm_div = addElement(EQP_left, 'div', 'EQP_arm_div', null, '');
+        var EQP_arms_div = addElement(EQP_left, 'div', null, 'EQP_arms_div', '');
+        var EQP_Armor_div = addElement(EQP_left, 'div', null, 'EQP_Armor_div', '');
+        var EQP_arm_div = addElement(EQP_left, 'div', null, 'EQP_arm_div', '');
         addElement(EQP_arms_div, 'button', null, 'EQP_show', '');
         for (let j = 0; j < 4; j++) {
             addElement(EQP_Armor_div, 'button', null, 'EQP_show', '');

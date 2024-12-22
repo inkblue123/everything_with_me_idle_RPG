@@ -1,6 +1,6 @@
 import { player } from '../Player.js';
 import { items } from '../Data/Item/Item.js';
-import { get_EQP_switch } from './Get_dom_status_func.js';
+import { get_EQP_switch } from './Get_func.js';
 
 //点击“属性展示”按钮之后，显示出或者隐藏属性展示界面
 function change_PA() {
@@ -100,10 +100,4 @@ function printf_play_item() {
     console.log('\n');
 }
 
-export {
-    change_PA, //
-    change_BP_SK_IB, //
-    show_dropdown_table, //
-    printf_play_item, //
-    show_active_EQP, ///
-};
+export { change_PA, change_BP_SK_IB, show_dropdown_table, printf_play_item, show_active_EQP };

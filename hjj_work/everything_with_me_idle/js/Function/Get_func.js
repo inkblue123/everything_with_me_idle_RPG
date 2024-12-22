@@ -43,5 +43,9 @@ function get_BP_weight() {
     console.log('玩家当前背包负重%d', BP_weight);
     return BP_weight;
 }
+//获取物品id获取可装备位置
+function get_EQP_wearing_position(id) {
+    items[id].wearing_position;
+}
 
 export { get_BP_type, get_EQP_switch, get_BP_weight };

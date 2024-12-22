@@ -1,7 +1,7 @@
 import { player } from '../Player.js';
 import { items } from '../Data/Item/Item.js';
 import { addElement } from './Dom_function.js';
-import { get_BP_type } from './Get_dom_status_func.js';
+import { get_BP_type, get_EQP_switch } from './Get_func.js';
 import { show_active_EQP } from './Function.js';
 import { texts } from '../Data/Text/Text.js';
 //更新血条上的数值
@@ -217,7 +217,7 @@ function BPEQP_add_click(target_div, tip_type, tip_value) {
         //切换到当前激活的装备栏
         show_active_EQP();
         //将要穿戴的物品放到目前激活的装备栏的指定位置
-
+        player.worn_Equipment(tip_value.id, tip_value.num, rarity);
         //刷新背包界面
         update_BP_value();
 
@@ -226,5 +226,51 @@ function BPEQP_add_click(target_div, tip_type, tip_value) {
         tooltip.CloseTip(); //清空小窗口
     });
 }
+// 更新装备栏中显示的内容
+function update_equipment_show() {
+    //获取当前激活的装备栏
+    let EQP_column = get_EQP_switch();
+    //获取装备栏的具体组件，清空原本信息
+    const EQP_column_div = document.getElementById(EQP_column);
+    let main_hand = EQP_column_div.children[0].children[0].children[0]; //主手位置
+    main_hand.innerHTML = '';
+    let head = EQP_column_div.children[0].children[1].children[0]; //头部位置
+    head.innerHTML = '';
+    let chest = EQP_column_div.children[0].children[1].children[1]; //胸部位置
+    chest.innerHTML = '';
+    let legs = EQP_column_div.children[0].children[1].children[2]; //腿部位置
+    legs.innerHTML = '';
+    let feet = EQP_column_div.children[0].children[1].children[3]; //脚部位置
+    feet.innerHTML = '';
+    let deputy = EQP_column_div.children[0].children[2].children[0]; //副手位置
+    deputy.innerHTML = '';
+    //
+    let player_EQP_column = player.worn_EQP[EQP_column];
+    for (let wearing_position in player_EQP_column) {
+        let id = player_EQP_column[wearing_position].id;
+        if (wearing_position == 'main_hand_two') {
+            main_hand.innerHTML = items[id].name;
+            deputy.innerHTML = items[id].name;
+        } else if (wearing_position == 'main_hand') {
+            main_hand.innerHTML = items[id].name;
+        }
 
-export { update_HP, update_MP, update_ENP, update_player_name, update_BP_value };
+        if (wearing_position == 'head') {
+            head.innerHTML = items[id].name;
+        }
+        if (wearing_position == 'chest') {
+            chest.innerHTML = items[id].name;
+        }
+        if (wearing_position == 'legs') {
+            legs.innerHTML = items[id].name;
+        }
+        if (wearing_position == 'feet') {
+            feet.innerHTML = items[id].name;
+        }
+        if (wearing_position == 'deputy') {
+            deputy.innerHTML = items[id].name;
+        }
+    }
+}
+
+export { update_HP, update_MP, update_ENP, update_player_name, update_BP_value, update_equipment_show };
