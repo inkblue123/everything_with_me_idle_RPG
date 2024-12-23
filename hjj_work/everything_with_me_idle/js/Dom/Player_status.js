@@ -1,8 +1,8 @@
 import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
-import { change_PA, show_active_EQP } from '../Function/Function.js';
-import { update_player_name } from '../Function/Update_func.js';
+import { change_PA, show_active_EQP } from '../Function/show_func.js';
+import { update_player_name, update_equipment_show } from '../Function/Update_func.js';
 
-var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000');
+var player_status = crtElement('div', 'player_status', null, '', '#000000');
 
 //创建左上角，角色装备属性展示界面内的详细组件
 {
@@ -52,7 +52,6 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
             addElement(EQP_Armor_div, 'button', null, 'EQP_show', '');
         }
         var test = addElement(EQP_arm_div, 'button', null, 'EQP_show', '');
-        test.innerHTML = `装备栏\n${i + 1}`;
         var EQP_right = addElement(EQP_i, 'div', null, 'page_columns_11', ''); //装备栏右侧，饰品和饰品槽
     }
 
@@ -70,9 +69,9 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
     EQP_switch_div.children[0].children[0].checked = true;
 
     //组件放入角色属性装备界面中
-    Player_attribute.appendChild(bar_div);
-    Player_attribute.appendChild(attr_equip_div);
-    Player_attribute.appendChild(Player_attr_switch_div);
+    player_status.appendChild(bar_div);
+    player_status.appendChild(attr_equip_div);
+    player_status.appendChild(Player_attr_switch_div);
     //
 }
 
@@ -85,7 +84,7 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
         change_PA();
     };
     //角色装备栏切换开关
-    const radios = Player_attribute.querySelectorAll('input[type="radio"][name="EQP_switch"]');
+    const radios = player_status.querySelectorAll('input[type="radio"][name="EQP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
             show_active_EQP();
@@ -93,4 +92,4 @@ var Player_attribute = crtElement('div', 'player_attribute', null, '', '#000000'
     });
 }
 
-export { Player_attribute };
+export { player_status };

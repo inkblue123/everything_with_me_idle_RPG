@@ -1,6 +1,6 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 
-import { Player_attribute } from './player_attribute.js';
+import { player_status } from './Player_status.js';
 import { Backpack } from './Backpack.js';
 import { Option } from './Option.js';
 import { Tooltip } from './Tooltip.js';
@@ -10,7 +10,7 @@ var dom = new Object();
 // 创建出所有需要的界面
 {
     //角色属性装备界面
-    dom.player_attribute = Player_attribute;
+    dom.player_status = player_status;
     //物品、技能、图鉴展示界面
     dom.backpack = Backpack;
     //设置界面
@@ -62,7 +62,7 @@ var dom = new Object();
     dom.game_dom.appendChild(dom.game_left);
     dom.game_dom.appendChild(dom.game_right);
 
-    dom.game_left.appendChild(dom.player_attribute);
+    dom.game_left.appendChild(dom.player_status);
     dom.game_left.appendChild(dom.backpack);
 
     dom.game_right.appendChild(dom.game_up_combat);

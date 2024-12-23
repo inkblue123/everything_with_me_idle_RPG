@@ -1,5 +1,5 @@
 /* 角色属性界面的样式 */
-#player_attribute {
+#player_status {
     display: grid;
     /* 单列布局 */
     /* grid-template-columns: 1fr; */

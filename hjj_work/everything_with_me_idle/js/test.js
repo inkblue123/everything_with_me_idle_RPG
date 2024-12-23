@@ -1,5 +1,5 @@
 import { addElement } from './Function/Dom_function.js';
-import { player } from './Player.js';
+import { player } from './Player/player.js';
 import { update_MP, update_ENP } from './Function/Function.js';
 import { update_HP } from './Function/Update_func.js';
 

@@ -25,10 +25,12 @@ types.single_hand = [
     'summon_core',
 ];
 //特制武器可能的稀有度
+//破损，普通，优良，稀有，史诗，传说
 types.special_rarity = ['damaged', 'ordinary', 'excellent', 'rare', 'epic', 'legendary'];
 //制式武器可能的稀有度
+//破损，普通，优良，稀有，史诗
 types.no_special_rarity = ['damaged', 'ordinary', 'excellent', 'rare', 'epic'];
 //装备可能放置的位置
-types.wearing_position = ['main_hand', 'main_hand_two', 'head', 'chest', 'legs', 'feet', 'deputy', 'ornament'];
+types.wearing_position = ['main_hand', 'head', 'chest', 'legs', 'feet', 'deputy'];
 
 export { types };

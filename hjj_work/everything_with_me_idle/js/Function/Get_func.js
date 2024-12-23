@@ -1,4 +1,4 @@
-import { player } from '../Player.js';
+import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 
 //获取背包界面激活的过滤条件
@@ -11,7 +11,6 @@ function get_BP_type() {
         }
     }
 }
-
 //找到当前激活的装备栏的id
 function get_EQP_switch() {
     const radios = document.querySelectorAll('input[name="EQP_switch"]');
@@ -23,7 +22,6 @@ function get_EQP_switch() {
         }
     }
 }
-
 //根据玩家背包物品获得负重
 function get_BP_weight() {
     var BP_weight = 0;
@@ -42,10 +40,6 @@ function get_BP_weight() {
     }
     console.log('玩家当前背包负重%d', BP_weight);
     return BP_weight;
-}
-//获取物品id获取可装备位置
-function get_EQP_wearing_position(id) {
-    items[id].wearing_position;
 }
 
 export { get_BP_type, get_EQP_switch, get_BP_weight };

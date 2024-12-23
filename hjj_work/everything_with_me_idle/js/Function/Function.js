@@ -1,92 +1,74 @@
-import { player } from '../Player.js';
+import { player } from '../Player/player.js';
 import { items } from '../Data/Item/Item.js';
-import { get_EQP_switch } from './Get_func.js';
 
-//点击“属性展示”按钮之后，显示出或者隐藏属性展示界面
-function change_PA() {
-    const attribute_show = document.getElementById('attribute_show');
-    const equipment_show = document.getElementById('equipment_show');
+//判断物品类型中是否在指定过滤条件内
+function Item_type_handle(type_switch, items_type) {
+    for (let item_T of items_type) {
+        if (type_switch.includes(item_T)) return true;
+    }
+    return false;
+}
 
-    if (attribute_show.style.display == '') {
-        //如果显示了属性界面，则切换成装备栏
-        attribute_show.style.display = 'none';
-        equipment_show.style.display = '';
-        show_active_EQP();
-    } else {
-        attribute_show.style.display = '';
-        equipment_show.style.display = 'none';
+//将物品类型转义成能适应的全部类型，方便判断物品类型
+function BP_type_handle(BP_type) {
+    var BP_item_type = [];
+    if (BP_type === undefined) {
+        return BP_item_type;
     }
-}
-//显示当前激活的装备栏
-function show_active_EQP() {
-    const attribute_show = document.getElementById('attribute_show');
-    const equipment_show = document.getElementById('equipment_show');
-    //如果当前显示了属性界面，则切换成装备栏
-    if (attribute_show.style.display == '') {
-        attribute_show.style.display = 'none';
-        equipment_show.style.display = '';
-    }
-    //切换到当前激活的的装备栏上
-    for (let EQP_column of equipment_show.children) {
-        EQP_column.style.display = 'none';
-    }
-    let EQP_value = get_EQP_switch();
-    document.getElementById(EQP_value).style.display = '';
-}
-//切换背包、技能、图鉴的按钮
-function change_BP_SK_IB(button_id) {
-    const BP_div = document.getElementById('BP_div');
-    const SK_div = document.getElementById('SK_div');
-    const IB_div = document.getElementById('IB_div');
-    if (button_id == 'BP_switch_button') {
-        BP_div.style.display = '';
-        SK_div.style.display = 'none';
-        IB_div.style.display = 'none';
-    }
-    if (button_id == 'SK_switch_button') {
-        BP_div.style.display = 'none';
-        SK_div.style.display = '';
-        IB_div.style.display = 'none';
-    }
-    if (button_id == 'IB_switch_button') {
-        BP_div.style.display = 'none';
-        SK_div.style.display = 'none';
-        IB_div.style.display = '';
-    }
-}
-//点击了隐藏下拉框的按钮之后，展示当前按钮相关的下拉框，隐藏其他下拉框
-function show_dropdown_table(classification_div, table_id) {
-    const dropdownTable = document.getElementById(table_id);
-    const Class_div = document.getElementById(classification_div);
+    switch (BP_type) {
+        case 'all':
+            BP_item_type.push('equipment');
+            BP_item_type.push('consumable');
+            BP_item_type.push('material');
+            break;
+        case 'EQP_all': //武器装备，全部
+            BP_item_type.push('equipment');
+            break;
+        case 'EQP_W': //武器装备，武器
+            BP_item_type.push('weapon');
+            break;
+        case 'EQP_A': //武器装备，防具
+            BP_item_type.push('armor');
+            break;
+        case 'EQP_D': //武器装备，副手
+            BP_item_type.push('deputy');
+            break;
+        case 'EQP_O': //武器装备，饰品
+            BP_item_type.push('ornament');
+            break;
+        case 'CSB_all': //可使用物品，全部
+            BP_item_type.push('consumable');
+            break;
+        case 'CSB_F': //可使用物品，可食用物品
+            BP_item_type.push('food_CSB');
+            break;
+        case 'CSB_A': //可使用物品，弹药
+            BP_item_type.push('ammo_CSB');
+            break;
+        case 'CSB_L': //可使用物品，生活消耗品
+            BP_item_type.push('life_CSB');
+            break;
+        case 'MTR_all': //材料，全部
+            BP_item_type.push('material');
+            break;
+        case 'MTR_R': //材料，自然材料
+            BP_item_type.push('raw_MTR');
+            break;
+        case 'MTR_P': //材料，人工材料
+            BP_item_type.push('process_MTR');
+            break;
+        case 'MTR_F': //材料，成品
+            BP_item_type.push('finish_MTR');
+            break;
+        case 'MTR_O': //材料，其他物品
+            BP_item_type.push('other_MTR');
+            break;
 
-    // 切换目标下拉框的显示/隐藏状态
-    if (dropdownTable.style.display === 'block') {
-        // 如果表格已经显示，则折叠它
-        dropdownTable.style.maxHeight = '0';
-        setTimeout(() => {
-            dropdownTable.style.display = 'none';
-        }, 500); // 等待动画完成后隐藏
-    } else {
-        // 如果表格没有显示，则展开它
-        dropdownTable.style.display = 'block';
-        setTimeout(() => {
-            dropdownTable.style.maxHeight = '300px'; // 最大高度需要根据内容调整
-        }, 10); // 让显示状态先更新，再触发动画
+        default:
+            break;
     }
-    //遍历，并且关闭其他下拉框
-    let tables = Class_div.querySelectorAll('.dropdown_table');
-    for (let table of tables) {
-        if (table.id !== table_id) {
-            // 切换表格的显示/隐藏状态
-            if (table.style.display === 'block') {
-                // 如果表格已经显示，则折叠它
-                table.style.maxHeight = '0';
-                setTimeout(() => {
-                    table.style.display = 'none';
-                }, 500); // 等待动画完成后隐藏
-            }
-        }
-    }
+
+    return BP_item_type;
 }
 
 //测试
@@ -100,4 +82,4 @@ function printf_play_item() {
     console.log('\n');
 }
 
-export { change_PA, change_BP_SK_IB, show_dropdown_table, printf_play_item, show_active_EQP };
+export { printf_play_item, Item_type_handle, BP_type_handle };
