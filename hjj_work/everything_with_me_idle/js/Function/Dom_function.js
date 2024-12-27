@@ -2,7 +2,7 @@ import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { player } from '../Player/player.js';
 import { show_active_EQP } from './show_func.js';
-import { update_BP_value } from './Update_func.js';
+import { update_BP_value, update_equipment_show } from './Update_func.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
     let newdom = document.createElement(elem);
@@ -126,7 +126,7 @@ function BPEQP_add_click(target_div, tip_type, tip_value) {
         //从玩家背包中去掉要穿戴的物品
         let keys = Object.keys(tip_value.rarity);
         let rarity = keys[0];
-        let ret = player.Player_lose_Equipment(tip_value.id, tip_value.num, rarity);
+        let ret = player.Player_lose_Equipment(tip_value);
         if (ret <= 0) return;
         //切换到当前激活的装备栏
         show_active_EQP();
@@ -134,7 +134,8 @@ function BPEQP_add_click(target_div, tip_type, tip_value) {
         player.worn_Equipment(tip_value.id, tip_value.num, rarity);
         //刷新背包界面
         update_BP_value();
-
+        //更新装备栏
+        update_equipment_show();
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口

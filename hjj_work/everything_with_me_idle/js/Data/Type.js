@@ -32,5 +32,37 @@ types.special_rarity = ['damaged', 'ordinary', 'excellent', 'rare', 'epic', 'leg
 types.no_special_rarity = ['damaged', 'ordinary', 'excellent', 'rare', 'epic'];
 //装备可能放置的位置
 types.wearing_position = ['main_hand', 'head', 'chest', 'legs', 'feet', 'deputy'];
-
+//装备可能的小类型
+types.equipment_type = [
+    'empty_hands', //空手
+    // 近战武器
+    'dagger', //匕首
+    'sword', //剑
+    'battle_axe', //战斧
+    'long_handled', //长柄武器
+    'gloves', //拳套
+    'sticks', //棍棒
+    'hammers', //大锤
+    'whips', //鞭子
+    //远程武器
+    'bow', //弓
+    'crossbow', //弩
+    'hand_gun', //手弩
+    'spray_gun', //喷枪
+    'boomerang', //回旋武器
+    'throw', //投掷工具
+    //魔法武器
+    'putmagic_core', //施法核心
+    'zhenfa_core', //阵法核心
+    'magic_core', //法术核心
+    'spread_core', //扩散核心
+    'summon_core', //召唤核心
+    //防具
+    'helmet', //头盔
+    'chest_armor', //胸甲
+    'leg_armor', //腿甲
+    'shoes', //鞋子
+    'deputy', //副手装备
+    'ornament', //饰品
+];
 export { types };

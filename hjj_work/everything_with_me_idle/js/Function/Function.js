@@ -1,5 +1,6 @@
 import { player } from '../Player/player.js';
 import { items } from '../Data/Item/Item.js';
+import { types } from '../Data/Type.js';
 
 //判断物品类型中是否在指定过滤条件内
 function Item_type_handle(type_switch, items_type) {
@@ -71,6 +72,41 @@ function BP_type_handle(BP_type) {
     return BP_item_type;
 }
 
+//校验输入的参数是否是合法的装备信息
+function check_Equipment(id, equip_rarity) {
+    if (items[id] === undefined) {
+        //该物品未定义
+        console.log('未定义物品：%s', id);
+        return false;
+    }
+    if (items[id].type.includes('equipment')) {
+        //稀有度参数校验
+        if (items[id].special_flag) {
+            if (!types.special_rarity.includes(equip_rarity)) {
+                console.log('稀有度异常，%s不属于特制武器的可能稀有度', equip_rarity);
+                return false;
+            }
+        } else {
+            if (!types.no_special_rarity.includes(equip_rarity)) {
+                console.log('稀有度异常，%s不属于制式武器的可能稀有度', equip_rarity);
+                return false;
+            }
+        }
+        //校验无误，当前输入参数属于正确的装备的参数
+        return true;
+    } else {
+        //该物品不属于装备
+        console.log('%s不属于装备', id);
+        return false;
+    }
+}
+
+//判断一个对象是否为空
+function isEmptyObject(obj) {
+    //测试
+    return JSON.stringify(obj) === '{}';
+}
+
 //测试
 function printf_play_item() {
     //测试
@@ -82,4 +118,4 @@ function printf_play_item() {
     console.log('\n');
 }
 
-export { printf_play_item, Item_type_handle, BP_type_handle };
+export { printf_play_item, Item_type_handle, BP_type_handle, check_Equipment, isEmptyObject };

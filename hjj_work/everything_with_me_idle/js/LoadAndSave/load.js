@@ -21,6 +21,10 @@ function player_init() {
     player.Player_get_item('Oak_logs', 10);
     player.Player_get_item('wood_sword', 1, 'damaged');
     player.Player_get_item('wood_sword', 2, 'ordinary');
+    player.Player_get_item('wood_battle_axe', 2, 'ordinary');
+    player.Player_get_item('wood_battle_axe', 2, 'excellent');
+
+    player.Player_get_item('wood_battle_axe', 2, 'excellent');
 }
 function dom_init() {
     const radios = document.querySelectorAll('input[name="EQP_switch"]');

@@ -20,42 +20,6 @@ const Item_type = Object.freeze({
     Other: 'other_MTR', //其他物品
 });
 
-//武器装备的具体类别
-const equipment_type = Object.freeze({
-    Empty_hands: 'empty_hands', //空手
-    // 近战武器
-    Dagger: 'dagger', //匕首
-    Sword: 'sword', //剑
-    Battle_axe: 'battle_axe', //战斧
-    Long_handled: 'long_handled', //长柄武器
-    Gloves: 'gloves', //拳套
-    Sticks: 'sticks', //棍棒
-    Hammers: 'hammers', //大锤
-    Whips: 'whips', //鞭子
-    //远程武器
-    Bow: 'bow', //弓
-    Crossbow: 'crossbow', //弩
-    Hand_gun: 'hand_gun', //手弩
-    Spray_gun: 'spray_gun', //喷枪
-    Boomerang: 'boomerang', //回旋武器
-    Throw: 'throw', //投掷工具
-    //魔法武器
-    Putmagic_core: 'putmagic_core', //施法核心
-    Zhenfa_core: 'zhenfa_core', //阵法核心
-    magic_core: 'magic_core', //法术核心
-    Spread_core: 'spread_core', //扩散核心
-    Summon_core: 'summon_core', //召唤核心
-    //防具
-    Helmet: 'helmet', //头盔
-    Chest_armor: 'chest_armor', //胸甲
-    Leg_armor: 'leg_armor', //腿甲
-    Shoes: 'shoes', //鞋子
-    //副手
-    Deputy: 'deputy', //副手装备
-    //饰品
-    Ornament: 'ornament', //饰品
-});
-
 //可穿戴部位
 const wearing_position_type = Object.freeze({
     Head: 'head', //头部
@@ -145,13 +109,49 @@ function init_Item_Equipment(items) {
         items['wood_bow'] = new Equipment('wood_bow');
         items['wood_bow'].init_Item_other(1, ['weapon']); //堆叠数量，物品大分类
         items['wood_bow'].init_Equipment('bow'); //物品小分类
+
+        //测试手弩
+        items['test_hand_gun'] = new Equipment('test_hand_gun');
+        items['test_hand_gun'].name = '测试用手弩';
+        items['test_hand_gun'].init_Item_other(1, ['weapon']); //堆叠数量，物品大分类
+        items['test_hand_gun'].init_Equipment('hand_gun'); //物品小分类
+
+        //测试回旋武器
+        items['test_boomerang'] = new Equipment('test_boomerang');
+        items['test_boomerang'].name = '测试用回旋武器';
+        items['test_boomerang'].init_Item_other(5, ['weapon']); //堆叠数量，物品大分类
+        items['test_boomerang'].init_Equipment('boomerang'); //物品小分类
     }
     //魔法武器
     {
     }
     //防具
     {
+        items['test_helmet'] = new Equipment('test_helmet');
+        items['test_helmet'].name = '测试头盔';
+        items['test_helmet'].init_Item_other(1, ['armor']); //堆叠数量，物品大分类
+        items['test_helmet'].init_Equipment('helmet'); //物品小分类
+        items['test_chest_armor'] = new Equipment('test_chest_armor');
+        items['test_chest_armor'].name = '测试胸甲';
+        items['test_chest_armor'].init_Item_other(1, ['armor']); //堆叠数量，物品大分类
+        items['test_chest_armor'].init_Equipment('chest_armor'); //物品小分类
+        items['test_leg_armor'] = new Equipment('test_leg_armor');
+        items['test_leg_armor'].name = '测试腿甲';
+        items['test_leg_armor'].init_Item_other(1, ['armor']); //堆叠数量，物品大分类
+        items['test_leg_armor'].init_Equipment('leg_armor'); //物品小分类
+        items['test_shoes'] = new Equipment('test_shoes');
+        items['test_shoes'].name = '测试鞋子';
+        items['test_shoes'].init_Item_other(1, ['armor']); //堆叠数量，物品大分类
+        items['test_shoes'].init_Equipment('shoes'); //物品小分类
     }
+    //副手
+    {
+        items['test_shield'] = new Equipment('test_shield');
+        items['test_shield'].name = '测试盾牌';
+        items['test_shield'].init_Item_other(1, ['deputy']); //堆叠数量，物品大分类
+        items['test_shield'].init_Equipment('deputy'); //物品小分类
+    }
+    //饰品
 }
 
 export { init_Item_Equipment };

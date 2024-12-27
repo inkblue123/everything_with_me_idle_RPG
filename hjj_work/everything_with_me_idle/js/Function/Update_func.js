@@ -5,7 +5,7 @@ import { types } from '../Data/Type.js';
 import { addElement, addBP_item, addBP_equipment } from './Dom_function.js';
 import { get_BP_type, get_EQP_switch } from './Get_func.js';
 import { show_active_EQP } from './show_func.js';
-import { Item_type_handle, BP_type_handle } from './Function.js';
+import { Item_type_handle, BP_type_handle, isEmptyObject } from './Function.js';
 //更新血条上的数值
 function update_HP() {
     const HP_bar = document.getElementById('HP_bar');
@@ -87,8 +87,11 @@ function update_equipment_show(EQP_column) {
         EQP_div_date[i].style.opacity = 0.5;
     }
     //读取玩家身上穿戴的装备信息，显示到装备栏上
-    let player_EQP_column = player.worn_EQP[EQP_column];
+    let player_EQP_column = player.get_worn_EQP(EQP_column);
     for (let wearing_position in player_EQP_column) {
+        //如果位置上没有装备信息，不处理
+        if (isEmptyObject(player_EQP_column[wearing_position])) continue;
+        
         let id = player_EQP_column[wearing_position].id;
         if (wearing_position == 'main_hand_two') {
             EQP_div_date['main_hand'].innerHTML = items[id].name;

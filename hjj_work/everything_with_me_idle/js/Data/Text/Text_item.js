@@ -33,7 +33,8 @@ function init_Text_item(texts) {
     texts['wood_sword'].item_desc = '使用木头制作的剑，并不如何锋利，仅仅是可以挥舞罢了';
     texts['wood_battle_axe'] = new Text('wood_battle_axe');
     texts['wood_battle_axe'].item_name = '木制战斧';
-    texts['wood_battle_axe'].item_desc = '使用木头制作的战斧，削出了一个棱角充当斧刃，看来只能打架，不能用来砍树了';
+    texts['wood_battle_axe'].item_desc =
+        '使用木头制作的战斧，削出了一个很钝的棱角充当斧刃，看来只能打架，不能用来砍树了';
     texts['wood_sticks'] = new Text('wood_sticks');
     texts['wood_sticks'].item_name = '木棒';
     texts['wood_sticks'].item_desc =
