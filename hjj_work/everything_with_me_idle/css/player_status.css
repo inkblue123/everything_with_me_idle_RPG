@@ -195,6 +195,7 @@
 /* 装备栏中，容纳防具的div */
 .EQP_Armor_div {
     display: flex;
+    margin: auto;
     flex-direction: column;
     align-items: center;
     /* gap: 5px; */
@@ -208,15 +209,18 @@
 }
 /* 单个装备展示单元格 */
 .EQP_show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 60px;
-    /* width: 50px; */
     height: 45px;
     background-color: rgb(255, 255, 255);
     font-size: 15px; /*文本大小*/
-    /*设置行间距为1，也就去掉了默认的行间距*/
     line-height: 1;
+    text-align: center; /* 水平居中 */
     /* white-space: nowrap; */
     border: 2px solid #797691; /* 内框 */
+    user-select: none;
 }
 
 /* 属性展示单元格 */

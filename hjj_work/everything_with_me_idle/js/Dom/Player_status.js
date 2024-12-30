@@ -1,4 +1,4 @@
-import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
+import { crtElement, addElement, addElement_radio, add_click_Equipment_worn_remove } from '../Function/Dom_function.js';
 import { change_PA, show_active_EQP } from '../Function/show_func.js';
 import { update_player_name, update_equipment_show } from '../Function/Update_func.js';
 
@@ -47,11 +47,11 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
         var EQP_arms_div = addElement(EQP_left, 'div', null, 'EQP_arms_div', '');
         var EQP_Armor_div = addElement(EQP_left, 'div', null, 'EQP_Armor_div', '');
         var EQP_arm_div = addElement(EQP_left, 'div', null, 'EQP_arm_div', '');
-        addElement(EQP_arms_div, 'button', null, 'EQP_show', '');
+        addElement(EQP_arms_div, 'div', null, 'EQP_show', '');
         for (let j = 0; j < 4; j++) {
-            addElement(EQP_Armor_div, 'button', null, 'EQP_show', '');
+            addElement(EQP_Armor_div, 'div', null, 'EQP_show', '');
         }
-        var test = addElement(EQP_arm_div, 'button', null, 'EQP_show', '');
+        var test = addElement(EQP_arm_div, 'div', null, 'EQP_show', '');
         var EQP_right = addElement(EQP_i, 'div', null, 'page_columns_11', ''); //装备栏右侧，饰品和饰品槽
     }
 
@@ -90,6 +90,22 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
             show_active_EQP();
         });
     });
+    //角色装备栏添加点击之后卸下装备的功能
+    for (let i = 0; i < 4; i++) {
+        let EQP_i = equipment_show.children[i].children[0];
+        let main_hand = EQP_i.children[0].children[0]; //主手位置
+        add_click_Equipment_worn_remove(main_hand, 'main_hand');
+        let deputy = EQP_i.children[2].children[0]; //副手位置
+        add_click_Equipment_worn_remove(deputy, 'deputy');
+        let head = EQP_i.children[1].children[0]; //头部位置
+        add_click_Equipment_worn_remove(head, 'head');
+        let chest = EQP_i.children[1].children[1]; //胸部位置
+        add_click_Equipment_worn_remove(chest, 'chest');
+        let legs = EQP_i.children[1].children[2]; //腿部位置
+        add_click_Equipment_worn_remove(legs, 'legs');
+        let feet = EQP_i.children[1].children[2]; //鞋部位置
+        add_click_Equipment_worn_remove(feet, 'feet');
+    }
 }
 
 export { player_status };

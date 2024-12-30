@@ -58,7 +58,7 @@ function addBP_item(player_item) {
             aitem.innerHTML = `${name} x${player_item_num}`;
             player_item_num = 0;
         }
-        add_mousemove(aitem, 'item', aitem.Data);
+        add_show_Tooltip(aitem, 'item', aitem.Data);
     }
 }
 //向背包界面展示玩家的一种武器装备
@@ -92,16 +92,16 @@ function addBP_equipment(player_item) {
                 player_E_rarity_num = 0;
             }
             //给背包中的物品添加鼠标移动上去显示提示的效果
-            add_mousemove(aitem, 'item', aitem.Data);
-            //对于装备，添加鼠标点击可以穿戴到身上的效果
+            add_show_Tooltip(aitem, 'item', aitem.Data);
+            //添加鼠标点击可以穿戴到身上的效果
             if (i != 'damaged') {
-                BPEQP_add_click(aitem, 'item', aitem.Data);
+                add_click_Equipment_worn(aitem, aitem.Data);
             }
         }
     }
 }
 // 向目标组件添加鼠标移动显示小窗口的功能
-function add_mousemove(target_div, tip_type, tip_value) {
+function add_show_Tooltip(target_div, tip_type, tip_value) {
     // 获取目标元素和小窗口
     let tooltip = document.getElementById('tooltip');
 
@@ -120,8 +120,8 @@ function add_mousemove(target_div, tip_type, tip_value) {
         tooltip.CloseTip(); //清空小窗口
     });
 }
-// 向背包界面中的装备元素添加鼠标点击穿戴到身上的功能
-function BPEQP_add_click(target_div, tip_type, tip_value) {
+//  向目标组件添加鼠标点击穿戴到身上的功能
+function add_click_Equipment_worn(target_div, tip_value) {
     target_div.addEventListener('click', () => {
         //从玩家背包中去掉要穿戴的物品
         let keys = Object.keys(tip_value.rarity);
@@ -142,6 +142,20 @@ function BPEQP_add_click(target_div, tip_type, tip_value) {
     });
 }
 
+// 向目标组件添加鼠标点击后从装备栏里卸下的的功能
+function add_click_Equipment_worn_remove(target_div, tip_value) {
+    target_div.addEventListener('click', () => {
+        player.remove_worn_Equipment(tip_value);
+        //刷新背包界面
+        update_BP_value();
+        //更新装备栏
+        update_equipment_show();
+        //关闭提示窗
+        let tooltip = document.getElementById('tooltip');
+        tooltip.CloseTip(); //清空小窗口
+    });
+}
+
 export {
     crtElement,
     addElement,
@@ -149,6 +163,7 @@ export {
     empty_dom,
     addBP_item,
     addBP_equipment,
-    add_mousemove,
-    BPEQP_add_click,
+    add_show_Tooltip,
+    add_click_Equipment_worn,
+    add_click_Equipment_worn_remove,
 };

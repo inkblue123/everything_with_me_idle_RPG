@@ -75,9 +75,23 @@ class Player {
         if (!check_Equipment(id, equip_rarity)) {
             return 0;
         }
-        //将装备放到身上装备栏里对应的位置
+        //脱下身上即将穿戴的目标位置的原装备
         let raw_worn_E = new Object();
-        this.worn_EQP.worn_Equipment(id, num, equip_rarity, raw_worn_E);
+        this.worn_EQP.Remove_worn_Equipment(id, raw_worn_E);
+        let keys = Object.keys(raw_worn_E);
+        for (let key of keys) {
+            //如果原位置已有装备，则将原装备放回背包
+            if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item(raw_worn_E[key]);
+        }
+
+        //将装备放到身上装备栏里对应的位置
+        this.worn_EQP.worn_Equipment(id, num, equip_rarity);
+    }
+    //脱掉一件装备
+    remove_worn_Equipment(wp) {
+        //脱下身上指定位置的装备
+        let raw_worn_E = new Object();
+        this.worn_EQP.Remove_position_Equipment(wp, raw_worn_E);
         let keys = Object.keys(raw_worn_E);
         for (let key of keys) {
             //如果原位置已有装备，则将原装备放回背包

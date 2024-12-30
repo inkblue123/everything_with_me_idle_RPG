@@ -103,8 +103,26 @@ function check_Equipment(id, equip_rarity) {
 
 //判断一个对象是否为空
 function isEmptyObject(obj) {
-    //测试
+    //未定义内容会返回真
+    if (obj === undefined) return true;
+    //没有任何内容的对象会返回真
     return JSON.stringify(obj) === '{}';
+}
+//将hex颜色和透明度转换成rgba颜色
+function hex2Rgba(bgColor, alpha = 1) {
+    let color = bgColor.slice(1); // 去掉'#'号
+    let rgba = [
+        parseInt('0x' + color.slice(0, 2)),
+        parseInt('0x' + color.slice(2, 4)),
+        parseInt('0x' + color.slice(4, 6)),
+        alpha,
+    ];
+    return 'rgba(' + rgba.toString() + ')';
+}
+
+function setTextcolor(div, hex_color, opacity) {
+    let rgba = hex2Rgba(hex_color, opacity);
+    div.style.color = rgba;
 }
 
 //测试
@@ -118,4 +136,4 @@ function printf_play_item() {
     console.log('\n');
 }
 
-export { printf_play_item, Item_type_handle, BP_type_handle, check_Equipment, isEmptyObject };
+export { printf_play_item, Item_type_handle, BP_type_handle, check_Equipment, isEmptyObject, hex2Rgba };

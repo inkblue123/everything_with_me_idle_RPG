@@ -42,4 +42,12 @@ function get_BP_weight() {
     return BP_weight;
 }
 
-export { get_BP_type, get_EQP_switch, get_BP_weight };
+//获取一个对象中唯一的key
+function get_object_only_key(obj) {
+    let keys = Object.keys(obj); //将拥有的物品的key转换成一个数组
+    if (keys.length != 1) {
+        return false;
+    }
+    return keys[0];
+}
+export { get_BP_type, get_EQP_switch, get_BP_weight, get_object_only_key };

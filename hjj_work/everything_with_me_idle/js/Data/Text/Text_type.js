@@ -91,6 +91,7 @@ function Equipment_rarity(texts) {
     texts['damaged'].rarity_name = '破损';
     texts['damaged'].type_desc = '完全不可使用的破损装备，也许有高人能回收利用，不然就只能卖掉了';
     texts['damaged'].rarity_color = '#838383';
+    texts['damaged'].rarity_rgb_color = 'rgba(131,131,131)';
     texts['ordinary'] = new Text('ordinary');
     texts['ordinary'].rarity_name = '普通';
     texts['ordinary'].rarity_color = '#000000';
@@ -130,7 +131,7 @@ function Equipment_wearing_position(texts) {
     texts['ornament'] = new Text('ornament');
     texts['ornament'].wearing_name = '饰品';
     texts['ornament'].wearing_desc = '这件装备可以放在饰品位置';
-    texts['deputy'] = new Text('deputy');
+    // texts['deputy'] = new Text('deputy');//重名
     texts['deputy'].wearing_name = '副手';
     texts['deputy'].wearing_desc = '这件装备可以放在副手';
 }
