@@ -1,5 +1,5 @@
 import { texts } from '../Text/Text.js';
-import { Item } from './Item_class.js';
+import { add_Consumable_object } from './Item_class.js';
 //物品的大类别枚举
 const Item_type = Object.freeze({
     //武器装备 equipment
@@ -37,25 +37,11 @@ const Consumable_type = Object.freeze({
     Money: 'money', //货币
 });
 
-//消耗品通用属性
-class Consumable extends Item {
-    constructor(id, name, maxStack) {
-        super(id, name, maxStack);
-
-        this.type.push('consumable');
-        this.Consumable_type = new Array(); //这个消耗品的具体类型
-    }
-
-    //为这个物品填写消耗品特有的属性
-    init_Consumable(e_type) {
-        this.Consumable_type.push(e_type);
-    }
-}
 //初始化文本数据库中与类型相关的文本
 function init_Item_Consumable(items) {
     //弹药
     {
-        items['wood_arrow'] = new Consumable('wood_arrow');
+        add_Consumable_object(items, 'wood_arrow');
         items['wood_arrow'].init_Item_other(100, ['ammo_CSB']); //堆叠数量，物品大分类
         items['wood_arrow'].init_Consumable('arrow'); //物品小分类，是否特制
     }

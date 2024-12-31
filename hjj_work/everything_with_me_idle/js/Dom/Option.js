@@ -1,5 +1,5 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
-import { update_HP, update_BP_value } from '../Function/Update_func.js';
+import { updata_HP, updata_BP_value } from '../Function/Updata_func.js';
 import { printf_play_item } from '../Function/Function.js';
 import { get_BP_weight } from '../Function/Get_func.js';
 import { player } from '../Player/player.js';
@@ -26,7 +26,7 @@ var Option = crtElement('div', null, 'option_page', '');
         } else {
             player.health_point += 10;
         }
-        update_HP(player);
+        updata_HP(player);
     };
 
     var button4 = addElement(Option, 'button');
@@ -37,7 +37,7 @@ var Option = crtElement('div', null, 'option_page', '');
         } else {
             player.health_point -= 10;
         }
-        update_HP(player);
+        updata_HP(player);
     };
 
     var button5 = addElement(Option, 'button');
@@ -46,7 +46,7 @@ var Option = crtElement('div', null, 'option_page', '');
         // printf_play_item();
         player.Player_get_item('Oak_logs', 1);
         // printf_play_item();
-        update_BP_value();
+        updata_BP_value();
         printf_play_item();
         get_BP_weight();
     };
@@ -57,7 +57,7 @@ var Option = crtElement('div', null, 'option_page', '');
         printf_play_item();
         player.Player_get_item(10, 1);
         printf_play_item();
-        update_BP_value();
+        updata_BP_value();
         printf_play_item();
     };
 }

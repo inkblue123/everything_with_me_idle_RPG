@@ -2,7 +2,7 @@
 import { items } from '../Data/Item/Item.js';
 import { types } from '../Data/Type.js';
 import { check_Equipment, isEmptyObject } from '../Function/Function.js';
-import { update_equipment_show } from '../Function/Update_func.js';
+import { updata_equipment_show } from '../Function/Updata_func.js';
 
 import { Player_attributes } from './Player_attributes.js';
 import { Player_backpack } from './Player_backpack.js';

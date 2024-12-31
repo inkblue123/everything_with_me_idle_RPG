@@ -15,3 +15,13 @@ export class Text {
         this.wearing_desc; //装备位置描述
     }
 }
+
+function add_text_object(texts, newid) {
+    if (texts[newid] === undefined) {
+        texts[newid] = new Text(newid);
+    } else {
+        console.log(`texts[${newid}] is no undefined`);
+    }
+}
+
+export { add_text_object };

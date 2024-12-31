@@ -1,6 +1,6 @@
 import { crtElement, addElement, addElement_radio, add_click_Equipment_worn_remove } from '../Function/Dom_function.js';
 import { change_PA, show_active_EQP } from '../Function/show_func.js';
-import { update_player_name, update_equipment_show } from '../Function/Update_func.js';
+import { updata_player_name, updata_equipment_show } from '../Function/Updata_func.js';
 
 var player_status = crtElement('div', 'player_status', null, '', '#000000');
 
@@ -46,12 +46,12 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
         var EQP_left = addElement(EQP_i, 'div', null, 'page_columns_111', ''); //装备栏左侧，角色的4个防具和主副手
         var EQP_arms_div = addElement(EQP_left, 'div', null, 'EQP_arms_div', '');
         var EQP_Armor_div = addElement(EQP_left, 'div', null, 'EQP_Armor_div', '');
-        var EQP_arm_div = addElement(EQP_left, 'div', null, 'EQP_arm_div', '');
+        var EQP_deputy_div = addElement(EQP_left, 'div', null, 'EQP_deputy_div', '');
         addElement(EQP_arms_div, 'div', null, 'EQP_show', '');
         for (let j = 0; j < 4; j++) {
             addElement(EQP_Armor_div, 'div', null, 'EQP_show', '');
         }
-        var test = addElement(EQP_arm_div, 'div', null, 'EQP_show', '');
+        var test = addElement(EQP_deputy_div, 'div', null, 'EQP_show', '');
         var EQP_right = addElement(EQP_i, 'div', null, 'page_columns_11', ''); //装备栏右侧，饰品和饰品槽
     }
 
@@ -78,7 +78,7 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
 // 为组件添加触发事件
 {
     //角色名文本框，实时修改角色名称
-    Player_name.addEventListener('change', update_player_name);
+    Player_name.addEventListener('change', updata_player_name);
     //角色属性界面切换开关
     PA_switch_button.onclick = function () {
         change_PA();

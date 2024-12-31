@@ -2,7 +2,9 @@ import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { player } from '../Player/player.js';
 import { show_active_EQP } from './show_func.js';
-import { update_BP_value, update_equipment_show } from './Update_func.js';
+import { hex2Rgba } from './Function.js';
+import { updata_BP_value, updata_equipment_show } from './Updata_func.js';
+import { get_object_only_key } from './Get_func.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
     let newdom = document.createElement(elem);
@@ -100,6 +102,23 @@ function addBP_equipment(player_item) {
         }
     }
 }
+//点亮左上装备栏中的指定展示框表示玩家穿戴了指定装备
+//添加鼠标点击可以卸下的逻辑
+function add_aEQP_data(EQP_div_data, aBP_item, wp, alpha = 1) {
+    let id = aBP_item.id;
+    let rarity = get_object_only_key(aBP_item.rarity);
+    let num = aBP_item.rarity[rarity];
+    if (num == 1) {
+        EQP_div_data.innerHTML = items[id].name; //装备栏上物品的名称
+    } else {
+        EQP_div_data.innerHTML = `${items[id].name} x${num}`; //装备栏上物品的名称x数量
+    }
+    EQP_div_data.style.color = hex2Rgba(texts[rarity].rarity_color, alpha); //装备栏物品的稀有度颜色
+    EQP_div_data.style.opacity = 1; //高亮显示表示已经装备
+    add_show_Tooltip(EQP_div_data, 'item', aBP_item); //添加鼠标移动上去显示详细内容的功能
+    add_click_Equipment_worn_remove(EQP_div_data, wp);
+}
+
 // 向目标组件添加鼠标移动显示小窗口的功能
 function add_show_Tooltip(target_div, tip_type, tip_value) {
     // 获取目标元素和小窗口
@@ -133,23 +152,23 @@ function add_click_Equipment_worn(target_div, tip_value) {
         //将要穿戴的物品放到目前激活的装备栏的指定位置
         player.worn_Equipment(tip_value.id, tip_value.num, rarity);
         //刷新背包界面
-        update_BP_value();
+        updata_BP_value();
         //更新装备栏
-        update_equipment_show();
+        updata_equipment_show();
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口
     });
 }
-
 // 向目标组件添加鼠标点击后从装备栏里卸下的的功能
-function add_click_Equipment_worn_remove(target_div, tip_value) {
+function add_click_Equipment_worn_remove(target_div, wp) {
     target_div.addEventListener('click', () => {
-        player.remove_worn_Equipment(tip_value);
+        //从玩家身上脱下指定位置的装备
+        player.remove_worn_Equipment(wp);
         //刷新背包界面
-        update_BP_value();
+        updata_BP_value();
         //更新装备栏
-        update_equipment_show();
+        updata_equipment_show();
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口
@@ -166,4 +185,5 @@ export {
     add_show_Tooltip,
     add_click_Equipment_worn,
     add_click_Equipment_worn_remove,
+    add_aEQP_data,
 };

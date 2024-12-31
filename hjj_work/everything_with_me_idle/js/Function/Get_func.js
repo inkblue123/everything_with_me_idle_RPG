@@ -50,4 +50,21 @@ function get_object_only_key(obj) {
     }
     return keys[0];
 }
-export { get_BP_type, get_EQP_switch, get_BP_weight, get_object_only_key };
+//获取指定装备栏里的6个展示框
+function get_EQP_data(EQP_column) {
+    if (!EQP_column) {
+        //如果没指定装备栏，则获取当前激活的装备栏id
+        EQP_column = get_EQP_switch();
+    }
+    //获取装备栏的具体组件
+    const EQP_column_div = document.getElementById(EQP_column);
+    let EQP_div_data = new Object();
+    EQP_div_data['main_hand'] = EQP_column_div.children[0].children[0].children[0]; //主手位置;
+    EQP_div_data['deputy'] = EQP_column_div.children[0].children[2].children[0]; //副手位置
+    EQP_div_data['head'] = EQP_column_div.children[0].children[1].children[0]; //头部位置
+    EQP_div_data['chest'] = EQP_column_div.children[0].children[1].children[1]; //胸部位置
+    EQP_div_data['legs'] = EQP_column_div.children[0].children[1].children[2]; //腿部位置
+    EQP_div_data['feet'] = EQP_column_div.children[0].children[1].children[3]; //脚部位置
+    return EQP_div_data;
+}
+export { get_BP_type, get_EQP_switch, get_BP_weight, get_object_only_key, get_EQP_data };

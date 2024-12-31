@@ -1,11 +1,11 @@
 import { player } from '../Player/player.js';
 import { items } from '../Data/Item/Item.js';
 import { addElement } from '../Function/Dom_function.js';
-import { update_HP, update_MP, update_ENP, update_BP_value } from '../Function/Update_func.js';
+import { updata_HP, updata_MP, updata_ENP, updata_BP_value } from '../Function/Updata_func.js';
 import { texts } from '../Data/Text/Text.js';
 
 //更新属性展示表格中的数值
-function update_attribute_show() {
+function updata_attribute_show() {
     const Player_att = document.getElementById('attribute_show');
     let player_attr = player.attributes;
 
@@ -29,13 +29,13 @@ function update_attribute_show() {
 }
 
 //更新游戏界面中的内容
-function update_game() {
+function updata_game() {
     //用玩家信息初始化界面内的信息
-    update_HP();
-    update_MP();
-    update_ENP();
-    update_attribute_show();
-    update_BP_value();
+    updata_HP();
+    updata_MP();
+    updata_ENP();
+    updata_attribute_show();
+    updata_BP_value();
 }
 
-export { update_game };
+export { updata_game };

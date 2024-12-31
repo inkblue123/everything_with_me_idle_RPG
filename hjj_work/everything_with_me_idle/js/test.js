@@ -1,7 +1,7 @@
 import { addElement } from './Function/Dom_function.js';
 import { player } from './Player/player.js';
-import { update_MP, update_ENP } from './Function/Function.js';
-import { update_HP } from './Function/Update_func.js';
+import { updata_MP, updata_ENP } from './Function/Function.js';
+import { updata_HP } from './Function/Updata_func.js';
 
 function add_test_button(dom) {
     var button1 = addElement(dom.option_dom, 'button');
@@ -23,7 +23,7 @@ function add_test_button(dom) {
         } else {
             player.health_point += 10;
         }
-        update_HP();
+        updata_HP();
     };
 
     var button4 = addElement(dom.option_dom, 'button');
@@ -34,7 +34,7 @@ function add_test_button(dom) {
         } else {
             player.health_point -= 10;
         }
-        update_HP();
+        updata_HP();
     };
 
     var button5 = addElement(dom.option_dom, 'button');

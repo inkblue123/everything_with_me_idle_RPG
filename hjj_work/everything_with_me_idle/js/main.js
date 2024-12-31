@@ -1,6 +1,6 @@
 import { dom } from './Dom/Dom.js';
 import { LoadSaveFile } from './LoadAndSave/load.js';
-import { update_game } from './GameRun/run_manage.js';
+import { updata_game } from './GameRun/run_manage.js';
 
 window.addEventListener('load', () => {
     //启动第一个类，dom类，
@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
     LoadSaveFile();
 
     //更新一次游戏的各个界面（可能不需要）
-    update_game();
+    updata_game();
 
     //启动第四个类，游戏运行类，
     //负责按帧计算游戏内的数据，每帧更新一次游戏各个界面

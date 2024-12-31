@@ -120,11 +120,6 @@ function hex2Rgba(bgColor, alpha = 1) {
     return 'rgba(' + rgba.toString() + ')';
 }
 
-function setTextcolor(div, hex_color, opacity) {
-    let rgba = hex2Rgba(hex_color, opacity);
-    div.style.color = rgba;
-}
-
 //测试
 function printf_play_item() {
     //测试

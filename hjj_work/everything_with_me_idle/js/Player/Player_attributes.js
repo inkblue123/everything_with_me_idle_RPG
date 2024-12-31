@@ -2,7 +2,7 @@
 import { items } from '../Data/Item/Item.js';
 import { types } from '../Data/Type.js';
 import { get_EQP_switch } from '../Function/Get_func.js';
-import { update_equipment_show } from '../Function/Update_func.js';
+import { updata_equipment_show } from '../Function/Updata_func.js';
 
 export class Player_attributes {
     constructor(id) {

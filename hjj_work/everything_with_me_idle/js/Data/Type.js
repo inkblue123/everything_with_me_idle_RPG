@@ -7,6 +7,27 @@ class Type {
         this.single_hand; //哪些武器类型属于单手武器
     }
 }
+//物品可能的大类型
+types.Item_type = [
+    //装备
+    'equipment', //武器装备大类
+    'weapon', //武器
+    'armor', //防具
+    'deputy', //副手
+    'ornament', //饰品
+    //可使用物品
+    'consumable', //可使用物品大类
+    'food_CSB', //食品
+    'ammo_CSB', //弹药
+    'life_CSB', //生活消耗品
+    //材料
+    'material', //材料大类
+    'raw_MTR', //自然材料
+    'process_MTR', //人工材料
+    'finish_MTR', //成品
+    'other_MTR', //其他物品
+];
+
 //哪些武器类型属于双手武器
 types.both_hand = ['battle_axe', 'long_handled', 'hammers', 'gloves', 'bow', 'crossbow', 'spray_gun'];
 //哪些武器类型属于单手武器
@@ -31,7 +52,7 @@ types.special_rarity = ['damaged', 'ordinary', 'excellent', 'rare', 'epic', 'leg
 //破损，普通，优良，稀有，史诗
 types.no_special_rarity = ['damaged', 'ordinary', 'excellent', 'rare', 'epic'];
 //装备可能放置的位置
-types.wearing_position = ['main_hand', 'head', 'chest', 'legs', 'feet', 'deputy'];
+types.wearing_position = ['main_hand', 'head', 'chest', 'legs', 'feet', 'deputy', 'ornament'];
 //装备可能的小类型
 types.equipment_type = [
     'empty_hands', //空手
@@ -65,4 +86,5 @@ types.equipment_type = [
     'deputy', //副手装备
     'ornament', //饰品
 ];
+
 export { types };
