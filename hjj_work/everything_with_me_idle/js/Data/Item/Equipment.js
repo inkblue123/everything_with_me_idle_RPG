@@ -40,18 +40,23 @@ function init_Item_Equipment(items) {
         add_Equipment_object(items, 'wood_sword');
         items['wood_sword'].init_Item_other(1, ['weapon']); //堆叠数量，物品大分类
         items['wood_sword'].init_Equipment('sword'); //物品小分类，是否特制
-
+        //攻击，精准，暴击率，暴击伤害，攻击速度
+        items['wood_sword'].init_Equipment_attack_attr(5, 5, 5, 20, 2);
+        //木制战斧
         add_Equipment_object(items, 'wood_battle_axe');
         items['wood_battle_axe'].init_Item_other(1, ['weapon']); //堆叠数量，物品大分类
         items['wood_battle_axe'].init_Equipment('battle_axe'); //物品小分类
-
+        items['wood_battle_axe'].init_Equipment_attack_attr(10, 5, 0, 0, 3);
+        //木制棍棒
         add_Equipment_object(items, 'wood_sticks');
         items['wood_sticks'].init_Item_other(1, ['weapon']); //堆叠数量，物品大分类
         items['wood_sticks'].init_Equipment('sticks'); //物品小分类
-
+        items['wood_sticks'].init_Equipment_attack_attr(5, 5, 5, 20, 2);
+        //木制大锤
         add_Equipment_object(items, 'wood_hammers');
         items['wood_hammers'].init_Item_other(1, ['weapon']); //堆叠数量，物品大分类
         items['wood_hammers'].init_Equipment('hammers'); //物品小分类
+        items['wood_hammers'].init_Equipment_attack_attr(10, 5, 0, 0, 3);
     }
     //远程武器
     {

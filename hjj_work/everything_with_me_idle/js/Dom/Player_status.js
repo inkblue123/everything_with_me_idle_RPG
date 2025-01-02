@@ -72,7 +72,6 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
     player_status.appendChild(bar_div);
     player_status.appendChild(attr_equip_div);
     player_status.appendChild(Player_attr_switch_div);
-    //
 }
 
 // 为组件添加触发事件
@@ -90,22 +89,6 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
             show_active_EQP();
         });
     });
-    //角色装备栏添加点击之后卸下装备的功能
-    for (let i = 0; i < 4; i++) {
-        let EQP_i = equipment_show.children[i].children[0];
-        let main_hand = EQP_i.children[0].children[0]; //主手位置
-        add_click_Equipment_worn_remove(main_hand, 'main_hand');
-        let deputy = EQP_i.children[2].children[0]; //副手位置
-        add_click_Equipment_worn_remove(deputy, 'deputy');
-        let head = EQP_i.children[1].children[0]; //头部位置
-        add_click_Equipment_worn_remove(head, 'head');
-        let chest = EQP_i.children[1].children[1]; //胸部位置
-        add_click_Equipment_worn_remove(chest, 'chest');
-        let legs = EQP_i.children[1].children[2]; //腿部位置
-        add_click_Equipment_worn_remove(legs, 'legs');
-        let feet = EQP_i.children[1].children[2]; //鞋部位置
-        add_click_Equipment_worn_remove(feet, 'feet');
-    }
 }
 
 export { player_status };

@@ -17,26 +17,32 @@ import { Item_type_handle, BP_type_handle, isEmptyObject, hex2Rgba } from './Fun
 //更新血条上的数值
 function updata_HP() {
     const HP_bar = document.getElementById('HP_bar');
-    let player_attr = player.attributes;
+    let P_attr = player.get_player_attributes();
+    let health_point = P_attr.get_health_point();
+    let health_max = P_attr.get_a_attr('health_max');
 
-    HP_bar.children[0].children[0].style.width = `${(player_attr.health_point / player_attr.health_max) * 100}%`;
-    HP_bar.children[1].innerText = `${Math.floor(player_attr.health_point)}/${Math.ceil(player_attr.health_max)} 生命`;
+    HP_bar.children[0].children[0].style.width = `${(health_point / health_max) * 100}%`;
+    HP_bar.children[1].innerText = `${Math.floor(health_point)}/${Math.ceil(health_max)} 生命`;
 }
 //更新魔力条上的数值
 function updata_MP() {
     const MP_bar = document.getElementById('MP_bar');
-    let player_attr = player.attributes;
+    let P_attr = player.get_player_attributes();
+    let magic_point = P_attr.get_magic_point();
+    let magic_max = P_attr.get_a_attr('magic_max');
 
-    MP_bar.children[0].children[0].style.width = `${(player_attr.magic_point / player_attr.magic_max) * 100}%`;
-    MP_bar.children[1].innerText = `${Math.floor(player_attr.magic_point)}/${Math.ceil(player_attr.magic_max)} 魔力`;
+    MP_bar.children[0].children[0].style.width = `${(magic_point / magic_max) * 100}%`;
+    MP_bar.children[1].innerText = `${Math.floor(magic_point)}/${Math.ceil(magic_max)} 魔力`;
 }
 //更新精力条上的数值
 function updata_ENP() {
     const ENP_bar = document.getElementById('ENP_bar');
-    let player_attr = player.attributes;
+    let P_attr = player.get_player_attributes();
+    let energy_point = P_attr.get_energy_point();
+    let energy_max = P_attr.get_a_attr('energy_max');
 
-    ENP_bar.children[0].children[0].style.width = `${(player_attr.energy_point / player_attr.energy_max) * 100}%`;
-    ENP_bar.children[1].innerText = `${Math.floor(player_attr.energy_point)}/${Math.ceil(player_attr.energy_max)} 精力`;
+    ENP_bar.children[0].children[0].style.width = `${(energy_point / energy_max) * 100}%`;
+    ENP_bar.children[1].innerText = `${Math.floor(energy_point)}/${Math.ceil(energy_max)} 精力`;
 }
 //更新角色名
 function updata_player_name() {
@@ -85,21 +91,60 @@ function updata_equipment_show(EQP_column) {
     //获取装备栏的具体组件
     let EQP_div_data = get_EQP_data(EQP_column);
     //读取玩家身上穿戴的装备信息，显示到装备栏上
-    let player_EQP_column = player.get_worn_EQP(EQP_column);
+    let player_worn_EQP = player.get_player_worn_EQP();
+    let player_EQP_column = player_worn_EQP.get_worn_EQP(EQP_column);
     for (let wearing_position in player_EQP_column) {
         //如果位置上没有装备信息，不处理
         if (isEmptyObject(player_EQP_column[wearing_position])) continue;
 
         if (types.wearing_position.includes(wearing_position)) {
-            add_aEQP_data(EQP_div_data[wearing_position], player_EQP_column[wearing_position], wearing_position, 1);
+            add_aEQP_data(player_EQP_column[wearing_position], wearing_position, 1);
         } else if (wearing_position == 'main_hand_two') {
             //双手武器单独处理
-            add_aEQP_data(EQP_div_data['main_hand'], player_EQP_column[wearing_position], 'main_hand', 1);
-            add_aEQP_data(EQP_div_data['deputy'], player_EQP_column[wearing_position], 'deputy', 1);
+            add_aEQP_data(player_EQP_column[wearing_position], 'main_hand', 1);
+            add_aEQP_data(player_EQP_column[wearing_position], 'deputy', 1);
         } else {
             console.log('异常位置 ：%s', wearing_position);
         }
     }
 }
 
-export { updata_HP, updata_MP, updata_ENP, updata_player_name, updata_BP_value, updata_equipment_show };
+//更新玩家属性展示表格中的数值
+function updata_attribute_show() {
+    const combat_attr_show = document.getElementById('combat_attribute_show');
+    const player_base_attr = document.getElementById('Player_attribute_show');
+
+    let P_attr = player.get_player_attributes();
+
+    //表格排序，从左到右，从上到下，右半边表示玩家基础属性
+    //战斗属性中，前5个是攻击属性
+    let i = 0;
+    for (let id of types.combat_attack_attr) {
+        let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
+        combat_attr_show.children[i].innerText = ch;
+        i++;
+    }
+    //然后是4个是防御属性
+    for (let id of types.combat_defense_attr) {
+        let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
+        combat_attr_show.children[i].innerText = ch;
+        i++;
+    }
+    //7个玩家基础属性
+    i = 0;
+    for (let id of types.player_base_attr) {
+        let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
+        player_base_attr.children[i].innerText = ch;
+        i++;
+    }
+}
+
+export {
+    updata_HP,
+    updata_MP,
+    updata_ENP,
+    updata_player_name,
+    updata_BP_value,
+    updata_equipment_show,
+    updata_attribute_show,
+};

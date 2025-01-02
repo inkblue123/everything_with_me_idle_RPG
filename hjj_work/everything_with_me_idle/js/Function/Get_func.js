@@ -1,5 +1,6 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
+import { types } from '../Data/Type.js';
 
 //获取背包界面激活的过滤条件
 function get_BP_type() {
@@ -67,4 +68,42 @@ function get_EQP_data(EQP_column) {
     EQP_div_data['feet'] = EQP_column_div.children[0].children[1].children[3]; //脚部位置
     return EQP_div_data;
 }
-export { get_BP_type, get_EQP_switch, get_BP_weight, get_object_only_key, get_EQP_data };
+//获取指定装备栏里的一个具体位置的展示框
+function get_EQP_wp_data(EQP_column, wp) {
+    if (!EQP_column) {
+        //如果没指定装备栏，则获取当前激活的装备栏id
+        EQP_column = get_EQP_switch();
+    }
+    //获取装备栏的具体组件
+    const EQP_column_div = document.getElementById(EQP_column);
+    let EQP_wp_data = new Object();
+    if (types.wearing_position.includes(wp)) {
+        //位置合法
+        switch (wp) {
+            case 'main_hand':
+                EQP_wp_data = EQP_column_div.children[0].children[0].children[0]; //主手位置;
+                break;
+            case 'deputy':
+                EQP_wp_data = EQP_column_div.children[0].children[2].children[0]; //副手位置
+                break;
+            case 'head':
+                EQP_wp_data = EQP_column_div.children[0].children[1].children[0]; //头部位置
+                break;
+            case 'chest':
+                EQP_wp_data = EQP_column_div.children[0].children[1].children[1]; //胸部位置
+                break;
+            case 'legs':
+                EQP_wp_data = EQP_column_div.children[0].children[1].children[2]; //腿部位置
+                break;
+            case 'feet':
+                EQP_wp_data = EQP_column_div.children[0].children[1].children[3]; //脚部位置
+                break;
+
+            default:
+                break;
+        }
+    }
+    return EQP_wp_data;
+}
+
+export { get_BP_type, get_EQP_switch, get_BP_weight, get_object_only_key, get_EQP_data, get_EQP_wp_data };

@@ -146,7 +146,7 @@ function attr_type(texts) {
     add_text_object(texts, 'critical_damage');
     texts['critical_damage'].attr_name = '暴击伤害';
     add_text_object(texts, 'attack_speed');
-    texts['attack_speed'].attr_name = '攻击速度';
+    texts['attack_speed'].attr_name = '攻速';
     add_text_object(texts, 'defense');
     texts['defense'].attr_name = '防御';
     add_text_object(texts, 'evade');

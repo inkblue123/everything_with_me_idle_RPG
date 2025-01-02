@@ -3,32 +3,32 @@ import { addElement } from './Dom_function.js';
 import { hex2Rgba } from './Function.js';
 import { types } from '../Data/Type.js';
 import { texts } from '../Data/Text/Text.js';
-//Çå¿Õ×óÏÂ½Ç±³°ü½çÃæµÄËùÓĞÔªËØ
+//æ¸…ç©ºå·¦ä¸‹è§’èƒŒåŒ…ç•Œé¢çš„æ‰€æœ‰å…ƒç´ 
 function delete_BP_div() {
     let BP_value_div = document.getElementById('BP_value_div');
-    BP_value_div.replaceChildren(); //Çå¿ÕÏÖÓĞ±³°üÄÚÕ¹Ê¾µÄÎïÆ·
+    BP_value_div.replaceChildren(); //æ¸…ç©ºç°æœ‰èƒŒåŒ…å†…å±•ç¤ºçš„ç‰©å“
 }
-//ÖØĞÂÉú³É×óÉÏ½Ç×°±¸Õ¹Ê¾½çÃæµÄÔªËØ
+//é‡æ–°ç”Ÿæˆå·¦ä¸Šè§’è£…å¤‡å±•ç¤ºç•Œé¢çš„å…ƒç´ 
 function delete_equipment_show(EQP_column) {
     if (!EQP_column) {
-        //Èç¹ûÃ»Ö¸¶¨×°±¸À¸£¬Ôò»ñÈ¡µ±Ç°¼¤»îµÄ×°±¸À¸id
+        //å¦‚æœæ²¡æŒ‡å®šè£…å¤‡æ ï¼Œåˆ™è·å–å½“å‰æ¿€æ´»çš„è£…å¤‡æ id
         EQP_column = get_EQP_switch();
     }
     const EQP_column_div = document.getElementById(EQP_column);
-    let EQP_arms_div = EQP_column_div.children[0].children[0]; //ÈİÄÉÎäÆ÷µÄdiv
-    let EQP_Armor_div = EQP_column_div.children[0].children[1]; //ÈİÄÉ4¸ö·À¾ßµÄdiv
-    let EQP_deputy_div = EQP_column_div.children[0].children[2]; //ÈİÄÉ¸±ÊÖµÄdiv
+    let EQP_arms_div = EQP_column_div.children[0].children[0]; //å®¹çº³æ­¦å™¨çš„div
+    let EQP_Armor_div = EQP_column_div.children[0].children[1]; //å®¹çº³4ä¸ªé˜²å…·çš„div
+    let EQP_deputy_div = EQP_column_div.children[0].children[2]; //å®¹çº³å‰¯æ‰‹çš„div
     EQP_arms_div.replaceChildren();
     EQP_Armor_div.replaceChildren();
     EQP_deputy_div.replaceChildren();
-    //ÖØĞÂ´´½¨Õ¹Ê¾¿ò
+    //é‡æ–°åˆ›å»ºå±•ç¤ºæ¡†
     addElement(EQP_arms_div, 'div', null, 'EQP_show', '');
     for (let j = 0; j < 4; j++) {
         addElement(EQP_Armor_div, 'div', null, 'EQP_show', '');
     }
     addElement(EQP_deputy_div, 'div', null, 'EQP_show', '');
     let EQP_div_data = get_EQP_data(EQP_column);
-    //³õÊ¼»¯Õ¹Ê¾¿òÄÚÈİ
+    //åˆå§‹åŒ–å±•ç¤ºæ¡†å†…å®¹
     for (let i in EQP_div_data) {
         EQP_div_data[i].innerHTML = texts[i].wearing_name;
         EQP_div_data[i].style.color = hex2Rgba(texts['ordinary'].rarity_color, 1);

@@ -46,12 +46,16 @@ Tooltip.MoveTip = function (event) {
     this.style.left = left + 'px';
     this.style.top = top + 'px';
 };
-
 //清空并隐藏小窗口
 Tooltip.CloseTip = function () {
     this.style.display = 'none'; // 隐藏小窗口
     empty_dom(this); //清空内容
 };
+// 为小窗口添加鼠标移动时更新小窗口位置的功能
+//如果不加，当鼠标移动过快，进入小窗口时，就失去了正常的移动能力
+Tooltip.addEventListener('mousemove', (event) => {
+    requestAnimationFrame(() => Tooltip.MoveTip(event));
+});
 
 //传入玩家的一个物品拷贝对象，展示这个物品的详细信息
 function init_item_tip(player_item) {

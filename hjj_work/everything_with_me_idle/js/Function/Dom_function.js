@@ -3,8 +3,8 @@ import { texts } from '../Data/Text/Text.js';
 import { player } from '../Player/player.js';
 import { show_active_EQP } from './show_func.js';
 import { hex2Rgba } from './Function.js';
-import { updata_BP_value, updata_equipment_show } from './Updata_func.js';
-import { get_object_only_key } from './Get_func.js';
+import { updata_BP_value, updata_equipment_show, updata_attribute_show } from './Updata_func.js';
+import { get_object_only_key, get_EQP_wp_data } from './Get_func.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
     let newdom = document.createElement(elem);
@@ -104,10 +104,11 @@ function addBP_equipment(player_item) {
 }
 //点亮左上装备栏中的指定展示框表示玩家穿戴了指定装备
 //添加鼠标点击可以卸下的逻辑
-function add_aEQP_data(EQP_div_data, aBP_item, wp, alpha = 1) {
+function add_aEQP_data(aBP_item, wp, alpha = 1) {
     let id = aBP_item.id;
     let rarity = get_object_only_key(aBP_item.rarity);
     let num = aBP_item.rarity[rarity];
+    let EQP_div_data = get_EQP_wp_data(null, wp);
     if (num == 1) {
         EQP_div_data.innerHTML = items[id].name; //装备栏上物品的名称
     } else {
@@ -131,7 +132,8 @@ function add_show_Tooltip(target_div, tip_type, tip_value) {
 
     // 鼠标移动时更新小窗口位置
     target_div.addEventListener('mousemove', (event) => {
-        tooltip.MoveTip(event); //移动小窗口
+        requestAnimationFrame(() => tooltip.MoveTip(event));
+        // tooltip.MoveTip(event); //移动小窗口
     });
 
     // 鼠标移出目标元素时隐藏小窗口
@@ -155,6 +157,8 @@ function add_click_Equipment_worn(target_div, tip_value) {
         updata_BP_value();
         //更新装备栏
         updata_equipment_show();
+        //更新属性栏
+        updata_attribute_show();
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口
@@ -169,6 +173,8 @@ function add_click_Equipment_worn_remove(target_div, wp) {
         updata_BP_value();
         //更新装备栏
         updata_equipment_show();
+        //更新属性栏
+        updata_attribute_show();
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口

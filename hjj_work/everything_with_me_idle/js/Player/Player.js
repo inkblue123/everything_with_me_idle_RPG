@@ -8,20 +8,6 @@ import { Player_attributes } from './Player_attributes.js';
 import { Player_backpack } from './Player_backpack.js';
 import { Player_worn } from './Player_worn_EQP.js';
 
-// class Player_Item {
-//     constructor(id) {
-//         this.id = id; //唯一id
-//         this.num = 0; //玩家拥有该物品总数
-//     }
-// }
-// class Player_Item_E extends Player_Item {
-//     constructor(id) {
-//         super(id);
-//         //针对武器装备，当前物品的稀有度
-//         this.rarity = new Object(); //稀有度
-//     }
-// }
-
 class Player {
     constructor() {
         //角色属性
@@ -36,10 +22,20 @@ class Player {
 
     init() {
         //初始化玩家属性
-        // this.attributes.init();
+        this.attributes.init();
         //初始化身上穿戴的装备
         this.worn_EQP.init();
     }
+    get_player_attributes() {
+        return this.attributes;
+    }
+    get_player_backpack_items() {
+        return this.backpack_items;
+    }
+    get_player_worn_EQP() {
+        return this.worn_EQP;
+    }
+
     //给玩家背包添加物品，js版函数重载
     Player_get_item(...args) {
         if (typeof args[0] == 'object') {
@@ -86,6 +82,8 @@ class Player {
 
         //将装备放到身上装备栏里对应的位置
         this.worn_EQP.worn_Equipment(id, num, equip_rarity);
+        //更新玩家属性
+        this.updata_attr();
     }
     //脱掉一件装备
     remove_worn_Equipment(wp) {
@@ -97,10 +95,18 @@ class Player {
             //如果原位置已有装备，则将原装备放回背包
             if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item(raw_worn_E[key]);
         }
+        this.updata_attr();
     }
-    //获取玩家当前装备栏里的装备信息
-    get_worn_EQP(EQP_switct) {
-        return this.worn_EQP.get_worn_EQP(EQP_switct);
+    //根据玩家当前的加成更新属性
+    updata_attr() {
+        //获取当前穿戴的装备
+        let worn_EQP = this.worn_EQP.get_worn_EQP();
+        //更新装备的属性加成
+        this.attributes.Summary_worn_EQP_attr(worn_EQP);
+        //获取当前拥有的技能
+        //更新技能的加成
+
+        this.attributes.updata_end_attr();
     }
 }
 

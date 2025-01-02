@@ -9,7 +9,6 @@ function Item_type_handle(type_switch, items_type) {
     }
     return false;
 }
-
 //将物品类型转义成能适应的全部类型，方便判断物品类型
 function BP_type_handle(BP_type) {
     var BP_item_type = [];
@@ -71,7 +70,6 @@ function BP_type_handle(BP_type) {
 
     return BP_item_type;
 }
-
 //校验输入的参数是否是合法的装备信息
 function check_Equipment(id, equip_rarity) {
     if (items[id] === undefined) {
@@ -100,7 +98,6 @@ function check_Equipment(id, equip_rarity) {
         return false;
     }
 }
-
 //判断一个对象是否为空
 function isEmptyObject(obj) {
     //未定义内容会返回真
@@ -119,7 +116,6 @@ function hex2Rgba(bgColor, alpha = 1) {
     ];
     return 'rgba(' + rgba.toString() + ')';
 }
-
 //测试
 function printf_play_item() {
     //测试
