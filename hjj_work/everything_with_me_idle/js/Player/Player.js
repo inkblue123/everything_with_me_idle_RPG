@@ -1,26 +1,24 @@
 'use strict';
-import { items } from '../Data/Item/Item.js';
-import { types } from '../Data/Type.js';
 import { check_Equipment, isEmptyObject } from '../Function/Function.js';
-import { updata_equipment_show } from '../Function/Updata_func.js';
 
 import { Player_attributes } from './Player_attributes.js';
 import { Player_backpack } from './Player_backpack.js';
 import { Player_worn } from './Player_worn_EQP.js';
 
-class Player {
+export class Player_Object {
     constructor() {
         //角色属性
-        this.attributes = new Player_attributes();
+        this.attributes = new Object();
         //背包物品
-        this.backpack_items = new Player_backpack();
+        this.backpack_items = new Object();
         //穿戴的装备
-        this.worn_EQP = new Player_worn();
-
-        this.init();
+        this.worn_EQP = new Object();
     }
 
     init() {
+        this.attributes = new Player_attributes();
+        this.backpack_items = new Player_backpack();
+        this.worn_EQP = new Player_worn();
         //初始化玩家属性
         this.attributes.init();
         //初始化身上穿戴的装备
@@ -82,8 +80,6 @@ class Player {
 
         //将装备放到身上装备栏里对应的位置
         this.worn_EQP.worn_Equipment(id, num, equip_rarity);
-        //更新玩家属性
-        this.updata_attr();
     }
     //脱掉一件装备
     remove_worn_Equipment(wp) {
@@ -95,7 +91,6 @@ class Player {
             //如果原位置已有装备，则将原装备放回背包
             if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item(raw_worn_E[key]);
         }
-        this.updata_attr();
     }
     //根据玩家当前的加成更新属性
     updata_attr() {
@@ -110,6 +105,7 @@ class Player {
     }
 }
 
-var player = new Player();
+// var player = new Object();
+var player = new Player_Object();
 
 export { player };

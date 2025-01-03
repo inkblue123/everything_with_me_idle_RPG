@@ -1,7 +1,6 @@
 import { get_EQP_data } from './Get_func.js';
 import { addElement } from './Dom_function.js';
 import { hex2Rgba } from './Function.js';
-import { types } from '../Data/Type.js';
 import { texts } from '../Data/Text/Text.js';
 //清空左下角背包界面的所有元素
 function delete_BP_div() {

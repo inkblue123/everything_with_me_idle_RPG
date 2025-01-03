@@ -1,4 +1,4 @@
-import { Text, add_text_object } from './Text_class.js';
+import { add_text_object } from './Text_class.js';
 
 //初始化文本数据库中与类型相关的文本
 function init_Text_item(texts) {

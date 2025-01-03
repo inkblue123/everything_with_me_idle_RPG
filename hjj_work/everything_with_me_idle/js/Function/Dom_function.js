@@ -1,9 +1,9 @@
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
-import { player } from '../Player/player.js';
+import { player } from '../Player/Player.js';
 import { show_active_EQP } from './show_func.js';
 import { hex2Rgba } from './Function.js';
-import { updata_BP_value, updata_equipment_show, updata_attribute_show } from './Updata_func.js';
+import { updata_player_EQP, updata_BP_value, updata_equipment_show, updata_attribute_show } from './Updata_func.js';
 import { get_object_only_key, get_EQP_wp_data } from './Get_func.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
@@ -155,10 +155,8 @@ function add_click_Equipment_worn(target_div, tip_value) {
         player.worn_Equipment(tip_value.id, tip_value.num, rarity);
         //刷新背包界面
         updata_BP_value();
-        //更新装备栏
-        updata_equipment_show();
-        //更新属性栏
-        updata_attribute_show();
+        //装备信息发生变动，更新相关界面
+        updata_player_EQP();
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口
@@ -171,10 +169,8 @@ function add_click_Equipment_worn_remove(target_div, wp) {
         player.remove_worn_Equipment(wp);
         //刷新背包界面
         updata_BP_value();
-        //更新装备栏
-        updata_equipment_show();
-        //更新属性栏
-        updata_attribute_show();
+        //装备信息发生变动，更新相关界面
+        updata_player_EQP();
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口

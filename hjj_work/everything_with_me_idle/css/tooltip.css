@@ -13,12 +13,22 @@
     z-index: 99999;
     user-select: none;
 }
-/* 文本 */
-.lable {
+/* 正下方有横线的文本 */
+.lable_down {
     border-bottom: solid 1px darkgrey;
     font-size: 15px;
 }
-/* 去掉了下部的横线的文本 */
+/* 正上方有横线的文本 */
+.lable_up {
+    border-top: solid 1px darkgrey;
+    font-size: 15px;
+}
+/* 上下都有横线的文本 */
+.lable_all {
+    border-block: solid 1px darkgrey;
+    font-size: 15px;
+}
+/* 没有横线的文本 */
 .lable_end {
     font-size: 15px;
 }
@@ -37,3 +47,31 @@
     font-size: 15px;
     text-align: right;
 }
+/* 每行3列的表格布局 */
+.table_div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    /* 元素之间的间隔 */
+    /* gap: 10px;  */
+}
+/* 表格布局中的每个元素 */
+/* 每个元素只给右侧画线，专门为第3n + 1个元素左右都画线，实现表格内的样式 */
+.table_value {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px 0;
+    writing-mode: horizontal-tb;
+    border-right: 1px solid darkgrey;
+    border-bottom: 1px solid darkgrey;
+    text-align: center;
+    position: relative;
+}
+/* 第3n + 1个元素左右都画线 */
+.table_div .table_value:nth-child(3n + 1) {
+    border-inline: 1px solid darkgrey;
+}
+
+/* 可选：调整最后一行的间距 */
+/* .container > .item:nth-last-child(-n + 3) {
+    border-bottom: none; 
+} */

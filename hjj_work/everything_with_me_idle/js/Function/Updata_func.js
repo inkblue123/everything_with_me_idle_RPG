@@ -1,7 +1,7 @@
-import { player } from '../Player/player.js';
+import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
-import { types } from '../Data/Type.js';
+import { types } from '../Data/Type/Type.js';
 import {
     addElement,
     addBP_item,
@@ -108,7 +108,6 @@ function updata_equipment_show(EQP_column) {
         }
     }
 }
-
 //更新玩家属性展示表格中的数值
 function updata_attribute_show() {
     const combat_attr_show = document.getElementById('combat_attribute_show');
@@ -138,6 +137,15 @@ function updata_attribute_show() {
         i++;
     }
 }
+//玩家装备信息发生变动，更新相关界面
+function updata_player_EQP() {
+    //更新玩家属性
+    player.updata_attr();
+    //更新装备栏
+    updata_equipment_show();
+    //更新属性栏
+    updata_attribute_show();
+}
 
 export {
     updata_HP,
@@ -147,4 +155,5 @@ export {
     updata_BP_value,
     updata_equipment_show,
     updata_attribute_show,
+    updata_player_EQP,
 };

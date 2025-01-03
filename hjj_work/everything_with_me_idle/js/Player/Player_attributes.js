@@ -1,9 +1,7 @@
 'use strict';
 import { items } from '../Data/Item/Item.js';
-import { types } from '../Data/Type.js';
 import { isEmptyObject } from '../Function/Function.js';
-import { get_EQP_switch, get_object_only_key } from '../Function/Get_func.js';
-import { updata_equipment_show } from '../Function/Updata_func.js';
+import { get_object_only_key } from '../Function/Get_func.js';
 
 export class Player_attributes {
     constructor(id) {

@@ -1,6 +1,6 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
-import { types } from '../Data/Type.js';
+import { types } from '../Data/Type/Type.js';
 
 //获取背包界面激活的过滤条件
 function get_BP_type() {

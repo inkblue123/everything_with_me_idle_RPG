@@ -33,8 +33,8 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
     var attr_equip_div = crtElement('div', 'attr_equip_div', 'page_columns_1', '');
     //属性展示组件
     var attribute_show = addElement(attr_equip_div, 'div', 'attribute_show', 'page_columns_11', '');
-    var combat_attribute_show = addElement(attribute_show, 'div', 'combat_attribute_show', 'page_grid_9');
-    var Player_attribute_show = addElement(attribute_show, 'div', 'Player_attribute_show', 'page_grid_9');
+    var combat_attribute_show = addElement(attribute_show, 'div', 'combat_attribute_show', 'page_columns_111');
+    var Player_attribute_show = addElement(attribute_show, 'div', 'Player_attribute_show', 'page_columns_111');
     for (let i = 0; i < 9; i++) {
         addElement(combat_attribute_show, 'div', null, 'state_show'); //条的外框
         addElement(Player_attribute_show, 'div', null, 'state_show'); //条的外框

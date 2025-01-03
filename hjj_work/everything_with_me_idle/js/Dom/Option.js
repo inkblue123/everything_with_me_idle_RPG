@@ -2,7 +2,7 @@ import { crtElement, addElement } from '../Function/Dom_function.js';
 import { updata_HP, updata_BP_value } from '../Function/Updata_func.js';
 import { printf_play_item } from '../Function/Function.js';
 import { get_BP_weight } from '../Function/Get_func.js';
-import { player } from '../Player/player.js';
+import { player } from '../Player/Player.js';
 
 var Option = crtElement('div', null, 'option_page', '');
 

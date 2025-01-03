@@ -19,7 +19,7 @@ const Item_type = Object.freeze({
 });
 
 //消耗品的具体类别
-const Consumable_type = Object.freeze({
+const consumable_type = Object.freeze({
     // 可食用物品 food_CSB
     // 食材，烹饪技能专属材料类型，因为可以吃所以归到消耗品
     // 食品，主要从烹饪技能中获取
@@ -31,10 +31,10 @@ const Consumable_type = Object.freeze({
     Spray_gun_bullet: 'spray_gun_bullet', //喷枪弹药
     Throwable: 'throwable', //可投掷弹药
     Magic_core_bullet: 'magic_core_bullet', //法术核心弹药
-    //生活消耗品
+    //生活消耗品,主要是玩家主动使用的一次性物品
     Box: 'box', //宝箱
-    Key: 'key', //钥匙
-    Money: 'money', //货币
+    // 技能书
+    // 梦境
 });
 
 //初始化文本数据库中与类型相关的文本

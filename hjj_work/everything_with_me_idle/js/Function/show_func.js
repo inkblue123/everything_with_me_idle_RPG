@@ -1,5 +1,5 @@
 import { get_EQP_switch } from './Get_func.js';
-import { updata_attribute_show } from './Updata_func.js';
+import { updata_attribute_show, updata_player_EQP } from './Updata_func.js';
 //点击“属性展示”按钮之后，显示出或者隐藏属性展示界面
 function change_PA() {
     const attribute_show = document.getElementById('attribute_show');
@@ -30,9 +30,8 @@ function show_active_EQP() {
     }
     let EQP_value = get_EQP_switch();
     document.getElementById(EQP_value).style.display = '';
-    //更换了装备栏之后，玩家属性要跟着切换
-
-    updata_attribute_show();
+    //装备信息发生变动，更新相关界面
+    updata_player_EQP();
 }
 //切换背包、技能、图鉴的按钮
 function change_BP_SK_IB(button_id) {

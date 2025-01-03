@@ -1,6 +1,6 @@
-import { player } from '../Player/player.js';
+import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
-import { types } from '../Data/Type.js';
+import { types } from '../Data/Type/Type.js';
 
 //判断物品类型中是否在指定过滤条件内
 function Item_type_handle(type_switch, items_type) {

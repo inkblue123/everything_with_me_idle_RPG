@@ -1,6 +1,4 @@
-import { texts } from '../Text/Text.js';
-import { Item, add_Equipment_object } from './Item_class.js';
-import { types } from '../Type.js';
+import { add_Equipment_object } from './Item_class.js';
 
 //物品的大类别枚举
 const Item_type = Object.freeze({
@@ -64,6 +62,7 @@ function init_Item_Equipment(items) {
         items['wood_bow(n)'].type.push('material');
         items['wood_bow(n)'].init_Item_other(10, ['weapon', 'process_MTR']); //堆叠数量，物品大分类
         items['wood_bow(n)'].init_Equipment('sticks'); //物品小分类
+        // items['wood_bow(n)'].init_Material('for_making'); //材料小分类
 
         add_Equipment_object(items, 'wood_bow');
         items['wood_bow'].init_Item_other(1, ['weapon']); //堆叠数量，物品大分类

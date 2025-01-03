@@ -1,9 +1,6 @@
 'use strict';
 import { items } from '../Data/Item/Item.js';
-import { types } from '../Data/Type.js';
-import { get_EQP_switch } from '../Function/Get_func.js';
 import { check_Equipment } from '../Function/Function.js';
-import { updata_equipment_show } from '../Function/Updata_func.js';
 
 class Player_Item {
     constructor(id) {

@@ -1,4 +1,4 @@
-import { Text, add_text_object } from './Text_class.js';
+import { add_text_object } from './Text_class.js';
 
 //武器装备类型描述
 function Equipment_type(texts) {
@@ -145,8 +145,10 @@ function attr_type(texts) {
     texts['critical_chance'].attr_name = '暴击率';
     add_text_object(texts, 'critical_damage');
     texts['critical_damage'].attr_name = '暴击伤害';
+    texts['critical_damage'].min_attr_name = '暴伤';
     add_text_object(texts, 'attack_speed');
-    texts['attack_speed'].attr_name = '攻速';
+    texts['attack_speed'].attr_name = '攻击速度';
+    texts['attack_speed'].min_attr_name = '攻速';
     add_text_object(texts, 'defense');
     texts['defense'].attr_name = '防御';
     add_text_object(texts, 'evade');
@@ -155,6 +157,7 @@ function attr_type(texts) {
     texts['resistance_point'].attr_name = '抵抗力';
     add_text_object(texts, 'move_speed');
     texts['move_speed'].attr_name = '移动速度';
+    texts['move_speed'].min_attr_name = '移速';
 
     add_text_object(texts, 'physique');
     texts['physique'].attr_name = '体格';
@@ -171,7 +174,35 @@ function attr_type(texts) {
     add_text_object(texts, 'technique');
     texts['technique'].attr_name = '技巧';
 }
+//材料的类型名称
+function material_type(texts) {
+    add_text_object(texts, 'raw_MTR');
+    texts['raw_MTR'].type_name = '自然材料';
+    add_text_object(texts, 'process_MTR');
+    texts['process_MTR'].type_name = '人工材料';
+    add_text_object(texts, 'finish_MTR');
+    texts['finish_MTR'].type_name = '成品';
+    add_text_object(texts, 'other_MTR');
+    texts['other_MTR'].type_name = '其他物品';
 
+    add_text_object(texts, 'for_logging');
+    texts['for_logging'].source = '伐木';
+    add_text_object(texts, 'for_fishing');
+    texts['for_fishing'].source = '钓鱼';
+    add_text_object(texts, 'for_mining');
+    texts['for_mining'].source = '挖矿';
+    add_text_object(texts, 'for_harvest');
+    texts['for_harvest'].source = '采集';
+
+    add_text_object(texts, 'for_cooking');
+    texts['for_cooking'].source = '烹饪';
+    add_text_object(texts, 'for_making');
+    texts['for_making'].source = '制造';
+    add_text_object(texts, 'for_forging');
+    texts['for_forging'].source = '锻造';
+    add_text_object(texts, 'for_alchemy');
+    texts['for_alchemy'].source = '炼金';
+}
 //初始化文本数据库中与类型相关的文本
 function init_Text_type(texts) {
     //武器装备类型描述
@@ -182,5 +213,7 @@ function init_Text_type(texts) {
     Equipment_wearing_position(texts);
     //属性名称描述
     attr_type(texts);
+    //材料类型描述
+    material_type(texts);
 }
 export { init_Text_type };

@@ -1,8 +1,8 @@
 import { texts } from '../Text/Text.js';
-import { types } from '../Type.js';
+import { types } from '../Type/Type.js';
 
 //物品通用属性
-export class Item {
+class Item {
     constructor(id) {
         this.id = id; //唯一id
         this.name = ''; // 物品名称
@@ -28,6 +28,7 @@ export class Item {
         if (maxStack) {
             this.maxStack = maxStack;
         }
+        //复合类型物品,追加其他类型
         this.type = this.type.concat(type);
     }
 }
@@ -131,12 +132,12 @@ export class Consumable extends Item {
         super(id, name, maxStack);
 
         this.type.push('consumable');
-        this.Consumable_type = new Array(); //这个消耗品的具体类型
+        this.consumable_type = new Array(); //这个消耗品的具体类型
     }
 
     //为这个物品填写消耗品特有的属性
     init_Consumable(e_type) {
-        this.Consumable_type.push(e_type);
+        this.consumable_type.push(e_type);
     }
 }
 
@@ -145,6 +146,11 @@ class Material extends Item {
     constructor(id, name, maxStack) {
         super(id, name, maxStack);
         this.type.push('material');
+        this.material_type = new Array(); //这个消耗品的具体类型
+    }
+    //为这个物品填写材料特有的属性
+    init_Material(e_type) {
+        this.material_type.push(e_type);
     }
 }
 
