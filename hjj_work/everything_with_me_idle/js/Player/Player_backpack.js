@@ -23,7 +23,7 @@ export class Player_backpack {
     Player_get_item(id, num, equip_rarity) {
         if (items[id] === undefined) {
             //添加的物品不在数据库中
-            console.log('未定义物品：%s', id);
+            console.log('Player_get_item:未定义物品：%s', id);
             return;
         }
         //要添加的物品如果是武器装备，则必须要有稀有度，否则给予0稀有度物品

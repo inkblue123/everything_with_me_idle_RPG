@@ -1,5 +1,5 @@
 import { texts } from '../Text/Text.js';
-import { add_Consumable_object } from './Item_class.js';
+import { add_Item_object } from './Item_class.js';
 //物品的大类别枚举
 const Item_type = Object.freeze({
     //武器装备 equipment
@@ -41,7 +41,7 @@ const consumable_type = Object.freeze({
 function init_Item_Consumable(items) {
     //弹药
     {
-        add_Consumable_object(items, 'wood_arrow');
+        add_Item_object(items,  'wood_arrow','consumable',);
         items['wood_arrow'].init_Item_other(100, ['ammo_CSB']); //堆叠数量，物品大分类
         items['wood_arrow'].init_Consumable('arrow'); //物品小分类，是否特制
     }

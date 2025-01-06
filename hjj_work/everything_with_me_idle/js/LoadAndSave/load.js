@@ -18,7 +18,7 @@ function new_game_init() {
 }
 
 function player_init() {
-    // player = new Player_Object();
+    //初始化玩家类
     player.init();
 
     player.Player_get_item('Oak_logs', 10);

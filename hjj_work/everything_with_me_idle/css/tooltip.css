@@ -59,7 +59,7 @@
 .table_value {
     display: flex;
     justify-content: space-between;
-    padding: 0 10px 0;
+    padding: 0 5px 0;
     writing-mode: horizontal-tb;
     border-right: 1px solid darkgrey;
     border-bottom: 1px solid darkgrey;

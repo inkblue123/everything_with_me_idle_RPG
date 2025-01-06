@@ -17,12 +17,10 @@ function BP_type_handle(BP_type) {
     }
     switch (BP_type) {
         case 'all':
-            BP_item_type.push('equipment');
-            BP_item_type.push('consumable');
-            BP_item_type.push('material');
+            BP_item_type = ['equipment', 'consumable', 'material'];
             break;
         case 'EQP_all': //武器装备，全部
-            BP_item_type.push('equipment');
+            BP_item_type = ['equipment'];
             break;
         case 'EQP_W': //武器装备，武器
             BP_item_type.push('weapon');
@@ -37,7 +35,7 @@ function BP_type_handle(BP_type) {
             BP_item_type.push('ornament');
             break;
         case 'CSB_all': //可使用物品，全部
-            BP_item_type.push('consumable');
+            BP_item_type.push('Consumable');
             break;
         case 'CSB_F': //可使用物品，可食用物品
             BP_item_type.push('food_CSB');
@@ -74,7 +72,7 @@ function BP_type_handle(BP_type) {
 function check_Equipment(id, equip_rarity) {
     if (items[id] === undefined) {
         //该物品未定义
-        console.log('未定义物品：%s', id);
+        console.log('check_Equipment : 输入的物品是未定义物品,id：%s', id);
         return false;
     }
     if (items[id].type.includes('equipment')) {
@@ -94,7 +92,7 @@ function check_Equipment(id, equip_rarity) {
         return true;
     } else {
         //该物品不属于装备
-        console.log('%s不属于装备', id);
+        console.log('check_Equipment:%s不属于装备', id);
         return false;
     }
 }

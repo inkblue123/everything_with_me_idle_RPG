@@ -69,8 +69,7 @@ function init_item_tip(player_item) {
     //根据物品的大类别，追加展示额外的信息
     if (items[player_item.id].type.includes('equipment')) {
         show_equipment(player_item);
-    }
-    if (items[player_item.id].type.includes('material')) {
+    } else if (items[player_item.id].type.includes('material')) {
         show_material(player_item);
     }
 }
@@ -233,13 +232,13 @@ function show_material_type(show_item) {
         } else if (type_num == 1) {
             //单种类
             let m_type = items[show_item.id].material_type[0]; //获取这唯一的武器类型
-            type_ch = '来源于' + texts[m_type].source; //获取类型名称
+            type_ch = '来源于 ' + texts[m_type].source; //获取类型名称
         } else if (type_num > 1) {
             // //复合类型武器
-            // for (let m_type of items[show_item.id].equipment_type) {
-            //     type_ch = type_ch + texts[m_type].type_name + '，';
-            // }
-            // type_ch = type_ch.substring(0, type_ch.length - 1);
+            for (let m_type of items[show_item.id].material_type) {
+                type_ch = type_ch + texts[m_type].type_name + '、';
+            }
+            type_ch = type_ch.substring(0, type_ch.length - 1);
         }
     }
     T_value.innerHTML = type_ch;

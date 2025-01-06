@@ -1,4 +1,4 @@
-import { add_Material_object } from './Item_class.js';
+import { add_Item_object } from './Item_class.js';
 //物品的大类别枚举
 const Item_type = Object.freeze({
     //武器装备 equipment
@@ -41,30 +41,33 @@ const material_type = Object.freeze({
 function init_Item_Material(items) {
     //自然材料
     {
-        add_Material_object(items, 'Oak_logs');
+        add_Item_object(items, 'Oak_logs', 'material');
         items['Oak_logs'].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
         items['Oak_logs'].init_Material('for_logging'); //材料小分类
 
-        add_Material_object(items, 'Oak_woodchip');
+        add_Item_object(items, 'Oak_woodchip', 'material');
         items['Oak_woodchip'].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
         items['Oak_woodchip'].init_Material('for_logging'); //材料小分类
 
-        add_Material_object(items, 'Willow_logs');
+        add_Item_object(items, 'Willow_logs', 'material');
         items['Willow_logs'].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
         items['Willow_logs'].init_Material('for_logging'); //材料小分类
-        add_Material_object(items, 'Willow_woodchip');
+        add_Item_object(items, 'Willow_woodchip', 'material');
         items['Willow_woodchip'].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
         items['Willow_woodchip'].init_Material('for_logging'); //材料小分类
     }
     //人工材料
     {
-        add_Material_object(items, 'normal_board');
+        //普通木板
+        add_Item_object(items, 'normal_board', 'material');
         items['normal_board'].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
         items['normal_board'].init_Material('for_making'); //材料小分类
-        add_Material_object(items, 'Oak_board');
+        //橡木板
+        add_Item_object(items, 'Oak_board', 'material');
         items['Oak_board'].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
         items['Oak_board'].init_Material('for_making'); //材料小分类
-        add_Material_object(items, 'Willow_board');
+        //柳木板
+        add_Item_object(items, 'Willow_board', 'material');
         items['Willow_board'].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
         items['Willow_board'].init_Material('for_making'); //材料小分类
     }

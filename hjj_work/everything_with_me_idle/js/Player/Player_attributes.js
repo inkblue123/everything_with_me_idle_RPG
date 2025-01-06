@@ -6,15 +6,15 @@ import { get_object_only_key } from '../Function/Get_func.js';
 export class Player_attributes {
     constructor(id) {
         this.name = '我'; //角色名称
+        this.health_point = 100; //当前血量
+        this.magic_point = 100; //当前魔力
+        this.energy_point = 100; //当前精力
         //战斗攻击属性
         this.combat_attack_attr = new Object();
         //战斗防御属性
         this.combat_defense_attr = new Object();
         //战斗生存属性
         this.combat_survival_attr = new Object();
-        this.health_point = 100; //当前血量
-        this.magic_point = 100; //当前魔力
-        this.energy_point = 100; //当前精力
         //角色基础属性汇总
         this.player_base_attr = new Object();
         //当前激活的装备栏上所有装备的属性汇总

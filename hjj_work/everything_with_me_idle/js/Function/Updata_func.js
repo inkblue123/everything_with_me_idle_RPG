@@ -68,6 +68,7 @@ function updata_BP_value() {
     for (let play_item_id of arr) {
         if (items[play_item_id] === undefined) {
             //玩家拥有的物品不在数据库中，应该清除
+            console.log('updata_BP_value : 玩家拥有未定义物品 id=%s', play_item_id);
             delete player.backpack_items[play_item_id];
         } else if (Item_type_handle(type_switch, items[play_item_id].type)) {
             if (items[play_item_id].type.includes('equipment')) {

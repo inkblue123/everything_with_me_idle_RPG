@@ -22,6 +22,16 @@ function init_Type_item(types) {
         'finish_MTR', //成品
         'other_MTR', //其他物品
     ];
+    //物品最基础的类型
+    add_Type_Array(types, 'Item_base_type');
+    types['Item_base_type'] = [
+        //装备
+        'equipment', //武器装备
+        //可使用物品
+        'consumable', //可使用物品
+        //材料
+        'material', //材料
+    ];
 }
 
 export { init_Type_item };
