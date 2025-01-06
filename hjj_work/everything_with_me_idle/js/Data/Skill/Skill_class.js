@@ -1,17 +1,17 @@
 export class Skill {
     constructor(id) {
-        this.id = id; //Î¨Ò»id
-        this.name = 'Î´¶¨Òå¼¼ÄÜ'; // ¼¼ÄÜÃû³Æ
-        this.description; // ¼¼ÄÜÃèÊö
-        this.max_level; // ×î´óµÈ¼¶ÉÏÏŞ
-        this.exp_need_level; // ¾­ÑéĞèÇóÁ¿µÈ¼¶
-        this.type = new Array(); //ÀàĞÍ
-        this.leveling_behavior = new Array(); //Á·¼¶ĞĞÎª
+        this.id = id; //å”¯ä¸€id
+        this.name = 'æœªå®šä¹‰æŠ€èƒ½'; // æŠ€èƒ½åç§°
+        this.description; // æŠ€èƒ½æè¿°
+        this.max_level; // æœ€å¤§ç­‰çº§ä¸Šé™
+        this.exp_need_level; // ç»éªŒéœ€æ±‚é‡ç­‰çº§
+        this.type = new Array(); //ç±»å‹
+        this.leveling_behavior = new Array(); //ç»ƒçº§è¡Œä¸º
 
-        //Ö÷¶¯¼¼ÄÜ
-        // this.active_type; //¼¤»îÖ®ºóµÄÀàĞÍ£¬±ÈÈç¹¥»÷/¸¨Öú
-        // this.base_attr; //»ùÓÚÄÄĞ©ÊôĞÔ½øĞĞ¼ÆËã
-        // this.active_effect; //¼¤»îÖ®ºóµÄĞ§¹û
-        // this.active_condition; //¼¤»îÕâ¸ö¼¼ÄÜĞèÒªÂú×ãµÄÌõ¼ş
+        //ä¸»åŠ¨æŠ€èƒ½
+        // this.active_type; //æ¿€æ´»ä¹‹åçš„ç±»å‹ï¼Œæ¯”å¦‚æ”»å‡»/è¾…åŠ©
+        // this.base_attr; //åŸºäºå“ªäº›å±æ€§è¿›è¡Œè®¡ç®—
+        // this.active_effect; //æ¿€æ´»ä¹‹åçš„æ•ˆæœ
+        // this.active_condition; //æ¿€æ´»è¿™ä¸ªæŠ€èƒ½éœ€è¦æ»¡è¶³çš„æ¡ä»¶
     }
 }

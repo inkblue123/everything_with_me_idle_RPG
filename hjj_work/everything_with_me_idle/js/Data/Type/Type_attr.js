@@ -1,46 +1,46 @@
 import { add_Type_Array } from './Type_class.js';
-//³õÊ¼»¯Ã¶¾Ù¿âÖĞÓëÎïÆ·Ïà¹ØµÄÄÚÈİ
+//åˆå§‹åŒ–æšä¸¾åº“ä¸­ä¸ç‰©å“ç›¸å…³çš„å†…å®¹
 function init_Type_attr(types) {
-    //Õ½¶·-½ø¹¥Ïà¹ØÊôĞÔ
+    //æˆ˜æ–—-è¿›æ”»ç›¸å…³å±æ€§
     add_Type_Array(types, 'combat_attack_attr');
     types['combat_attack_attr'] = [
-        'attack', //¹¥»÷Á¦
-        'precision', //¾«×¼
-        'critical_chance', //±©»÷ÂÊ£¬°Ù·ÖÖÆ£¬¾ßÌå¼ÆËãÊ±»á³ıÒÔ100
-        'critical_damage', //±©»÷ÉËº¦£¬°Ù·ÖÖÆ£¬¾ßÌå¼ÆËãÊ±»á³ıÒÔ100
-        'attack_speed', //¹¥»÷ËÙ¶È
+        'attack', //æ”»å‡»åŠ›
+        'precision', //ç²¾å‡†
+        'critical_chance', //æš´å‡»ç‡ï¼Œç™¾åˆ†åˆ¶ï¼Œå…·ä½“è®¡ç®—æ—¶ä¼šé™¤ä»¥100
+        'critical_damage', //æš´å‡»ä¼¤å®³ï¼Œç™¾åˆ†åˆ¶ï¼Œå…·ä½“è®¡ç®—æ—¶ä¼šé™¤ä»¥100
+        'attack_speed', //æ”»å‡»é€Ÿåº¦
     ];
-    //Õ½¶·-·ÀÓùÏà¹ØÊôĞÔ
+    //æˆ˜æ–—-é˜²å¾¡ç›¸å…³å±æ€§
     add_Type_Array(types, 'combat_defense_attr');
     types['combat_defense_attr'] = [
-        'defense', //·ÀÓù
-        'evade', //ÉÁ±Ü
-        'resistance_point', //µÖ¿¹Á¦
-        'move_speed', //ÒÆ¶¯ËÙ¶È
+        'defense', //é˜²å¾¡
+        'evade', //é—ªé¿
+        'resistance_point', //æŠµæŠ—åŠ›
+        'move_speed', //ç§»åŠ¨é€Ÿåº¦
     ];
-    //Õ½¶·-Éú´æÏà¹ØÊôĞÔ
+    //æˆ˜æ–—-ç”Ÿå­˜ç›¸å…³å±æ€§
     add_Type_Array(types, 'combat_survival_attr');
     types['combat_survival_attr'] = [
-        'health_max', //×î´óÑªÁ¿ÉÏÏŞ
-        'magic_max', //×î´óÄ§Á¦ÉÏÏŞ
-        'energy_max', //×î´ó¾«Á¦ÉÏÏŞ
+        'health_max', //æœ€å¤§è¡€é‡ä¸Šé™
+        'magic_max', //æœ€å¤§é­”åŠ›ä¸Šé™
+        'energy_max', //æœ€å¤§ç²¾åŠ›ä¸Šé™
     ];
-    //Íæ¼Ò»ù±¾ÊôĞÔ
+    //ç©å®¶åŸºæœ¬å±æ€§
     add_Type_Array(types, 'player_base_attr');
     types['player_base_attr'] = [
-        'physique', //Ìå¸ñ
-        'Meridians', //¾­Âö
-        'soul', //»êÆÇ
-        'power', //Á¦Á¿
-        'agile', //Ãô½İ
-        'intelligence', //ÖÇÁ¦
-        'technique', //¼¼ÇÉ
+        'physique', //ä½“æ ¼
+        'Meridians', //ç»è„‰
+        'soul', //é­‚é­„
+        'power', //åŠ›é‡
+        'agile', //æ•æ·
+        'intelligence', //æ™ºåŠ›
+        'technique', //æŠ€å·§
     ];
-    //ĞèÒªÊ¹ÓÃ°Ù·ÖºÅ±íÊ¾µÄÊôĞÔ
+    //éœ€è¦ä½¿ç”¨ç™¾åˆ†å·è¡¨ç¤ºçš„å±æ€§
     add_Type_Array(types, 'need_per_cent_attr');
     types['need_per_cent_attr'] = [
-        'critical_chance', //±©»÷ÂÊ
-        'critical_damage', //±©»÷ÉËº¦
+        'critical_chance', //æš´å‡»ç‡
+        'critical_damage', //æš´å‡»ä¼¤å®³
     ];
 }
 

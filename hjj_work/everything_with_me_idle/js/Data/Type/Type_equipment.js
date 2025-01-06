@@ -1,13 +1,13 @@
 import { add_Type_Array } from './Type_class.js';
-//³õÊ¼»¯Ã¶¾Ù¿âÖĞÓë×°±¸Ïà¹ØµÄÄÚÈİ
+//åˆå§‹åŒ–æšä¸¾åº“ä¸­ä¸è£…å¤‡ç›¸å…³çš„å†…å®¹
 function init_Type_equipment(types) {
-    //´´½¨ĞÂµÄÄÚÈİÖ®Ç°½¨ÒéÏÈÓÃadd_Type_Array,ÖØÃûÇé¿ö»áÓÃconsole.logÊä³ö
-    //Èç¹ûÒÑ¾­ÓĞ¹ıÄÚÈİÔòÓ¦¸Ã¿¼ÂÇ»»¸öÃû×Ö
+    //åˆ›å»ºæ–°çš„å†…å®¹ä¹‹å‰å»ºè®®å…ˆç”¨add_Type_Array,é‡åæƒ…å†µä¼šç”¨console.logè¾“å‡º
+    //å¦‚æœå·²ç»æœ‰è¿‡å†…å®¹åˆ™åº”è¯¥è€ƒè™‘æ¢ä¸ªåå­—
 
-    //ÄÄĞ©ÎäÆ÷ÀàĞÍÊôÓÚË«ÊÖÎäÆ÷
+    //å“ªäº›æ­¦å™¨ç±»å‹å±äºåŒæ‰‹æ­¦å™¨
     add_Type_Array(types, 'both_hand');
     types.both_hand = ['battle_axe', 'long_handled', 'hammers', 'gloves', 'bow', 'crossbow', 'spray_gun'];
-    //ÄÄĞ©ÎäÆ÷ÀàĞÍÊôÓÚµ¥ÊÖÎäÆ÷
+    //å“ªäº›æ­¦å™¨ç±»å‹å±äºå•æ‰‹æ­¦å™¨
     add_Type_Array(types, 'single_hand');
     types.single_hand = [
         'dagger',
@@ -23,56 +23,56 @@ function init_Type_equipment(types) {
         'spread_core',
         'summon_core',
     ];
-    //ÌØÖÆÎäÆ÷¿ÉÄÜµÄÏ¡ÓĞ¶È
+    //ç‰¹åˆ¶æ­¦å™¨å¯èƒ½çš„ç¨€æœ‰åº¦
     add_Type_Array(types, 'special_rarity');
     types.special_rarity = [
-        'damaged', //ÆÆËğ
-        'ordinary', //ÆÕÍ¨
-        'excellent', //ÓÅÁ¼
-        'rare', //Ï¡ÓĞ
-        'epic', //Ê·Ê«
-        'legendary', //´«Ëµ
+        'damaged', //ç ´æŸ
+        'ordinary', //æ™®é€š
+        'excellent', //ä¼˜è‰¯
+        'rare', //ç¨€æœ‰
+        'epic', //å²è¯—
+        'legendary', //ä¼ è¯´
     ];
-    //ÖÆÊ½ÎäÆ÷¿ÉÄÜµÄÏ¡ÓĞ¶È
-    //ÆÆËğ£¬ÆÕÍ¨£¬ÓÅÁ¼£¬Ï¡ÓĞ£¬Ê·Ê«
+    //åˆ¶å¼æ­¦å™¨å¯èƒ½çš„ç¨€æœ‰åº¦
+    //ç ´æŸï¼Œæ™®é€šï¼Œä¼˜è‰¯ï¼Œç¨€æœ‰ï¼Œå²è¯—
     add_Type_Array(types, 'no_special_rarity');
     types.no_special_rarity = ['damaged', 'ordinary', 'excellent', 'rare', 'epic'];
-    //×°±¸¿ÉÄÜ·ÅÖÃµÄÎ»ÖÃ
+    //è£…å¤‡å¯èƒ½æ”¾ç½®çš„ä½ç½®
     add_Type_Array(types, 'wearing_position');
     types.wearing_position = ['main_hand', 'head', 'chest', 'legs', 'feet', 'deputy', 'ornament'];
-    //×°±¸¿ÉÄÜµÄĞ¡ÀàĞÍ
+    //è£…å¤‡å¯èƒ½çš„å°ç±»å‹
     add_Type_Array(types, 'equipment_type');
     types.equipment_type = [
-        'empty_hands', //¿ÕÊÖ
-        // ½üÕ½ÎäÆ÷
-        'dagger', //Ø°Ê×
-        'sword', //½£
-        'battle_axe', //Õ½¸«
-        'long_handled', //³¤±úÎäÆ÷
-        'gloves', //È­Ì×
-        'sticks', //¹÷°ô
-        'hammers', //´ó´¸
-        'whips', //±Ş×Ó
-        //Ô¶³ÌÎäÆ÷
-        'bow', //¹­
-        'crossbow', //åó
-        'hand_gun', //ÊÖåó
-        'spray_gun', //ÅçÇ¹
-        'boomerang', //»ØĞıÎäÆ÷
-        'throw', //Í¶ÖÀ¹¤¾ß
-        //Ä§·¨ÎäÆ÷
-        'putmagic_core', //Ê©·¨ºËĞÄ
-        'zhenfa_core', //Õó·¨ºËĞÄ
-        'magic_core', //·¨ÊõºËĞÄ
-        'spread_core', //À©É¢ºËĞÄ
-        'summon_core', //ÕÙ»½ºËĞÄ
-        //·À¾ß
-        'helmet', //Í·¿ø
-        'chest_armor', //ĞØ¼×
-        'leg_armor', //ÍÈ¼×
-        'shoes', //Ğ¬×Ó
-        'deputy', //¸±ÊÖ×°±¸
-        'ornament', //ÊÎÆ·
+        'empty_hands', //ç©ºæ‰‹
+        // è¿‘æˆ˜æ­¦å™¨
+        'dagger', //åŒ•é¦–
+        'sword', //å‰‘
+        'battle_axe', //æˆ˜æ–§
+        'long_handled', //é•¿æŸ„æ­¦å™¨
+        'gloves', //æ‹³å¥—
+        'sticks', //æ£æ£’
+        'hammers', //å¤§é”¤
+        'whips', //é­å­
+        //è¿œç¨‹æ­¦å™¨
+        'bow', //å¼“
+        'crossbow', //å¼©
+        'hand_gun', //æ‰‹å¼©
+        'spray_gun', //å–·æª
+        'boomerang', //å›æ—‹æ­¦å™¨
+        'throw', //æŠ•æ·å·¥å…·
+        //é­”æ³•æ­¦å™¨
+        'putmagic_core', //æ–½æ³•æ ¸å¿ƒ
+        'zhenfa_core', //é˜µæ³•æ ¸å¿ƒ
+        'magic_core', //æ³•æœ¯æ ¸å¿ƒ
+        'spread_core', //æ‰©æ•£æ ¸å¿ƒ
+        'summon_core', //å¬å”¤æ ¸å¿ƒ
+        //é˜²å…·
+        'helmet', //å¤´ç›”
+        'chest_armor', //èƒ¸ç”²
+        'leg_armor', //è…¿ç”²
+        'shoes', //é‹å­
+        'deputy', //å‰¯æ‰‹è£…å¤‡
+        'ornament', //é¥°å“
     ];
 }
 

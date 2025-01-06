@@ -1,18 +1,18 @@
 import { Skill } from '..Skill_class.js';
 
-//±»¶¯¼¼ÄÜÍ¨ÓÃÊôĞÔ
+//è¢«åŠ¨æŠ€èƒ½é€šç”¨å±æ€§
 class Passive_skill extends Skill {
     constructor(id) {
         super(id);
-        //±»¶¯¼¼ÄÜ
-        this.rewards; //³£Ì¬µÈ¼¶¼Ó³É
-        this.milepost; // ¹Ø¼üµÈ¼¶½Úµã
+        //è¢«åŠ¨æŠ€èƒ½
+        this.rewards; //å¸¸æ€ç­‰çº§åŠ æˆ
+        this.milepost; // å…³é”®ç­‰çº§èŠ‚ç‚¹
     }
 }
 
-//³õÊ¼»¯¼¼ÄÜÊı¾İ¿âÖĞÓë±»¶¯¼¼ÄÜÏà¹ØµÄÄÚÈİ
+//åˆå§‹åŒ–æŠ€èƒ½æ•°æ®åº“ä¸­ä¸è¢«åŠ¨æŠ€èƒ½ç›¸å…³çš„å†…å®¹
 function init_Passive_skill(skills) {
-    //ÆÕÍ¨½£Êõ
+    //æ™®é€šå‰‘æœ¯
     skills['normal_sword'] = new Passive_skill('normal_sword');
 }
 

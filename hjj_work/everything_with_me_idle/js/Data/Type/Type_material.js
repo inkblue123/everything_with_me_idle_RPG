@@ -1,30 +1,30 @@
 import { add_Type_Array } from './Type_class.js';
-//³õÊ¼»¯Ã¶¾Ù¿âÖĞÓëÎïÆ·Ïà¹ØµÄÄÚÈİ
+//åˆå§‹åŒ–æšä¸¾åº“ä¸­ä¸ç‰©å“ç›¸å…³çš„å†…å®¹
 function init_Type_material(types) {
-    //½ö½öÊôÓÚ²ÄÁÏµÄĞ¡ÀàĞÍ
+    //ä»…ä»…å±äºææ–™çš„å°ç±»å‹
     add_Type_Array(types, 'material_type');
     types.material_type = [
-        // ÌìÈ»²ÄÁÏ raw_MTR
-        'for_logging', //À´×Ô·¥Ä¾µÄÎïÆ·
-        'for_fishing', //À´×ÔµöÓãµÄÎïÆ·
-        'for_mining', //À´×ÔÍÚ¿óµÄÎïÆ·
-        'for_harvest', //À´×Ô²É¼¯µÄÎïÆ·
-        //ÈË¹¤²ÄÁÏ process_MTR
-        'for_cooking', //À´×ÔÅëâ¿µÄÎïÆ·
-        'for_making', //À´×ÔÖÆÔìµÄÎïÆ·
-        'for_forging', //À´×Ô¶ÍÔìµÄÎïÆ·
-        'for_alchemy', //À´×ÔÁ¶½ğµÄÎïÆ·
-        //³ÉÆ· finish_MTR ÒÑ¾­²»ÔÙ²ÎÓëºÏ³É,µ«ÊÇÓĞÓÃµÄÎïÆ·
-        'key', //Ô¿³×
-        'money', //»õ±Ò
-        //ÆäËûÎïÆ· other_MTR
+        // å¤©ç„¶ææ–™ raw_MTR
+        'for_logging', //æ¥è‡ªä¼æœ¨çš„ç‰©å“
+        'for_fishing', //æ¥è‡ªé’“é±¼çš„ç‰©å“
+        'for_mining', //æ¥è‡ªæŒ–çŸ¿çš„ç‰©å“
+        'for_harvest', //æ¥è‡ªé‡‡é›†çš„ç‰©å“
+        //äººå·¥ææ–™ process_MTR
+        'for_cooking', //æ¥è‡ªçƒ¹é¥ªçš„ç‰©å“
+        'for_making', //æ¥è‡ªåˆ¶é€ çš„ç‰©å“
+        'for_forging', //æ¥è‡ªé”»é€ çš„ç‰©å“
+        'for_alchemy', //æ¥è‡ªç‚¼é‡‘çš„ç‰©å“
+        //æˆå“ finish_MTR å·²ç»ä¸å†å‚ä¸åˆæˆ,ä½†æ˜¯æœ‰ç”¨çš„ç‰©å“
+        'key', //é’¥åŒ™
+        'money', //è´§å¸
+        //å…¶ä»–ç‰©å“ other_MTR
         'other',
     ];
     // types.material_type = [
-    //     'raw_MTR', //×ÔÈ»²ÄÁÏ
-    //     'process_MTR', //ÈË¹¤²ÄÁÏ
-    //     'finish_MTR', //³ÉÆ·
-    //     'other_MTR', //ÆäËûÎïÆ·
+    //     'raw_MTR', //è‡ªç„¶ææ–™
+    //     'process_MTR', //äººå·¥ææ–™
+    //     'finish_MTR', //æˆå“
+    //     'other_MTR', //å…¶ä»–ç‰©å“
     // ];
 }
 

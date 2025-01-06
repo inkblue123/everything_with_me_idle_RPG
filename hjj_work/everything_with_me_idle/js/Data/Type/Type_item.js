@@ -1,36 +1,36 @@
 import { add_Type_Array } from './Type_class.js';
-//³õÊ¼»¯Ã¶¾Ù¿âÖĞÓëÎïÆ·Ïà¹ØµÄÄÚÈİ
+//åˆå§‹åŒ–æšä¸¾åº“ä¸­ä¸ç‰©å“ç›¸å…³çš„å†…å®¹
 function init_Type_item(types) {
-    //ÎïÆ·¿ÉÄÜµÄ´óÀàĞÍ
+    //ç‰©å“å¯èƒ½çš„å¤§ç±»å‹
     add_Type_Array(types, 'Item_type');
     types['Item_type'] = [
-        //×°±¸
-        'equipment', //ÎäÆ÷×°±¸´óÀà
-        'weapon', //ÎäÆ÷
-        'armor', //·À¾ß
-        'deputy', //¸±ÊÖ
-        'ornament', //ÊÎÆ·
-        //¿ÉÊ¹ÓÃÎïÆ·
-        'consumable', //¿ÉÊ¹ÓÃÎïÆ·´óÀà
-        'food_CSB', //Ê³Æ·
-        'ammo_CSB', //µ¯Ò©
-        'life_CSB', //Éú»îÏûºÄÆ·
-        //²ÄÁÏ
-        'material', //²ÄÁÏ´óÀà
-        'raw_MTR', //×ÔÈ»²ÄÁÏ
-        'process_MTR', //ÈË¹¤²ÄÁÏ
-        'finish_MTR', //³ÉÆ·
-        'other_MTR', //ÆäËûÎïÆ·
+        //è£…å¤‡
+        'equipment', //æ­¦å™¨è£…å¤‡å¤§ç±»
+        'weapon', //æ­¦å™¨
+        'armor', //é˜²å…·
+        'deputy', //å‰¯æ‰‹
+        'ornament', //é¥°å“
+        //å¯ä½¿ç”¨ç‰©å“
+        'consumable', //å¯ä½¿ç”¨ç‰©å“å¤§ç±»
+        'food_CSB', //é£Ÿå“
+        'ammo_CSB', //å¼¹è¯
+        'life_CSB', //ç”Ÿæ´»æ¶ˆè€—å“
+        //ææ–™
+        'material', //ææ–™å¤§ç±»
+        'raw_MTR', //è‡ªç„¶ææ–™
+        'process_MTR', //äººå·¥ææ–™
+        'finish_MTR', //æˆå“
+        'other_MTR', //å…¶ä»–ç‰©å“
     ];
-    //ÎïÆ·×î»ù´¡µÄÀàĞÍ
+    //ç‰©å“æœ€åŸºç¡€çš„ç±»å‹
     add_Type_Array(types, 'Item_base_type');
     types['Item_base_type'] = [
-        //×°±¸
-        'equipment', //ÎäÆ÷×°±¸
-        //¿ÉÊ¹ÓÃÎïÆ·
-        'consumable', //¿ÉÊ¹ÓÃÎïÆ·
-        //²ÄÁÏ
-        'material', //²ÄÁÏ
+        //è£…å¤‡
+        'equipment', //æ­¦å™¨è£…å¤‡
+        //å¯ä½¿ç”¨ç‰©å“
+        'consumable', //å¯ä½¿ç”¨ç‰©å“
+        //ææ–™
+        'material', //ææ–™
     ];
 }
 
