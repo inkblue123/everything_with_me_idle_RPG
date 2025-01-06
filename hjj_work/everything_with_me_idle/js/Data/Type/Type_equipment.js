@@ -1,4 +1,38 @@
 import { add_Type_Array } from './Type_class.js';
+function init_Equipment_attr_Presets(types) {
+    //装备的预设属性
+    add_Type_Array(types, 'equipment_attr_level');
+    types.equipment_attr_level = new Object();
+    types.equipment_attr_level.L1 = new Object();
+    types.equipment_attr_level.L1.attack = {
+        attack: 5, //攻击
+        precision: 5, //精准
+        critical_chance: 5, //暴击率，百分制，具体计算时会除以100
+        critical_damage: 5, //暴击伤害，百分制，具体计算时会除以100
+        attack_speed: 5, //攻击速度
+    };
+    types.equipment_attr_level.L1.defense = {
+        defense: 5, //防御
+        evade: 5, //闪避
+        resistance_point: 5, //抵抗力
+        move_speed: 5, //移动速度
+    };
+    types.equipment_attr_level.L1.survival = {
+        health_max: 5, //最大血量上限
+        magic_max: 5, //最大魔力上限
+        energy_max: 5, //最大精力上限
+    };
+    types.equipment_attr_level.L1.player_base = {
+        physique: 5, //体格
+        Meridians: 5, //经脉
+        soul: 5, //魂魄
+        power: 5, //力量
+        agile: 5, //敏捷
+        intelligence: 5, //智力
+        technique: 5, //技巧
+    };
+}
+
 //初始化枚举库中与装备相关的内容
 function init_Type_equipment(types) {
     //创建新的内容之前建议先用add_Type_Array,重名情况会用console.log输出
@@ -74,6 +108,9 @@ function init_Type_equipment(types) {
         'deputy', //副手装备
         'ornament', //饰品
     ];
+
+    //装备的预设属性
+    init_Equipment_attr_Presets(types);
 }
 
 export { init_Type_equipment };
