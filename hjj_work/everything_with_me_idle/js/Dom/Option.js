@@ -3,9 +3,9 @@ import { updata_HP, updata_BP_value } from '../Function/Updata_func.js';
 import { printf_play_item } from '../Function/Function.js';
 import { get_BP_weight } from '../Function/Get_func.js';
 import { player } from '../Player/Player.js';
+import { dom } from './Dom.js';
 
 var Option = crtElement('div', null, 'option_page', '');
-
 {
     var button1 = addElement(Option, 'button');
     button1.innerHTML = '战斗时的ui';

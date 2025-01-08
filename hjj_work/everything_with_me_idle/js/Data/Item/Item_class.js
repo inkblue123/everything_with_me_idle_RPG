@@ -1,5 +1,5 @@
 import { texts } from '../Text/Text.js';
-import { types } from '../Type/Type.js';
+import { enums } from '../Enum/Enum.js';
 
 //物品通用属性
 class Item {
@@ -8,7 +8,9 @@ class Item {
         this.name = ''; // 物品名称
         this.description = ''; // 物品描述
         this.maxStack = 1; // 最大堆叠数量
-        this.type = new Array(); //物品大类型
+        // this.type = new Array(); //物品大类型
+        this.main_type = new Array(); //物品大类型
+        this.secon_type = new Array(); //物品小类型
 
         this.init_Item_name_desc(id);
     }
@@ -24,12 +26,19 @@ class Item {
         }
     }
     //手动定义其他的物品属性
-    init_Item_other(maxStack, type) {
+    init_Item_other(maxStack, secon_type) {
         if (maxStack) {
             this.maxStack = maxStack;
         }
         //复合类型物品,追加其他类型
-        this.type = this.type.concat(type);
+        if (secon_type) {
+            if (typeof secon_type == 'object') {
+                this.secon_type = this.secon_type.concat(secon_type);
+            }
+            if (typeof secon_type == 'string') {
+                this.secon_type.push(secon_type);
+            }
+        }
     }
 }
 
@@ -38,7 +47,7 @@ let Equipment_class = (extendsClass) =>
     class extends extendsClass {
         constructor(id) {
             super(id);
-            this.type.push('equipment');
+            this.main_type.push('equipment');
             this.equipment_type = new Array(); //这件装备的具体类型
             this.wearing_position = new Array(); //这件装备能穿戴的位置
             this.two_handed_flag = false; //这件装备是否属于双手武器
@@ -56,9 +65,9 @@ let Equipment_class = (extendsClass) =>
         init_Equipment(e_type, special = false) {
             this.equipment_type.push(e_type);
             //为装备预设穿戴位置
-            if (types.single_hand.includes(e_type)) {
+            if (enums.single_hand.includes(e_type)) {
                 this.wearing_position.push('main_hand'); //这件装备可以放在主手位置
-            } else if (types.both_hand.includes(e_type)) {
+            } else if (enums.both_hand.includes(e_type)) {
                 this.wearing_position.push('main_hand_two'); //这件装备可以放在主手位置
                 this.two_handed_flag = true; //这件装备属于双手武器
             } else if (e_type == 'helmet') {
@@ -120,14 +129,49 @@ let Equipment_class = (extendsClass) =>
         }
         //为这个物品设置属性级别,自动填充对应类型的属性
         //可能会给某些不应该填的属性填上数值
-        set_attr_level(levle, attr_type) {
+        set_attr_level(level, attr_type) {
+            //枚举库中没有该等级的预设，直接结束
+            if (enums.equipment_attr_level[level] == undefined) return;
+            //枚举库中没有对应类型的预设，直接结束
+            if (enums.equipment_attr_level[level][attr_type] == undefined) return;
+            //复合类型装备或者未定义类型的装备，不支持属性预设，直接结束
+            if (this.equipment_type.length != 1) return;
+            //枚举库中没有对该装备类型设置属性倾向，直接结束
+            if (enums.equipment_type_attr_Presets[this.equipment_type[0]] == undefined) return;
+            //获取数值预设
+            let Level_attr = enums.equipment_attr_level[level][attr_type];
+            //针对武器，获取该等级下具体伤害类型的属性预设
+            if (this.secon_type[0] == 'weapon') {
+                let damage_type = enums.weapon_damage_type[this.equipment_type[0]];
+                //枚举库中没设置该种伤害类型的属性预设，直接结束
+                if (Level_attr[damage_type] == undefined) return;
+                Level_attr = Level_attr[damage_type];
+            }
+            //获取属性倾向
+            let attr_Presets = enums.equipment_type_attr_Presets[this.equipment_type[0]];
+
+            //获取需要填的属性名称
+            let need_attr_name;
             if (attr_type == 'attack') {
+                need_attr_name = enums['combat_attack_attr'];
             }
             if (attr_type == 'defense') {
+                need_attr_name = enums['combat_defense_attr'];
             }
             if (attr_type == 'survival') {
+                need_attr_name = enums['combat_survival_attr'];
             }
             if (attr_type == 'player_base') {
+                need_attr_name = enums['player_base_attr'];
+            }
+
+            for (let attr_name of need_attr_name) {
+                //获取attr_name属性倾向，例如最高较高普通较低最低
+                let Presets = attr_Presets[attr_name];
+                //获取level等级下，属性倾向的具体数值
+                let num = Level_attr[attr_name][Presets];
+                //赋值
+                this.equip_attr[attr_name] = num;
             }
         }
     };
@@ -137,7 +181,7 @@ let Consumable_class = (extendsClass) =>
     class extends extendsClass {
         constructor(id) {
             super(id);
-            this.type.push('consumable');
+            this.main_type.push('consumable');
             this.consumable_type = new Array(); //这个消耗品的具体类型
         }
         //为这个物品填写消耗品特有的属性
@@ -151,7 +195,7 @@ let Material_class = (extendsClass) =>
     class extends extendsClass {
         constructor(id) {
             super(id);
-            this.type.push('material');
+            this.main_type.push('material');
             this.material_type = new Array(); //这个消耗品的具体类型
         }
         material_type = new Array(); //这个消耗品的具体类型
@@ -167,24 +211,24 @@ class Consumable extends Consumable_class(Item) {}
 class Material extends Material_class(Item) {}
 
 //创建Item对象，如果已经创建过则生成混合类
-function add_Item_object(items, newid, ...types) {
+function add_Item_object(items, newid, ...enums) {
     if (items[newid] === undefined) {
         //全新对象
-        if (types.length == 0) {
+        if (enums.length == 0) {
             console.log('add_mix_Item_object error :未输入物品类型');
             return;
-        } else if (types.length == 1) {
-            if (types[0] == 'equipment') {
+        } else if (enums.length == 1) {
+            if (enums[0] == 'equipment') {
                 items[newid] = new Equipment(newid);
-            } else if (types[0] == 'consumable') {
+            } else if (enums[0] == 'consumable') {
                 items[newid] = new Consumable(newid);
-            } else if (types[0] == 'material') {
+            } else if (enums[0] == 'material') {
                 items[newid] = new Material(newid);
             }
         } else {
             //遍历每一种需要的类型,最终造出需要的混合类
             let mix_class = Item;
-            for (let aT of types) {
+            for (let aT of enums) {
                 if (aT == 'equipment') {
                     mix_class = Equipment_class(mix_class);
                 }
@@ -198,14 +242,14 @@ function add_Item_object(items, newid, ...types) {
             class mix_Item extends mix_class {}
 
             items[newid] = new mix_Item(newid);
+            items[newid].main_type = enums;
         }
-        items[newid].type = types;
     } else {
         //如果已经创建过对象,则尝试生成一个混合类,将原本对象中的值赋予新的混合类
         let base_types = new Array();
         let other_types = new Array();
         //获取源类型
-        for (let raw_type of items[newid].type) {
+        for (let raw_type of items[newid].main_type) {
             if (raw_type == 'equipment' || raw_type == 'consumable' || raw_type == 'material') {
                 base_types.push(raw_type);
             } else {
@@ -213,7 +257,7 @@ function add_Item_object(items, newid, ...types) {
             }
         }
         //依据原类型和新类型生成混合类
-        base_types = base_types.concat(types);
+        base_types = base_types.concat(enums);
         base_types = [...new Set(base_types)]; //去重
         //造出混合类
         let mix_class = Item;
@@ -240,7 +284,7 @@ function add_Item_object(items, newid, ...types) {
         new_types = [...new Set(new_types)]; //去重
         //完成
         items[newid] = new_item;
-        items[newid].type = new_types;
+        items[newid].main_type = new_types;
     }
 }
 // 深拷贝函数

@@ -35,7 +35,7 @@ function player_init() {
     player.Player_get_item('test_boomerang', 3, 'excellent');
     player.Player_get_item('test_boomerang', 5, 'rare');
     player.Player_get_item('test_boomerang', 8, 'epic');
-    // player.Player_get_item('wood_bow(n)', 15, 'ordinary'); //复合类型物品测试
+    player.Player_get_item('wood_bow', 1, 'ordinary'); //远程武器测试
 }
 function dom_init() {
     const radios = document.querySelectorAll('input[name="EQP_switch"]');

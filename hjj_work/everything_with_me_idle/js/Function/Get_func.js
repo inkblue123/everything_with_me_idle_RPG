@@ -1,6 +1,6 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
-import { types } from '../Data/Type/Type.js';
+import { enums } from '../Data/Enum/Enum.js';
 
 //获取背包界面激活的过滤条件
 function get_BP_type() {
@@ -77,7 +77,7 @@ function get_EQP_wp_data(EQP_column, wp) {
     //获取装备栏的具体组件
     const EQP_column_div = document.getElementById(EQP_column);
     let EQP_wp_data = new Object();
-    if (types.wearing_position.includes(wp)) {
+    if (enums.wearing_position.includes(wp)) {
         //位置合法
         switch (wp) {
             case 'main_hand':

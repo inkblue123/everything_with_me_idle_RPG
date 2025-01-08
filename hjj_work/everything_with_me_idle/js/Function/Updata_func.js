@@ -1,7 +1,7 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
-import { types } from '../Data/Type/Type.js';
+import { enums } from '../Data/Enum/Enum.js';
 import {
     addElement,
     addBP_item,
@@ -70,10 +70,10 @@ function updata_BP_value() {
             //玩家拥有的物品不在数据库中，应该清除
             console.log('updata_BP_value : 玩家拥有未定义物品 id=%s', play_item_id);
             delete player.backpack_items[play_item_id];
-        } else if (Item_type_handle(type_switch, items[play_item_id].type)) {
-            if (items[play_item_id].type.includes('equipment')) {
+        } else if (Item_type_handle(type_switch, play_item_id)) {
+            if (items[play_item_id].main_type.includes('equipment')) {
                 addBP_equipment(player.backpack_items[play_item_id]);
-            } else if (items[play_item_id].type.includes('material')) {
+            } else if (items[play_item_id].main_type.includes('material')) {
                 addBP_item(player.backpack_items[play_item_id]);
             }
         } else {
@@ -98,7 +98,7 @@ function updata_equipment_show(EQP_column) {
         //如果位置上没有装备信息，不处理
         if (isEmptyObject(player_EQP_column[wearing_position])) continue;
 
-        if (types.wearing_position.includes(wearing_position)) {
+        if (enums.wearing_position.includes(wearing_position)) {
             add_aEQP_data(player_EQP_column[wearing_position], wearing_position, 1);
         } else if (wearing_position == 'main_hand_two') {
             //双手武器单独处理
@@ -119,20 +119,20 @@ function updata_attribute_show() {
     //表格排序，从左到右，从上到下，右半边表示玩家基础属性
     //战斗属性中，前5个是攻击属性
     let i = 0;
-    for (let id of types.combat_attack_attr) {
+    for (let id of enums.combat_attack_attr) {
         let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
         combat_attr_show.children[i].innerText = ch;
         i++;
     }
     //然后是4个是防御属性
-    for (let id of types.combat_defense_attr) {
+    for (let id of enums.combat_defense_attr) {
         let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
         combat_attr_show.children[i].innerText = ch;
         i++;
     }
     //7个玩家基础属性
     i = 0;
-    for (let id of types.player_base_attr) {
+    for (let id of enums.player_base_attr) {
         let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
         player_base_attr.children[i].innerText = ch;
         i++;

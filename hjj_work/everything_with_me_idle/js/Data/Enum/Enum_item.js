@@ -1,9 +1,9 @@
-import { add_Type_Array } from './Type_class.js';
+import { add_Enum_Array } from './Enum_class.js';
 //初始化枚举库中与物品相关的内容
-function init_Type_item(types) {
+function init_Enum_item(enums) {
     //物品可能的大类型
-    add_Type_Array(types, 'Item_type');
-    types['Item_type'] = [
+    add_Enum_Array(enums, 'Item_type');
+    enums['Item_type'] = [
         //装备
         'equipment', //武器装备大类
         'weapon', //武器
@@ -23,8 +23,8 @@ function init_Type_item(types) {
         'other_MTR', //其他物品
     ];
     //物品最基础的类型
-    add_Type_Array(types, 'Item_base_type');
-    types['Item_base_type'] = [
+    add_Enum_Array(enums, 'Item_base_type');
+    enums['Item_base_type'] = [
         //装备
         'equipment', //武器装备
         //可使用物品
@@ -34,4 +34,4 @@ function init_Type_item(types) {
     ];
 }
 
-export { init_Type_item };
+export { init_Enum_item };

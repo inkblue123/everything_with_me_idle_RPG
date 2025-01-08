@@ -1,10 +1,13 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
-import { types } from '../Data/Type/Type.js';
+import { enums } from '../Data/Enum/Enum.js';
 
 //判断物品类型中是否在指定过滤条件内
-function Item_type_handle(type_switch, items_type) {
-    for (let item_T of items_type) {
+function Item_type_handle(type_switch, id) {
+    let item_type = new Array();
+    item_type = item_type.concat(items[id].main_type);
+    item_type = item_type.concat(items[id].secon_type);
+    for (let item_T of item_type) {
         if (type_switch.includes(item_T)) return true;
     }
     return false;
@@ -75,15 +78,15 @@ function check_Equipment(id, equip_rarity) {
         console.log('check_Equipment : 输入的物品是未定义物品,id：%s', id);
         return false;
     }
-    if (items[id].type.includes('equipment')) {
+    if (items[id].main_type.includes('equipment')) {
         //稀有度参数校验
         if (items[id].special_flag) {
-            if (!types.special_rarity.includes(equip_rarity)) {
+            if (!enums.special_rarity.includes(equip_rarity)) {
                 console.log('稀有度异常，%s不属于特制武器的可能稀有度', equip_rarity);
                 return false;
             }
         } else {
-            if (!types.no_special_rarity.includes(equip_rarity)) {
+            if (!enums.no_special_rarity.includes(equip_rarity)) {
                 console.log('稀有度异常，%s不属于制式武器的可能稀有度', equip_rarity);
                 return false;
             }

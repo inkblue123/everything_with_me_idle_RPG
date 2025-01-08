@@ -2,7 +2,7 @@ import { crtElement, addElement, empty_dom } from '../Function/Dom_function.js';
 import { get_object_only_key } from '../Function/Get_func.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
-import { types } from '../Data/Type/Type.js';
+import { enums } from '../Data/Enum/Enum.js';
 
 //跟随鼠标，当鼠标移动到特定元素上时显示出来，充当提示窗口
 var Tooltip = crtElement('div', 'tooltip', null, 'none');
@@ -67,9 +67,9 @@ function init_item_tip(player_item) {
         return false; //异常物品，中止展示
     }
     //根据物品的大类别，追加展示额外的信息
-    if (items[player_item.id].type.includes('equipment')) {
+    if (items[player_item.id].main_type.includes('equipment')) {
         show_equipment(player_item);
-    } else if (items[player_item.id].type.includes('material')) {
+    } else if (items[player_item.id].main_type.includes('material')) {
         show_material(player_item);
     }
 }
@@ -85,7 +85,7 @@ function show_item_name_description(player_item) {
         return false;
     }
     let label = addElement(Tooltip, 'div', null, 'lable_down');
-    if (items[player_item.id].type.includes('equipment')) {
+    if (items[player_item.id].main_type.includes('equipment')) {
         //为装备的名称上色
         let rarity = get_object_only_key(player_item.rarity);
         label.style.color = texts[rarity].rarity_color;
@@ -189,7 +189,7 @@ function show_equipment_attr(show_item) {
             }
             //属性数值
             let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
-            if (types.need_per_cent_attr.includes(attr)) {
+            if (enums.need_per_cent_attr.includes(attr)) {
                 //这是需要用百分号表示的属性
                 T_value.innerHTML = '+' + items[id].equip_attr[attr] + '%';
             } else if (attr == 'attack_speed') {
@@ -242,14 +242,6 @@ function show_material_type(show_item) {
         }
     }
     T_value.innerHTML = type_ch;
-
-    // if (types.material_type.includes(m_type)) {
-    //     T_value.innerHTML = texts[m_type].type_name;
-    //     type_name_flag = true;
-    // }
-    // if (!type_name_flag) {
-    //     T_value.innerHTML = '异常材料分类';
-    // }
 }
 //追加展示材料来源和用处
 function show_material_source_use(show_item) {}

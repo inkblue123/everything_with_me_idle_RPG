@@ -1,0 +1,26 @@
+/* 玩家控制界面的样式 */
+#control {
+    /* display: grid; */
+    /* 单列布局 */
+    /* grid-template-columns: 1fr; */
+    /* grid-template-rows: repeat(auto-fit, minmax(95px, 1fr)); */
+    /* grid-template-rows: auto; */
+    /* color: white; */
+    /* font-size: 24px; */
+    /* height: 50%; */
+    box-sizing: border-box;
+    border: 3px solid #797691; /* 内框 */
+}
+
+/* 用来描述角色所处位置的容器 */
+#Place_desc_div {
+    box-sizing: border-box;
+    background-color: rgb(19, 250, 54);
+    border: 1px solid #797691; /* 内框 */
+}
+/* 用来容纳角色当前位置可以进行的操作的容器 */
+#player_Control_div {
+    box-sizing: border-box;
+    background-color: rgb(250, 19, 19);
+    border: 1px solid #797691; /* 内框 */
+}

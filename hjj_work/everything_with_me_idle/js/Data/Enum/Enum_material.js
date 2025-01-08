@@ -1,9 +1,9 @@
-import { add_Type_Array } from './Type_class.js';
+import { add_Enum_Array } from './Enum_class.js';
 //初始化枚举库中与物品相关的内容
-function init_Type_material(types) {
+function init_Enum_material(enums) {
     //仅仅属于材料的小类型
-    add_Type_Array(types, 'material_type');
-    types.material_type = [
+    add_Enum_Array(enums, 'material_type');
+    enums.material_type = [
         // 天然材料 raw_MTR
         'for_logging', //来自伐木的物品
         'for_fishing', //来自钓鱼的物品
@@ -20,7 +20,7 @@ function init_Type_material(types) {
         //其他物品 other_MTR
         'other',
     ];
-    // types.material_type = [
+    // enums.material_type = [
     //     'raw_MTR', //自然材料
     //     'process_MTR', //人工材料
     //     'finish_MTR', //成品
@@ -28,4 +28,4 @@ function init_Type_material(types) {
     // ];
 }
 
-export { init_Type_material };
+export { init_Enum_material };

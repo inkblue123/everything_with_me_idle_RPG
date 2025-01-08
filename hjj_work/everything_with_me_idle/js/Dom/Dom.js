@@ -4,6 +4,7 @@ import { player_status } from './Player_status.js';
 import { Backpack } from './Backpack.js';
 import { Option } from './Option.js';
 import { Tooltip } from './Tooltip.js';
+import { Control } from './Control.js';
 
 var dom = new Object();
 
@@ -17,9 +18,11 @@ var dom = new Object();
     dom.option_dom = Option;
     //游离于游戏布局之上，跟随鼠标的小窗口
     dom.tooltip = Tooltip;
+    //玩家控制界面
+    dom.control = Control;
 
-    dom.control = crtElement('div', null, 'section', '', '#ff00ff');
-    dom.control.textContent = '玩家控制界面';
+    // dom.control = crtElement('div', null, 'section', '', '#ff00ff');
+    // dom.control.textContent = '玩家控制界面';
 
     dom.create = crtElement('div', null, 'section', '', '#ffff00');
     dom.create.textContent = '合成制作界面';

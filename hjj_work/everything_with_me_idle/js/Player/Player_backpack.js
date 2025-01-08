@@ -28,7 +28,7 @@ export class Player_backpack {
         }
         //要添加的物品如果是武器装备，则必须要有稀有度，否则给予0稀有度物品
         //为玩家添加武器装备
-        if (items[id].type.includes('equipment')) {
+        if (items[id].main_type.includes('equipment')) {
             this.Player_get_Equipment(id, num, equip_rarity);
         } else {
             if (this[id] === undefined) {
