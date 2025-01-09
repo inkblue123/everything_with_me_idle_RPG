@@ -2,6 +2,7 @@ import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
+import { places } from '../Data/Place/Place.js';
 import {
     addElement,
     addBP_item,
@@ -14,6 +15,7 @@ import { get_BP_type, get_EQP_switch, get_object_only_key, get_EQP_data } from '
 import { show_active_EQP } from './show_func.js';
 import { delete_BP_div, delete_equipment_show } from './delete_func.js';
 import { Item_type_handle, BP_type_handle, isEmptyObject, hex2Rgba } from './Function.js';
+import { dom } from '../Dom/Dom.js';
 //更新血条上的数值
 function updata_HP() {
     const HP_bar = document.getElementById('HP_bar');
@@ -138,6 +140,21 @@ function updata_attribute_show() {
         i++;
     }
 }
+//玩家所处位置发生变动，更新相关界面
+function updata_place(id) {
+    // 获取玩家控制界面
+    let control = document.getElementById('control');
+    //展示新地点的内容
+    control.change_place(id);
+    //触发新地点的转场
+    let new_place = places[id];
+    if (new_place.type == 'combat') {
+        dom.InitGameDomCombat();
+    } else if (new_place.type == 'normal') {
+        dom.InitGameDomNomal();
+    }
+}
+
 //玩家装备信息发生变动，更新相关界面
 function updata_player_EQP() {
     //更新玩家属性
@@ -157,4 +174,5 @@ export {
     updata_equipment_show,
     updata_attribute_show,
     updata_player_EQP,
+    updata_place,
 };

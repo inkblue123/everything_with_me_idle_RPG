@@ -1,5 +1,7 @@
 import { player, Player_Object } from '../Player/Player.js';
-import { updata_equipment_show } from '../Function/Updata_func.js';
+import { updata_equipment_show, updata_place } from '../Function/Updata_func.js';
+import { dom } from '../Dom/Dom.js';
+
 //
 function LoadSaveFile(save_file) {
     if (save_file) {
@@ -16,7 +18,7 @@ function new_game_init() {
     //游戏界面初始化
     dom_init();
 }
-
+//玩家参数初始化
 function player_init() {
     //初始化玩家类
     player.init();
@@ -37,11 +39,14 @@ function player_init() {
     player.Player_get_item('test_boomerang', 8, 'epic');
     player.Player_get_item('wood_bow', 1, 'ordinary'); //远程武器测试
 }
+//游戏界面初始化
 function dom_init() {
-    const radios = document.querySelectorAll('input[name="EQP_switch"]');
     // 将每个装备栏中的信息初始化
+    const radios = document.querySelectorAll('input[name="EQP_switch"]');
     for (const radio of radios) {
         updata_equipment_show(radio.value);
     }
+    //移动到初始位置
+    updata_place('test_normal1');
 }
 export { LoadSaveFile };

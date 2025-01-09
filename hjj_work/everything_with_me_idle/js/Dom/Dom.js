@@ -87,14 +87,14 @@ var dom = new Object();
 
 //向游戏布局中填充战斗时的默认界面
 dom.InitGameDomCombat = function () {
-    dom.main_dom.style.display = '';
+    // dom.main_dom.style.display = '';
 
-    dom.game_left.style.display = '';
-    dom.game_right.style.display = '';
+    // dom.game_left.style.display = '';
+    // dom.game_right.style.display = '';
 
     dom.game_up_combat.style.display = '';
     dom.game_up_nomal.style.display = 'none';
-    dom.game_down_nomal.style.display = '';
+    // dom.game_down_nomal.style.display = '';
 
     dom.create.style.display = 'none';
     dom.combat_setting.style.display = '';
@@ -102,14 +102,14 @@ dom.InitGameDomCombat = function () {
 
 //向游戏布局中填充正常时的默认界面
 dom.InitGameDomNomal = function () {
-    dom.main_dom.style.display = '';
+    // dom.main_dom.style.display = '';
 
-    dom.game_left.style.display = '';
-    dom.game_right.style.display = '';
+    // dom.game_left.style.display = '';
+    // dom.game_right.style.display = '';
 
     dom.game_up_combat.style.display = 'none';
     dom.game_up_nomal.style.display = '';
-    dom.game_down_nomal.style.display = '';
+    // dom.game_down_nomal.style.display = '';
 
     dom.create.style.display = '';
     dom.combat_setting.style.display = 'none';

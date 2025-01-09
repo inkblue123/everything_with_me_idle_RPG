@@ -14,7 +14,13 @@
 
 /* 用来描述角色所处位置的容器 */
 #Place_desc_div {
+    display: flex;
     box-sizing: border-box;
+    /* text-align: center;  */
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+
     background-color: rgb(19, 250, 54);
     border: 1px solid #797691; /* 内框 */
 }
@@ -23,4 +29,13 @@
     box-sizing: border-box;
     background-color: rgb(250, 19, 19);
     border: 1px solid #797691; /* 内框 */
+    user-select: none;
+}
+
+/* 可执行操作按钮 */
+.player_Control_button {
+    box-sizing: border-box;
+    /* background-color: rgb(250, 19, 19); */
+    border: 1px solid #797691; /* 内框 */
+    user-select: none;
 }
