@@ -21,7 +21,7 @@ var Control = crtElement('div', 'control', null, '');
 {
 }
 
-//移动到指定地点，读取地点库信息，展示到控制界面中
+//移动到指定地点，读取新地点库信息，展示到控制界面中
 Control.change_place = function (id) {
     empty_dom(Place_desc_div); //清空原本地点描述
     empty_dom(player_Control_div); //清空原本地点的可执行操作
@@ -30,7 +30,9 @@ Control.change_place = function (id) {
 
     //展示新地点的描述
     Place_desc_div.innerHTML = new_place.desc;
+
     //展示新地点的可执行操作
+
     //可以前往其他区域
     if (!isEmptyObject(new_place.connected_place)) {
         for (let next_place of new_place.connected_place) {

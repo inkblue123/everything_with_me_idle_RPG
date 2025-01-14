@@ -5,7 +5,7 @@ import { updata_game } from './GameRun/run_manage.js';
 window.addEventListener('load', () => {
     //启动第一个类，dom类，
     // 负责构建全部游戏界面
-    dom.InitGameDomNomal();
+    // dom.InitGameDomNomal();
 
     //启动第二个类，dom管理类，
     // 负责为游戏内的按钮、单选框等等功能绑定触发后需要执行的函数

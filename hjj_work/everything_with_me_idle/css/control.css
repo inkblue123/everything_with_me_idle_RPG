@@ -21,13 +21,13 @@
     align-items: center;
     min-height: 50px;
 
-    background-color: rgb(19, 250, 54);
+    /* background-color: rgb(19, 250, 54); */
     border: 1px solid #797691; /* 内框 */
 }
 /* 用来容纳角色当前位置可以进行的操作的容器 */
 #player_Control_div {
     box-sizing: border-box;
-    background-color: rgb(250, 19, 19);
+    /* background-color: rgb(250, 19, 19); */
     border: 1px solid #797691; /* 内框 */
     user-select: none;
 }
@@ -35,6 +35,8 @@
 /* 可执行操作按钮 */
 .player_Control_button {
     box-sizing: border-box;
+    min-height: 30px;
+    text-align: center;
     /* background-color: rgb(250, 19, 19); */
     border: 1px solid #797691; /* 内框 */
     user-select: none;

@@ -1,6 +1,7 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 import { updata_HP, updata_BP_value } from '../Function/Updata_func.js';
 import { printf_play_item } from '../Function/Function.js';
+import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 import { get_BP_weight } from '../Function/Get_func.js';
 import { player } from '../Player/Player.js';
 import { dom } from './Dom.js';
@@ -10,12 +11,12 @@ var Option = crtElement('div', null, 'option_page', '');
     var button1 = addElement(Option, 'button');
     button1.innerHTML = '战斗时的ui';
     button1.onclick = function () {
-        dom.InitGameDomCombat();
+        show_combat_game_div();
     };
     var button2 = addElement(Option, 'button');
     button2.innerHTML = '平时的ui';
     button2.onclick = function () {
-        dom.InitGameDomNomal();
+        show_normal_game_div();
     };
 
     var button3 = addElement(Option, 'button');

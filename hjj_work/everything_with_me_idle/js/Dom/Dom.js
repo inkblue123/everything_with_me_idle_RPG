@@ -24,7 +24,7 @@ var dom = new Object();
     // dom.control = crtElement('div', null, 'section', '', '#ff00ff');
     // dom.control.textContent = '玩家控制界面';
 
-    dom.create = crtElement('div', null, 'section', '', '#ffff00');
+    dom.create = crtElement('div', 'create', 'section', '', '#ffff00');
     dom.create.textContent = '合成制作界面';
 
     dom.map = crtElement('div', null, 'section', '', '#33fff9');
@@ -33,7 +33,7 @@ var dom = new Object();
     dom.remenber = crtElement('div', null, 'section', '', '#3357ff');
     dom.remenber.textContent = '脑海界面';
 
-    dom.combat_setting = crtElement('div', null, 'section', '', '#ff33a1');
+    dom.combat_setting = crtElement('div', 'combat_setting', 'section', '', '#ff33a1');
     dom.combat_setting.textContent = '战斗规划界面';
 
     dom.combat = crtElement('div', null, 'section', '', '#33fff9');
@@ -46,14 +46,14 @@ var dom = new Object();
     //游戏主体左侧三分之一是玩家相关，右侧三分之二是游戏的各种事件
     dom.game_dom = crtElement('div', null, 'main_page', '');
 
-    dom.game_left = crtElement('div', null, 'page_rows_11', 'none');
-    dom.game_right = crtElement('div', null, 'page_rows_11', 'none');
+    dom.game_left = crtElement('div', null, 'page_rows_11', '');
+    dom.game_right = crtElement('div', null, 'page_rows_11', '');
     //战斗时位于游戏上半部分的容器
-    dom.game_up_combat = crtElement('div', null, 'page_columns_1', 'none');
+    dom.game_up_combat = crtElement('div', 'game_up_combat', 'page_columns_1', 'none');
     //平时位于游戏上半部分的容器
-    dom.game_up_nomal = crtElement('div', null, 'page_columns_11', 'none');
+    dom.game_up_nomal = crtElement('div', 'game_up_nomal', 'page_columns_11', 'none');
     //平时位于游戏上半部分的容器
-    dom.game_down_nomal = crtElement('div', null, 'page_columns_11', 'none');
+    dom.game_down_nomal = crtElement('div', null, 'page_columns_11', '');
 }
 
 // 向布局中插入合适的元素，实现游戏界面
@@ -84,35 +84,5 @@ var dom = new Object();
     dom.main_dom.appendChild(dom.option_dom);
     dom.main_dom.appendChild(dom.tooltip);
 }
-
-//向游戏布局中填充战斗时的默认界面
-dom.InitGameDomCombat = function () {
-    // dom.main_dom.style.display = '';
-
-    // dom.game_left.style.display = '';
-    // dom.game_right.style.display = '';
-
-    dom.game_up_combat.style.display = '';
-    dom.game_up_nomal.style.display = 'none';
-    // dom.game_down_nomal.style.display = '';
-
-    dom.create.style.display = 'none';
-    dom.combat_setting.style.display = '';
-};
-
-//向游戏布局中填充正常时的默认界面
-dom.InitGameDomNomal = function () {
-    // dom.main_dom.style.display = '';
-
-    // dom.game_left.style.display = '';
-    // dom.game_right.style.display = '';
-
-    dom.game_up_combat.style.display = 'none';
-    dom.game_up_nomal.style.display = '';
-    // dom.game_down_nomal.style.display = '';
-
-    dom.create.style.display = '';
-    dom.combat_setting.style.display = 'none';
-};
 
 export { dom };

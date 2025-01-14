@@ -88,4 +88,39 @@ function show_dropdown_table(classification_div, table_id) {
         }
     }
 }
-export { change_PA, show_active_EQP, change_BP_SK_IB, show_dropdown_table };
+
+//展示战斗时的游戏界面
+function show_combat_game_div() {
+    const game_up_combat = document.getElementById('game_up_combat');
+    const game_up_nomal = document.getElementById('game_up_nomal');
+    const create = document.getElementById('create');
+    const combat_setting = document.getElementById('combat_setting');
+
+    game_up_combat.style.display = '';
+    game_up_nomal.style.display = 'none';
+
+    create.style.display = 'none';
+    combat_setting.style.display = '';
+}
+//展示非战斗时的游戏界面
+function show_normal_game_div() {
+    const game_up_combat = document.getElementById('game_up_combat');
+    const game_up_nomal = document.getElementById('game_up_nomal');
+    const create = document.getElementById('create');
+    const combat_setting = document.getElementById('combat_setting');
+
+    game_up_combat.style.display = 'none';
+    game_up_nomal.style.display = '';
+
+    create.style.display = '';
+    combat_setting.style.display = 'none';
+}
+
+export {
+    change_PA,
+    show_active_EQP,
+    change_BP_SK_IB,
+    show_dropdown_table,
+    show_combat_game_div,
+    show_normal_game_div, //
+};

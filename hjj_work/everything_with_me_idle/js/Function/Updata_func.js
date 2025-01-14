@@ -12,7 +12,7 @@ import {
     add_aEQP_data,
 } from './Dom_function.js';
 import { get_BP_type, get_EQP_switch, get_object_only_key, get_EQP_data } from './Get_func.js';
-import { show_active_EQP } from './show_func.js';
+import { show_active_EQP, show_combat_game_div, show_normal_game_div } from './show_func.js';
 import { delete_BP_div, delete_equipment_show } from './delete_func.js';
 import { Item_type_handle, BP_type_handle, isEmptyObject, hex2Rgba } from './Function.js';
 import { dom } from '../Dom/Dom.js';
@@ -140,7 +140,7 @@ function updata_attribute_show() {
         i++;
     }
 }
-//玩家所处位置发生变动，更新相关界面
+//移动到id地点，并且更新相关界面
 function updata_place(id) {
     // 获取玩家控制界面
     let control = document.getElementById('control');
@@ -149,9 +149,9 @@ function updata_place(id) {
     //触发新地点的转场
     let new_place = places[id];
     if (new_place.type == 'combat') {
-        dom.InitGameDomCombat();
+        show_combat_game_div();
     } else if (new_place.type == 'normal') {
-        dom.InitGameDomNomal();
+        show_normal_game_div();
     }
 }
 
