@@ -64,17 +64,6 @@
     /* height: 90%; */
 }
 
-/* 背包物品界面左侧的分类部分 */
-/* 容纳具体图鉴内容的div */
-#BP_value_div {
-    /* display: grid;
-    grid-template-columns: 1fr 2fr; */
-    /* width: 100vw; */
-    /* color: white; */
-    /* 测试颜色 */
-    background-color: #1100ff;
-    /* height: 90%; */
-}
 /* 启动隐藏下拉表格的按钮，第一级 */
 .dropdown_button_1 {
     padding: 10px;

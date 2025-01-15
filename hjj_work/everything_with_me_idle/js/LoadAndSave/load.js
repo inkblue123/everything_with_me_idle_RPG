@@ -1,6 +1,6 @@
 import { player, Player_Object } from '../Player/Player.js';
 import { updata_equipment_show, updata_place } from '../Function/Updata_func.js';
-import { show_normal_game_div } from '../Function/show_func.js';
+import { show_normal_game_div, show_combat_game_div } from '../Function/show_func.js';
 import { dom } from '../Dom/Dom.js';
 
 //
@@ -44,12 +44,14 @@ function player_init() {
 function dom_init() {
     //激活非战斗时游戏界面
     show_normal_game_div();
+    // show_combat_game_div();
     // 将每个装备栏中的信息初始化
     const radios = document.querySelectorAll('input[name="EQP_switch"]');
     for (const radio of radios) {
         updata_equipment_show(radio.value);
     }
     //移动到初始位置
-    updata_place('test_normal1');
+    updata_place('test_combat1');
+    // updata_place('test_normal1');
 }
 export { LoadSaveFile };

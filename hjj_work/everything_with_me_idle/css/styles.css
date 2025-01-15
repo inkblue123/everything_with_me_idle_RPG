@@ -160,8 +160,8 @@ html {
 }
 /* 在overflow_y_div内部，当内容超过100时就会激活滚动条 */
 .classification_div {
-    position: absolute;
     display: flex;
+    position: absolute;
     flex-direction: column;
     flex-wrap: nowrap;
     width: 100%;

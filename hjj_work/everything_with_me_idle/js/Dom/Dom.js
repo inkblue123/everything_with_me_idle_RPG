@@ -5,6 +5,7 @@ import { Backpack } from './Backpack.js';
 import { Option } from './Option.js';
 import { Tooltip } from './Tooltip.js';
 import { Control } from './Control.js';
+import { Combat } from './Combat.js';
 
 var dom = new Object();
 
@@ -20,9 +21,8 @@ var dom = new Object();
     dom.tooltip = Tooltip;
     //玩家控制界面
     dom.control = Control;
-
-    // dom.control = crtElement('div', null, 'section', '', '#ff00ff');
-    // dom.control.textContent = '玩家控制界面';
+    //战斗界面
+    dom.combat = Combat;
 
     dom.create = crtElement('div', 'create', 'section', '', '#ffff00');
     dom.create.textContent = '合成制作界面';
@@ -35,9 +35,6 @@ var dom = new Object();
 
     dom.combat_setting = crtElement('div', 'combat_setting', 'section', '', '#ff33a1');
     dom.combat_setting.textContent = '战斗规划界面';
-
-    dom.combat = crtElement('div', null, 'section', '', '#33fff9');
-    dom.combat.textContent = '战斗界面';
 }
 
 //创建布局

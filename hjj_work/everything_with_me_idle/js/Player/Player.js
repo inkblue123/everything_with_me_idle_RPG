@@ -4,6 +4,7 @@ import { check_Equipment, isEmptyObject } from '../Function/Function.js';
 import { Player_attributes } from './Player_attributes.js';
 import { Player_backpack } from './Player_backpack.js';
 import { Player_worn } from './Player_worn_EQP.js';
+import { Player_active_skills_Manage } from './Player_active_skills.js';
 
 export class Player_Object {
     constructor() {
@@ -13,16 +14,21 @@ export class Player_Object {
         this.backpack_items = new Object();
         //穿戴的装备
         this.worn_EQP = new Object();
+        //主动技能槽
+        this.ASkill_Manage = new Object();
     }
 
     init() {
         this.attributes = new Player_attributes();
         this.backpack_items = new Player_backpack();
         this.worn_EQP = new Player_worn();
+        this.ASkill_Manage = new Player_active_skills_Manage();
         //初始化玩家属性
         this.attributes.init();
         //初始化身上穿戴的装备
         this.worn_EQP.init();
+        //初始化主动技能槽
+        this.ASkill_Manage.init();
     }
     get_player_attributes() {
         return this.attributes;
@@ -32,6 +38,9 @@ export class Player_Object {
     }
     get_player_worn_EQP() {
         return this.worn_EQP;
+    }
+    get_player_ASkill_Manage() {
+        return this.ASkill_Manage;
     }
 
     //给玩家背包添加物品，js版函数重载
@@ -105,7 +114,6 @@ export class Player_Object {
     }
 }
 
-// var player = new Object();
 var player = new Player_Object();
 
 export { player };
