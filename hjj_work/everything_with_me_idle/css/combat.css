@@ -9,7 +9,7 @@
     /* font-size: 24px; */
     /* height: 50%; */
     box-sizing: border-box;
-    border: 3px solid #797691; /* 内框 */
+    border: 2px solid #797691; /* 内框 */
     user-select: none;
 }
 
@@ -17,7 +17,7 @@
 #main_combat {
     display: grid;
     grid-template-columns: 1fr 4fr;
-
+    border-bottom: 3px solid #797691; /* 内框 */
     /* background-color: rgb(19, 250, 54); */
     width: 100%;
     height: 75%;
@@ -28,13 +28,19 @@
     /* background-color: rgb(250, 27, 19); */
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
 }
 /* 玩家区域中，玩家的各种buff的div*/
 #MCP_buff_div {
     display: grid;
+    box-sizing: border-box;
     /* background-color: rgb(250, 227, 19); */
     width: 100%;
     height: 30%;
+    /* border: 3px solid #797691;  */
+    /* 只需要下侧有边框即可 */
+    border-bottom: 3px solid #797691; /* 内框 */
 }
 #MCP_buff_value {
     display: flex;
@@ -52,6 +58,7 @@
     font-size: 20px; /*文本大小*/
     line-height: 1;
     background-color: rgb(250, 19, 19);
+    border: 1px solid #797691; /* 内框 */
     width: 25px;
     height: 25px;
 }
@@ -71,6 +78,7 @@
     background-color: rgb(19, 250, 19);
     width: 80px;
     height: 80px;
+    border: 3px solid #797691; /* 内框 */
 }
 
 /* 主要战斗区域中，敌人所处的部分 */
@@ -81,15 +89,85 @@
     width: 100%;
     height: 100%;
 }
+/* 敌人区域中，近中远三个战斗场地的div */
+.MCE_field_div {
+    /* display: flex; */
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: rgb(250, 19, 19);
+    border: 1px solid #797691; /* 内框 */
+}
+/* 战斗场地上部*/
+.field_up {
+    /* display: flex; */
+    width: 100%;
+    height: 10%;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: rgb(250, 246, 19);
+    border: 1px solid #797691; /* 内框 */
+}
+/* 战斗场地下部*/
+.field_down {
+    /* display: flex; */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    height: 90%;
+    box-sizing: border-box;
+    background-color: rgb(42, 19, 250);
+    border: 1px solid #797691; /* 内框 */
+}
+.enemy {
+    /* width: 80px;
+    height: 80px; */
+    border: 1px solid #797691; /* 内框 */
+}
 
 /* 战斗设置区域布局 */
 #combat_option {
-    display: flex;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    /* display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: white; */
 
     background-color: rgb(108, 19, 250);
     width: 100%;
     height: 25%;
+}
+/* 展示主动技能槽的div */
+#active_slot_div {
+    /* width: 80px;
+    height: 80px; */
+    border: 1px solid #797691; /* 内框 */
+}
+/* 时间进度条的div */
+#timebar {
+    color: white;
+    height: 95px;
+    /* font-size: 24px; */
+    /* height: 50%; */
+    /* border: 3px solid #797691;  */
+}
+/* 时间进度条外框的样式 */
+#time_frame {
+    margin: 0% auto; /* 居中显示 */
+    width: 85%; /* 宽度为整个窗口的85% */
+    height: 15px; /* 高度固定为15px */
+    outline: 2px solid rgb(201, 16, 16); /* 外框 */
+    background-color: rgba(255, 46, 46, 0.3);
+}
+/* 时间进度条中央的色块 */
+#time_current {
+    height: 15px;
+    background-color: rgb(255, 0, 0);
+}
+/* 其他玩家可执行操作 */
+#other_active_div {
+    /* width: 80px;
+    height: 80px; */
+    border: 1px solid #797691; /* 内框 */
 }

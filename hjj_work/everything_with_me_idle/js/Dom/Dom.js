@@ -41,7 +41,7 @@ var dom = new Object();
 {
     //整个项目先分成上下两部分，上95%是游戏主体，下5%是设置
     //游戏主体左侧三分之一是玩家相关，右侧三分之二是游戏的各种事件
-    dom.game_dom = crtElement('div', null, 'main_page', '');
+    dom.game_dom = crtElement('div', null, 'game_dom', '');
 
     dom.game_left = crtElement('div', null, 'page_rows_11', '');
     dom.game_right = crtElement('div', null, 'page_rows_11', '');
@@ -55,7 +55,7 @@ var dom = new Object();
 
 // 向布局中插入合适的元素，实现游戏界面
 {
-    dom.main_dom = addElement(document.body, 'div', null, 'page_columns_1');
+    dom.main_dom = addElement(document.body, 'div', null, 'main_page');
 
     dom.main_dom.appendChild(dom.game_dom);
 
@@ -81,5 +81,4 @@ var dom = new Object();
     dom.main_dom.appendChild(dom.option_dom);
     dom.main_dom.appendChild(dom.tooltip);
 }
-
 export { dom };

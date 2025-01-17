@@ -3,19 +3,28 @@ body,
 html {
     margin: 0;
     padding: 0;
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #f4f4f4;
 }
-/* 容纳所有显示元素的容器，游戏主界面 */
+/* 容纳所有内容的最大的父容器 */
 .main_page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+/* 游戏主界面 */
+.game_dom {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    /* grid-gap: 0; */
-    width: 100vw;
-    height: 95vh;
+    flex: 0 1 95%;
+    /* width: 100vw; */
+    /* height: 95vh; */
 }
 /* 游戏底部的设置区域的布局 */
 .option_page {
@@ -23,8 +32,9 @@ html {
     justify-content: center;
     align-items: center;
     color: white;
-    width: 100vw;
-    height: 5vh;
+    flex: 0 1 5%;
+    /* width: 100vw;
+    height: 5vh; */
 }
 
 /* 每行1列的布局 */
@@ -160,8 +170,8 @@ html {
 }
 /* 在overflow_y_div内部，当内容超过100时就会激活滚动条 */
 .classification_div {
-    display: flex;
     position: absolute;
+    display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     width: 100%;

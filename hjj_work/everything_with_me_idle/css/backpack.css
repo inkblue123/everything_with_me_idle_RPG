@@ -6,7 +6,7 @@
     /* height: 90%; */
     /* background-color: #00ff00; */
     box-sizing: border-box;
-    border: 3px solid #797691; /* 内框 */
+    border: 2px solid #797691; /* 内框 */
 }
 /* 容纳切换背包、技能、图鉴三个按钮的div */
 #BP_SK_IB_switch {
@@ -23,7 +23,7 @@
     /* width: ; */
     font-size: 15px;
     height: 40px;
-    border: 2px solid #797691; /* 内框 */
+    border: 1px solid #797691; /* 内框 */
 }
 /* 容纳具体的背包、技能、图鉴内容的div */
 #BP_SK_IB_div {
@@ -111,7 +111,7 @@
     /* padding: 20px; */
     text-align: center;
     box-sizing: border-box;
-    border: 2px solid #797691; /* 内框 */
+    border: 1px solid #797691; /* 内框 */
     /* 文本不可选中 */
     user-select: none;
 }
@@ -131,7 +131,7 @@
     color: #000;
     background-color: #fff;
     box-sizing: border-box;
-    border: 2px solid #797691; /* 内框 */
+    border: 1px solid #797691; /* 内框 */
 }
 /* 80%宽度 */
 .BP_switch_radio_div_2 label {
@@ -147,7 +147,7 @@
     color: #000;
     background-color: #fff;
     box-sizing: border-box;
-    border: 2px solid #797691; /* 内框 */
+    border: 1px solid #797691; /* 内框 */
 }
 /* 60%宽度 */
 .BP_switch_radio_div_3 label {
@@ -163,7 +163,7 @@
     color: #000;
     background-color: #fff;
     box-sizing: border-box;
-    border: 2px solid #797691; /* 内框 */
+    border: 1px solid #797691; /* 内框 */
 }
 /* 背包物品分类单选按钮，选中之后，圆点绑定的文本的样式 */
 /* .BP_switch_radio_div_1 input[type='radio']:checked + label {
