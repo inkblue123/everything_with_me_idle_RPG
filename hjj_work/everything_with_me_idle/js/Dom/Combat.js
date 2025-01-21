@@ -31,7 +31,7 @@ var Combat = crtElement('div', 'combat', null, '');
     enemy_field['near_enemy_field'] = addElement(MC_enemy_div, 'div', 'near_enemy_field', 'MCE_field_div');
     enemy_field['in_enemy_field'] = addElement(MC_enemy_div, 'div', 'in_enemy_field', 'MCE_field_div');
     enemy_field['far_enemy_field'] = addElement(MC_enemy_div, 'div', 'far_enemy_field', 'MCE_field_div');
-
+    //给三块区域添加描述框和敌人所处格子
     for (let key in enemy_field) {
         let field_div = enemy_field[key];
         addElement(field_div, 'div', null, 'field_up');
@@ -46,10 +46,25 @@ var Combat = crtElement('div', 'combat', null, '');
     field_div.children[0].innerHTML = '中距离';
     field_div = enemy_field['far_enemy_field'];
     field_div.children[0].innerHTML = '远距离';
-
+    //展示玩家的主动技能槽的部分
     var active_slot_div = addElement(combat_option_div, 'div', 'active_slot_div', null);
+    //表示主动技能运行到哪里的进度条
+    var time_bar = addElement(active_slot_div, 'div', 'time_bar', null, '');
+    var time_frame = addElement(time_bar, 'div', 'time_frame', null); //时间进度条外框
+    var time_current = addElement(time_frame, 'div', 'time_current', null); //时间进度条中央的色块
+    //具体容纳主动技能的div
+    var player_active_div = addElement(active_slot_div, 'div', 'player_active_div', null);
+    for (let i = 0; i < 9; i++) {
+        //初始3个槽位
+        var player_active = addElement(player_active_div, 'div', null, 'player_active');
+    }
+    //恢复和撤离的div
     var other_active_div = addElement(combat_option_div, 'div', 'other_active_div', null);
 
+    //恢复
+    var recovery_active = addElement(other_active_div, 'div', null, 'player_active');
+    //撤离
+    var evacuate_active = addElement(other_active_div, 'div', null, 'player_active');
     //组件放入战斗界面中
     Combat.appendChild(main_combat_div);
     Combat.appendChild(combat_option_div);

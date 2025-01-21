@@ -22,23 +22,33 @@ var Option = crtElement('div', null, 'option_page', '');
     var button3 = addElement(Option, 'button');
     button3.innerHTML = '加10生命';
     button3.onclick = function () {
-        if (player.health_point + 10 >= player.health_max) {
-            player.health_point = player.health_max;
+        let P_attr = player.get_player_attributes();
+        let health_point = P_attr.get_health_point();
+        let health_max = P_attr.get_a_attr('health_max');
+        // let player_attr = player.get_player_attributes();
+
+        if (health_point + 10 >= health_max) {
+            P_attr.health_point = health_max;
         } else {
-            player.health_point += 10;
+            P_attr.health_point += 10;
         }
-        updata_HP(player);
+        P_attr.updata_end_attr();
+        updata_HP();
     };
 
     var button4 = addElement(Option, 'button');
     button4.innerHTML = '减10生命';
     button4.onclick = function () {
-        if (player.health_point - 10 <= 0) {
-            player.health_point = 0;
+        let P_attr = player.get_player_attributes();
+        let health_point = P_attr.get_health_point();
+        let health_max = P_attr.get_a_attr('health_max');
+        if (health_point - 10 <= 0) {
+            P_attr.health_point = 0;
         } else {
-            player.health_point -= 10;
+            P_attr.health_point -= 10;
         }
-        updata_HP(player);
+        P_attr.updata_end_attr();
+        updata_HP();
     };
 
     var button5 = addElement(Option, 'button');
