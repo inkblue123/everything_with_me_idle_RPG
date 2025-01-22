@@ -75,6 +75,8 @@
 /* 玩家区域中，容纳玩家头像（目前是名称）的div*/
 #MCP_player_head {
     display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: rgb(19, 250, 19);
     width: 80px;
     height: 80px;
@@ -119,7 +121,7 @@
     background-color: rgb(42, 19, 250);
     border: 1px solid #797691; /* 内框 */
 }
-.enemy {
+.enemy_show {
     /* width: 80px;
     height: 80px; */
     border: 1px solid #797691; /* 内框 */

@@ -26,6 +26,7 @@ var Combat = crtElement('div', 'combat', null, '');
     //玩家区域中，容纳玩家本人(目前只有名字)的div
     var MCP_player_div = addElement(MC_play_div, 'div', 'MCP_player_div', null);
     var MCP_player_head = addElement(MCP_player_div, 'div', 'MCP_player_head', null);
+    MCP_player_head.innerHTML = '玩家';
     //敌人区域中，表示近中远三块区域的div
     let enemy_field = new Object();
     enemy_field['near_enemy_field'] = addElement(MC_enemy_div, 'div', 'near_enemy_field', 'MCE_field_div');
@@ -37,7 +38,7 @@ var Combat = crtElement('div', 'combat', null, '');
         addElement(field_div, 'div', null, 'field_up');
         let field_down = addElement(field_div, 'div', null, 'field_down');
         for (let i = 0; i < 9; i++) {
-            addElement(field_down, 'div', null, 'enemy');
+            addElement(field_down, 'div', null, 'enemy_show');
         }
     }
     let field_div = enemy_field['near_enemy_field'];

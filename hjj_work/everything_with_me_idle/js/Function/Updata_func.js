@@ -49,12 +49,19 @@ function updata_ENP() {
 //更新角色名
 function updata_player_name() {
     const name_input = document.getElementById('Player_name');
+    let P_attr = player.get_player_attributes();
+
+    //获取更新后的玩家名称
     if (name_input.value.toString().trim().length > 0) {
-        player.attributes.name = name_input.value;
+        P_attr.name = name_input.value;
     } else {
-        player.attributes.name = '我';
+        P_attr.name = '玩家';
     }
-    name_input.value = player.attributes.name;
+    //修改左上玩家状态界面
+    name_input.value = P_attr.name;
+    //修改战斗界面玩家名称显示
+    let MCP_player_head = document.getElementById('MCP_player_head');
+    MCP_player_head.innerHTML = P_attr.name;
 }
 //更新左下角的背包物品栏中的元素
 function updata_BP_value() {

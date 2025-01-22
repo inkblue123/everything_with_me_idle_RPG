@@ -5,7 +5,7 @@ import { get_object_only_key } from '../Function/Get_func.js';
 
 export class Player_attributes {
     constructor() {
-        this.name = '我'; //角色名称
+        this.name = '玩家'; //角色名称
         this.health_point = 100; //当前血量
         this.magic_point = 100; //当前魔力
         this.energy_point = 100; //当前精力

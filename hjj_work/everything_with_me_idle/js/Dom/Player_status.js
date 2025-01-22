@@ -12,7 +12,7 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
     var Player_name_div = addElement(bar_div, 'div', 'Player_name_div', 'page_columns_1'); //血条中，条的外框
     var Player_name = addElement(Player_name_div, 'input', 'Player_name', null); //血条中，条的外框
     Player_name.type = 'text';
-    Player_name.value = 'text';
+    Player_name.value = '玩家';
     //血条组件
     var HP_bar = addElement(bar_div, 'div', 'HP_bar', null, '');
     var HP_frame = addElement(HP_bar, 'div', 'HP_frame', null); //血条中，条的外框

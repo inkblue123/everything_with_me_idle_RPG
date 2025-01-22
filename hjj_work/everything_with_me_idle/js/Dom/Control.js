@@ -2,6 +2,7 @@ import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
 import { isEmptyObject } from '../Function/Function.js';
 import { updata_place } from '../Function/Updata_func.js';
 import { places } from '../Data/Place/Place.js';
+import { texts } from '../Data/Text/Text.js';
 
 var Control = crtElement('div', 'control', null, '');
 
@@ -30,16 +31,15 @@ Control.change_place = function (id) {
 
     //展示新地点的描述
     Place_desc_div.innerHTML = new_place.desc;
-
     //展示新地点的可执行操作
-
     //可以前往其他区域
     if (!isEmptyObject(new_place.connected_place)) {
-        for (let next_place of new_place.connected_place) {
+        for (let next_place_id of new_place.connected_place) {
             var move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button'); //血条中，条的外框
-            move_place_button.innerHTML = next_place.desc;
+
+            move_place_button.innerHTML = '前往' + places[next_place_id].name;
             move_place_button.addEventListener('click', function () {
-                updata_place(next_place.id);
+                updata_place(next_place_id);
             });
         }
     }
