@@ -33,7 +33,7 @@ var Option = crtElement('div', null, 'option_page', '');
             P_attr.health_point += 10;
         }
         P_attr.updata_end_attr();
-        updata_HP();
+        // updata_HP();
     };
 
     var button4 = addElement(Option, 'button');
@@ -48,7 +48,7 @@ var Option = crtElement('div', null, 'option_page', '');
             P_attr.health_point -= 10;
         }
         P_attr.updata_end_attr();
-        updata_HP();
+        // updata_HP();
     };
 
     var button5 = addElement(Option, 'button');

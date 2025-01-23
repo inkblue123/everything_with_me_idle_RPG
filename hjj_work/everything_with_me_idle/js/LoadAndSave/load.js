@@ -1,7 +1,8 @@
 import { player, Player_Object } from '../Player/Player.js';
-import { updata_equipment_show, updata_place } from '../Function/Updata_func.js';
+import { updata_equipment_show, updata_place, updata_BP_value } from '../Function/Updata_func.js';
 import { show_normal_game_div, show_combat_game_div } from '../Function/show_func.js';
 import { dom } from '../Dom/Dom.js';
+import { fps_manage } from '../GameRun/FPS_class.js';
 
 //
 function LoadSaveFile(save_file) {
@@ -14,6 +15,8 @@ function LoadSaveFile(save_file) {
 }
 
 function new_game_init() {
+    //全局配置初始化
+    fps_manage.init();
     //玩家参数初始化
     player_init();
     //游戏界面初始化
@@ -45,6 +48,8 @@ function dom_init() {
     //激活非战斗时游戏界面
     show_normal_game_div();
     // show_combat_game_div();
+    //初始化玩家背包
+    updata_BP_value();
     // 将每个装备栏中的信息初始化
     const radios = document.querySelectorAll('input[name="EQP_switch"]');
     for (const radio of radios) {
