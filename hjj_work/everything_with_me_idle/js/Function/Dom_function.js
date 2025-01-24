@@ -102,8 +102,7 @@ function addBP_equipment(player_item) {
         }
     }
 }
-//点亮左上装备栏中的指定展示框表示玩家穿戴了指定装备
-//添加鼠标点击可以卸下的逻辑
+//点亮左上装备栏中的指定展示框表示玩家穿戴了指定装备，并展示装备名
 function add_aEQP_data(aBP_item, wp, alpha = 1) {
     let id = aBP_item.id;
     let rarity = get_object_only_key(aBP_item.rarity);

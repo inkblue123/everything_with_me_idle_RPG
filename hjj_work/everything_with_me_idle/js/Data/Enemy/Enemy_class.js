@@ -10,18 +10,18 @@ export class Enemy {
         this.defense_attr = new Object(); //防御属性
         this.survival_attr = new Object(); //生存属性
 
-        this.init_Place_name_desc(id);
+        this.init_Enemy_name_desc(id);
     }
 
     //调用文本数据库中的地点名称和描述
     init_Enemy_name_desc(id) {
         if (texts[id] === undefined) {
             //尚未定义
-            this.name = '未命名地点';
-            this.desc = '未设定地点描述';
+            this.name = '未命名敌';
+            this.desc = '未设定敌人描述';
         } else {
-            this.name = texts[id].place_name;
-            this.desc = texts[id].place_desc;
+            this.name = texts[id].enemy_name;
+            this.desc = texts[id].enemy_desc;
         }
     }
     init_attack_attr(attack, precision, critical_chance, critical_damage, attack_speed) {

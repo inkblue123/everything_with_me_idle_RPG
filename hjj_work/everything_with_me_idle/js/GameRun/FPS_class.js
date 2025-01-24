@@ -1,6 +1,5 @@
-import { global } from './global_class.js';
-//记录全局参数和游戏状态的对象
-class FPS_manage {
+//帧率和时间库
+export class FPS_manage {
     constructor() {
         this.FPS;
         this.FPS_ms; //帧率对应的每次运行间隔时间，毫秒
@@ -9,16 +8,16 @@ class FPS_manage {
         this.now_run_time; //当前时间
         this.one_second_num; //一秒内运行的次数
     }
-    //调用文本数据库中的物品名称和描述
-    init() {
-        this.FPS = global.FPS;
+    // 初始化
+    init(global_fps) {
+        this.FPS = global_fps;
         this.FPS_ms = 1000 / this.FPS;
         this.last_run_time = Date.now();
         // this.now_run_time = new Date();
         this.one_second_num = 0;
         this.last_sleep_ms = 0;
     }
-    //手动定义其他的物品属性
+    //获取当前一帧还需要睡眠多长时间
     get_sleep_ms() {
         let sleep_ms;
         this.now_run_time = Date.now();
@@ -46,8 +45,7 @@ class FPS_manage {
         }
         return sleep_ms;
     }
+    get_now_time() {
+        return this.now_run_time;
+    }
 }
-//记录全局参数和游戏状态的对象
-var fps_manage = new FPS_manage();
-
-export { fps_manage };

@@ -37,6 +37,8 @@ export class P_combat extends Place {
     constructor(id) {
         super(id);
         this.type = 'combat';
+        this.enemy = new Array();
+        this.max_enemy_num = 0;
     }
 }
 

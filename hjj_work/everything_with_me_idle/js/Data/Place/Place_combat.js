@@ -7,11 +7,7 @@ function init_Place_combat(places) {
     //可联通地点的id
     places[id].connected_place = ['test_normal1'];
     //战斗地点-可以刷的怪
-    places[id].enemy = [
-        {
-            desc: '前往非战斗区域',
-            id: 'test_normal1',
-        },
-    ];
+    places[id].enemy = ['Training_Dummy'];
+    places[id].max_enemy_num = 5;
 }
 export { init_Place_combat };

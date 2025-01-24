@@ -2,6 +2,7 @@ import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
+import { enemys } from '../Data/Enemy/Enemy.js';
 import { places } from '../Data/Place/Place.js';
 import {
     addElement,
@@ -16,6 +17,7 @@ import { show_active_EQP, show_combat_game_div, show_normal_game_div } from './s
 import { delete_BP_div, delete_equipment_show } from './delete_func.js';
 import { Item_type_handle, BP_type_handle, isEmptyObject, hex2Rgba } from './Function.js';
 import { dom } from '../Dom/Dom.js';
+import { global } from '../GameRun/global_class.js';
 //更新血条上的数值
 function updata_HP() {
     const HP_bar = document.getElementById('HP_bar');
@@ -147,8 +149,23 @@ function updata_attribute_show() {
         i++;
     }
 }
+//更新战斗界面中，一个敌人的具体表现
+function update_enemy_show(enemy, place_x, place_y) {
+    let enemy_field = document.getElementById(place_x);
+    let enemy_slot = enemy_field.children[1].children[place_y];
+    if (enemy.statu) {
+        //该敌人活着，更新相关信息
+        enemy_slot.innerHTML = enemys[enemy.id].name;
+    } else {
+        //该敌人死了，清空相关信息
+        enemy_slot.innerHTML = '';
+    }
+}
 //移动到id地点，并且更新相关界面
 function updata_place(id) {
+    //在全局配置中更新地点
+    let place_manage = global.get_place_manage();
+    place_manage.set_now_place(id);
     // 获取玩家控制界面
     let control = document.getElementById('control');
     //展示新地点的内容
@@ -182,4 +199,5 @@ export {
     updata_attribute_show,
     updata_player_EQP,
     updata_place,
+    update_enemy_show,
 };
