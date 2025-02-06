@@ -1,5 +1,10 @@
 import { player, Player_Object } from '../Player/Player.js';
-import { updata_equipment_show, updata_place, updata_BP_value } from '../Function/Updata_func.js';
+import {
+    updata_equipment_show,
+    updata_place,
+    updata_BP_value,
+    updata_player_active_slots,
+} from '../Function/Updata_func.js';
 import { show_normal_game_div, show_combat_game_div } from '../Function/show_func.js';
 import { dom } from '../Dom/Dom.js';
 import { global } from '../GameRun/global_class.js';
@@ -48,6 +53,9 @@ function dom_init() {
     //激活非战斗时游戏界面
     show_normal_game_div();
     // show_combat_game_div();
+    //初始化玩家主动技能部分
+    let P_Askill = player.get_player_ASkill_Manage();
+    updata_player_active_slots(P_Askill.get_slot_num());
     //初始化玩家背包
     updata_BP_value();
     // 将每个装备栏中的信息初始化

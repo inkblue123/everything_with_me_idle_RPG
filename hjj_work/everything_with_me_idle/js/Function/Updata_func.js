@@ -149,16 +149,64 @@ function updata_attribute_show() {
         i++;
     }
 }
-//更新战斗界面中，一个敌人的具体表现
-function update_enemy_show(enemy, place_x, place_y) {
-    let enemy_field = document.getElementById(place_x);
-    let enemy_slot = enemy_field.children[1].children[place_y];
-    if (enemy.statu) {
-        //该敌人活着，更新相关信息
-        enemy_slot.innerHTML = enemys[enemy.id].name;
-    } else {
-        //该敌人死了，清空相关信息
-        enemy_slot.innerHTML = '';
+//玩家主动技能槽数量变动，更新界面展示
+function updata_player_active_slots(num) {
+    //主动技能槽的数量
+    let player_active_div = document.getElementById('player_active_div');
+    for (let i = 0; i < 9; i++) {
+        if (i < num) {
+            player_active_div.children[i].style.display = '';
+        } else {
+            player_active_div.children[i].style.display = 'none';
+        }
+    }
+    //主动技能进度条的长度
+    //将目标槽拷贝到一个可见的，不影响布局的临时窗口内，获取宽度
+    var clonedChild = player_active_div.children[0].cloneNode(true);
+    var tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute'; // 不影响布局
+    tempContainer.style.visibility = 'hidden'; // 保证父元素不可见不会影响布局
+    document.body.appendChild(tempContainer);
+    tempContainer.appendChild(clonedChild);
+    let aslot_width = clonedChild.offsetWidth; //获取一个槽的宽度
+    document.body.removeChild(tempContainer);
+
+    // 获取槽之间的间隔
+    let divStyle = window.getComputedStyle(player_active_div);
+    let div_gap = parseInt(divStyle.gap, 10);
+    //计算进度条应该有多长
+    let active_time_width = (num - 1) * div_gap + num * aslot_width;
+    let time_frame = document.getElementById('time_frame');
+    time_frame.style.width = `${active_time_width}px`;
+}
+
+//更新战斗界面中的所有敌人
+function update_enemy_show() {
+    let enemy_manage = global.get_enemy_manage();
+    let combat_place_enemys = enemy_manage.get_combat_place_enemys();
+    for (let place_x in combat_place_enemys) {
+        for (let place_y = 0; place_y < 9; place_y++) {
+            //获取战斗界面中的敌人框
+            let enemy_field = document.getElementById(place_x);
+            let enemy_slot = enemy_field.children[1].children[place_y];
+            let enemy_HP_bar = enemy_slot.querySelector('.enemy_HP_bar');
+            let enemy_attr_bar = enemy_slot.querySelector('.enemy_attr_bar');
+            let enemy_head = enemy_slot.querySelector('.enemy_head');
+            //获取敌人信息
+            let field = combat_place_enemys[place_x];
+            let enemy = field[place_y];
+            if (enemy.statu) {
+                //该敌人活着，更新相关信息
+                enemy_HP_bar.style.display = '';
+                enemy_attr_bar.style.display = '';
+                enemy_head.innerHTML = enemys[enemy.id].name;
+            } else {
+                //该敌人死了，清空相关信息
+                enemy_HP_bar.style.display = 'none';
+                enemy_attr_bar.style.display = 'none';
+                enemy_head.innerHTML = '';
+            }
+        }
     }
 }
 //移动到id地点，并且更新相关界面
@@ -166,6 +214,9 @@ function updata_place(id) {
     //在全局配置中更新地点
     let place_manage = global.get_place_manage();
     place_manage.set_now_place(id);
+    //清除旧地点中的内容
+    let enemy_manage = global.get_enemy_manage();
+    enemy_manage.delete_all_enemy();
     // 获取玩家控制界面
     let control = document.getElementById('control');
     //展示新地点的内容
@@ -178,7 +229,6 @@ function updata_place(id) {
         show_normal_game_div();
     }
 }
-
 //玩家装备信息发生变动，更新相关界面
 function updata_player_EQP() {
     //更新玩家属性
@@ -200,4 +250,5 @@ export {
     updata_player_EQP,
     updata_place,
     update_enemy_show,
+    updata_player_active_slots,
 };

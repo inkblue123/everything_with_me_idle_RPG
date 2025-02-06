@@ -38,7 +38,17 @@ var Combat = crtElement('div', 'combat', null, '');
         addElement(field_div, 'div', null, 'field_up');
         let field_down = addElement(field_div, 'div', null, 'field_down');
         for (let i = 0; i < 9; i++) {
-            addElement(field_down, 'div', null, 'enemy_show');
+            let enemy_show = addElement(field_down, 'div', null, 'enemy_show');
+            //敌人血条
+            let enemy_HP_bar = addElement(enemy_show, 'div', null, 'enemy_HP_bar', 'none');
+            let enemy_HP_frame = addElement(enemy_HP_bar, 'div', null, 'enemy_HP_frame');
+            let enemy_HP_current = addElement(enemy_HP_frame, 'div', null, 'enemy_HP_current');
+            //敌人攻击进度条
+            let enemy_attr_bar = addElement(enemy_show, 'div', null, 'enemy_attr_bar', 'none');
+            let enemy_attr_frame = addElement(enemy_attr_bar, 'div', null, 'enemy_attr_frame');
+            let enemy_attr_current = addElement(enemy_attr_frame, 'div', null, 'enemy_attr_current');
+            //敌人头像
+            let enemy_head = addElement(enemy_show, 'div', null, 'enemy_head');
         }
     }
     let field_div = enemy_field['near_enemy_field'];

@@ -1,6 +1,7 @@
 import { FPS_manage } from './FPS_class.js';
 import { Place_manage } from './Place_class.js';
 import { Random_manage } from './random_class.js';
+import { Enemy_manage } from './enemy_class.js';
 import { places } from '../Data/Place/Place.js';
 //记录全局参数和游戏状态的对象
 class Global {
@@ -8,6 +9,7 @@ class Global {
         this.config;
         this.fps_manage;
         this.place_manage;
+        this.enemy_manage;
         this.random_manage;
     }
     init() {
@@ -19,6 +21,9 @@ class Global {
 
         this.place_manage = new Place_manage();
         this.place_manage.init();
+
+        this.enemy_manage = new Enemy_manage();
+        this.enemy_manage.init();
 
         this.random_manage = new Random_manage();
     }
@@ -34,6 +39,9 @@ class Global {
     get_place_manage() {
         return this.place_manage;
     }
+    get_enemy_manage() {
+        return this.enemy_manage;
+    }
     get_random_manage() {
         return this.random_manage;
     }
@@ -48,8 +56,8 @@ class Global {
         }
         return false;
     }
-    get_random(min, max) {
-        return this.random_manage.get_random(min, max);
+    add_new_enemy(now_place) {
+        return this.enemy_manage.add_new_enemy(now_place);
     }
 }
 //记录全局参数和游戏状态的对象

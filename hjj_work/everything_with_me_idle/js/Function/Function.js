@@ -128,4 +128,11 @@ function printf_play_item() {
     console.log('\n');
 }
 
-export { printf_play_item, Item_type_handle, BP_type_handle, check_Equipment, isEmptyObject, hex2Rgba };
+export {
+    printf_play_item, //
+    Item_type_handle,
+    BP_type_handle,
+    check_Equipment,
+    isEmptyObject,
+    hex2Rgba,
+};
