@@ -9,6 +9,7 @@ function change_PA() {
         //如果显示了属性界面，则切换成装备栏
         attribute_show.style.display = 'none';
         equipment_show.style.display = '';
+        //切换到当前激活的装备栏
         show_active_EQP();
     } else {
         attribute_show.style.display = '';
@@ -30,8 +31,6 @@ function show_active_EQP() {
     }
     let EQP_value = get_EQP_switch();
     document.getElementById(EQP_value).style.display = '';
-    //装备信息发生变动，更新相关界面
-    updata_player_EQP();
 }
 //切换背包、技能、图鉴的按钮
 function change_BP_SK_IB(button_id) {

@@ -88,6 +88,9 @@ export class Player_attributes {
     get_a_attr(id) {
         return this.end_attr[id];
     }
+    get_end_attr() {
+        return this.end_attr;
+    }
     //更新最终属性
     updata_end_attr() {
         this.end_attr = new Object();

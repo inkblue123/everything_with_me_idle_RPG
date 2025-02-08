@@ -21,8 +21,16 @@ class Item {
             this.name = '未命名物品';
             this.description = '未设定物品描述';
         } else {
-            this.name = texts[id].item_name;
-            this.description = texts[id].item_desc;
+            if (texts[id].item_name) {
+                this.name = texts[id].item_name;
+            } else {
+                this.name = '未命名物品';
+            }
+            if (texts[id].item_desc) {
+                this.description = texts[id].item_desc;
+            } else {
+                this.description = '未设定物品描述';
+            }
         }
     }
     //手动定义其他的物品属性

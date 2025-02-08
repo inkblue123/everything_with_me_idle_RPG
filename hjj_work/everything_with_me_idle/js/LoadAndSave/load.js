@@ -3,7 +3,9 @@ import {
     updata_equipment_show,
     updata_place,
     updata_BP_value,
-    updata_player_active_slots,
+    updata_player_active_slots_num,
+    updata_player_active_show,
+    updata_player_active,
 } from '../Function/Updata_func.js';
 import { show_normal_game_div, show_combat_game_div } from '../Function/show_func.js';
 import { dom } from '../Dom/Dom.js';
@@ -47,6 +49,8 @@ function player_init() {
     player.Player_get_item('test_boomerang', 5, 'rare');
     player.Player_get_item('test_boomerang', 8, 'epic');
     player.Player_get_item('wood_bow', 1, 'ordinary'); //远程武器测试
+    let P_Askill = player.get_player_ASkill_Manage();
+    P_Askill.set_active_skill('normal_attack_Melee', 0); //在第0个主动技能槽里设置普通攻击
 }
 //游戏界面初始化
 function dom_init() {
@@ -54,8 +58,9 @@ function dom_init() {
     show_normal_game_div();
     // show_combat_game_div();
     //初始化玩家主动技能部分
-    let P_Askill = player.get_player_ASkill_Manage();
-    updata_player_active_slots(P_Askill.get_slot_num());
+    updata_player_active(); //主动技能测试，正常应该在战斗规划界面设置主动技能，设置之后调用这个接口
+    // updata_player_active_slots_num(); //主动技能槽数量
+    // updata_player_active_show(); //主动技能槽内容
     //初始化玩家背包
     updata_BP_value();
     // 将每个装备栏中的信息初始化

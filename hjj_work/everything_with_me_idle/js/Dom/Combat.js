@@ -60,14 +60,15 @@ var Combat = crtElement('div', 'combat', null, '');
     //展示玩家的主动技能槽的部分
     var active_slot_div = addElement(combat_option_div, 'div', 'active_slot_div', null);
     //表示主动技能运行到哪里的进度条
-    var time_bar = addElement(active_slot_div, 'div', 'time_bar', null, '');
-    var time_frame = addElement(time_bar, 'div', 'time_frame', null); //时间进度条外框
-    var time_current = addElement(time_frame, 'div', 'time_current', null); //时间进度条中央的色块
+    var active_time_bar = addElement(active_slot_div, 'div', 'active_time_bar', null, '');
+    var active_time_frame = addElement(active_time_bar, 'div', 'active_time_frame', null); //时间进度条外框
+    var active_time_current = addElement(active_time_frame, 'div', 'active_time_current', null); //时间进度条中央的色块
+    var un_use_active_time_frame = addElement(active_time_frame, 'div', 'un_use_active_time_frame', null); //没有使用的时间进度条外框
     //具体容纳主动技能的div
     var player_active_div = addElement(active_slot_div, 'div', 'player_active_div', null);
     for (let i = 0; i < 9; i++) {
-        //初始3个槽位
         var player_active = addElement(player_active_div, 'div', null, 'player_active');
+        addElement(player_active, 'div', null, 'player_active_text');
     }
     //恢复和撤离的div
     var other_active_div = addElement(combat_option_div, 'div', 'other_active_div', null);

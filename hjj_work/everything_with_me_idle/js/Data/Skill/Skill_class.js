@@ -4,22 +4,31 @@ export class Skill {
     constructor(id) {
         this.id = id; //唯一id
         this.name = '未定义技能'; // 技能名称
-        this.description; // 技能描述
+        this.desc; // 技能描述
         this.max_level; // 最大等级上限
         this.exp_need_level; // 经验需求量等级
         this.type; //类型
         this.leveling_behavior = new Array(); //练级行为
+        this.init_Skill_name_desc(id);
     }
 
     //调用文本数据库中的技能名称和描述
     init_Skill_name_desc(id) {
         if (texts[id] === undefined) {
             //尚未定义
-            this.name = '未命名地点';
-            this.desc = '未设定地点描述';
+            this.name = '未命名技能';
+            this.desc = '未设定技能描述';
         } else {
-            this.name = texts[id].Skill_name;
-            this.desc = texts[id].Skill_desc;
+            if (texts[id].Skill_name) {
+                this.name = texts[id].Skill_name;
+            } else {
+                this.name = '未命名技能';
+            }
+            if (texts[id].Skill_desc) {
+                this.desc = texts[id].Skill_desc;
+            } else {
+                this.desc = '未设定技能描述';
+            }
         }
     }
 }
@@ -37,12 +46,14 @@ export class Active_skill extends Skill {
         super(id);
         this.type = 'Active';
         //主动技能
-        this.active_type; //激活之后的类型，比如攻击/辅助
+        this.active_condition = new Object(); //激活这个技能需要满足的条件
         this.need_slot_num; //需要几个技能槽
-        this.base_attr; //哪些属性作为基础数值进行计算
-        this.algorithm; //使用哪个算法进行计算
-        this.active_effect; //激活之后的效果
-        this.active_condition; //激活这个技能需要满足的条件
+        this.active_type = new Array(); //每个槽激活之后的类型，比如攻击/辅助
+        this.base_attr = new Array(); //每个槽使用哪些属性作为基础数值进行计算
+        this.algorithm = new Array(); //每个槽使用哪个算法进行计算
+        this.start_time = new Array(); //每个槽会在何时激活，比如开始时/结束时/持续激活
+
+        this.active_effect = new Array(); //激活之后的效果
     }
 }
 

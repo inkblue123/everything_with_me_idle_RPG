@@ -17,8 +17,16 @@ export class Place {
             this.name = '未命名地点';
             this.desc = '未设定地点描述';
         } else {
-            this.name = texts[id].place_name;
-            this.desc = texts[id].place_desc;
+            if (texts[id].place_name) {
+                this.name = texts[id].place_name;
+            } else {
+                this.name = '未命名地点';
+            }
+            if (texts[id].place_desc) {
+                this.desc = texts[id].place_desc;
+            } else {
+                this.desc = '未设定地点描述';
+            }
         }
     }
     add_connected_place(...args) {

@@ -22,7 +22,7 @@ function state_game() {
     updata_game();
     //睡眠一段时间，保证游戏一秒运行帧数次
     let sleep_ms = global.get_sleep_ms();
-    setTimeout(state_game, 1000);
+    setTimeout(state_game, sleep_ms);
 }
 
 //更新游戏界面中的信息
@@ -39,11 +39,10 @@ function updata_game() {
 }
 //战斗中，计算一帧之后的战斗内容
 function updata_combat() {
-    let place_manage = global.get_place_manage();
-    let now_place = place_manage.get_now_place();
     //刷出新怪
-    global.add_new_enemy(now_place);
+    global.add_new_enemy();
     //玩家动作
+    player.run_game_FPS();
     //敌人动作
     //战斗结果
 }

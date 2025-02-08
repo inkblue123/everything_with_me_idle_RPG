@@ -42,7 +42,6 @@ export class Player_Object {
     get_player_ASkill_Manage() {
         return this.ASkill_Manage;
     }
-
     //给玩家背包添加物品，js版函数重载
     Player_get_item(...args) {
         if (typeof args[0] == 'object') {
@@ -71,7 +70,6 @@ export class Player_Object {
             this.backpack_items.Player_lose_Equipment(args[0], args[1], args[2]);
         }
     }
-
     //穿戴一件装备
     worn_Equipment(id, num, equip_rarity) {
         //校验装备参数是否合法
@@ -102,7 +100,7 @@ export class Player_Object {
         }
     }
     //根据玩家当前的加成更新属性
-    updata_attr() {
+    updata_attr(active_reset_flag) {
         //获取当前穿戴的装备
         let worn_EQP = this.worn_EQP.get_worn_EQP();
         //更新装备的属性加成
@@ -110,7 +108,19 @@ export class Player_Object {
         //获取当前拥有的技能
         //更新技能的加成
 
+        //更新最终属性
         this.attributes.updata_end_attr();
+        //将最终属性更新到其他会用的地方
+        let end_attr = this.attributes.get_end_attr();
+        this.ASkill_Manage.updata_player_data(end_attr, active_reset_flag);
+    }
+    //游戏运行一帧，计算玩家相关内容
+    run_game_FPS() {
+        //玩家主动技能
+        let attack_speed = this.attributes.get_a_attr('attack_speed');
+        this.ASkill_Manage.run_player_active_skill(attack_speed);
+        //玩家被动技能
+        //玩家临时buff
     }
 }
 

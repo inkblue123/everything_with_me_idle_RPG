@@ -13,7 +13,7 @@ export class FPS_manage {
         this.FPS = global_fps;
         this.FPS_ms = 1000 / this.FPS;
         this.last_run_time = Date.now();
-        // this.now_run_time = new Date();
+        this.now_run_time = Date.now();
         this.one_second_num = 0;
         this.last_sleep_ms = 0;
     }
@@ -37,8 +37,8 @@ export class FPS_manage {
         this.last_sleep_ms = sleep_ms;
         this.one_second_num++;
         if (this.one_second_num >= this.FPS) {
-            let currentDate = new Date();
-            let currentDate_ms = Date.now();
+            // let currentDate = new Date();
+            // let currentDate_ms = Date.now();
             // console.log(`${currentDate} ${currentDate_ms}`);
             // console.log(`运行了30次`);
             this.one_second_num = 0;

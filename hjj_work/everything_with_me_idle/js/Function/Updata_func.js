@@ -1,6 +1,7 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
+import { skills } from '../Data/Skill/Skill.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { places } from '../Data/Place/Place.js';
@@ -13,7 +14,7 @@ import {
     add_aEQP_data,
 } from './Dom_function.js';
 import { get_BP_type, get_EQP_switch, get_object_only_key, get_EQP_data } from './Get_func.js';
-import { show_active_EQP, show_combat_game_div, show_normal_game_div } from './show_func.js';
+import { show_combat_game_div, show_normal_game_div } from './show_func.js';
 import { delete_BP_div, delete_equipment_show } from './delete_func.js';
 import { Item_type_handle, BP_type_handle, isEmptyObject, hex2Rgba } from './Function.js';
 import { dom } from '../Dom/Dom.js';
@@ -150,7 +151,9 @@ function updata_attribute_show() {
     }
 }
 //玩家主动技能槽数量变动，更新界面展示
-function updata_player_active_slots(num) {
+function updata_player_active_slots_num() {
+    let P_Askill = player.get_player_ASkill_Manage();
+    let num = P_Askill.get_slot_num();
     //主动技能槽的数量
     let player_active_div = document.getElementById('player_active_div');
     for (let i = 0; i < 9; i++) {
@@ -176,10 +179,31 @@ function updata_player_active_slots(num) {
     let div_gap = parseInt(divStyle.gap, 10);
     //计算进度条应该有多长
     let active_time_width = (num - 1) * div_gap + num * aslot_width;
-    let time_frame = document.getElementById('time_frame');
-    time_frame.style.width = `${active_time_width}px`;
+    let active_time_frame = document.getElementById('active_time_frame');
+    active_time_frame.style.width = `${active_time_width}px`;
 }
-
+//玩家主动技能的内容发生变动，更新界面展示
+function updata_player_active_show() {
+    let player_active_div = document.getElementById('player_active_div');
+    let P_Askill = player.get_player_ASkill_Manage();
+    let num = P_Askill.get_slot_num();
+    let active_slots = P_Askill.get_active_slots();
+    for (let i = 0; i < num; i++) {
+        //
+        if (!isEmptyObject(active_slots[i])) {
+            let skill_id = active_slots[i].id;
+            if (texts[skill_id].skill_name.length >= 10) {
+                player_active_div.children[i].children[0].innerHTML = texts[skill_id].mini_skill_name;
+            } else {
+                player_active_div.children[i].children[0].innerHTML = texts[skill_id].skill_name;
+            }
+            // player_active_div.children[i].innerHTML = skills[skill_id].name;
+        }
+    }
+    let use_slots_num = P_Askill.get_use_active_slots_num();
+    let un_use_active_time_frame = document.getElementById('un_use_active_time_frame');
+    un_use_active_time_frame.style.width = `${100 * ((num - use_slots_num) / num)}%`;
+}
 //更新战斗界面中的所有敌人
 function update_enemy_show() {
     let enemy_manage = global.get_enemy_manage();
@@ -232,11 +256,20 @@ function updata_place(id) {
 //玩家装备信息发生变动，更新相关界面
 function updata_player_EQP() {
     //更新玩家属性
-    player.updata_attr();
+    player.updata_attr(true);
     //更新装备栏
     updata_equipment_show();
     //更新属性栏
     updata_attribute_show();
+}
+//玩家主动技能发生变动，更新相关界面
+function updata_player_active() {
+    //更新玩家属性
+    player.updata_attr(true);
+    //更新主动技能框的展示内容
+    updata_player_active_show();
+    //更新主动技能进度条的长度
+    updata_player_active_slots_num();
 }
 
 export {
@@ -250,5 +283,7 @@ export {
     updata_player_EQP,
     updata_place,
     update_enemy_show,
-    updata_player_active_slots,
+    updata_player_active_slots_num,
+    updata_player_active_show,
+    updata_player_active,
 };

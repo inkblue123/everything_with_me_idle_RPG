@@ -17,11 +17,19 @@ export class Enemy {
     init_Enemy_name_desc(id) {
         if (texts[id] === undefined) {
             //尚未定义
-            this.name = '未命名敌';
+            this.name = '未命名敌人';
             this.desc = '未设定敌人描述';
         } else {
-            this.name = texts[id].enemy_name;
-            this.desc = texts[id].enemy_desc;
+            if (texts[id].enemy_name) {
+                this.name = texts[id].enemy_name;
+            } else {
+                this.name = '未命名敌人';
+            }
+            if (texts[id].enemy_desc) {
+                this.desc = texts[id].enemy_desc;
+            } else {
+                this.desc = '未设定敌人描述';
+            }
         }
     }
     init_attack_attr(attack, precision, critical_chance, critical_damage, attack_speed) {
