@@ -2,6 +2,7 @@ import { FPS_manage } from './FPS_class.js';
 import { Place_manage } from './Place_class.js';
 import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
+import { Combat_manage } from './combat_class.js';
 import { places } from '../Data/Place/Place.js';
 //记录全局参数和游戏状态的对象
 class Global {
@@ -27,6 +28,7 @@ class Global {
         this.enemy_manage.init();
 
         this.random_manage = new Random_manage();
+        this.combat_manage = new Combat_manage();
     }
     init_config() {
         //
@@ -50,8 +52,17 @@ class Global {
         return this.combat_manage;
     }
     //对外提供一些常用功能的接口
+    update_FPS_manage() {
+        return this.fps_manage.update_FPS_manage();
+    }
     get_sleep_ms() {
         return this.fps_manage.get_sleep_ms();
+    }
+    get_now_time() {
+        return this.fps_manage.get_now_time();
+    }
+    get_game_now_time() {
+        return this.fps_manage.get_game_now_time();
     }
     get_combat_statu() {
         let now_place = this.place_manage.get_now_place();

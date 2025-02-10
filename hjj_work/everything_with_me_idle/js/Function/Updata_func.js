@@ -222,7 +222,9 @@ function update_enemy_show() {
             if (enemy.statu) {
                 //该敌人活着，更新相关信息
                 enemy_HP_bar.style.display = '';
+                enemy_HP_bar.children[0].children[0].style.width = enemy.get_HP_ratio();
                 enemy_attr_bar.style.display = '';
+                enemy_attr_bar.children[0].children[0].style.width = enemy.get_attack_ratio();
                 enemy_head.innerHTML = enemys[enemy.id].name;
             } else {
                 //该敌人死了，清空相关信息
@@ -241,6 +243,9 @@ function updata_place(id) {
     //清除旧地点中的内容
     let enemy_manage = global.get_enemy_manage();
     enemy_manage.delete_all_enemy();
+    update_enemy_show();
+    let P_Askill = player.get_player_ASkill_Manage();
+    P_Askill.reset_round();
     // 获取玩家控制界面
     let control = document.getElementById('control');
     //展示新地点的内容

@@ -29,7 +29,7 @@ export class Player_active_skills_Manage {
 
         this.round_start_time; //当前回合开始时间
         this.now_time; //当前时间
-        this.now_round_time = Date.now(); //当前回合运行了多久的时间
+        this.now_round_time = 0; //当前回合运行了多久的时间
         this.max_round_time = 9000; //当前回合最大时间
         this.last_run_slot; //上一个运行完毕的槽的编号
         this.last_run_time; //上一次运行的时间
@@ -43,12 +43,10 @@ export class Player_active_skills_Manage {
             slot_num = 3;
         }
         this.active_slot_num = slot_num;
-        // this.active_slots = new Object(); //主动技能槽内容
-
         for (let i = 0; i < slot_num; i++) {
             this.active_slots[i] = new Object();
         }
-        this.now_time = Date.now();
+        this.now_time = global.get_game_now_time();
         this.max_round_time = 9000;
         this.reset_round();
     }
@@ -129,9 +127,14 @@ export class Player_active_skills_Manage {
     }
     //重置当前回合，重置相关参数
     reset_round() {
-        this.round_start_time = Date.now();
+        this.round_start_time = global.get_game_now_time();
         this.now_round_time = 0;
         this.last_run_slot = -1;
+        this.naxt_Attack_effect = new Attack_effect();
+        this.updata_player_active_time_bar();
+    }
+    //重置玩家攻击
+    reset_player_Attack_effect() {
         this.naxt_Attack_effect = new Attack_effect();
     }
     //计算主动技能进度条的进度
@@ -199,24 +202,26 @@ export class Player_active_skills_Manage {
         //计算主动技能应该得到的效果
         let Askill_algorithm = skills[id].algorithm[slot_num];
         Askill_algorithm(askill_base_attr, this.naxt_Attack_effect);
+        //计算玩家装备的额外效果
 
         //根据主动技能类型，产生这次效果
         if (skills[id].active_type[slot_num] == 'attack') {
-            //攻击类技能，现在已经计算完毕，输出到战斗管理类中，执行该次攻击
+            //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
             let combat_manage = global.get_combat_manage();
             combat_manage.set_player_next_attack(this.naxt_Attack_effect);
+            this.reset_player_Attack_effect();
         }
     }
     //游戏运行一帧，计算主动技能部分内容
     run_player_active_skill() {
-        this.now_time = Date.now();
+        this.now_time = global.get_game_now_time();
         this.now_round_time = this.now_time - this.round_start_time;
         //计算主动技能进度条的进度
         this.updata_player_active_time_bar();
         //如果运行到某个技能准备就绪
         let start_slot = this.judge_active_start();
         if (start_slot != -1) {
-            // start_player_active(start_slot);
+            this.start_player_active(start_slot);
             // console.log(`${start_slot}`);
         }
         //如果运行到一回合结束，

@@ -15,12 +15,18 @@ import {
 import { texts } from '../Data/Text/Text.js';
 
 function state_game() {
+    let FPS_manage = global.get_fps_manage();
+    FPS_manage.update_FPS_start();
+    //更新战斗内容
     if (global.get_combat_statu()) {
         updata_combat();
     }
-    //更新需要即时变动的游戏内容
+
+    //更新需要即时变动的游戏界面内容
     updata_game();
-    //睡眠一段时间，保证游戏一秒运行帧数次
+
+    FPS_manage.update_FPS_end();
+    //一帧运行完毕，睡眠一段时间，保证游戏一秒运行帧数次
     let sleep_ms = global.get_sleep_ms();
     setTimeout(state_game, sleep_ms);
 }
@@ -39,12 +45,15 @@ function updata_game() {
 }
 //战斗中，计算一帧之后的战斗内容
 function updata_combat() {
-    //刷出新怪
-    global.add_new_enemy();
     //玩家动作
     player.run_game_FPS();
     //敌人动作
+
     //战斗结果
+    let combat_manage = global.get_combat_manage();
+    combat_manage.run_conbat();
+    //刷出新怪
+    global.add_new_enemy();
 }
 
 export { updata_game, state_game };

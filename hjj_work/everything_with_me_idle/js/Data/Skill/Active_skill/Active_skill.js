@@ -12,6 +12,11 @@ function init_Active_skill(skills) {
     skills[id].base_attr = [{ power: 1 }]; //哪些属性作为基础数值进行计算
     skills[id].algorithm = [Askill_algorithm_1]; //使用哪个算法进行计算
     skills[id].start_time = ['end']; //结束时计算
+    skills[id].lock_enemy_type = {
+        num: 1, //攻击一个敌人
+        distance: 'min', //选择最近的
+        type: 'normal', //普通直接攻击
+    };
 }
 
 export { init_Active_skill };

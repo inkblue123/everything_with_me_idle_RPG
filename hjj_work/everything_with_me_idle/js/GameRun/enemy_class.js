@@ -1,18 +1,45 @@
+import { global } from './global_class.js';
 import { places } from '../Data/Place/Place.js';
-import { get_random } from '../Function/math_func.js';
+import { enemys } from '../Data/Enemy/Enemy.js';
+import { get_random, get_random_enemy_distance } from '../Function/math_func.js';
 //场地内的敌人对象
 class place_enemy {
     constructor(id) {
         this.id = id; //唯一id
-        this.health_max = 1;
-        this.health_point = 1;
+        this.health_point = 0; //当前血量
+        this.attack_point = 0; //当前攻击进度
         this.statu = false; //死活状态
+        this.distance = 0;
         //战斗攻击属性
         this.combat_attack_attr = new Object();
         //战斗防御属性
         this.combat_defense_attr = new Object();
         //战斗生存属性
         this.combat_survival_attr = new Object();
+    }
+    //初始化敌人
+    init() {
+        if (enemys[this.id]) {
+            this.combat_attack_attr = JSON.parse(JSON.stringify(enemys[this.id].attack_attr));
+            this.combat_defense_attr = JSON.parse(JSON.stringify(enemys[this.id].defense_attr));
+            this.combat_survival_attr = JSON.parse(JSON.stringify(enemys[this.id].survival_attr));
+            this.statu = true; //死活状态
+            this.health_point = this.combat_survival_attr['health_max']; //设置满血
+            this.attack_point = 0;
+            this.distance = 0;
+            return true;
+        } else {
+            //敌人数据库中不存在该敌人
+            return false;
+        }
+    }
+    //获取当前血条比例
+    get_HP_ratio() {
+        return `${(this.health_point / this.combat_survival_attr['health_max']) * 100}%`;
+    }
+    //获取当前攻击进度比例
+    get_attack_ratio() {
+        return `${(this.attack_point / this.combat_attack_attr['attack_speed']) * 100}%`;
     }
 }
 
@@ -66,11 +93,10 @@ export class Enemy_manage {
             //可以刷怪，尝试进行刷怪
             if (this.try_add_new_enemy()) {
                 //刷怪成功，更新参数
-                this.last_add_enemy_time = Date.now();
+                this.last_add_enemy_time = global.get_game_now_time();
             }
         }
     }
-
     //判断当前帧是否可以刷怪
     judge_add_new_enemy() {
         //根据地点信息，选择判断的依据
@@ -84,7 +110,7 @@ export class Enemy_manage {
             live_enemy_num_judge = true;
         }
         //上次刷怪时间间隔判断
-        let now_time = Date.now();
+        let now_time = global.get_game_now_time();
         if (now_time - this.last_add_enemy_time >= places[this.now_place].add_enemy_time * 1000) {
             time_judge = true;
         }
@@ -136,8 +162,24 @@ export class Enemy_manage {
         }
         let field = this.combat_place_enemys[place_x];
         field[place_y] = new place_enemy(enemy_id);
-        field[place_y].statu = true;
+        field[place_y].init();
+        field[place_y].distance = get_random_enemy_distance(place_x, place_y);
+
         return field[place_y];
+    }
+    //获取距离最近的n个活着的敌人的拷贝
+    get_min_distance_enemy(n) {
+        let enemys = new Array();
+        for (let key in this.combat_place_enemys) {
+            let field = this.combat_place_enemys[key];
+            for (let i = 0; i < 9; i++) {
+                if (field[i].statu) {
+                    enemys.push(field[i]);
+                }
+            }
+        }
+        enemys.sort((a, b) => a.distance - b.distance);
+        return enemys.slice(0, n);
     }
     //清空所有敌人
     delete_all_enemy() {

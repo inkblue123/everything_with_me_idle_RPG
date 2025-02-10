@@ -47,13 +47,14 @@ export class Active_skill extends Skill {
         this.type = 'Active';
         //主动技能
         this.active_condition = new Object(); //激活这个技能需要满足的条件
+        this.lock_enemy_type = new Object(); //索敌方式
         this.need_slot_num; //需要几个技能槽
         this.active_type = new Array(); //每个槽激活之后的类型，比如攻击/辅助
         this.base_attr = new Array(); //每个槽使用哪些属性作为基础数值进行计算
         this.algorithm = new Array(); //每个槽使用哪个算法进行计算
         this.start_time = new Array(); //每个槽会在何时激活，比如开始时/结束时/持续激活
 
-        this.active_effect = new Array(); //激活之后的效果
+        // this.active_effect = new Array(); //激活之后的效果
     }
 }
 
