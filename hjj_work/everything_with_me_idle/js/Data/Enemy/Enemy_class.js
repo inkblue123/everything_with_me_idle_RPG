@@ -51,18 +51,6 @@ export class Enemy {
         this.survival_attr['energy_max'] = energy_max; //最大精力上限
     }
 }
-// export class P_normal extends Place {
-//     constructor(id) {
-//         super(id);
-//         this.type = 'normal';
-//     }
-// }
-// export class P_combat extends Place {
-//     constructor(id) {
-//         super(id);
-//         this.type = 'combat';
-//     }
-// }
 function add_Enemy_object(enemys, newid) {
     if (enemys[newid] === undefined) {
         enemys[newid] = new Enemy(newid);

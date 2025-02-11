@@ -1,6 +1,7 @@
 import { global } from './global_class.js';
+import { player } from '../Player/Player.js';
 import { isEmptyObject } from '../Function/Function.js';
-import { skills } from '../Data/Skill/Skill.js';
+import { P_skills } from '../Data/Skill/Skill.js';
 class Attack_effect {
     constructor() {
         this.id;
@@ -14,11 +15,16 @@ class Attack_effect {
 export class Combat_manage {
     constructor() {
         this.player_Attack = new Attack_effect();
+        this.enemy_Attacks = new Array();
         this.combat_place_enemys; //战斗场地内敌人的浅拷贝
     }
     //设置玩家即将造成的攻击
     set_player_next_attack(player_Attack) {
         this.player_Attack = player_Attack;
+    }
+    //设置敌人即将造成的攻击
+    set_enemy_next_attack(enemy_Attack) {
+        this.enemy_Attacks.push(enemy_Attack);
     }
     //结算这一帧的战斗结果
     run_conbat() {
@@ -26,7 +32,8 @@ export class Combat_manage {
         this.combat_place_enemys = enemy_manage.get_combat_place_enemys();
         //玩家攻击
         this.PAE_manage();
-        //
+        //敌人攻击
+        this.EAP_manage();
     }
     //玩家攻击敌人的战斗结果
     PAE_manage() {
@@ -48,6 +55,24 @@ export class Combat_manage {
         }
         //结束
         this.player_Attack = new Attack_effect();
+    }
+    //敌人攻击玩家的战斗结果
+    EAP_manage() {
+        let P_attr = player.get_player_attributes();
+        //处理这一帧每个敌人的攻击
+        for (let i = 0; i < this.enemy_Attacks.length; i++) {
+            for (let j = 0; j < this.enemy_Attacks[i].number_times; j++) {
+                P_attr.health_point -= this.enemy_Attacks[i].base_damage;
+            }
+            //玩家生命归零，进入死亡逻辑
+            if (P_attr.health_point <= 0) {
+                P_attr.health_point = 0;
+                global.player_death();
+                break;
+            }
+        }
+        //结束
+        this.enemy_Attacks = new Array();
     }
     //获取当前玩家攻击的索敌目标
     get_lock_enemy() {

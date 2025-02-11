@@ -1,11 +1,11 @@
-import { add_Active_skill } from '../Skill_class.js';
+import { add_P_Active_skill } from '../Skill_class.js';
 import { Askill_algorithm_1 } from '../../../Function/math_func.js';
 
 //初始化技能数据库中与被动技能相关的内容
-function init_Active_skill(skills) {
+function init_P_Active_skill(skills) {
     //普通攻击-近战
     let id = 'normal_attack_Melee';
-    add_Active_skill(skills, id);
+    add_P_Active_skill(skills, id);
     skills[id].active_condition = { weapon_damage_type: 'melee' }; //武器需要是近战类型
     skills[id].need_slot_num = 1; //需要几个技能槽
     skills[id].active_type = ['attack']; //攻击类型主动技能
@@ -19,4 +19,4 @@ function init_Active_skill(skills) {
     };
 }
 
-export { init_Active_skill };
+export { init_P_Active_skill };

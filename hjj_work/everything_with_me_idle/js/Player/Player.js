@@ -117,8 +117,7 @@ export class Player_Object {
     //游戏运行一帧，计算玩家相关内容
     run_game_FPS() {
         //玩家主动技能
-        let attack_speed = this.attributes.get_a_attr('attack_speed');
-        this.ASkill_Manage.run_player_active_skill(attack_speed);
+        this.ASkill_Manage.run_player_active_skill();
         //玩家被动技能
         //玩家临时buff
     }

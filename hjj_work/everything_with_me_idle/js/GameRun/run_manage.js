@@ -48,7 +48,7 @@ function updata_combat() {
     //玩家动作
     player.run_game_FPS();
     //敌人动作
-
+    global.run_game_FPS();
     //战斗结果
     let combat_manage = global.get_combat_manage();
     combat_manage.run_conbat();

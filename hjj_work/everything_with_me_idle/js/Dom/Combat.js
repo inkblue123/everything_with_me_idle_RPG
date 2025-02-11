@@ -1,6 +1,5 @@
 import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
 import { isEmptyObject } from '../Function/Function.js';
-import { updata_place } from '../Function/Updata_func.js';
 
 var Combat = crtElement('div', 'combat', null, '');
 

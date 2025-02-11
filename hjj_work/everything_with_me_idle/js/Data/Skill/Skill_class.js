@@ -32,7 +32,8 @@ export class Skill {
         }
     }
 }
-export class Passive_skill extends Skill {
+//玩家被动技能
+export class P_Passive_skill extends Skill {
     constructor(id) {
         super(id);
         this.type = 'Passive';
@@ -40,8 +41,8 @@ export class Passive_skill extends Skill {
         this.milepost; // 关键等级节点
     }
 }
-
-export class Active_skill extends Skill {
+//玩家主动技能
+export class P_Active_skill extends Skill {
     constructor(id) {
         super(id);
         this.type = 'Active';
@@ -57,6 +58,18 @@ export class Active_skill extends Skill {
         // this.active_effect = new Array(); //激活之后的效果
     }
 }
+//敌人主动技能
+export class E_Active_skill extends Skill {
+    constructor(id) {
+        super(id);
+        this.type = 'enemy_Active';
+        //主动技能
+        this.active_type = new Array(); //每个槽激活之后的类型，比如攻击/辅助
+        this.base_attr = new Array(); //每个槽使用哪些属性作为基础数值进行计算
+        this.algorithm = new Array(); //每个槽使用哪个算法进行计算
+        this.start_time = new Array(); //每个槽会在何时激活，比如开始时/结束时/持续激活
+    }
+}
 
 function add_Skill_object(skills, newid) {
     if (skills[newid] === undefined) {
@@ -65,19 +78,31 @@ function add_Skill_object(skills, newid) {
         console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
-function add_Passive_skill(skills, newid) {
+function add_P_Passive_skill(skills, newid) {
     if (skills[newid] === undefined) {
-        skills[newid] = new Passive_skill(newid);
+        skills[newid] = new P_Passive_skill(newid);
     } else {
         console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
-function add_Active_skill(skills, newid) {
+function add_P_Active_skill(skills, newid) {
     if (skills[newid] === undefined) {
-        skills[newid] = new Active_skill(newid);
+        skills[newid] = new P_Active_skill(newid);
+    } else {
+        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+    }
+}
+function add_E_Active_skill(skills, newid) {
+    if (skills[newid] === undefined) {
+        skills[newid] = new E_Active_skill(newid);
     } else {
         console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
 
-export { add_Skill_object, add_Passive_skill, add_Active_skill };
+export {
+    add_Skill_object,
+    add_P_Passive_skill,
+    add_P_Active_skill,
+    add_E_Active_skill, //
+};

@@ -1,7 +1,7 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
-import { skills } from '../Data/Skill/Skill.js';
+import { P_skills } from '../Data/Skill/Skill.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { places } from '../Data/Place/Place.js';
@@ -197,7 +197,7 @@ function updata_player_active_show() {
             } else {
                 player_active_div.children[i].children[0].innerHTML = texts[skill_id].skill_name;
             }
-            // player_active_div.children[i].innerHTML = skills[skill_id].name;
+            // player_active_div.children[i].innerHTML = P_skills[skill_id].name;
         }
     }
     let use_slots_num = P_Askill.get_use_active_slots_num();

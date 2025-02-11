@@ -4,6 +4,7 @@ import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
 import { Combat_manage } from './combat_class.js';
 import { places } from '../Data/Place/Place.js';
+import { updata_place } from '../Function/Updata_func.js';
 //记录全局参数和游戏状态的对象
 class Global {
     constructor() {
@@ -77,6 +78,21 @@ class Global {
     }
     set_conbat_player_attack(player_Attack_effect) {
         this.combat_manage.set_player_next_attack(player_Attack_effect);
+    }
+    //游戏运行一帧，计算其他全局内容
+    run_game_FPS() {
+        //敌人主动技能
+        this.enemy_manage.run_enemy_active_skill();
+        //玩家被动技能
+        //玩家临时buff
+    }
+    //玩家死亡，处理相关逻辑
+    player_death() {
+        //移动到安全的地方
+        updata_place('test_normal1');
+        //清空玩家buff
+        //清空战斗区域的临时加成
+        
     }
 }
 //记录全局参数和游戏状态的对象

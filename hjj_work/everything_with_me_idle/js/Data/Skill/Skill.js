@@ -1,5 +1,6 @@
-import { init_Passive_skill } from './Passive_skill/Passive_skill.js';
-import { init_Active_skill } from './Active_skill/Active_skill.js';
+import { init_P_Passive_skill } from './player_skill/P_Passive_skill.js';
+import { init_P_Active_skill } from './player_skill/P_Active_skill.js';
+import { init_E_Active_skill } from './enemy_skill/E_Active_skill.js';
 //技能的类别枚举
 // const skill_type = Object.freeze({
 //     //根基技能 basic
@@ -19,11 +20,16 @@ import { init_Active_skill } from './Active_skill/Active_skill.js';
 //     //特殊功法 super
 //     // 暂无
 // });
-var skills = new Object();
+var P_skills = new Object();
+//初始化技能数据库中与玩家被动技能相关的内容
+init_P_Passive_skill(P_skills);
+//初始化技能数据库中与玩家主动技能相关的内容
+init_P_Active_skill(P_skills);
 
-//初始化技能数据库中与被动技能相关的内容
-init_Passive_skill(skills);
-//初始化技能数据库中与主动技能相关的内容
-init_Active_skill(skills);
+var E_skills = new Object();
+//初始化技能数据库中与敌人被动技能相关的内容
+// init_P_Passive_skill(P_skills);
+//初始化技能数据库中与敌人主动技能相关的内容
+init_E_Active_skill(E_skills);
 
-export { skills };
+export { P_skills, E_skills };
