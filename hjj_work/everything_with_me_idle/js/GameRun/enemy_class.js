@@ -1,14 +1,9 @@
 import { global } from './global_class.js';
+import { Attack_effect } from './combat_class.js';
 import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { E_skills } from '../Data/Skill/Skill.js';
 import { get_random, get_random_enemy_distance } from '../Function/math_func.js';
-class Attack_effect {
-    constructor() {
-        this.number_times = 0; //攻击次数
-        this.base_damage = 0; //攻击基础伤害
-    }
-}
 //场地内的敌人对象
 class place_enemy {
     constructor(id) {
@@ -117,6 +112,7 @@ class place_enemy {
         }
         return start_skill;
     }
+    //激活敌人的这一次主动技能
     start_enemy_active() {
         //
         let id = this.now_active_id;

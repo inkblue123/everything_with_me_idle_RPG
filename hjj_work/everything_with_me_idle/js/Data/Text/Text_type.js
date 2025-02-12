@@ -43,7 +43,7 @@ function Equipment_type(texts) {
     texts['spray_gun'].type_desc = '中近距离远程武器，进行远程攻击时消耗喷枪弹药';
     add_text_object(texts, 'boomerang');
     texts['boomerang'].type_name = '回旋武器';
-    texts['boomerang'].type_desc = '中近距离远程武器，进行远程攻击后武器会飞回来，不消耗弹药';
+    texts['boomerang'].type_desc = '中近距离远程武器，进行远程攻击时不消耗弹药，数量越多攻速越快';
     add_text_object(texts, 'throw');
     texts['throw'].type_name = '投掷工具';
     texts['throw'].type_desc = '全距离适用的远程武器，进行远程攻击时消耗可投掷弹药';

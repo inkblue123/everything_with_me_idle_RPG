@@ -6,7 +6,7 @@ function init_P_Active_skill(skills) {
     //普通攻击-近战
     let id = 'normal_attack_Melee';
     add_P_Active_skill(skills, id);
-    skills[id].active_condition = { weapon_damage_type: 'melee' }; //武器需要是近战类型
+    skills[id].active_condition = { weapon_damage_type: ['melee'] }; //武器需要是近战类型
     skills[id].need_slot_num = 1; //需要几个技能槽
     skills[id].active_type = ['attack']; //攻击类型主动技能
     skills[id].base_attr = [{ power: 1 }]; //哪些属性作为基础数值进行计算

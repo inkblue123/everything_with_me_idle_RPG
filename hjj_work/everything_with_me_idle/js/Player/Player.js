@@ -29,6 +29,7 @@ export class Player_Object {
         this.worn_EQP.init();
         //初始化主动技能槽
         this.ASkill_Manage.init();
+        this.updata_attr();
     }
     get_player_attributes() {
         return this.attributes;

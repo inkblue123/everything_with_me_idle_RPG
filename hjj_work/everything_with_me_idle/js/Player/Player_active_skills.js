@@ -1,5 +1,7 @@
 'use strict';
 import { P_skills } from '../Data/Skill/Skill.js';
+import { enums } from '../Data/Enum/Enum.js';
+import { Attack_effect } from '../GameRun/combat_class.js';
 import { global } from '../GameRun/global_class.js';
 import { isEmptyObject } from '../Function/Function.js';
 import { get_Askill_base_attr } from '../Function/math_func.js';
@@ -14,13 +16,6 @@ class Player_active_skill {
         this.slot_num = 0; //这一个槽属于技能的第几个部分
     }
 }
-class Attack_effect {
-    constructor() {
-        this.number_times = 0; //攻击次数
-        this.base_damage = 0; //攻击基础伤害
-    }
-}
-
 export class Player_active_skills_Manage {
     constructor() {
         this.active_slot_num; //主动技能槽数量
@@ -34,7 +29,9 @@ export class Player_active_skills_Manage {
         this.last_run_slot; //上一个运行完毕的槽的编号
         this.last_run_time; //上一次运行的时间
         this.player_end_attr = new Object(); //玩家最终属性拷贝，方便调用
-        this.naxt_Attack_effect = new Attack_effect();
+        this.main_Attack = new Attack_effect(); //玩家主手攻击效果
+        this.deputy_Attack = new Attack_effect(); //玩家副手攻击效果
+        this.other_Attack = new Attack_effect(); //其他可能的攻击效果
     }
     //初始化主动技能槽
     init(slot_num = 3) {
@@ -130,23 +127,33 @@ export class Player_active_skills_Manage {
         this.round_start_time = global.get_game_now_time();
         this.now_round_time = 0;
         this.last_run_slot = -1;
-        this.naxt_Attack_effect = new Attack_effect();
-        this.updata_player_active_time_bar();
+        //重置玩家攻击
+        this.reset_player_Attack_effect();
     }
     //重置玩家攻击
     reset_player_Attack_effect() {
-        this.naxt_Attack_effect = new Attack_effect();
-    }
-    //计算主动技能进度条的进度
-    updata_player_active_time_bar() {
-        let use_slots_num = this.get_use_active_slots_num();
-        let max_ratio = 100 * (use_slots_num / this.active_slot_num);
-        let bar_ratio = (this.now_round_time / this.max_round_time) * max_ratio;
-        if (bar_ratio > max_ratio) {
-            bar_ratio = max_ratio;
+        this.main_Attack = new Attack_effect();
+        this.deputy_Attack = new Attack_effect();
+        this.deputy_Attack = new Attack_effect();
+        if (!isEmptyObject(this.player_end_attr)) {
+            this.main_Attack.number_times = 1;
+            this.main_Attack.base_damage = this.player_end_attr['attack'];
+            this.main_Attack.precision = this.player_end_attr['precision'];
+            this.main_Attack.critical_chance = this.player_end_attr['critical_chance'];
+            this.main_Attack.critical_damage = this.player_end_attr['critical_damage'];
+
+            this.deputy_Attack.number_times = 1;
+            this.deputy_Attack.base_damage = this.player_end_attr['attack'];
+            this.deputy_Attack.precision = this.player_end_attr['precision'];
+            this.deputy_Attack.critical_chance = this.player_end_attr['critical_chance'];
+            this.deputy_Attack.critical_damage = this.player_end_attr['critical_damage'];
+
+            this.other_Attack.number_times = 1;
+            this.other_Attack.base_damage = this.player_end_attr['attack'];
+            this.other_Attack.precision = this.player_end_attr['precision'];
+            this.other_Attack.critical_chance = this.player_end_attr['critical_chance'];
+            this.other_Attack.critical_damage = this.player_end_attr['critical_damage'];
         }
-        const active_time_bar = document.getElementById('active_time_bar');
-        active_time_bar.children[0].children[0].style.width = `${bar_ratio}%`;
     }
     //判断当前运行的槽中的技能是否准备就绪
     judge_active_start() {
@@ -158,6 +165,11 @@ export class Player_active_skills_Manage {
                 }
                 let id = this.active_slots[i].id;
                 let slot_num = this.active_slots[i].slot_num;
+                if (!this.judge_active_condition(id)) {
+                    //目前运行的技能不满足限定条件
+                    this.last_run_slot = i;
+                    continue;
+                }
                 let start_time = P_skills[id].start_time[slot_num];
                 if (start_time == 'start') {
                     //当前技能应该在当前攻速时间的启动时激活
@@ -184,6 +196,38 @@ export class Player_active_skills_Manage {
         }
         return -1;
     }
+    //判断当前运行的槽中的技能是否满足激活条件
+    judge_active_condition(id) {
+        let flag = true;
+        let active_condition = P_skills[id].active_condition;
+        //武器伤害类型判定
+        if (active_condition.weapon_damage_type) {
+            let weapon_damage_type_flag = false;
+            for (let pw of this.player_end_attr['weapon_type']) {
+                let damage_type = enums.weapon_damage_type[pw];
+                if (active_condition.weapon_damage_type.includes(damage_type)) {
+                    //伤害类型判定成功
+                    weapon_damage_type_flag = true;
+                    break;
+                }
+            }
+            if (weapon_damage_type_flag == false) flag = false;
+        }
+        //武器伤害类型判定
+        if (active_condition.weapon_type) {
+            let weapon_type_flag = false;
+            for (let pw of this.player_end_attr['weapon_type']) {
+                if (active_condition.weapon_type.includes(pw)) {
+                    //武器类型判定成功
+                    weapon_type_flag = true;
+                    break;
+                }
+            }
+            if (weapon_type_flag == false) flag = false;
+        }
+
+        return flag;
+    }
     //激活玩家的第i个主动技能
     start_player_active(start_slot) {
         if (isEmptyObject(this.active_slots[start_slot])) {
@@ -196,14 +240,15 @@ export class Player_active_skills_Manage {
         let askill_base_attr = get_Askill_base_attr(P_skills[id].base_attr[slot_num], this.player_end_attr);
         //计算主动技能应该得到的效果
         let Askill_algorithm = P_skills[id].algorithm[slot_num];
-        Askill_algorithm(askill_base_attr, this.naxt_Attack_effect);
+        Askill_algorithm(askill_base_attr, this.main_Attack);
         //计算玩家装备的额外效果
-
+        if (0) {
+        }
         //根据主动技能类型，产生这次效果
         if (P_skills[id].active_type[slot_num] == 'attack') {
             //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
             let combat_manage = global.get_combat_manage();
-            combat_manage.set_player_next_attack(this.naxt_Attack_effect);
+            combat_manage.set_player_next_attack(this.main_Attack);
             this.reset_player_Attack_effect();
         }
     }
@@ -211,8 +256,6 @@ export class Player_active_skills_Manage {
     run_player_active_skill() {
         this.now_time = global.get_game_now_time();
         this.now_round_time = this.now_time - this.round_start_time;
-        //计算主动技能进度条的进度
-        this.updata_player_active_time_bar();
         //如果运行到某个技能准备就绪
         let start_slot = this.judge_active_start();
         if (start_slot != -1) {

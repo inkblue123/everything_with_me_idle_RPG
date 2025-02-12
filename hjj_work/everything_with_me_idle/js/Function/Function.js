@@ -127,6 +127,11 @@ function printf_play_item() {
     }
     console.log('\n');
 }
+function get_uniqueArr(array) {
+    // 使用 Set 去重
+    let uniqueArr = [...new Set(array)];
+    return uniqueArr;
+}
 
 export {
     printf_play_item, //
@@ -135,4 +140,5 @@ export {
     check_Equipment,
     isEmptyObject,
     hex2Rgba,
+    get_uniqueArr,
 };

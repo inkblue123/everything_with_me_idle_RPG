@@ -204,6 +204,19 @@ function updata_player_active_show() {
     let un_use_active_time_frame = document.getElementById('un_use_active_time_frame');
     un_use_active_time_frame.style.width = `${100 * ((num - use_slots_num) / num)}%`;
 }
+//更新玩家主动技能进度条的进度
+function updata_player_active_time_bar() {
+    //
+    let P_Askill = player.get_player_ASkill_Manage();
+    let use_slots_num = P_Askill.get_use_active_slots_num();
+    let max_ratio = 100 * (use_slots_num / P_Askill.active_slot_num);
+    let bar_ratio = (P_Askill.now_round_time / P_Askill.max_round_time) * max_ratio;
+    if (bar_ratio > max_ratio) {
+        bar_ratio = max_ratio;
+    }
+    const active_time_bar = document.getElementById('active_time_bar');
+    active_time_bar.children[0].children[0].style.width = `${bar_ratio}%`;
+}
 //更新战斗界面中的所有敌人
 function update_enemy_show() {
     let enemy_manage = global.get_enemy_manage();
@@ -273,7 +286,7 @@ function updata_player_active() {
     player.updata_attr(true);
     //更新主动技能框的展示内容
     updata_player_active_show();
-    //更新主动技能进度条的长度
+    //更新主动技能进度条的总长度
     updata_player_active_slots_num();
 }
 
@@ -291,4 +304,5 @@ export {
     updata_player_active_slots_num,
     updata_player_active_show,
     updata_player_active,
+    updata_player_active_time_bar,
 };

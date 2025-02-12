@@ -193,9 +193,15 @@ function show_equipment_attr(show_item) {
                 //这是需要用百分号表示的属性
                 T_value.innerHTML = '+' + items[id].equip_attr[attr] + '%';
             } else if (attr == 'attack_speed') {
-                //其他属性
-                T_value.innerHTML = '+' + items[id].equip_attr[attr] + '秒';
+                //回旋武器的攻击速度单独处理
+                if (items[id].equipment_type.includes('boomerang')) {
+                    // this.EQP_attr[i] += items[id].equip_attr[i] / num;
+                    T_value.innerHTML = '+(' + items[id].equip_attr[attr] + '/' + show_item.num + ')秒';
+                } else {
+                    T_value.innerHTML = '+' + items[id].equip_attr[attr] + '秒';
+                }
             } else {
+                //其他属性
                 T_value.innerHTML = '+' + items[id].equip_attr[attr];
             }
         }

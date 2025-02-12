@@ -68,7 +68,6 @@ function get_random_enemy_distance(place_x, place_y) {
 }
 //主动技能效果计算函数1号
 function Askill_algorithm_1(base_attr, Attack_effect) {
-    Attack_effect.number_times += 1;
     if (base_attr <= 100) {
         Attack_effect.base_damage = base_attr * 0.1;
     } else {

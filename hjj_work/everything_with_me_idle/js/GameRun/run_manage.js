@@ -11,6 +11,7 @@ import {
     updata_attribute_show,
     updata_player_name,
     update_enemy_show,
+    updata_player_active_time_bar,
 } from '../Function/Updata_func.js';
 import { texts } from '../Data/Text/Text.js';
 
@@ -38,7 +39,7 @@ function updata_game() {
     updata_ENP();
     updata_player_name();
     updata_attribute_show();
-
+    updata_player_active_time_bar();
     if (global.get_combat_statu()) {
         update_enemy_show();
     }

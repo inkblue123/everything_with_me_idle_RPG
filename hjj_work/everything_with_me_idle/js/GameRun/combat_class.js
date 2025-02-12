@@ -2,38 +2,69 @@ import { global } from './global_class.js';
 import { player } from '../Player/Player.js';
 import { isEmptyObject } from '../Function/Function.js';
 import { P_skills } from '../Data/Skill/Skill.js';
-class Attack_effect {
+
+export class Attack_effect {
     constructor() {
         this.id;
+        this.lock_enemy_type = new Object(); //索敌逻辑
+
         this.number_times = 0; //攻击次数
         this.base_damage = 0; //攻击基础伤害
+        this.precision = 0; //精准
+        this.critical_chance = 0; //暴击率
+        this.critical_damage = 0; //暴击伤害
+    }
+}
+export class P_Attack_effect {
+    constructor() {
+        this.id;
         this.lock_enemy_type = new Object(); //索敌逻辑
+
+        this.main_Attack = new Attack_effect();
+        this.deputy_Attack = new Attack_effect();
+        this.other_Attack = new Attack_effect();
+        // this.number_times = 0; //攻击次数
+        // this.base_damage = 0; //攻击基础伤害
+        // this.precision = 0; //精准
+        // this.critical_chance = 0; //暴击率
+        // this.critical_damage = 0; //暴击伤害
     }
 }
 
 //战斗管理类
 export class Combat_manage {
     constructor() {
-        this.player_Attack = new Attack_effect();
+        this.player_Attack = new P_Attack_effect();
         this.enemy_Attacks = new Array();
         this.combat_place_enemys; //战斗场地内敌人的浅拷贝
+        this.combat_flag; //当前帧是否需要进行战斗的标记
     }
     //设置玩家即将造成的攻击
-    set_player_next_attack(player_Attack) {
-        this.player_Attack = player_Attack;
+    set_player_next_attack(main_Attack, deputy_Attack, other_Attack) {
+        if (main_Attack) this.player_Attack.main_Attack = main_Attack;
+        if (deputy_Attack) this.player_Attack.deputy_Attack = deputy_Attack;
+        if (other_Attack) this.player_Attack.other_Attack = other_Attack;
+        if (main_Attack || deputy_Attack || other_Attack) this.combat_flag = true;
     }
     //设置敌人即将造成的攻击
     set_enemy_next_attack(enemy_Attack) {
         this.enemy_Attacks.push(enemy_Attack);
+        this.combat_flag = true;
     }
     //结算这一帧的战斗结果
     run_conbat() {
+        if (!this.combat_flag) {
+            return false;
+        }
+
         let enemy_manage = global.get_enemy_manage();
         this.combat_place_enemys = enemy_manage.get_combat_place_enemys();
         //玩家攻击
         this.PAE_manage();
         //敌人攻击
         this.EAP_manage();
+        this.combat_flag = false;
+        return true;
     }
     //玩家攻击敌人的战斗结果
     PAE_manage() {
@@ -42,12 +73,12 @@ export class Combat_manage {
         //攻击n次
         if (enemys.length == 0) {
             //没有找到敌人，攻击结束
-            this.player_Attack = new Attack_effect();
+            this.player_Attack = new P_Attack_effect();
             return true;
         }
         for (let i = 0; i < enemys.length; i++) {
-            for (let j = 0; j < this.player_Attack.number_times; j++) {
-                enemys[i].health_point -= this.player_Attack.base_damage;
+            for (let j = 0; j < this.player_Attack.main_Attack.number_times; j++) {
+                enemys[i].health_point -= this.player_Attack.main_Attack.base_damage;
             }
             if (enemys[i].health_point <= 0) {
                 enemys[i].statu = false;
