@@ -1,7 +1,7 @@
 'use strict';
 import { items } from '../Data/Item/Item.js';
 import { check_Equipment } from '../Function/Function.js';
-
+//玩家背包中的一个物品
 class Player_Item {
     constructor(id) {
         this.id = id; //唯一id

@@ -63,35 +63,6 @@
     /* height: 90%; */
 }
 
-/* 启动隐藏下拉表格的按钮，第一级 */
-.dropdown_button_1 {
-    padding: 10px;
-    font-size: 15px;
-    width: 100%;
-    cursor: pointer;
-}
-/* 启动隐藏下拉表格的按钮，第二级 */
-.dropdown_button_2 {
-    padding: 10px;
-    font-size: 15px;
-    width: 80%;
-    cursor: pointer;
-}
-/* 启动隐藏下拉表格的按钮，第三级 */
-.dropdown_button_3 {
-    padding: 10px;
-    font-size: 15px;
-    width: 60%;
-    cursor: pointer;
-}
-/* 初始隐藏下拉表格 */
-.dropdown_table {
-    display: none;
-    /* margin-top: 10px; */
-    transition: max-height 0.5s ease-out;
-    overflow: hidden;
-    max-height: 0;
-}
 /* 物品栏界面，容纳具体物品的div */
 #BP_value_div {
     display: flex;

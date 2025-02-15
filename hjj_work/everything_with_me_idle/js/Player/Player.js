@@ -14,7 +14,7 @@ export class Player_Object {
         this.backpack_items = new Object();
         //穿戴的装备
         this.worn_EQP = new Object();
-        //主动技能槽
+        //已装载的主动技能
         this.ASkill_Manage = new Object();
     }
 

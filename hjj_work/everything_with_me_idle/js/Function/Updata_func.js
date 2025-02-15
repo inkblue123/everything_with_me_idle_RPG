@@ -154,7 +154,8 @@ function updata_attribute_show() {
 function updata_player_active_slots_num() {
     let P_Askill = player.get_player_ASkill_Manage();
     let num = P_Askill.get_slot_num();
-    //主动技能槽的数量
+
+    //战斗界面-主动技能槽的数量
     let player_active_div = document.getElementById('player_active_div');
     for (let i = 0; i < 9; i++) {
         if (i < num) {
@@ -163,7 +164,8 @@ function updata_player_active_slots_num() {
             player_active_div.children[i].style.display = 'none';
         }
     }
-    //主动技能进度条的长度
+
+    //战斗界面-主动技能进度条的长度
     //将目标槽拷贝到一个可见的，不影响布局的临时窗口内，获取宽度
     var clonedChild = player_active_div.children[0].cloneNode(true);
     var tempContainer = document.createElement('div');
@@ -173,7 +175,6 @@ function updata_player_active_slots_num() {
     tempContainer.appendChild(clonedChild);
     let aslot_width = clonedChild.offsetWidth; //获取一个槽的宽度
     document.body.removeChild(tempContainer);
-
     // 获取槽之间的间隔
     let divStyle = window.getComputedStyle(player_active_div);
     let div_gap = parseInt(divStyle.gap, 10);
@@ -181,6 +182,16 @@ function updata_player_active_slots_num() {
     let active_time_width = (num - 1) * div_gap + num * aslot_width;
     let active_time_frame = document.getElementById('active_time_frame');
     active_time_frame.style.width = `${active_time_width}px`;
+
+    //游戏规划界面-战斗规划-主动技能规划中展示的主动技能槽数量
+    let active_show_div = document.getElementById('active_show_div');
+    for (let i = 0; i < 9; i++) {
+        if (i < num) {
+            active_show_div.children[i].style.display = '';
+        } else {
+            active_show_div.children[i].style.display = 'none';
+        }
+    }
 }
 //玩家主动技能的内容发生变动，更新界面展示
 function updata_player_active_show() {

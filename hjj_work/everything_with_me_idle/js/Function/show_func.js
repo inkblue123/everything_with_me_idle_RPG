@@ -53,24 +53,68 @@ function change_BP_SK_IB(button_id) {
         IB_div.style.display = '';
     }
 }
+//切换战斗规划、生活技能、创造合成界面的按钮
+function change_CBP_LVP_CTP(button_id) {
+    const CBP_div = document.getElementById('CBP_div');
+    const LVP_div = document.getElementById('LVP_div');
+    const CTP_div = document.getElementById('CTP_div');
+    if (button_id == 'CBP_switch_button') {
+        CBP_div.style.display = '';
+        LVP_div.style.display = 'none';
+        CTP_div.style.display = 'none';
+    }
+    if (button_id == 'LVP_switch_button') {
+        CBP_div.style.display = 'none';
+        LVP_div.style.display = '';
+        CTP_div.style.display = 'none';
+    }
+    if (button_id == 'CTP_switch_button') {
+        CBP_div.style.display = 'none';
+        LVP_div.style.display = 'none';
+        CTP_div.style.display = '';
+    }
+}
+//按下战斗规划中，主动技能规划、自动恢复规划、自动撤离规划按钮之后，切换到对应的界面
+function change_ASP_ARP_AEP(button_id) {
+    const ASP_value_scroll_box = document.getElementById('ASP_value_div');
+    const ARP_value_scroll_box = document.getElementById('ARP_value_scroll_box');
+    const AEP_value_scroll_box = document.getElementById('AEP_value_scroll_box');
+    if (button_id == 'ASP_button') {
+        ASP_value_scroll_box.style.display = '';
+        ARP_value_scroll_box.style.display = 'none';
+        AEP_value_scroll_box.style.display = 'none';
+    }
+    if (button_id == 'ARP_button') {
+        ASP_value_scroll_box.style.display = 'none';
+        ARP_value_scroll_box.style.display = '';
+        AEP_value_scroll_box.style.display = 'none';
+    }
+    if (button_id == 'AEP_button') {
+        ASP_value_scroll_box.style.display = 'none';
+        ARP_value_scroll_box.style.display = 'none';
+        AEP_value_scroll_box.style.display = '';
+    }
+}
 //点击了隐藏下拉框的按钮之后，展示当前按钮相关的下拉框，隐藏其他下拉框
 function show_dropdown_table(classification_div, table_id) {
     const dropdownTable = document.getElementById(table_id);
     const Class_div = document.getElementById(classification_div);
 
-    // 切换目标下拉框的显示/隐藏状态
-    if (dropdownTable.style.display === 'block') {
-        // 如果表格已经显示，则折叠它
-        dropdownTable.style.maxHeight = '0';
-        setTimeout(() => {
-            dropdownTable.style.display = 'none';
-        }, 500); // 等待动画完成后隐藏
-    } else {
-        // 如果表格没有显示，则展开它
-        dropdownTable.style.display = 'block';
-        setTimeout(() => {
-            dropdownTable.style.maxHeight = '300px'; // 最大高度需要根据内容调整
-        }, 10); // 让显示状态先更新，再触发动画
+    if (dropdownTable) {
+        if (dropdownTable.style.display === 'block') {
+            // 切换目标下拉框的显示/隐藏状态
+            // 如果表格已经显示，则折叠它
+            dropdownTable.style.maxHeight = '0';
+            setTimeout(() => {
+                dropdownTable.style.display = 'none';
+            }, 500); // 等待动画完成后隐藏
+        } else {
+            // 如果表格没有显示，则展开它
+            dropdownTable.style.display = 'block';
+            setTimeout(() => {
+                dropdownTable.style.maxHeight = '300px'; // 最大高度需要根据内容调整
+            }, 10); // 让显示状态先更新，再触发动画
+        }
     }
     //遍历，并且关闭其他下拉框
     let tables = Class_div.querySelectorAll('.dropdown_table');
@@ -93,32 +137,34 @@ function show_combat_game_div() {
     const game_up_combat = document.getElementById('game_up_combat');
     const game_up_nomal = document.getElementById('game_up_nomal');
     const create = document.getElementById('create');
-    const combat_setting = document.getElementById('combat_setting');
+    const game_plan = document.getElementById('game_plan');
 
     game_up_combat.style.display = '';
     game_up_nomal.style.display = 'none';
 
     create.style.display = 'none';
-    combat_setting.style.display = '';
+    game_plan.style.display = '';
 }
 //展示非战斗时的游戏界面
 function show_normal_game_div() {
     const game_up_combat = document.getElementById('game_up_combat');
     const game_up_nomal = document.getElementById('game_up_nomal');
     const create = document.getElementById('create');
-    const combat_setting = document.getElementById('combat_setting');
+    const game_plan = document.getElementById('game_plan');
 
     game_up_combat.style.display = 'none';
     game_up_nomal.style.display = '';
 
     create.style.display = '';
-    combat_setting.style.display = 'none';
+    game_plan.style.display = 'none';
 }
 
 export {
     change_PA,
     show_active_EQP,
     change_BP_SK_IB,
+    change_CBP_LVP_CTP,
+    change_ASP_ARP_AEP,
     show_dropdown_table,
     show_combat_game_div,
     show_normal_game_div, //

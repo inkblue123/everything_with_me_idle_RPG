@@ -268,6 +268,10 @@ var Backpack = crtElement('div', 'backpack', null, '');
     const radios = Backpack.querySelectorAll('input[type="radio"][name="BP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
+            if (this.id == 'BP_all') {
+                //针对背包界面的“全部”按钮，额外新增关闭其他下拉框的功能
+                show_dropdown_table('BP_classification_div');
+            }
             updata_BP_value();
         });
     });

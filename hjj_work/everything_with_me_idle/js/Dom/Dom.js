@@ -6,6 +6,7 @@ import { Option } from './Option.js';
 import { Tooltip } from './Tooltip.js';
 import { Control } from './Control.js';
 import { Combat } from './Combat.js';
+import { Game_plan } from './Game_plan.js';
 
 var dom = new Object();
 
@@ -23,6 +24,10 @@ var dom = new Object();
     dom.control = Control;
     //战斗界面
     dom.combat = Combat;
+    //游戏规划界面（战斗规划，生活技能规划）
+    dom.game_plan = Game_plan;
+    // dom.game_plan = crtElement('div', 'game_plan', 'section', '', '#ff33a1');
+    // dom.game_plan.textContent = '战斗规划界面';
 
     dom.create = crtElement('div', 'create', 'section', '', '#ffff00');
     dom.create.textContent = '合成制作界面';
@@ -32,9 +37,6 @@ var dom = new Object();
 
     dom.remenber = crtElement('div', null, 'section', '', '#3357ff');
     dom.remenber.textContent = '脑海界面';
-
-    dom.combat_setting = crtElement('div', 'combat_setting', 'section', '', '#ff33a1');
-    dom.combat_setting.textContent = '战斗规划界面';
 }
 
 //创建布局
@@ -76,7 +78,7 @@ var dom = new Object();
 
     dom.game_down_nomal.appendChild(dom.control);
     dom.game_down_nomal.appendChild(dom.create);
-    dom.game_down_nomal.appendChild(dom.combat_setting);
+    dom.game_down_nomal.appendChild(dom.game_plan);
 
     dom.main_dom.appendChild(dom.option_dom);
     dom.main_dom.appendChild(dom.tooltip);
