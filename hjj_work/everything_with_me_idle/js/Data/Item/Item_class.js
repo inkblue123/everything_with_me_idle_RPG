@@ -6,7 +6,7 @@ class Item {
     constructor(id) {
         this.id = id; //唯一id
         this.name = ''; // 物品名称
-        this.description = ''; // 物品描述
+        this.desc = ''; // 物品描述
         this.maxStack = 1; // 最大堆叠数量
         // this.type = new Array(); //物品大类型
         this.main_type = new Array(); //物品大类型
@@ -19,7 +19,7 @@ class Item {
         if (texts[id] === undefined) {
             //尚未定义物品名称和描述
             this.name = '未命名物品';
-            this.description = '未设定物品描述';
+            this.desc = '未设定物品描述';
         } else {
             if (texts[id].item_name) {
                 this.name = texts[id].item_name;
@@ -27,9 +27,9 @@ class Item {
                 this.name = '未命名物品';
             }
             if (texts[id].item_desc) {
-                this.description = texts[id].item_desc;
+                this.desc = texts[id].item_desc;
             } else {
-                this.description = '未设定物品描述';
+                this.desc = '未设定物品描述';
             }
         }
     }

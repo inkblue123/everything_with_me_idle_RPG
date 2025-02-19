@@ -3,6 +3,9 @@ import { get_object_only_key } from '../Function/Get_func.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
+import { P_skills } from '../Data/Skill/Skill.js';
+
+const TOOLTIP_WIDTH = 320;
 
 //跟随鼠标，当鼠标移动到特定元素上时显示出来，充当提示窗口
 var Tooltip = crtElement('div', 'tooltip', null, 'none');
@@ -10,11 +13,15 @@ var Tooltip = crtElement('div', 'tooltip', null, 'none');
 // 初始化小窗口内容并显示小窗口
 Tooltip.InitTip = function (type, value) {
     this.CloseTip();
+    this.type = type;
 
     this.style.display = 'block';
     if (type == 'item') {
         //初始化物品介绍内容
         init_item_tip(value);
+    } else if (type == 'active_skill') {
+        //初始化主动技能介绍内容
+        init_active_skill_tip(value);
     }
 };
 //移动小窗口
@@ -29,21 +36,28 @@ Tooltip.MoveTip = function (event) {
     // 获取浏览器窗口的宽度和高度
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
+    let left, top;
+    if (this.type == 'active_skill') {
+        //展示主动技能时固定位置
+        // 计算小窗口的新位置
+        left = (windowWidth - tooltipWidth) / 2; //在整个浏览器的中央位置显示
+        top = windowHeight / 2; //在整个浏览器的中央位置显示
+    } else {
+        //其他情况下跟随鼠标移动
+        // 计算小窗口的新位置
+        left = mouseX + 10; // 初始假设小窗口显示在右侧
+        top = mouseY + 10; // 初始假设小窗口显示在下方
 
-    // 计算小窗口的新位置
-    let left = mouseX + 10; // 初始假设小窗口显示在右侧
-    let top = mouseY + 10; // 初始假设小窗口显示在下方
+        // 如果小窗口靠近浏览器右侧边缘，改为显示在左侧
+        if (mouseX + tooltipWidth + 10 > windowWidth) {
+            left = mouseX - tooltipWidth - 10; // 显示在左侧
+        }
 
-    // 如果小窗口靠近浏览器右侧边缘，改为显示在左侧
-    if (mouseX + tooltipWidth + 10 > windowWidth) {
-        left = mouseX - tooltipWidth - 10; // 显示在左侧
+        // 如果小窗口靠近浏览器底部边缘，改为显示在上方
+        if (mouseY + tooltipHeight + 10 > windowHeight) {
+            top = mouseY - tooltipHeight - 10; // 显示在上方
+        }
     }
-
-    // 如果小窗口靠近浏览器底部边缘，改为显示在上方
-    if (mouseY + tooltipHeight + 10 > windowHeight) {
-        top = mouseY - tooltipHeight - 10; // 显示在上方
-    }
-
     // 更新小窗口的位置
     this.style.left = left + 'px';
     this.style.top = top + 'px';
@@ -51,6 +65,8 @@ Tooltip.MoveTip = function (event) {
 //清空并隐藏小窗口
 Tooltip.CloseTip = function () {
     this.style.display = 'none'; // 隐藏小窗口
+    this.style.width = TOOLTIP_WIDTH + 'px'; // 恢复宽度
+
     empty_dom(this); //清空内容
 };
 // 为小窗口添加鼠标移动时更新小窗口位置的功能
@@ -88,13 +104,14 @@ function show_item_name_description(player_item) {
     if (items[player_item.id].main_type.includes('equipment')) {
         //为装备的名称上色
         let rarity = get_object_only_key(player_item.rarity);
-        label.style.color = texts[rarity].rarity_color;
+        label.style.color = enums[rarity].rarity_color;
     }
     label.innerHTML = items[item_id].name; //物品名称
     let text = addElement(Tooltip, 'div', null, 'lable_down');
-    text.innerHTML = items[item_id].description; //物品描述
+    text.innerHTML = items[item_id].desc; //物品描述
     return true;
 }
+
 //针对武器装备，追加展示稀有度，详细类型，可装备位置
 function show_equipment(show_item) {
     //装备类型详情展示
@@ -127,7 +144,7 @@ function show_equipment_type(show_item) {
     let show_item_rarity;
     for (show_item_rarity in show_item.rarity) {
         R_value.innerHTML = texts[show_item_rarity].rarity_name;
-        rarity_div.style.color = texts[show_item_rarity].rarity_color;
+        rarity_div.style.color = enums[show_item_rarity].rarity_color;
     }
     let type_ch = '';
     //武器类型获取，类型描述展示
@@ -176,10 +193,10 @@ function show_equipment_wearing_position(show_item) {
 //追加展示装备属性
 function show_equipment_attr(show_item) {
     let id = show_item.id;
-    let attr_div = addElement(Tooltip, 'div', null, 'table_div');
+    let attr_div = addElement(Tooltip, 'div', null, 'table_3_div');
     for (let attr in items[id].equip_attr) {
         if (items[id].equip_attr[attr] != 0) {
-            let TLV_div = addElement(attr_div, 'div', null, 'table_value');
+            let TLV_div = addElement(attr_div, 'div', null, 'table_3_value');
             // 属性名称
             let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
             if (texts[attr].attr_name.length >= 4) {
@@ -252,4 +269,47 @@ function show_material_type(show_item) {
 //追加展示材料来源和用处
 function show_material_source_use(show_item) {}
 
+//传入玩家的一个主动技能拷贝对象，展示这个主动技能的详细信息
+function init_active_skill_tip(active_skill) {
+    let id = active_skill.id;
+    let slot_num = active_skill.slot_num;
+    //创造主动技能展示的布局
+    Tooltip.style.width = `${4 * TOOLTIP_WIDTH}px`;
+    // Tooltip.style.width = `${P_skills[id].need_slot_num * TOOLTIP_WIDTH}px`;
+    for (let i = 1; i <= P_skills[id].need_slot_num; i++) {
+        // let attr_div = addElement(Tooltip, 'div', null, 'table_3_div');
+        //展示物品的名称和描述
+        if (!show_active_skill_name_desc(active_skill)) {
+            return false; //异常物品，中止展示
+        }
+    }
+    // //根据物品的大类别，追加展示额外的信息
+    // if (items[player_item.id].main_type.includes('equipment')) {
+    //     show_equipment(player_item);
+    // } else if (items[player_item.id].main_type.includes('material')) {
+    //     show_material(player_item);
+    // }
+}
+//展示技能的名称和描述
+function show_active_skill_name_desc(active_skill) {
+    let item_id = active_skill.id;
+
+    // if (P_skills[item_id] === undefined) {
+    //     let label = addElement(Tooltip, 'div', null, 'lable_down');
+    //     label.innerHTML = '未定义物品';
+    //     let text = addElement(Tooltip, 'div', null, 'lable_down');
+    //     text.innerHTML = '物品id为 : ' + item_id;
+    //     return false;
+    // }
+    // let label = addElement(Tooltip, 'div', null, 'lable_down');
+    // if (P_skills[player_item.id].main_type.includes('equipment')) {
+    //     //为装备的名称上色
+    //     let rarity = get_object_only_key(player_item.rarity);
+    //     label.style.color = enums[rarity].rarity_color;
+    // }
+    // label.innerHTML = P_skills[item_id].name; //物品名称
+    // let text = addElement(Tooltip, 'div', null, 'lable_down');
+    // text.innerHTML = P_skills[item_id].desc; //物品描述
+    return true;
+}
 export { Tooltip };

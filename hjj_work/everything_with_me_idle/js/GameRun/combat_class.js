@@ -38,6 +38,7 @@ export class Combat_manage {
         this.enemy_Attacks = new Array();
         this.combat_place_enemys; //战斗场地内敌人的浅拷贝
         this.combat_flag; //当前帧是否需要进行战斗的标记
+        this.player_combat_flag; //当前帧玩家战斗是否成功的标记
     }
     //设置玩家即将造成的攻击
     set_player_next_attack(main_Attack, deputy_Attack, other_Attack) {
@@ -52,7 +53,7 @@ export class Combat_manage {
         this.combat_flag = true;
     }
     //结算这一帧的战斗结果
-    run_conbat() {
+    run_combat() {
         if (!this.combat_flag) {
             return false;
         }
@@ -63,29 +64,49 @@ export class Combat_manage {
         this.PAE_manage();
         //敌人攻击
         this.EAP_manage();
-        this.combat_flag = false;
+        //战斗结束，重置相关参数
+        this.reset_combat_data();
         return true;
+    }
+    //重置战斗相关参数
+    reset_combat_data() {
+        this.player_Attack = new Attack_effect();
+        this.enemy_Attacks = new Array();
+        this.combat_flag = false;
+        this.player_combat_flag = false;
     }
     //玩家攻击敌人的战斗结果
     PAE_manage() {
         //索敌
         let enemys = this.get_lock_enemy();
-        //攻击n次
         if (enemys.length == 0) {
             //没有找到敌人，攻击结束
-            this.player_Attack = new P_Attack_effect();
             return true;
         }
+        //攻击n次
+        this.player_combat_flag = true;
+        let end_attack_damage = 0;
+        let end_attack_num = 0;
         for (let i = 0; i < enemys.length; i++) {
             for (let j = 0; j < this.player_Attack.main_Attack.number_times; j++) {
-                enemys[i].health_point -= this.player_Attack.main_Attack.base_damage;
-            }
-            if (enemys[i].health_point <= 0) {
-                enemys[i].statu = false;
+                if (enemys[i].health_point < this.player_Attack.main_Attack.base_damage) {
+                    end_attack_damage += enemys[i].health_point;
+                    enemys[i].health_point = 0;
+                } else {
+                    end_attack_damage += this.player_Attack.main_Attack.base_damage;
+                    enemys[i].health_point -= this.player_Attack.main_Attack.base_damage;
+                }
+                if (enemys[i].health_point <= 0) {
+                    enemys[i].statu = false;
+                    break;
+                }
             }
         }
-        //结束
-        this.player_Attack = new Attack_effect();
+        end_attack_num = this.player_Attack.main_Attack.number_times;
+        //结算经验
+        let exp_manage = global.get_exp_manage();
+        exp_manage.set_Active_skill_exp(this.player_Attack.main_Attack.id, end_attack_damage);
+        exp_manage.set_combat_leveling_behavior(end_attack_num, end_attack_damage);
     }
     //敌人攻击玩家的战斗结果
     EAP_manage() {
@@ -102,8 +123,6 @@ export class Combat_manage {
                 break;
             }
         }
-        //结束
-        this.enemy_Attacks = new Array();
     }
     //获取当前玩家攻击的索敌目标
     get_lock_enemy() {

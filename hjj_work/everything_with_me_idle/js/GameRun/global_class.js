@@ -3,6 +3,7 @@ import { Place_manage } from './Place_class.js';
 import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
 import { Combat_manage } from './combat_class.js';
+import { Exp_manage } from './exp_class.js';
 import { places } from '../Data/Place/Place.js';
 import { updata_place } from '../Function/Updata_func.js';
 //记录全局参数和游戏状态的对象
@@ -14,6 +15,7 @@ class Global {
         this.enemy_manage; //场地内敌人类
         this.random_manage; //随机数管理类
         this.combat_manage; //战斗管理类
+        this.exp_manage; //技能经验管理类
     }
     init() {
         //获取配置
@@ -30,6 +32,7 @@ class Global {
 
         this.random_manage = new Random_manage();
         this.combat_manage = new Combat_manage();
+        this.exp_manage = new Exp_manage();
     }
     init_config() {
         //
@@ -51,6 +54,9 @@ class Global {
     }
     get_combat_manage() {
         return this.combat_manage;
+    }
+    get_exp_manage() {
+        return this.exp_manage;
     }
     //对外提供一些常用功能的接口
     update_FPS_manage() {
@@ -92,7 +98,6 @@ class Global {
         updata_place('test_normal1');
         //清空玩家buff
         //清空战斗区域的临时加成
-        
     }
 }
 //记录全局参数和游戏状态的对象

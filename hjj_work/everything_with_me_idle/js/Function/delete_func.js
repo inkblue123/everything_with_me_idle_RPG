@@ -2,6 +2,7 @@ import { get_EQP_data } from './Get_func.js';
 import { addElement } from './Dom_function.js';
 import { hex2Rgba } from './Function.js';
 import { texts } from '../Data/Text/Text.js';
+import { enums } from '../Data/Enum/Enum.js';
 //清空左下角背包界面的所有元素
 function delete_BP_div() {
     let BP_value_div = document.getElementById('BP_value_div');
@@ -30,8 +31,26 @@ function delete_equipment_show(EQP_column) {
     //初始化展示框内容
     for (let i in EQP_div_data) {
         EQP_div_data[i].innerHTML = texts[i].wearing_name;
-        EQP_div_data[i].style.color = hex2Rgba(texts['ordinary'].rarity_color, 1);
+        EQP_div_data[i].style.color = hex2Rgba(enums['ordinary'].rarity_color, 1);
         EQP_div_data[i].style.opacity = 0.5;
     }
 }
-export { delete_BP_div, delete_equipment_show };
+//重新生成右上战斗界面的玩家主动技能部分
+function delete_player_active_div() {
+    let player_active_div = document.getElementById('player_active_div');
+    player_active_div.replaceChildren(); //清空现有主动技能槽内容
+    for (let i = 0; i < 9; i++) {
+        var player_active = addElement(player_active_div, 'div', null, 'player_active');
+        addElement(player_active, 'div', null, 'player_active_text');
+    }
+}
+//重新生成右下游戏规划界面中战斗规划界面的主动技能展示部分
+function delete_active_show_div() {
+    let active_show_div = document.getElementById('active_show_div');
+    active_show_div.replaceChildren(); //清空现有内容
+    for (let i = 0; i < 9; i++) {
+        addElement(active_show_div, 'div', null, 'active_show_value');
+    }
+}
+
+export { delete_BP_div, delete_equipment_show, delete_player_active_div, delete_active_show_div };

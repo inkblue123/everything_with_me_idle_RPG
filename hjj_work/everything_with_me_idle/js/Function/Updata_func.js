@@ -15,7 +15,12 @@ import {
 } from './Dom_function.js';
 import { get_BP_type, get_EQP_switch, get_object_only_key, get_EQP_data } from './Get_func.js';
 import { show_combat_game_div, show_normal_game_div } from './show_func.js';
-import { delete_BP_div, delete_equipment_show } from './delete_func.js';
+import {
+    delete_BP_div,
+    delete_equipment_show,
+    delete_player_active_div,
+    delete_active_show_div,
+} from './delete_func.js';
 import { Item_type_handle, BP_type_handle, isEmptyObject, hex2Rgba } from './Function.js';
 import { dom } from '../Dom/Dom.js';
 import { global } from '../GameRun/global_class.js';
@@ -195,7 +200,11 @@ function updata_player_active_slots_num() {
 }
 //玩家主动技能的内容发生变动，更新界面展示
 function updata_player_active_show() {
-    let player_active_div = document.getElementById('player_active_div');
+    //清空原有内容
+    delete_player_active_div();
+    delete_active_show_div();
+    let player_active_div = document.getElementById('player_active_div'); //战斗界面，玩家主动技能展示框
+    let active_show_div = document.getElementById('active_show_div'); //战斗规划界面，主动技能规划展示框
     let P_Askill = player.get_player_ASkill_Manage();
     let num = P_Askill.get_slot_num();
     let active_slots = P_Askill.get_active_slots();
@@ -203,18 +212,28 @@ function updata_player_active_show() {
         //
         if (!isEmptyObject(active_slots[i])) {
             let skill_id = active_slots[i].id;
+            let slot_num = active_slots[i].slot_num;
+            //战斗界面，玩家主动技能展示框
             if (texts[skill_id].skill_name.length >= 10) {
                 player_active_div.children[i].children[0].innerHTML = texts[skill_id].mini_skill_name;
             } else {
                 player_active_div.children[i].children[0].innerHTML = texts[skill_id].skill_name;
             }
-            // player_active_div.children[i].innerHTML = P_skills[skill_id].name;
+            player_active_div.children[i].data = active_slots[i];
+            add_show_Tooltip(player_active_div.children[i], 'active_skill', active_slots[i]); //添加鼠标移动之后展示该槽位设置的主动技能
+
+            //战斗规划界面，主动技能规划展示框
+            let active_type = P_skills[skill_id].active_type[slot_num];
+            active_show_div.children[i].style.backgroundColor = enums[active_type].active_show_color;
+            active_show_div.children[i].data = active_slots[i];
+            add_show_Tooltip(active_show_div.children[i], 'active_skill', active_slots[i]); //添加鼠标移动之后展示该槽位设置的主动技能
         }
     }
     let use_slots_num = P_Askill.get_use_active_slots_num();
     let un_use_active_time_frame = document.getElementById('un_use_active_time_frame');
     un_use_active_time_frame.style.width = `${100 * ((num - use_slots_num) / num)}%`;
 }
+
 //更新玩家主动技能进度条的进度
 function updata_player_active_time_bar() {
     //

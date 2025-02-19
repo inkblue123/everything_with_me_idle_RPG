@@ -2,8 +2,9 @@ import { add_Enum_Array } from './Enum_class.js';
 //初始化枚举库中与物品相关的内容
 function init_Enum_material(enums) {
     //仅仅属于材料的小类型
-    add_Enum_Array(enums, 'material_type');
-    enums.material_type = [
+    let id = 'material_type';
+    add_Enum_Array(enums, id);
+    enums[id] = [
         // 天然材料 raw_MTR
         'for_logging', //来自伐木的物品
         'for_fishing', //来自钓鱼的物品

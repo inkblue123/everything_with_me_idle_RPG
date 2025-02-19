@@ -10,7 +10,8 @@
 }
 .GP_switch_button {
     font-size: 15px;
-    height: 40px;
+    /* height: 40px; */
+    box-sizing: border-box;
     border: 1px solid #797691; /* 内框 */
 }
 /* 容纳具体的战斗规划、生活技能、创造合成内容的div */
@@ -18,9 +19,9 @@
     height: 90%;
 }
 /* 容纳具体战斗规划内容的div */
-#CBP_div {
+/* #CBP_div {
     background-color: rgb(255, 0, 0);
-}
+} */
 /* 容纳具体生活技能内容的div */
 #LVP_div {
     background-color: #ffd700;
@@ -35,7 +36,9 @@
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-between;
-    background-color: #00ff2a;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+    /* background-color: #00ff2a; */
     width: 100%;
     height: 100%;
 }
@@ -78,7 +81,9 @@
     justify-content: center;
     align-items: center;
     gap: 5px;
-    background-color: #ff5e00;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+    /* background-color: #ff5e00; */
     width: 100%;
     height: 15%;
 }

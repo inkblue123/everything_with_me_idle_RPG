@@ -1,9 +1,10 @@
 import { items } from '../Data/Item/Item.js';
+import { enums } from '../Data/Enum/Enum.js';
 import { texts } from '../Data/Text/Text.js';
 import { player } from '../Player/Player.js';
 import { show_active_EQP } from './show_func.js';
 import { hex2Rgba } from './Function.js';
-import { updata_player_EQP, updata_BP_value, updata_equipment_show, updata_attribute_show } from './Updata_func.js';
+import { updata_player_EQP, updata_BP_value, updata_attribute_show } from './Updata_func.js';
 import { get_object_only_key, get_EQP_wp_data } from './Get_func.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
@@ -73,7 +74,7 @@ function addBP_equipment(player_item) {
             //当某个稀有度有数量，就展示到背包里
             let BP_value_div = document.getElementById('BP_value_div');
             let aitem = addElement(BP_value_div, 'div', null, 'BP_value');
-            aitem.style.color = texts[i].rarity_color;
+            aitem.style.color = enums[i].rarity_color;
             let name = items[player_item.id].name;
             aitem.Data = JSON.parse(JSON.stringify(player_item));
             aitem.Data.rarity = [];
@@ -113,7 +114,7 @@ function add_aEQP_data(aBP_item, wp, alpha = 1) {
     } else {
         EQP_div_data.innerHTML = `${items[id].name} x${num}`; //装备栏上物品的名称x数量
     }
-    EQP_div_data.style.color = hex2Rgba(texts[rarity].rarity_color, alpha); //装备栏物品的稀有度颜色
+    EQP_div_data.style.color = hex2Rgba(enums[rarity].rarity_color, alpha); //装备栏物品的稀有度颜色
     EQP_div_data.style.opacity = 1; //高亮显示表示已经装备
     add_show_Tooltip(EQP_div_data, 'item', aBP_item); //添加鼠标移动上去显示详细内容的功能
     add_click_Equipment_worn_remove(EQP_div_data, wp);

@@ -33,7 +33,11 @@ function new_game_init() {
 function player_init() {
     //初始化玩家类
     player.init();
-
+    //初始化玩家一开始就应该拥有的0级技能
+    let All_Skills = player.get_player_All_Skills();
+    All_Skills.player_unlock_skill('normal_sword');
+    All_Skills.player_unlock_skill('normal_attack_Melee');
+    //测试物品和装备系统
     player.Player_get_item('Oak_logs', 10);
     player.Player_get_item('wood_sword', 1, 'damaged');
     player.Player_get_item('wood_sword', 2, 'ordinary');

@@ -90,23 +90,16 @@ function Equipment_rarity(texts) {
     add_text_object(texts, 'damaged');
     texts['damaged'].rarity_name = '破损';
     texts['damaged'].type_desc = '完全不可使用的破损装备，也许有高人能回收利用，不然就只能卖掉了';
-    texts['damaged'].rarity_color = '#838383';
-    texts['damaged'].rarity_rgb_color = 'rgba(131,131,131)';
     add_text_object(texts, 'ordinary');
     texts['ordinary'].rarity_name = '普通';
-    texts['ordinary'].rarity_color = '#000000';
     add_text_object(texts, 'excellent');
     texts['excellent'].rarity_name = '优良';
-    texts['excellent'].rarity_color = '#00c400';
     add_text_object(texts, 'rare');
     texts['rare'].rarity_name = '稀有';
-    texts['rare'].rarity_color = '#1100ff';
     add_text_object(texts, 'epic');
     texts['epic'].rarity_name = '史诗';
-    texts['epic'].rarity_color = '#7c00ff';
     add_text_object(texts, 'legendary');
     texts['legendary'].rarity_name = '传说';
-    texts['legendary'].rarity_color = '#ff0000';
 }
 //武器装备的可装备位置描述
 function Equipment_wearing_position(texts) {

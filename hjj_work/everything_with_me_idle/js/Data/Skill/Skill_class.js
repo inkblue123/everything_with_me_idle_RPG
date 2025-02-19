@@ -5,8 +5,11 @@ export class Skill {
         this.id = id; //唯一id
         this.name = '未定义技能'; // 技能名称
         this.desc; // 技能描述
+        this.levelup_flag; //是否可以升级标记
+        this.base_exp; //第一级需要的经验
         this.max_level; // 最大等级上限
-        this.exp_need_level; // 经验需求量等级
+        this.levelup_algorithm; // 经验需求量等级
+
         this.type; //类型
         this.leveling_behavior = new Array(); //练级行为
         this.init_Skill_name_desc(id);
@@ -30,6 +33,11 @@ export class Skill {
                 this.desc = '未设定技能描述';
             }
         }
+    }
+    set_skill_levelup_data(base_exp, max_level, algorithm) {
+        if (base_exp) this.base_exp = base_exp;
+        if (max_level) this.max_level = max_level;
+        if (algorithm) this.levelup_algorithm = algorithm;
     }
 }
 //玩家被动技能

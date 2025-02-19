@@ -5,6 +5,7 @@ import { Player_attributes } from './Player_attributes.js';
 import { Player_backpack } from './Player_backpack.js';
 import { Player_worn } from './Player_worn_EQP.js';
 import { Player_active_skills_Manage } from './Player_active_skills.js';
+import { Player_skills } from './Player_skill.js';
 
 export class Player_Object {
     constructor() {
@@ -14,21 +15,27 @@ export class Player_Object {
         this.backpack_items = new Object();
         //穿戴的装备
         this.worn_EQP = new Object();
+        //拥有的全部技能
+        this.All_Skills = new Object();
         //已装载的主动技能
         this.ASkill_Manage = new Object();
     }
 
     init() {
-        this.attributes = new Player_attributes();
-        this.backpack_items = new Player_backpack();
-        this.worn_EQP = new Player_worn();
-        this.ASkill_Manage = new Player_active_skills_Manage();
         //初始化玩家属性
+        this.attributes = new Player_attributes();
         this.attributes.init();
+        //玩家背包
+        this.backpack_items = new Player_backpack();
         //初始化身上穿戴的装备
+        this.worn_EQP = new Player_worn();
         this.worn_EQP.init();
+        //玩家所有技能
+        this.All_Skills = new Player_skills();
         //初始化主动技能槽
+        this.ASkill_Manage = new Player_active_skills_Manage();
         this.ASkill_Manage.init();
+        //更新玩家属性
         this.updata_attr();
     }
     get_player_attributes() {
@@ -42,6 +49,9 @@ export class Player_Object {
     }
     get_player_ASkill_Manage() {
         return this.ASkill_Manage;
+    }
+    get_player_All_Skills() {
+        return this.All_Skills;
     }
     //给玩家背包添加物品，js版函数重载
     Player_get_item(...args) {
@@ -120,6 +130,7 @@ export class Player_Object {
         //玩家主动技能
         this.ASkill_Manage.run_player_active_skill();
         //玩家被动技能
+
         //玩家临时buff
     }
 }

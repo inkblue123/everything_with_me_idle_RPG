@@ -4,7 +4,7 @@ import { enums } from '../Data/Enum/Enum.js';
 import { Attack_effect } from '../GameRun/combat_class.js';
 import { global } from '../GameRun/global_class.js';
 import { isEmptyObject } from '../Function/Function.js';
-import { get_Askill_base_attr } from '../Function/math_func.js';
+import { get_Askill_base_attr, Askill_effect_algorithm } from '../Function/math_func.js';
 import { get_object_only_key } from '../Function/Get_func.js';
 
 const MAX_slot_num = 9;
@@ -20,7 +20,6 @@ export class Player_active_skills_Manage {
     constructor() {
         this.active_slot_num; //主动技能槽数量
         this.active_slots = new Object(); //主动技能槽内容
-        this.player_end_attr = new Object(); //角色最终属性
 
         this.round_start_time; //当前回合开始时间
         this.now_time; //当前时间
@@ -213,7 +212,7 @@ export class Player_active_skills_Manage {
             }
             if (weapon_damage_type_flag == false) flag = false;
         }
-        //武器伤害类型判定
+        //武器类型判定
         if (active_condition.weapon_type) {
             let weapon_type_flag = false;
             for (let pw of this.player_end_attr['weapon_type']) {
@@ -236,11 +235,14 @@ export class Player_active_skills_Manage {
         }
         let id = this.active_slots[start_slot].id;
         let slot_num = this.active_slots[start_slot].slot_num;
+        //记录使用了哪个技能
+        this.main_Attack.id = id;
         //计算主动技能需要的玩家属性
         let askill_base_attr = get_Askill_base_attr(P_skills[id].base_attr[slot_num], this.player_end_attr);
         //计算主动技能应该得到的效果
-        let Askill_algorithm = P_skills[id].algorithm[slot_num];
-        Askill_algorithm(askill_base_attr, this.main_Attack);
+        let Askill_algorithm_id = P_skills[id].algorithm[slot_num];
+        Askill_effect_algorithm(Askill_algorithm_id, askill_base_attr, this.main_Attack);
+        // Askill_algorithm(askill_base_attr, this.main_Attack);
         //计算玩家装备的额外效果
         if (0) {
         }

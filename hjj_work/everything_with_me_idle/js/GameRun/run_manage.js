@@ -52,7 +52,11 @@ function updata_combat() {
     global.run_game_FPS();
     //战斗结果
     let combat_manage = global.get_combat_manage();
-    combat_manage.run_conbat();
+    combat_manage.run_combat();
+    //结算战斗产生的经验
+    let exp_manage = global.get_exp_manage();
+    exp_manage.set_leveling_behavior();
+    exp_manage.player_get_exp();
     //刷出新怪
     global.add_new_enemy();
 }
