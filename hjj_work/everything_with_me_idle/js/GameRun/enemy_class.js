@@ -169,9 +169,9 @@ export class Enemy_manage {
         this.combat_place_enemys = new Object();
     }
     init() {
-        this.combat_place_enemys['near_enemy_field'] = new Array();
-        this.combat_place_enemys['in_enemy_field'] = new Array();
-        this.combat_place_enemys['far_enemy_field'] = new Array();
+        this.combat_place_enemys['little_distance'] = new Array();
+        this.combat_place_enemys['middle_distance'] = new Array();
+        this.combat_place_enemys['remote_distance'] = new Array();
         for (let key in this.combat_place_enemys) {
             let field = this.combat_place_enemys[key];
             for (let i = 0; i < 9; i++) {
@@ -253,9 +253,9 @@ export class Enemy_manage {
         } else if (places[this.now_place].add_enemy_type == 'random') {
             //地点不约束，随机刷新
             place_x = get_random(1, 3);
-            if (place_x == 1) place_x = 'near_enemy_field';
-            if (place_x == 2) place_x = 'in_enemy_field';
-            if (place_x == 3) place_x = 'far_enemy_field';
+            if (place_x == 1) place_x = 'little_distance';
+            if (place_x == 2) place_x = 'middle_distance';
+            if (place_x == 3) place_x = 'remote_distance';
             place_y = get_random(0, 8);
         }
 
@@ -275,7 +275,7 @@ export class Enemy_manage {
     }
     //在指定位置刷出一个敌人
     add_enemy(place_x, place_y, enemy_id) {
-        if (place_x != 'near_enemy_field' && place_x != 'in_enemy_field' && place_x != 'far_enemy_field') {
+        if (place_x != 'little_distance' && place_x != 'middle_distance' && place_x != 'remote_distance') {
             console.log(`add_enemy：输入的目标地点错误 ${place_x}`);
         }
         let field = this.combat_place_enemys[place_x];

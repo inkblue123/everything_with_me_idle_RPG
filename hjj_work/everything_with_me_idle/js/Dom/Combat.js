@@ -28,9 +28,9 @@ var Combat = crtElement('div', 'combat', null, '');
     MCP_player_head.innerHTML = '玩家';
     //敌人区域中，表示近中远三块区域的div
     let enemy_field = new Object();
-    enemy_field['near_enemy_field'] = addElement(MC_enemy_div, 'div', 'near_enemy_field', 'MCE_field_div');
-    enemy_field['in_enemy_field'] = addElement(MC_enemy_div, 'div', 'in_enemy_field', 'MCE_field_div');
-    enemy_field['far_enemy_field'] = addElement(MC_enemy_div, 'div', 'far_enemy_field', 'MCE_field_div');
+    enemy_field['little_distance'] = addElement(MC_enemy_div, 'div', 'little_distance', 'MCE_field_div');
+    enemy_field['middle_distance'] = addElement(MC_enemy_div, 'div', 'middle_distance', 'MCE_field_div');
+    enemy_field['remote_distance'] = addElement(MC_enemy_div, 'div', 'remote_distance', 'MCE_field_div');
     //给三块区域添加描述框和敌人所处格子
     for (let key in enemy_field) {
         let field_div = enemy_field[key];
@@ -50,11 +50,11 @@ var Combat = crtElement('div', 'combat', null, '');
             let enemy_head = addElement(enemy_show, 'div', null, 'enemy_head');
         }
     }
-    let field_div = enemy_field['near_enemy_field'];
+    let field_div = enemy_field['little_distance'];
     field_div.children[0].innerHTML = '近距离';
-    field_div = enemy_field['in_enemy_field'];
+    field_div = enemy_field['middle_distance'];
     field_div.children[0].innerHTML = '中距离';
-    field_div = enemy_field['far_enemy_field'];
+    field_div = enemy_field['remote_distance'];
     field_div.children[0].innerHTML = '远距离';
     //展示玩家的主动技能槽的部分
     var active_slot_div = addElement(combat_option_div, 'div', 'active_slot_div', null);

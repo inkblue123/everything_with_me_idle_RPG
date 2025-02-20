@@ -12,27 +12,41 @@ export class Skill {
 
         this.type; //类型
         this.leveling_behavior = new Array(); //练级行为
-        this.init_Skill_name_desc(id);
+        this.init_Skill_name(id);
     }
 
-    //调用文本数据库中的技能名称和描述
-    init_Skill_name_desc(id) {
-        if (texts[id] === undefined) {
+    //调用文本数据库中的技能名称
+    init_Skill_name(id) {
+        if (texts[id] == undefined || texts[id].skill_name == undefined) {
             //尚未定义
             this.name = '未命名技能';
-            this.desc = '未设定技能描述';
         } else {
-            if (texts[id].Skill_name) {
-                this.name = texts[id].Skill_name;
-            } else {
-                this.name = '未命名技能';
-            }
-            if (texts[id].Skill_desc) {
-                this.desc = texts[id].Skill_desc;
-            } else {
-                this.desc = '未设定技能描述';
-            }
+            this.name = texts[id].skill_name;
         }
+    }
+    //自动调用技能参数，为每一个槽中的技能生成描述
+    init_skill_desc() {
+        for (let i = 0; i < this.need_slot_num; i++) {
+            //
+            let desc;
+            let flag = true;
+            let active_type = this.active_type[i];
+            if (this.active_type[i]) {
+                this.create_attack_skill_desc();
+                desc = '对';
+            } else {
+                //缺少必要参数，中止这个槽的描述生成
+                desc = '缺少技能类型，无法生成描述';
+                flag = false;
+            }
+            // 对近距离敌人造成一次近战伤害;
+            this.desc.push(desc);
+        }
+    }
+    //手动输入参数，为每个槽中的技能生成描述
+    set_skill_desc() {}
+    create_attack_skill_desc(i) {
+        //
     }
     set_skill_levelup_data(base_exp, max_level, algorithm) {
         if (base_exp) this.base_exp = base_exp;

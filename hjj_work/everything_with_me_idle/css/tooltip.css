@@ -47,12 +47,16 @@
     font-size: 15px;
     text-align: right;
 }
-/* 每行3列的表格布局 */
-.table_3_div {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    /* 元素之间的间隔 */
-    /* gap: 10px;  */
+/* 展示主动技能n个槽的父div */
+.slot_div {
+    display: flex; /* 启用 Flexbox 布局 */
+    width: 100%; /* 父容器占满父元素的宽度 */
+}
+/* 展示主动技能一个槽的div */
+.slot_value_div {
+    flex: 1; /* 每个子布局宽度均分 */
+    text-align: center; /* 可选：使子布局内容居中 */
+    border: 1px solid #ccc; /* 可选：给子布局添加边框，方便查看 */
 }
 /* 表格布局中的每个元素 */
 /* 每个元素只给右侧画线，专门为第3n + 1个元素左右都画线，实现表格内的样式 */
@@ -67,7 +71,7 @@
     position: relative;
 }
 /* 第3n + 1个元素左右都画线 */
-.table_3_div .table_3_value:nth-child(3n + 1) {
+.page_columns_111 .table_3_value:nth-child(3n + 1) {
     border-inline: 1px solid darkgrey;
 }
 

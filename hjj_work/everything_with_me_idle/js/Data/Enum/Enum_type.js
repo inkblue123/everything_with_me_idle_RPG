@@ -32,7 +32,7 @@ function init_Enum_type(enums) {
     id = 'recovery'; //恢复型
     add_Enum_Object(enums, id);
     enums[id].active_show_color = '#00ff00'; //绿色
-    id = 'fuzhu'; //辅助型
+    id = 'auxiliary'; //辅助型
     add_Enum_Object(enums, id);
     enums[id].active_show_color = '#673ab7'; //紫色
 }

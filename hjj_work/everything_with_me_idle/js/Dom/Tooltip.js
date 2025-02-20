@@ -1,5 +1,6 @@
 import { crtElement, addElement, empty_dom } from '../Function/Dom_function.js';
 import { get_object_only_key } from '../Function/Get_func.js';
+import { isEmptyObject } from '../Function/Function.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
@@ -193,7 +194,7 @@ function show_equipment_wearing_position(show_item) {
 //追加展示装备属性
 function show_equipment_attr(show_item) {
     let id = show_item.id;
-    let attr_div = addElement(Tooltip, 'div', null, 'table_3_div');
+    let attr_div = addElement(Tooltip, 'div', null, 'page_columns_111');
     for (let attr in items[id].equip_attr) {
         if (items[id].equip_attr[attr] != 0) {
             let TLV_div = addElement(attr_div, 'div', null, 'table_3_value');
@@ -273,15 +274,26 @@ function show_material_source_use(show_item) {}
 function init_active_skill_tip(active_skill) {
     let id = active_skill.id;
     let slot_num = active_skill.slot_num;
+    if (isEmptyObject(P_skills[id])) {
+        //技能库没有相关内容，简单展示信息
+        let name = addElement(Tooltip, 'div', null, 'lable_down');
+        name.innerHTML = '未定义技能';
+        let desc = addElement(Tooltip, 'div', null, 'lable_down');
+        desc.innerHTML = '技能id为 : ' + id;
+        return false;
+    }
     //创造主动技能展示的布局
-    Tooltip.style.width = `${4 * TOOLTIP_WIDTH}px`;
-    // Tooltip.style.width = `${P_skills[id].need_slot_num * TOOLTIP_WIDTH}px`;
+    // Tooltip.style.width = `${2 * TOOLTIP_WIDTH}px`;
+    Tooltip.style.width = `${P_skills[id].need_slot_num * TOOLTIP_WIDTH}px`;
+    let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
+    name_lable.innerHTML = P_skills[id].name;
+    let slot_div = addElement(Tooltip, 'div', null, 'slot_div');
+    // for (let i = 1; i <= 2; i++) {
     for (let i = 1; i <= P_skills[id].need_slot_num; i++) {
-        // let attr_div = addElement(Tooltip, 'div', null, 'table_3_div');
+        let slot_value_div = addElement(slot_div, 'div', null, 'slot_value_div');
         //展示物品的名称和描述
-        if (!show_active_skill_name_desc(active_skill)) {
-            return false; //异常物品，中止展示
-        }
+        let desc = addElement(slot_value_div, 'div', null, 'lable_down');
+        desc.innerHTML = P_skills[id].desc;
     }
     // //根据物品的大类别，追加展示额外的信息
     // if (items[player_item.id].main_type.includes('equipment')) {

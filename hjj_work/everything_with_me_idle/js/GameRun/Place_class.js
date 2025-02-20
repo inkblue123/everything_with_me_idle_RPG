@@ -16,9 +16,9 @@ export class Place_manage {
         this.combat_place_enemys = new Object();
     }
     init() {
-        this.combat_place_enemys['near_enemy_field'] = new Array();
-        this.combat_place_enemys['in_enemy_field'] = new Array();
-        this.combat_place_enemys['far_enemy_field'] = new Array();
+        this.combat_place_enemys['little_distance'] = new Array();
+        this.combat_place_enemys['middle_distance'] = new Array();
+        this.combat_place_enemys['remote_distance'] = new Array();
         for (let key in this.combat_place_enemys) {
             let field = this.combat_place_enemys[key];
             for (let i = 0; i < 9; i++) {
@@ -60,7 +60,7 @@ export class Place_manage {
         return enemy_num;
     }
     add_enemy(place_x, place_y, enemy_id) {
-        if (place_x != 'near_enemy_field' && place_x != 'in_enemy_field' && place_x != 'far_enemy_field') {
+        if (place_x != 'little_distance' && place_x != 'middle_distance' && place_x != 'remote_distance') {
             console.log(`add_enemy：输入的目标地点错误 ${place_x}`);
         }
         let field = this.combat_place_enemys[place_x];

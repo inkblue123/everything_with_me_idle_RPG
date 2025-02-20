@@ -19,48 +19,48 @@ function get_Askill_base_attr(base_attr, player_end_attr) {
 function get_random_enemy_distance(place_x, place_y) {
     let min;
     let max;
-    if (place_x == 'near_enemy_field') {
+    if (place_x == 'little_distance') {
         //在近距离区域的敌人
         min = 0;
-        max = 99;
+        max = 100;
         if (place_y % 3 == 0) {
             min = 0;
-            max = 29;
+            max = 30;
         } else if (place_y % 3 == 1) {
-            min = 30;
-            max = 59;
+            min = 31;
+            max = 60;
         } else if (place_y % 3 == 2) {
-            min = 60;
-            max = 99;
+            min = 61;
+            max = 100;
         }
     }
-    if (place_x == 'in_enemy_field') {
+    if (place_x == 'middle_distance') {
         //在中距离区域的敌人
-        min = 100;
-        max = 199;
+        min = 101;
+        max = 200;
         if (place_y % 3 == 0) {
-            min = 100;
-            max = 129;
+            min = 101;
+            max = 130;
         } else if (place_y % 3 == 1) {
-            min = 130;
-            max = 159;
+            min = 131;
+            max = 160;
         } else if (place_y % 3 == 2) {
-            min = 160;
-            max = 199;
+            min = 161;
+            max = 200;
         }
     }
-    if (place_x == 'far_enemy_field') {
+    if (place_x == 'remote_distance') {
         //在远距离区域的敌人
-        min = 200;
+        min = 201;
         max = 300;
         if (place_y % 3 == 0) {
-            min = 200;
-            max = 229;
+            min = 201;
+            max = 230;
         } else if (place_y % 3 == 1) {
-            min = 230;
-            max = 259;
+            min = 231;
+            max = 260;
         } else if (place_y % 3 == 2) {
-            min = 260;
+            min = 261;
             max = 300;
         }
     }
