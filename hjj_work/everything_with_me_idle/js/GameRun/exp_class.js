@@ -8,7 +8,7 @@ export class Attack_effect {
         this.id;
         this.lock_enemy_type = new Object(); //索敌逻辑
 
-        this.number_times = 0; //攻击次数
+        this.attack_num = 0; //攻击次数
         this.base_damage = 0; //攻击基础伤害
         this.precision = 0; //精准
         this.critical_chance = 0; //暴击率

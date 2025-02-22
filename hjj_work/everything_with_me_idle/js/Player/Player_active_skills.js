@@ -135,19 +135,16 @@ export class Player_active_skills_Manage {
         this.deputy_Attack = new Attack_effect();
         this.deputy_Attack = new Attack_effect();
         if (!isEmptyObject(this.player_end_attr)) {
-            this.main_Attack.number_times = 1;
             this.main_Attack.base_damage = this.player_end_attr['attack'];
             this.main_Attack.precision = this.player_end_attr['precision'];
             this.main_Attack.critical_chance = this.player_end_attr['critical_chance'];
             this.main_Attack.critical_damage = this.player_end_attr['critical_damage'];
 
-            this.deputy_Attack.number_times = 1;
             this.deputy_Attack.base_damage = this.player_end_attr['attack'];
             this.deputy_Attack.precision = this.player_end_attr['precision'];
             this.deputy_Attack.critical_chance = this.player_end_attr['critical_chance'];
             this.deputy_Attack.critical_damage = this.player_end_attr['critical_damage'];
 
-            this.other_Attack.number_times = 1;
             this.other_Attack.base_damage = this.player_end_attr['attack'];
             this.other_Attack.precision = this.player_end_attr['precision'];
             this.other_Attack.critical_chance = this.player_end_attr['critical_chance'];
@@ -200,32 +197,49 @@ export class Player_active_skills_Manage {
         let flag = true;
         let active_condition = P_skills[id].active_condition;
         //武器伤害类型判定
-        if (active_condition.weapon_damage_type) {
-            let weapon_damage_type_flag = false;
-            for (let pw of this.player_end_attr['weapon_type']) {
-                let damage_type = enums.weapon_damage_type[pw];
-                if (active_condition.weapon_damage_type.includes(damage_type)) {
-                    //伤害类型判定成功
-                    weapon_damage_type_flag = true;
-                    break;
-                }
-            }
-            if (weapon_damage_type_flag == false) flag = false;
-        }
+        // if (active_condition.weapon_damage_type) {
+        //     let weapon_damage_type_flag = false;
+        //     for (let pw of this.player_end_attr['weapon_type']) {
+        //         let damage_type = enums.weapon_damage_type[pw];
+        //         if (active_condition.weapon_damage_type.includes(damage_type)) {
+        //             //伤害类型判定成功
+        //             weapon_damage_type_flag = true;
+        //             break;
+        //         }
+        //     }
+        //     if (weapon_damage_type_flag == false) flag = false;
+        // }
         //武器类型判定
         if (active_condition.weapon_type) {
             let weapon_type_flag = false;
-            for (let pw of this.player_end_attr['weapon_type']) {
-                if (active_condition.weapon_type.includes(pw)) {
-                    //武器类型判定成功
-                    weapon_type_flag = true;
+            for (let skw of active_condition.weapon_type) {
+                if (enums['damage_type'].includes(skw)) {
+                    //如果限制条件是伤害类型，遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
+                    for (let pw of this.player_end_attr['weapon_type']) {
+                        let p_damage_type = enums.weapon_damage_type[pw];
+                        if (skw == p_damage_type) {
+                            weapon_type_flag = true;
+                            break;
+                        }
+                    }
+                    if (weapon_type_flag) {
+                        break;
+                    }
+                } else if (enums['equipment_type'].includes(skw)) {
+                    //如果限制条件是武器类型，遍历每种玩家武器，找到一样的就算成功
+                    if (this.player_end_attr['weapon_type'].includes(skw)) {
+                        weapon_type_flag = true;
+                        break;
+                    }
+                } else {
+                    console.log('该技能的武器类型限制条件填写错误');
                     break;
                 }
             }
             if (weapon_type_flag == false) flag = false;
-        }
 
-        return flag;
+            return flag;
+        }
     }
     //激活玩家的第i个主动技能
     start_player_active(start_slot) {
@@ -237,17 +251,21 @@ export class Player_active_skills_Manage {
         let slot_num = this.active_slots[start_slot].slot_num;
         //记录使用了哪个技能
         this.main_Attack.id = id;
-        //计算主动技能需要的玩家属性
-        let askill_base_attr = get_Askill_base_attr(P_skills[id].base_attr[slot_num], this.player_end_attr);
-        //计算主动技能应该得到的效果
-        let Askill_algorithm_id = P_skills[id].algorithm[slot_num];
-        Askill_effect_algorithm(Askill_algorithm_id, askill_base_attr, this.main_Attack);
-        // Askill_algorithm(askill_base_attr, this.main_Attack);
-        //计算玩家装备的额外效果
-        if (0) {
-        }
         //根据主动技能类型，产生这次效果
         if (P_skills[id].active_type[slot_num] == 'attack') {
+            //处理攻击类技能特有的内容
+            //攻击次数
+            if (P_skills[id].attack_num[slot_num].type == 'add') {
+                this.main_Attack.attack_num += P_skills[id].attack_num[slot_num].num;
+            } else if (P_skills[id].attack_num[slot_num].type == 'fixed') {
+                this.main_Attack.attack_num == P_skills[id].attack_num[slot_num].num;
+            }
+            //计算主动技能需要的玩家属性
+            let askill_base_attr = get_Askill_base_attr(P_skills[id].base_attr[slot_num], this.player_end_attr);
+            //计算攻击效果
+            let Askill_algorithm_id = P_skills[id].algorithm[slot_num];
+            Askill_effect_algorithm(Askill_algorithm_id, askill_base_attr, this.main_Attack);
+            //计算玩家装备的额外效果
             //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
             let combat_manage = global.get_combat_manage();
             combat_manage.set_player_next_attack(this.main_Attack);

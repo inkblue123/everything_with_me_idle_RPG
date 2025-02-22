@@ -8,7 +8,7 @@ export class Attack_effect {
         this.id;
         this.lock_enemy_type = new Object(); //索敌逻辑
 
-        this.number_times = 0; //攻击次数
+        this.attack_num = 0; //攻击次数
         this.base_damage = 0; //攻击基础伤害
         this.precision = 0; //精准
         this.critical_chance = 0; //暴击率
@@ -23,11 +23,6 @@ export class P_Attack_effect {
         this.main_Attack = new Attack_effect();
         this.deputy_Attack = new Attack_effect();
         this.other_Attack = new Attack_effect();
-        // this.number_times = 0; //攻击次数
-        // this.base_damage = 0; //攻击基础伤害
-        // this.precision = 0; //精准
-        // this.critical_chance = 0; //暴击率
-        // this.critical_damage = 0; //暴击伤害
     }
 }
 
@@ -88,7 +83,7 @@ export class Combat_manage {
         let end_attack_damage = 0;
         let end_attack_num = 0;
         for (let i = 0; i < enemys.length; i++) {
-            for (let j = 0; j < this.player_Attack.main_Attack.number_times; j++) {
+            for (let j = 0; j < this.player_Attack.main_Attack.attack_num; j++) {
                 if (enemys[i].health_point < this.player_Attack.main_Attack.base_damage) {
                     end_attack_damage += enemys[i].health_point;
                     enemys[i].health_point = 0;
@@ -102,7 +97,7 @@ export class Combat_manage {
                 }
             }
         }
-        end_attack_num = this.player_Attack.main_Attack.number_times;
+        end_attack_num = this.player_Attack.main_Attack.attack_num;
         //结算经验
         let exp_manage = global.get_exp_manage();
         exp_manage.set_Active_skill_exp(this.player_Attack.main_Attack.id, end_attack_damage);
@@ -113,7 +108,7 @@ export class Combat_manage {
         let P_attr = player.get_player_attributes();
         //处理这一帧每个敌人的攻击
         for (let i = 0; i < this.enemy_Attacks.length; i++) {
-            for (let j = 0; j < this.enemy_Attacks[i].number_times; j++) {
+            for (let j = 0; j < this.enemy_Attacks[i].attack_num; j++) {
                 P_attr.health_point -= this.enemy_Attacks[i].base_damage;
             }
             //玩家生命归零，进入死亡逻辑

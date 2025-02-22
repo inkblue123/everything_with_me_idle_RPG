@@ -58,7 +58,23 @@
     text-align: center; /* 可选：使子布局内容居中 */
     border: 1px solid #ccc; /* 可选：给子布局添加边框，方便查看 */
 }
-/* 表格布局中的每个元素 */
+/* 每行2列表格布局中的每个元素 */
+/* 每个元素只给右侧画线，专门为第3n + 1个元素左右都画线，实现表格内的样式 */
+.table_2_value {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px 0;
+    writing-mode: horizontal-tb;
+    border-right: 1px solid darkgrey;
+    border-bottom: 1px solid darkgrey;
+    text-align: center;
+    position: relative;
+}
+/* 第3n + 1个元素左右都画线 */
+.page_columns_11 .table_2_value:nth-child(2n + 1) {
+    border-inline: 1px solid darkgrey;
+}
+/* 每行3列表格布局中的每个元素 */
 /* 每个元素只给右侧画线，专门为第3n + 1个元素左右都画线，实现表格内的样式 */
 .table_3_value {
     display: flex;
@@ -74,8 +90,22 @@
 .page_columns_111 .table_3_value:nth-child(3n + 1) {
     border-inline: 1px solid darkgrey;
 }
-
-/* 可选：调整最后一行的间距 */
-/* .container > .item:nth-last-child(-n + 3) {
-    border-bottom: none; 
-} */
+/* 容纳一个主动技能限制条件的div */
+.condition_value_div {
+    display: flex; /* 启用 Flexbox 布局 */
+    width: 100%; /* 父容器占满父元素的宽度 */
+    border: 1px solid darkgrey;
+    /* border-bottom: solid 1px darkgrey; */
+}
+/* 当前限制条件是否满足的标记 */
+.condition_flag_div {
+    display: flex;
+    width: 15%;
+    border: 1px solid darkgrey;
+}
+/* 当前限制条件的描述 */
+.condition_desc_div {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+}

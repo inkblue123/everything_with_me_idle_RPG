@@ -302,6 +302,7 @@ function init_Enum_equipment(enums) {
         'deputy', //副手装备
         'ornament', //饰品
     ];
+    //装备类型及其对应的伤害类型
     add_Enum_Object(enums, 'weapon_damage_type');
     enums.weapon_damage_type = {
         //近战
@@ -327,6 +328,9 @@ function init_Enum_equipment(enums) {
         spread_core: 'magic',
         summon_core: 'magic',
     };
+    add_Enum_Array(enums, 'damage_type');
+    enums.damage_type = ['melee', 'ranged', 'magic'];
+
     //设置每种装备类型的属性倾向
     set_equipment_type_attr_Presets(enums);
     //设置每种等级的属性预设

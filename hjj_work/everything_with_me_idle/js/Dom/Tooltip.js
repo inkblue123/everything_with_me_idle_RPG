@@ -286,42 +286,88 @@ function init_active_skill_tip(active_skill) {
     // Tooltip.style.width = `${2 * TOOLTIP_WIDTH}px`;
     Tooltip.style.width = `${P_skills[id].need_slot_num * TOOLTIP_WIDTH}px`;
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
-    name_lable.innerHTML = P_skills[id].name;
+    name_lable.innerHTML = P_skills[id].name; //技能名
     let slot_div = addElement(Tooltip, 'div', null, 'slot_div');
     // for (let i = 1; i <= 2; i++) {
-    for (let i = 1; i <= P_skills[id].need_slot_num; i++) {
+    for (let i = 0; i < P_skills[id].need_slot_num; i++) {
         let slot_value_div = addElement(slot_div, 'div', null, 'slot_value_div');
         //展示物品的名称和描述
         let desc = addElement(slot_value_div, 'div', null, 'lable_down');
-        desc.innerHTML = P_skills[id].desc;
+        desc.innerHTML = P_skills[id].desc[i]; //这个槽的技能描述
+        //追加展示技能类型-伤害类型信息
+        // show_active_skill_type(slot_value_div, id, slot_num);
+        //追加展示技能的限制条件
+        show_active_skill_condition(slot_value_div, id, slot_num);
+        //追加展示技能的属性补正
+        show_active_skill_attr_correct(slot_value_div, id, slot_num);
     }
-    // //根据物品的大类别，追加展示额外的信息
-    // if (items[player_item.id].main_type.includes('equipment')) {
-    //     show_equipment(player_item);
-    // } else if (items[player_item.id].main_type.includes('material')) {
-    //     show_material(player_item);
-    // }
 }
-//展示技能的名称和描述
-function show_active_skill_name_desc(active_skill) {
-    let item_id = active_skill.id;
+//展示技能的类型
+function show_active_skill_type(slot_value_div, id, slot_num) {
+    let type_div = addElement(slot_value_div, 'div', null, 'page_columns_11');
+    let active_type_div = addElement(type_div, 'div', null, 'lable_end');
+    let T_value = addElement(type_div, 'div', null, 'lable_end');
+    let active_type = P_skills[id].active_type[slot_num];
+    active_type_div.innerHTML = texts[active_type].active_type_name; //这个槽的技能类型
 
-    // if (P_skills[item_id] === undefined) {
-    //     let label = addElement(Tooltip, 'div', null, 'lable_down');
-    //     label.innerHTML = '未定义物品';
-    //     let text = addElement(Tooltip, 'div', null, 'lable_down');
-    //     text.innerHTML = '物品id为 : ' + item_id;
-    //     return false;
-    // }
-    // let label = addElement(Tooltip, 'div', null, 'lable_down');
-    // if (P_skills[player_item.id].main_type.includes('equipment')) {
-    //     //为装备的名称上色
-    //     let rarity = get_object_only_key(player_item.rarity);
-    //     label.style.color = enums[rarity].rarity_color;
-    // }
-    // label.innerHTML = P_skills[item_id].name; //物品名称
-    // let text = addElement(Tooltip, 'div', null, 'lable_down');
-    // text.innerHTML = P_skills[item_id].desc; //物品描述
+    return true;
+}
+//展示技能的限制条件
+function show_active_skill_condition(slot_value_div, id, slot_num) {
+    let condition_name_div = addElement(slot_value_div, 'div', null, 'lable_down');
+    condition_name_div.innerHTML = '限制条件';
+    let condition_value_div = addElement(slot_value_div, 'div', null, 'page_columns_11');
+    for (let condition_key in P_skills[id].active_condition) {
+        let C_value_div = addElement(condition_value_div, 'div', null, 'condition_value_div');
+        let C_flag_div = addElement(C_value_div, 'div', null, 'condition_flag_div');
+        let C_desc_div = addElement(C_value_div, 'div', null, 'condition_desc_div');
+
+        if (condition_key == 'weapon_type') {
+            //武器类型限制
+            C_desc_div.innerHTML = '手持武器：';
+            let AC_WT = P_skills[id].active_condition.weapon_type;
+            if (isEmptyObject(AC_WT)) {
+                C_desc_div.innerHTML += '未设定';
+                console.log(`没设定${id}技能的武器类型限制条件`);
+            } else {
+                for (let i in AC_WT) {
+                    let w_type = AC_WT[i];
+                    if (enums['damage_type'].includes(w_type)) {
+                        //如果限制条件是伤害类型
+                        if (i == 0) {
+                            C_desc_div.innerHTML += texts['damage_type'].skill_desc[w_type] + '武器';
+                        } else {
+                            C_desc_div.innerHTML += '、' + texts['damage_type'].skill_desc[w_type] + '武器';
+                        }
+                    } else if (enums['equipment_type'].includes(w_type)) {
+                        //如果限制条件是武器类型
+                        if (i == 0) {
+                            C_desc_div.innerHTML += texts['type_name'].type_name;
+                        } else {
+                            C_desc_div.innerHTML += '、' + texts['type_name'].type_name;
+                        }
+                    } else {
+                        console.log('该技能的武器类型限制条件填写错误');
+                        break;
+                    }
+                }
+            }
+        }
+        // else if (condition_key == '') {
+        //     //其他限制条件
+        // }
+    }
+
+    return true;
+}
+//追加展示技能的属性补正
+function show_active_skill_attr_correct(slot_value_div, id, slot_num) {
+    let correct_name_div = addElement(slot_value_div, 'div', null, 'lable_down');
+    correct_name_div.innerHTML = '属性补正';
+    let correct_value_div = addElement(slot_value_div, 'div', null, 'page_columns_11');
+    for (let correct_key in P_skills[id].base_attr) {
+        let C_value_div = addElement(correct_value_div, 'div', null, 'table_2_value');
+    }
     return true;
 }
 export { Tooltip };

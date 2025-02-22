@@ -1,10 +1,11 @@
 import { texts } from '../Text/Text.js';
+import { isEmptyObject } from '../../Function/Function.js';
 
 export class Skill {
     constructor(id) {
         this.id = id; //唯一id
         this.name = '未定义技能'; // 技能名称
-        this.desc; // 技能描述
+        this.desc = new Array(); // 技能描述
         this.levelup_flag; //是否可以升级标记
         this.base_exp; //第一级需要的经验
         this.max_level; // 最大等级上限
@@ -29,24 +30,53 @@ export class Skill {
         for (let i = 0; i < this.need_slot_num; i++) {
             //
             let desc;
-            let flag = true;
             let active_type = this.active_type[i];
             if (this.active_type[i]) {
-                this.create_attack_skill_desc();
-                desc = '对';
+                desc = this.create_attack_skill_desc(i);
             } else {
                 //缺少必要参数，中止这个槽的描述生成
                 desc = '缺少技能类型，无法生成描述';
-                flag = false;
             }
-            // 对近距离敌人造成一次近战伤害;
             this.desc.push(desc);
         }
     }
     //手动输入参数，为每个槽中的技能生成描述
     set_skill_desc() {}
+    //创造攻击型技能的描述
     create_attack_skill_desc(i) {
-        //
+        //对{距离}的{索敌方式}个敌人造成{攻击次数}次{伤害类型}伤害
+        let desc = '对';
+        //距离
+        //没有开发距离设定
+
+        //索敌方式
+        if (isEmptyObject(this.lock_enemy_type)) {
+            desc = '缺少索敌方式，无法生成描述';
+            return desc;
+        }
+        let distance = this.lock_enemy_type.distance;
+        desc = desc + texts['lock_enemy_distance'].skill_desc[distance] + '的';
+        let num = this.lock_enemy_type.num;
+        desc = desc + num + '个敌人';
+
+        //攻击次数
+        if (isEmptyObject(this.attack_num)) {
+            desc = '缺少攻击次数，无法生成描述';
+            return desc;
+        }
+        if (this.attack_num[i].type == 'fixed') {
+            desc = desc + '固定造成' + this.attack_num[i].num + '次';
+        } else if (this.attack_num[i].type == 'add') {
+            desc = desc + '造成' + this.attack_num[i].num + '次';
+        }
+        //伤害类型
+        if (isEmptyObject(this.damage_type)) {
+            desc = '缺少伤害类型，无法生成描述';
+            return desc;
+        }
+        let damage_type = this.damage_type[i];
+        desc = desc + texts['damage_type'].skill_desc[damage_type] + '伤害';
+        return desc;
     }
     set_skill_levelup_data(base_exp, max_level, algorithm) {
         if (base_exp) this.base_exp = base_exp;

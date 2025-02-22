@@ -43,13 +43,6 @@ html {
     /* 自动调整列数，每列至少100px，最大宽度为可用空间 */
     grid-template-columns: repeat(4, 1fr);
 }
-/* 每行1列的布局 */
-.page_columns_1 {
-    display: grid;
-    grid-template-columns: 1fr;
-    /* grid-template-rows: 1fr 1fr; */
-    /* grid-gap: 0; */
-}
 /* 每行1列，共2行的布局 */
 .page_rows_11 {
     display: grid;
@@ -62,6 +55,13 @@ html {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     height: 100%;
+    /* grid-gap: 0; */
+}
+/* 每行1列的布局 */
+.page_columns_1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* grid-template-rows: 1fr 1fr; */
     /* grid-gap: 0; */
 }
 

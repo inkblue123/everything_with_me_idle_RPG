@@ -144,6 +144,7 @@ function attr_type(texts) {
     texts['attack_speed'].min_attr_name = '攻速';
     add_text_object(texts, 'defense');
     texts['defense'].attr_name = '防御';
+
     add_text_object(texts, 'evade');
     texts['evade'].attr_name = '闪避';
     add_text_object(texts, 'resistance_point');
@@ -196,6 +197,17 @@ function material_type(texts) {
     add_text_object(texts, 'for_alchemy');
     texts['for_alchemy'].source = '炼金';
 }
+//主动技能类型
+function active_type(texts) {
+    // add_text_object(texts, 'attack');
+    texts['attack'].active_type_name = '攻击型';
+    // add_text_object(texts, 'defense');
+    texts['defense'].active_type_name = '防御型';
+    add_text_object(texts, 'recovery');
+    texts['recovery'].active_type_name = '恢复型';
+    add_text_object(texts, 'auxiliary');
+    texts['auxiliary'].active_type_name = '辅助型';
+}
 //初始化文本数据库中与类型相关的文本
 function init_Text_type(texts) {
     //武器装备类型描述
@@ -208,5 +220,7 @@ function init_Text_type(texts) {
     attr_type(texts);
     //材料类型描述
     material_type(texts);
+    //主动技能类型描述
+    active_type(texts);
 }
 export { init_Text_type };
