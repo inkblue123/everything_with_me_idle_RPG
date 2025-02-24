@@ -1,7 +1,6 @@
 import { global } from './global_class.js';
 import { player } from '../Player/Player.js';
 import { isEmptyObject } from '../Function/Function.js';
-import { P_skills } from '../Data/Skill/Skill.js';
 
 export class Attack_effect {
     constructor() {

@@ -1,7 +1,6 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
-import { P_skills } from '../Data/Skill/Skill.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { places } from '../Data/Place/Place.js';
@@ -223,7 +222,7 @@ function updata_player_active_show() {
             add_show_Tooltip(player_active_div.children[i], 'active_skill', active_slots[i]); //添加鼠标移动之后展示该槽位设置的主动技能
 
             //战斗规划界面，主动技能规划展示框
-            let active_type = P_skills[skill_id].active_type[slot_num];
+            let active_type = active_slots[i].active_type;
             active_show_div.children[i].style.backgroundColor = enums[active_type].active_show_color;
             active_show_div.children[i].data = active_slots[i];
             add_show_Tooltip(active_show_div.children[i], 'active_skill', active_slots[i]); //添加鼠标移动之后展示该槽位设置的主动技能

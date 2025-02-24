@@ -9,7 +9,7 @@ function init_enemy_Active_skill(E_skills) {
     E_skills[id].active_condition = { weapon_damage_type: 'melee' }; //武器需要是近战类型
     E_skills[id].need_slot_num = 1; //需要几个技能槽
     E_skills[id].active_type = ['attack']; //攻击类型主动技能
-    E_skills[id].base_attr = [{ power: 1 }]; //哪些属性作为基础数值进行计算
+    E_skills[id].attr_correct = [{ power: 1 }]; //哪些属性作为基础数值进行计算
     E_skills[id].algorithm = [Askill_algorithm_1]; //使用哪个算法进行计算
     E_skills[id].start_time = ['end']; //结束时计算
     E_skills[id].lock_enemy_type = {

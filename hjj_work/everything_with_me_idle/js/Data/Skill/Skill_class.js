@@ -7,9 +7,6 @@ export class Skill {
         this.name = '未定义技能'; // 技能名称
         this.desc = new Array(); // 技能描述
         this.levelup_flag; //是否可以升级标记
-        this.base_exp; //第一级需要的经验
-        this.max_level; // 最大等级上限
-        this.levelup_algorithm; // 经验需求量等级
 
         this.type; //类型
         this.leveling_behavior = new Array(); //练级行为
@@ -25,63 +22,63 @@ export class Skill {
             this.name = texts[id].skill_name;
         }
     }
-    //自动调用技能参数，为每一个槽中的技能生成描述
+    //自动调用技能参数，生成技能描述
     init_skill_desc() {
-        for (let i = 0; i < this.need_slot_num; i++) {
-            //
-            let desc;
-            let active_type = this.active_type[i];
-            if (this.active_type[i]) {
-                desc = this.create_attack_skill_desc(i);
-            } else {
-                //缺少必要参数，中止这个槽的描述生成
-                desc = '缺少技能类型，无法生成描述';
-            }
-            this.desc.push(desc);
+        //
+        let desc;
+        if (this.active_type == 'attack') {
+            desc = this.create_attack_skill_desc();
+        } else {
+            //缺少必要参数，中止这个槽的描述生成
+            desc = '缺少技能类型，无法生成描述';
         }
+        this.desc = desc;
     }
     //手动输入参数，为每个槽中的技能生成描述
     set_skill_desc() {}
     //创造攻击型技能的描述
-    create_attack_skill_desc(i) {
+    create_attack_skill_desc() {
         //对{距离}的{索敌方式}个敌人造成{攻击次数}次{伤害类型}伤害
         let desc = '对';
         //距离
         //没有开发距离设定
 
         //索敌方式
-        if (isEmptyObject(this.lock_enemy_type)) {
+        let lock_enemy_type = this.effect.lock_enemy_type;
+        if (isEmptyObject(lock_enemy_type)) {
             desc = '缺少索敌方式，无法生成描述';
             return desc;
         }
-        let distance = this.lock_enemy_type.distance;
+        let distance = lock_enemy_type.distance;
         desc = desc + texts['lock_enemy_distance'].skill_desc[distance] + '的';
-        let num = this.lock_enemy_type.num;
+        let num = lock_enemy_type.num;
         desc = desc + num + '个敌人';
 
         //攻击次数
-        if (isEmptyObject(this.attack_num)) {
+        let attack_num = this.effect.attack_num;
+        if (isEmptyObject(attack_num)) {
             desc = '缺少攻击次数，无法生成描述';
             return desc;
         }
-        if (this.attack_num[i].type == 'fixed') {
-            desc = desc + '固定造成' + this.attack_num[i].num + '次';
-        } else if (this.attack_num[i].type == 'add') {
-            desc = desc + '造成' + this.attack_num[i].num + '次';
+        if (attack_num.type == 'fixed') {
+            desc = desc + '固定造成' + attack_num.num + '次';
+        } else if (attack_num.type == 'add') {
+            desc = desc + '造成' + attack_num.num + '次';
         }
         //伤害类型
-        if (isEmptyObject(this.damage_type)) {
+        let damage_type = this.effect.damage_type;
+        if (isEmptyObject(damage_type)) {
             desc = '缺少伤害类型，无法生成描述';
             return desc;
         }
-        let damage_type = this.damage_type[i];
         desc = desc + texts['damage_type'].skill_desc[damage_type] + '伤害';
         return desc;
     }
+    //设置通过经验升级的技能的相关参数
     set_skill_levelup_data(base_exp, max_level, algorithm) {
-        if (base_exp) this.base_exp = base_exp;
-        if (max_level) this.max_level = max_level;
-        if (algorithm) this.levelup_algorithm = algorithm;
+        if (base_exp) this.base_exp = base_exp; //第一级需要的经验
+        if (max_level) this.max_level = max_level; // 最大等级上限
+        if (algorithm) this.levelup_algorithm = algorithm; // 经验需求量算法
     }
 }
 //玩家被动技能
@@ -99,15 +96,13 @@ export class P_Active_skill extends Skill {
         super(id);
         this.type = 'Active';
         //主动技能
-        this.active_condition = new Object(); //激活这个技能需要满足的条件
-        this.lock_enemy_type = new Object(); //索敌方式
         this.need_slot_num; //需要几个技能槽
-        this.active_type = new Array(); //每个槽激活之后的类型，比如攻击/辅助
-        this.base_attr = new Array(); //每个槽使用哪些属性作为基础数值进行计算
-        this.algorithm = new Array(); //每个槽使用哪个算法进行计算
-        this.start_time = new Array(); //每个槽会在何时激活，比如开始时/结束时/持续激活
-
-        // this.active_effect = new Array(); //激活之后的效果
+        this.active_condition = new Object(); //激活这个技能需要满足的条件
+        this.active_type; //这个技能的类型，比如攻击/辅助
+        this.attr_correct = new Object(); //这个技能的属性补正
+        this.algorithm; //这个技能的属性计算算法
+        this.start_time; //这个技能的激活时间点，比如开始时/结束时/持续激活
+        this.effect = new Object(); //这个技能激活之后具体产生的效果
     }
 }
 //敌人主动技能
@@ -117,7 +112,7 @@ export class E_Active_skill extends Skill {
         this.type = 'enemy_Active';
         //主动技能
         this.active_type = new Array(); //每个槽激活之后的类型，比如攻击/辅助
-        this.base_attr = new Array(); //每个槽使用哪些属性作为基础数值进行计算
+        this.attr_correct = new Array(); //每个槽使用哪些属性作为基础数值进行计算
         this.algorithm = new Array(); //每个槽使用哪个算法进行计算
         this.start_time = new Array(); //每个槽会在何时激活，比如开始时/结束时/持续激活
     }

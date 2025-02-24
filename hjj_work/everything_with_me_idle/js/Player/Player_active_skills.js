@@ -1,5 +1,5 @@
 'use strict';
-import { P_skills } from '../Data/Skill/Skill.js';
+import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { Attack_effect } from '../GameRun/combat_class.js';
 import { global } from '../GameRun/global_class.js';
@@ -14,6 +14,26 @@ class Player_active_skill {
     constructor(id = 0) {
         this.id = id; //唯一技能id
         this.slot_num = 0; //这一个槽属于技能的第几个部分
+        // this.level;
+        // this.unlock_flag; //这个技能的解禁情况
+    }
+    //读取技能数据库，将详细参数拷贝到当前类中
+    init_active_skill_data() {
+        let id = this.id;
+        let slot_num = this.slot_num;
+        this.set_raw_skill_data(id, slot_num);
+    }
+    //读取技能数据库中的id技能slot_num槽位，将原始版本信息拷贝到这里
+    set_raw_skill_data(id, slot_num) {
+        //
+        let B_id = P_skills[id].need_slot_id[slot_num];
+        this.active_condition = B_skills[B_id].active_condition; //限制条件
+        this.active_type = B_skills[B_id].active_type; //辅助类型
+        this.attr_correct = B_skills[B_id].attr_correct; //哪些属性作为基础数值进行计算
+        this.algorithm = B_skills[B_id].algorithm; //使用哪个算法进行计算
+        this.start_time = B_skills[B_id].start_time; //结束时计算
+        this.effect = B_skills[B_id].effect; //技能效果
+        this.desc = B_skills[B_id].desc; //技能描述
     }
 }
 export class Player_active_skills_Manage {
@@ -81,7 +101,7 @@ export class Player_active_skills_Manage {
             }
         }
         if (flag == false) {
-            //主动技能槽已经被占据
+            //想使用的主动技能槽已经被占据
             //暂时算作设置失败
             return false;
         }
@@ -89,6 +109,7 @@ export class Player_active_skills_Manage {
         for (let i = 0; i < skill.need_slot_num; i++) {
             this.active_slots[slot_id + i] = new Player_active_skill(skill_id);
             this.active_slots[slot_id + i].slot_num = i;
+            this.active_slots[slot_id + i].init_active_skill_data();
         }
     }
     //获取所有主动技能槽的内容
@@ -154,61 +175,52 @@ export class Player_active_skills_Manage {
     //判断当前运行的槽中的技能是否准备就绪
     judge_active_start() {
         let now_run_slot = Math.floor(this.now_round_time / (this.player_end_attr.attack_speed * 1000));
+        let start_slot = -1;
         if (now_run_slot != this.last_run_slot) {
             for (let i = this.last_run_slot; i <= now_run_slot; i++) {
                 if (i == -1 || isEmptyObject(this.active_slots[i])) {
                     continue;
                 }
-                let id = this.active_slots[i].id;
-                let slot_num = this.active_slots[i].slot_num;
-                if (!this.judge_active_condition(id)) {
-                    //目前运行的技能不满足限定条件
-                    this.last_run_slot = i;
-                    continue;
-                }
-                let start_time = P_skills[id].start_time[slot_num];
+                let start_time = this.active_slots[i].start_time;
                 if (start_time == 'start') {
                     //当前技能应该在当前攻速时间的启动时激活
                     this.last_run_slot = i;
-                    return i;
+                    start_slot = i;
+                    break;
                 } else if (start_time == 'end') {
                     //当前技能应该在当前攻速时间的结束时激活，也就是下一个攻速时间的开始时
                     if (this.last_run_slot + 1 < now_run_slot) {
                         this.last_run_slot = i;
-                        return i;
+                        start_slot = i;
+                        break;
                     } else {
                         continue;
                     }
                 } else if (start_time == 'continued') {
                     //当前技能应该在当前攻速时间内全程激活
                     if (i == now_run_slot) {
-                        return i;
+                        start_slot = i;
+                        break;
                     } else {
                         this.last_run_slot = i;
                         continue;
                     }
                 }
             }
+            //判断即将运行的技能的限制条件是否满足
+            if (start_slot != -1) {
+                if (!this.judge_active_condition(start_slot)) {
+                    //目前运行的技能不满足限定条件
+                    start_slot = -1;
+                }
+            }
         }
-        return -1;
+        return start_slot;
     }
     //判断当前运行的槽中的技能是否满足激活条件
-    judge_active_condition(id) {
+    judge_active_condition(run_slot) {
         let flag = true;
-        let active_condition = P_skills[id].active_condition;
-        //武器伤害类型判定
-        // if (active_condition.weapon_damage_type) {
-        //     let weapon_damage_type_flag = false;
-        //     for (let pw of this.player_end_attr['weapon_type']) {
-        //         let damage_type = enums.weapon_damage_type[pw];
-        //         if (active_condition.weapon_damage_type.includes(damage_type)) {
-        //             //伤害类型判定成功
-        //             weapon_damage_type_flag = true;
-        //             break;
-        //         }
-        //     }
-        //     if (weapon_damage_type_flag == false) flag = false;
-        // }
+        let active_condition = this.active_slots[run_slot].active_condition;
         //武器类型判定
         if (active_condition.weapon_type) {
             let weapon_type_flag = false;
@@ -243,28 +255,29 @@ export class Player_active_skills_Manage {
     }
     //激活玩家的第i个主动技能
     start_player_active(start_slot) {
-        if (isEmptyObject(this.active_slots[start_slot])) {
+        let start_skill = this.active_slots[start_slot];
+        if (isEmptyObject(start_skill)) {
             //这个槽中没有技能，不运行
             return true;
         }
-        let id = this.active_slots[start_slot].id;
-        let slot_num = this.active_slots[start_slot].slot_num;
+        let id = start_skill.id;
         //记录使用了哪个技能
         this.main_Attack.id = id;
         //根据主动技能类型，产生这次效果
-        if (P_skills[id].active_type[slot_num] == 'attack') {
+        if (start_skill.active_type == 'attack') {
             //处理攻击类技能特有的内容
+            let effect = start_skill.effect;
             //攻击次数
-            if (P_skills[id].attack_num[slot_num].type == 'add') {
-                this.main_Attack.attack_num += P_skills[id].attack_num[slot_num].num;
-            } else if (P_skills[id].attack_num[slot_num].type == 'fixed') {
-                this.main_Attack.attack_num == P_skills[id].attack_num[slot_num].num;
+            if (effect.attack_num.type == 'add') {
+                this.main_Attack.attack_num += effect.attack_num.num;
+            } else if (effect.attack_num.type == 'fixed') {
+                this.main_Attack.attack_num = effect.attack_num.num;
             }
             //计算主动技能需要的玩家属性
-            let askill_base_attr = get_Askill_base_attr(P_skills[id].base_attr[slot_num], this.player_end_attr);
+            let askill_base_attr = get_Askill_base_attr(start_skill.attr_correct, this.player_end_attr);
             //计算攻击效果
-            let Askill_algorithm_id = P_skills[id].algorithm[slot_num];
-            Askill_effect_algorithm(Askill_algorithm_id, askill_base_attr, this.main_Attack);
+            let algorithm = start_skill.algorithm;
+            Askill_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);
             //计算玩家装备的额外效果
             //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
             let combat_manage = global.get_combat_manage();

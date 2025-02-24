@@ -1,8 +1,7 @@
 import { add_E_Active_skill } from '../Skill_class.js';
-// import { Askill_algorithm_1 } from '../../../Function/math_func.js';
 
 //初始化技能数据库中与敌人的技能相关的内容
-function init_E_Active_skill(E_skills) {
+function init_Enemy_Active_skill(E_skills) {
     //不攻击
     let id = 'no_attack';
     add_E_Active_skill(E_skills, id);
@@ -18,4 +17,4 @@ function init_E_Active_skill(E_skills) {
     E_skills[id].attack_speed = [0]; //每个阶段的攻击速度，0表示使用敌人自身的攻击速度
 }
 
-export { init_E_Active_skill };
+export { init_Enemy_Active_skill };

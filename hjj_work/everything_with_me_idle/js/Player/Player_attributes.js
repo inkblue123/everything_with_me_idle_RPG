@@ -133,14 +133,15 @@ export class Player_attributes {
                 this.end_attr[id] = 0;
             }
             this.end_attr[id] += this.combat_defense_attr[id];
-        } //初始战斗生存属性
+        }
+        //初始战斗生存属性
         for (let id in this.combat_survival_attr) {
             if (isEmptyObject(this.end_attr[id])) {
                 this.end_attr[id] = 0;
             }
             this.end_attr[id] += this.combat_survival_attr[id];
         }
-        //初始
+        //初始角色基础属性
         for (let id in this.player_base_attr) {
             if (isEmptyObject(this.end_attr[id])) {
                 this.end_attr[id] = 0;

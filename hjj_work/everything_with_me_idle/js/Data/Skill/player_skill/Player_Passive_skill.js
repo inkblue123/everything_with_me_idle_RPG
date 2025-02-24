@@ -1,7 +1,7 @@
 import { add_P_Passive_skill } from '../Skill_class.js';
 
 //初始化技能数据库中与被动技能相关的内容
-function init_P_Passive_skill(P_skills) {
+function init_Plyaer_Passive_skill(P_skills) {
     //普通剑术
     let id = 'normal_sword';
     add_P_Passive_skill(P_skills, id);
@@ -15,4 +15,4 @@ function init_P_Passive_skill(P_skills) {
     P_skills[id].exp_source = 'attack_num'; //根据攻击次数获得经验
 }
 
-export { init_P_Passive_skill };
+export { init_Plyaer_Passive_skill };

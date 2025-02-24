@@ -7,11 +7,11 @@ function get_random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 //将玩家属性折算成一个结果
-function get_Askill_base_attr(base_attr, player_end_attr) {
+function get_Askill_base_attr(attr_correct, player_end_attr) {
     let end_attr = 0;
-    for (let attr_name in base_attr) {
+    for (let attr_name in attr_correct) {
         let P_attr = player_end_attr[attr_name];
-        end_attr += P_attr * base_attr[attr_name];
+        end_attr += P_attr * attr_correct[attr_name];
     }
     return end_attr;
 }
