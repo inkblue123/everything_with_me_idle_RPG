@@ -1,6 +1,7 @@
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { texts } from '../Data/Text/Text.js';
+import { P_skills } from '../Data/Skill/Skill.js';
 import { player } from '../Player/Player.js';
 import { show_active_EQP } from './show_func.js';
 import { hex2Rgba } from './Function.js';
@@ -177,6 +178,14 @@ function add_click_Equipment_worn_remove(target_div, wp) {
     });
 }
 
+// 向战斗规划界面的主动技能规划界面添加一个主动技能
+function add_ASP_skill(skill_id) {
+    let active_value_div = document.getElementById('active_value_div');
+    let askill = addElement(active_value_div, 'div', null, 'active_value');
+    // askill.Data = JSON.parse(JSON.stringify(player_item));
+    askill.innerHTML = P_skills[skill_id].name;
+    // add_show_Tooltip(askill, 'item', askill.Data);
+}
 export {
     crtElement,
     addElement,
@@ -188,4 +197,5 @@ export {
     add_click_Equipment_worn,
     add_click_Equipment_worn_remove,
     add_aEQP_data,
+    add_ASP_skill,
 };

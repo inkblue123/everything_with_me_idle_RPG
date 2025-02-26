@@ -1,6 +1,7 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
+import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 
 //判断物品类型中是否在指定过滤条件内
 function Item_type_handle(type_switch, id) {
@@ -71,6 +72,91 @@ function BP_type_handle(BP_type) {
 
     return BP_item_type;
 }
+//按照主动技能规划的过滤或筛选条件，获得应该展示的技能id队列
+function ASP_type_handle(type_switch) {
+    let arr = new Array();
+    for (let skill_id in player.All_Skills) {
+        if (P_skills[skill_id].type == 'Active') {
+            switch (type_switch) {
+                case 'ASP_all': //全部主动技能
+                    arr.push(skill_id);
+                    break;
+                case 'ASP_N_1': //占用1槽的主动技能
+                    if (P_skills[skill_id].need_slot_num == 1) {
+                        arr.push(skill_id);
+                    }
+                    break;
+                case 'ASP_N_2': //占用2槽的主动技能
+                    if (P_skills[skill_id].need_slot_num == 2) {
+                        arr.push(skill_id);
+                    }
+                    break;
+                case 'ASP_N_3': //占用3槽的主动技能
+                    if (P_skills[skill_id].need_slot_num == 3) {
+                        arr.push(skill_id);
+                    }
+                    break;
+                case 'ASP_N_4': //占用4槽的主动技能
+                    if (P_skills[skill_id].need_slot_num == 4) {
+                        arr.push(skill_id);
+                    }
+                    break;
+                case 'ASP_A': //可以攻击的主动技能
+                    for (let slot_id in P_skills[skill_id].need_slot_id) {
+                        if (B_skills[slot_id].active_type == 'attack') {
+                            arr.push(skill_id);
+                            break;
+                        }
+                    }
+                    break;
+                case 'ASP_D': //可以防御的主动技能
+                    for (let slot_id in P_skills[skill_id].need_slot_id) {
+                        if (B_skills[slot_id].active_type == 'defense') {
+                            arr.push(skill_id);
+                            break;
+                        }
+                    }
+                    break;
+                case 'ASP_R': //可以恢复的主动技能
+                    for (let slot_id in P_skills[skill_id].need_slot_id) {
+                        if (B_skills[slot_id].active_type == 'recovery') {
+                            arr.push(skill_id);
+                            break;
+                        }
+                    }
+                    break;
+                case 'ASP_F': //可以辅助的主动技能
+                    for (let slot_id in P_skills[skill_id].need_slot_id) {
+                        if (B_skills[slot_id].active_type == 'auxiliary') {
+                            arr.push(skill_id);
+                            break;
+                        }
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    return arr;
+}
+//将属性补正数值转义成简写字母
+function attr_correct_handle(attr_correct) {
+    //
+    if (0 <= attr_correct && attr_correct <= 0.21) {
+        return 'D';
+    } else if (0.21 < attr_correct && attr_correct <= 0.41) {
+        return 'C';
+    } else if (0.41 < attr_correct && attr_correct <= 0.61) {
+        return 'B';
+    } else if (0.61 < attr_correct && attr_correct <= 0.81) {
+        return 'A';
+    } else if (0.81 < attr_correct && attr_correct <= 1.01) {
+        return 'S';
+    }
+}
 //校验输入的参数是否是合法的装备信息
 function check_Equipment(id, equip_rarity) {
     if (items[id] === undefined) {
@@ -127,6 +213,7 @@ function printf_play_item() {
     }
     console.log('\n');
 }
+//对Array数组去重
 function get_uniqueArr(array) {
     // 使用 Set 去重
     let uniqueArr = [...new Set(array)];
@@ -137,8 +224,10 @@ export {
     printf_play_item, //
     Item_type_handle,
     BP_type_handle,
+    ASP_type_handle,
     check_Equipment,
     isEmptyObject,
     hex2Rgba,
     get_uniqueArr,
+    attr_correct_handle,
 };

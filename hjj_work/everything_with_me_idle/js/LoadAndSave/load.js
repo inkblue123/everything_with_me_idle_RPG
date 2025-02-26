@@ -6,6 +6,7 @@ import {
     updata_player_active_slots_num,
     updata_player_active_show,
     updata_player_active,
+    updata_ASP_value,
 } from '../Function/Updata_func.js';
 import { show_normal_game_div, show_combat_game_div } from '../Function/show_func.js';
 import { dom } from '../Dom/Dom.js';
@@ -67,6 +68,8 @@ function dom_init() {
     // updata_player_active_show(); //主动技能槽内容
     //初始化玩家背包
     updata_BP_value();
+    //初始化玩家拥有的技能
+    updata_ASP_value();
     // 将每个装备栏中的信息初始化
     const radios = document.querySelectorAll('input[name="EQP_switch"]');
     for (const radio of radios) {

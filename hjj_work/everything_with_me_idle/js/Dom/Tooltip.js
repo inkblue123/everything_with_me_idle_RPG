@@ -1,6 +1,6 @@
 import { crtElement, addElement, empty_dom } from '../Function/Dom_function.js';
 import { get_object_only_key } from '../Function/Get_func.js';
-import { isEmptyObject } from '../Function/Function.js';
+import { isEmptyObject, attr_correct_handle } from '../Function/Function.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
@@ -200,7 +200,7 @@ function show_equipment_attr(show_item) {
             let TLV_div = addElement(attr_div, 'div', null, 'table_3_value');
             // 属性名称
             let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
-            if (texts[attr].attr_name.length >= 4) {
+            if (texts[attr].attr_name.length > 3) {
                 T_name.innerHTML = texts[attr].min_attr_name; //完整名称太长,选用简称
             } else {
                 T_name.innerHTML = texts[attr].attr_name;
@@ -294,11 +294,16 @@ function init_active_skill_tip(active_skill) {
         let desc = addElement(slot_value_div, 'div', null, 'lable_down');
         desc.innerHTML = active_skill.desc; //这个槽的技能描述
         //追加展示技能类型-伤害类型信息
-        // show_active_skill_type(slot_value_div,active_skill);
+        //不同类型的技能似乎展示效果不好，有待优化
+        show_active_skill_type(slot_value_div, active_skill);
         //追加展示技能的限制条件
         show_active_skill_condition(slot_value_div, active_skill);
         //追加展示技能的属性补正
         show_active_skill_attr_correct(slot_value_div, active_skill);
+        //对多槽技能，非当前展示的槽的展示内容上覆盖一层半透明颜色
+        if (i != slot_num) {
+            addElement(slot_value_div, 'div', null, 'cover');
+        }
     }
 }
 //展示技能的类型
@@ -374,12 +379,18 @@ function show_active_skill_attr_correct(slot_value_div, active_skill) {
     let slot_num = active_skill.slot_num;
     let correct_name_div = addElement(slot_value_div, 'div', null, 'lable_down');
     correct_name_div.innerHTML = '属性补正';
-    let correct_value_div = addElement(slot_value_div, 'div', null, 'page_columns_11');
+    let correct_value_div = addElement(slot_value_div, 'div', null, 'page_columns_111');
     for (let correct_key in active_skill.attr_correct) {
-        let C_value_div = addElement(correct_value_div, 'div', null, 'table_2_value');
+        let C_value_div = addElement(correct_value_div, 'div', null, 'table_3_value');
         //属性补正名称
         let C_name = addElement(C_value_div, 'div', null, 'TLV_left');
-        C_name.innerHTML = texts[correct_key].attr_name;
+        if (texts[correct_key].attr_name.length > 4) {
+            C_name.innerHTML = texts[correct_key].min_attr_name + '：'; //完整名称太长,选用简称
+        } else {
+            C_name.innerHTML = texts[correct_key].attr_name + '：';
+        }
+        let C_value = addElement(C_value_div, 'div', null, 'TLV_right');
+        C_value.innerHTML = attr_correct_handle(active_skill.attr_correct[correct_key]);
     }
     return true;
 }

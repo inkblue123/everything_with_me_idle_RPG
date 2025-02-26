@@ -129,6 +129,16 @@ function get_combat_place_enemynum(enemy_id) {
     }
     return enemy_num;
 }
+//获取主动技能规划界面的过滤条件
+function get_ASP_type() {
+    const radios = document.querySelectorAll('input[name="ASP_switch"]');
+    for (const radio of radios) {
+        if (radio.checked) {
+            // 找到一个选中的按钮后可以结束循环
+            return radio.value;
+        }
+    }
+}
 
 export {
     get_BP_type,
@@ -138,4 +148,5 @@ export {
     get_EQP_data,
     get_EQP_wp_data,
     get_combat_place_enemynum,
+    get_ASP_type,
 };

@@ -56,6 +56,7 @@
 .slot_value_div {
     flex: 1; /* 每个子布局宽度均分 */
     text-align: center; /* 可选：使子布局内容居中 */
+    position: relative; /* 使伪元素定位相对于这个容器 */
     border: 1px solid #ccc; /* 可选：给子布局添加边框，方便查看 */
 }
 /* 每行2列表格布局中的每个元素 */
@@ -108,4 +109,14 @@
     display: flex;
     justify-content: center;
     width: 80%;
+}
+
+.cover {
+    position: absolute; /* 绝对定位覆盖在 div 上 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色，0.5 是透明度 */
+    z-index: 1; /* 确保覆盖在 div 上面 */
 }

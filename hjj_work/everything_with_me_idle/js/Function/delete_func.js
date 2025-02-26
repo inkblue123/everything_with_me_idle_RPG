@@ -8,6 +8,11 @@ function delete_BP_div() {
     let BP_value_div = document.getElementById('BP_value_div');
     BP_value_div.replaceChildren(); //清空现有背包内展示的物品
 }
+//清空右下角的游戏规划中战斗规划的主动技能规划部分的内容
+function delete_ASP_div() {
+    let active_value_div = document.getElementById('active_value_div');
+    active_value_div.replaceChildren();
+}
 //重新生成左上角装备展示界面的元素
 function delete_equipment_show(EQP_column) {
     if (!EQP_column) {
@@ -53,4 +58,4 @@ function delete_active_show_div() {
     }
 }
 
-export { delete_BP_div, delete_equipment_show, delete_player_active_div, delete_active_show_div };
+export { delete_BP_div, delete_ASP_div, delete_equipment_show, delete_player_active_div, delete_active_show_div };

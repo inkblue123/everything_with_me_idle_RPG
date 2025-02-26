@@ -98,10 +98,10 @@ function change_ASP_ARP_AEP(button_id) {
 //点击了隐藏下拉框的按钮之后，展示当前按钮相关的下拉框，隐藏其他下拉框
 function show_dropdown_table(classification_div, table_id) {
     const dropdownTable = document.getElementById(table_id);
-    const Class_div = document.getElementById(classification_div);
+    let Class_div = document.getElementById(classification_div);
 
     if (dropdownTable) {
-        if (dropdownTable.style.display === 'block') {
+        if (dropdownTable.style.display === 'flex') {
             // 切换目标下拉框的显示/隐藏状态
             // 如果表格已经显示，则折叠它
             dropdownTable.style.maxHeight = '0';
@@ -110,9 +110,11 @@ function show_dropdown_table(classification_div, table_id) {
             }, 500); // 等待动画完成后隐藏
         } else {
             // 如果表格没有显示，则展开它
-            dropdownTable.style.display = 'block';
+            dropdownTable.style.display = 'flex';
             setTimeout(() => {
-                dropdownTable.style.maxHeight = '300px'; // 最大高度需要根据内容调整
+                // const contentHeight = dropdownTable.scrollHeight; // 获取实际内容的高度
+                // dropdownTable.style.maxHeight = contentHeight + 'px';
+                dropdownTable.style.maxHeight = '500px'; // 最大高度需要根据内容调整
             }, 10); // 让显示状态先更新，再触发动画
         }
     }
@@ -121,7 +123,7 @@ function show_dropdown_table(classification_div, table_id) {
     for (let table of tables) {
         if (table.id !== table_id) {
             // 切换表格的显示/隐藏状态
-            if (table.style.display === 'block') {
+            if (table.style.display === 'flex') {
                 // 如果表格已经显示，则折叠它
                 table.style.maxHeight = '0';
                 setTimeout(() => {

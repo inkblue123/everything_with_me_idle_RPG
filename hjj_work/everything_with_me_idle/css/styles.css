@@ -201,7 +201,10 @@ html {
 }
 /* 初始隐藏下拉表格 */
 .dropdown_table {
-    display: none;
+    /* display: none; */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
     /* margin-top: 10px; */
     transition: max-height 0.5s ease-out;
     overflow: hidden;

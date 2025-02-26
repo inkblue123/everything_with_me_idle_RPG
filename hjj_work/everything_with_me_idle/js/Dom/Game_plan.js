@@ -1,6 +1,6 @@
 import { crtElement, empty_dom, addElement, addElement_radio } from '../Function/Dom_function.js';
 import { show_dropdown_table, change_CBP_LVP_CTP, change_ASP_ARP_AEP } from '../Function/show_func.js';
-import { updata_BP_value } from '../Function/Updata_func.js';
+import { updata_ASP_value } from '../Function/Updata_func.js';
 
 var Game_plan = crtElement('div', 'game_plan', null, '');
 
@@ -37,17 +37,33 @@ var Game_plan = crtElement('div', 'game_plan', null, '');
             var ASP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
             addElement_radio(ASP_radio_div, `ASP_button`, 'CBP_switch', `ASP_button`, `主动技能规划`);
             ASP_radio_div.children[0].checked = true; //初始激活该按钮
-            var ASP_droptable = addElement(CBP_classification_div, 'div', 'ASP_droptable', 'dropdown_table');
+            // var ASP_droptable = addElement(CBP_classification_div, 'div', 'ASP_droptable', 'dropdown_table');
+            // var ASP_all_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var test = addElement(CBP_classification_div, 'div', 'ASP_droptable', 'dropdown_table');
+            var ASP_droptable = addElement(test, 'div', 'test_div', 'page_columns_1');
             var ASP_all_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+
             addElement_radio(ASP_all_radio_div, `ASP_all`, 'ASP_switch', `ASP_all`, `全部主动技能`);
-            var ASP_U_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
-            addElement_radio(ASP_U_radio_div, `ASP_U`, 'ASP_switch', `ASP_U`, `当前可用技能`);
-            var ASP_N_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
-            addElement_radio(ASP_N_radio_div, `ASP_N`, 'ASP_switch', `ASP_N`, `占槽数分类`);
+            // var ASP_U_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            // addElement_radio(ASP_U_radio_div, `ASP_U`, 'ASP_switch', `ASP_U`, `当前可用技能`);
+            var ASP_N_radio_div = addElement(ASP_droptable, 'button', 'ASP_N_button', 'dropdown_button_2');
+            ASP_N_radio_div.innerHTML = `占槽数分类`;
+            var ASP_N_droptable = addElement(ASP_droptable, 'div', 'ASP_N_droptable', 'dropdown_table');
+            var ASP_N_1_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div GP_switch_radio_div_3');
+            addElement_radio(ASP_N_1_radio_div, `ASP_N_1`, 'ASP_switch', `ASP_N_1`, `1 槽`);
+            var ASP_N_2_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div GP_switch_radio_div_3');
+            addElement_radio(ASP_N_2_radio_div, `ASP_N_2`, 'ASP_switch', `ASP_N_2`, `2 槽`);
+            var ASP_N_3_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div GP_switch_radio_div_3');
+            addElement_radio(ASP_N_3_radio_div, `ASP_N_3`, 'ASP_switch', `ASP_N_3`, `3 槽`);
+            var ASP_N_4_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div GP_switch_radio_div_3');
+            addElement_radio(ASP_N_4_radio_div, `ASP_N_4`, 'ASP_switch', `ASP_N_4`, `4 槽`);
+
             var ASP_A_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
             addElement_radio(ASP_A_radio_div, `ASP_A`, 'ASP_switch', `ASP_A`, `可攻击的技能`);
             var ASP_D_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
             addElement_radio(ASP_D_radio_div, `ASP_D`, 'ASP_switch', `ASP_D`, `可防御的技能`);
+            var ASP_R_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            addElement_radio(ASP_R_radio_div, `ASP_R`, 'ASP_switch', `ASP_R`, `可恢复的技能`);
             var ASP_F_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
             addElement_radio(ASP_F_radio_div, `ASP_F`, 'ASP_switch', `ASP_F`, `可辅助的技能`);
 
@@ -214,8 +230,12 @@ var Game_plan = crtElement('div', 'game_plan', null, '');
     CTP_switch_button.onclick = function () {
         change_CBP_LVP_CTP(this.id);
     };
+    ASP_N_radio_div.onclick = function () {
+        ASP_N_1_radio_div.children[0].checked = true;
+        show_dropdown_table('test_div', 'ASP_N_droptable');
+    };
     //选择战斗规划界面的具体功能
-    const radios = Game_plan_value_div.querySelectorAll('input[type="radio"][name="CBP_switch"]');
+    let radios = Game_plan_value_div.querySelectorAll('input[type="radio"][name="CBP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
             //主动技能规划按钮
@@ -232,6 +252,13 @@ var Game_plan = crtElement('div', 'game_plan', null, '');
                 //关闭其他下拉框
                 show_dropdown_table('CBP_classification_div');
             }
+        });
+    });
+    //主动技能过滤
+    radios = Game_plan_value_div.querySelectorAll('input[type="radio"][name="ASP_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            updata_ASP_value();
         });
     });
 }
