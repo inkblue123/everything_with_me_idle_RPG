@@ -58,7 +58,7 @@
     flex-wrap: wrap;
     background-color: #008cff;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
 }
 /* 主动技能规划界面内具体的一个技能 */
 .active_value {

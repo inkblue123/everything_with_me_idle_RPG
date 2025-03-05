@@ -59,10 +59,13 @@ var Combat = crtElement('div', 'combat', null, '');
     //展示玩家的主动技能槽的部分
     var active_slot_div = addElement(combat_option_div, 'div', 'active_slot_div', null);
     //表示主动技能运行到哪里的进度条
-    var active_time_bar = addElement(active_slot_div, 'div', 'active_time_bar', null, '');
-    var active_time_frame = addElement(active_time_bar, 'div', 'active_time_frame', null); //时间进度条外框
-    var active_time_current = addElement(active_time_frame, 'div', 'active_time_current', null); //时间进度条中央的色块
-    var un_use_active_time_frame = addElement(active_time_frame, 'div', 'un_use_active_time_frame', null); //没有使用的时间进度条外框
+    var active_time_bar_div = addElement(active_slot_div, 'div', 'active_time_bar_div', 'page_flex', '');
+    for (let i = 0; i < 9; i++) {
+        var active_time_bar = addElement(active_time_bar_div, 'div', null, 'active_time_bar', '');
+        var active_time_frame = addElement(active_time_bar, 'div', null, 'active_time_frame'); //时间进度条外框
+        var active_time_current = addElement(active_time_frame, 'div', null, 'active_time_current'); //时间进度条中央的色块
+    }
+    var un_use_active_time_frame = addElement(active_time_bar_div, 'div', 'un_use_active_time_frame', null); //没有使用的时间进度条外框
     //具体容纳主动技能的div
     var player_active_div = addElement(active_slot_div, 'div', 'player_active_div', null);
     for (let i = 0; i < 9; i++) {

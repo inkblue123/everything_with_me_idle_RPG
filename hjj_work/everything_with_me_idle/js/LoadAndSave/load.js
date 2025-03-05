@@ -66,6 +66,7 @@ function dom_init() {
     updata_player_active(); //主动技能测试，正常应该在战斗规划界面设置主动技能，设置之后调用这个接口
     // updata_player_active_slots_num(); //主动技能槽数量
     // updata_player_active_show(); //主动技能槽内容
+
     //初始化玩家背包
     updata_BP_value();
     //初始化玩家拥有的技能

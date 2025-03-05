@@ -13,6 +13,7 @@ import {
     add_click_Equipment_worn_remove,
     add_aEQP_data,
     add_ASP_skill,
+    add_click_Active_skill_worn_remove,
 } from './Dom_function.js';
 import {
     get_BP_type,
@@ -163,7 +164,7 @@ function updata_attribute_show() {
         i++;
     }
 }
-//玩家主动技能槽数量变动，更新界面展示
+//玩家主动技能变动，调整相关布局的展示
 function updata_player_active_slots_num() {
     let P_Askill = player.get_player_ASkill_Manage();
     let num = P_Askill.get_slot_num();
@@ -177,8 +178,7 @@ function updata_player_active_slots_num() {
             player_active_div.children[i].style.display = 'none';
         }
     }
-
-    //战斗界面-主动技能进度条的长度
+    //填充玩家没设置主动技能的部分的空白主动技能进度条
     //将目标槽拷贝到一个可见的，不影响布局的临时窗口内，获取宽度
     var clonedChild = player_active_div.children[0].cloneNode(true);
     var tempContainer = document.createElement('div');
@@ -186,15 +186,44 @@ function updata_player_active_slots_num() {
     tempContainer.style.visibility = 'hidden'; // 保证父元素不可见不会影响布局
     document.body.appendChild(tempContainer);
     tempContainer.appendChild(clonedChild);
-    let aslot_width = clonedChild.offsetWidth; //获取一个槽的宽度
+    let aslot_width = clonedChild.offsetWidth; //获取一个主动技能槽的宽度
     document.body.removeChild(tempContainer);
     // 获取槽之间的间隔
     let divStyle = window.getComputedStyle(player_active_div);
     let div_gap = parseInt(divStyle.gap, 10);
-    //计算进度条应该有多长
-    let active_time_width = (num - 1) * div_gap + num * aslot_width;
-    let active_time_frame = document.getElementById('active_time_frame');
-    active_time_frame.style.width = `${active_time_width}px`;
+    //计算主动技能进度条应该有多长
+    let use_slots_num = P_Askill.get_use_active_slots_num();
+    let active_time_bar_div = document.getElementById('active_time_bar_div');
+    for (let i = 0; i < 9; i++) {
+        if (i < use_slots_num) {
+            if (use_slots_num == 1) {
+                active_time_bar_div.children[i].style.width = aslot_width + 'px';
+            } else {
+                active_time_bar_div.children[i].style.width =
+                    aslot_width + (div_gap * (use_slots_num - 1)) / use_slots_num + 'px';
+            }
+            active_time_bar_div.children[i].style.display = '';
+        } else {
+            active_time_bar_div.children[i].style.display = 'none';
+        }
+    }
+    //无用进度条应该有多长
+    let un_use_active_time_frame = document.getElementById('un_use_active_time_frame');
+    let n = num - use_slots_num;
+    if (n == num) {
+        //没有主动技能
+        let un_use_len = n * aslot_width + (n - 1) * div_gap;
+        un_use_active_time_frame.style.display = '';
+        un_use_active_time_frame.style.width = un_use_len + 'px';
+    } else if (n == 0) {
+        // 主动技能全满
+        un_use_active_time_frame.style.display = 'none';
+    } else {
+        //其他情况
+        let un_use_len = n * aslot_width + n * div_gap;
+        un_use_active_time_frame.style.display = '';
+        un_use_active_time_frame.style.width = un_use_len + 'px';
+    }
 
     //游戏规划界面-战斗规划-主动技能规划中展示的主动技能槽数量
     let active_show_div = document.getElementById('active_show_div');
@@ -206,13 +235,12 @@ function updata_player_active_slots_num() {
         }
     }
 }
-//玩家主动技能的内容发生变动，更新界面展示
+//玩家主动技能发生变动，在布局中填入技能信息
 function updata_player_active_show() {
-    //清空原有内容
-    delete_player_active_div();
-    delete_active_show_div();
+    //将玩家设置的主动技能在界面上展示出来
     let player_active_div = document.getElementById('player_active_div'); //战斗界面，玩家主动技能展示框
     let active_show_div = document.getElementById('active_show_div'); //战斗规划界面，主动技能规划展示框
+    let active_time_bar_div = document.getElementById('active_time_bar_div');
     let P_Askill = player.get_player_ASkill_Manage();
     let num = P_Askill.get_slot_num();
     let active_slots = P_Askill.get_active_slots();
@@ -235,25 +263,29 @@ function updata_player_active_show() {
             active_show_div.children[i].style.backgroundColor = enums[active_type].active_show_color;
             active_show_div.children[i].data = active_slots[i];
             add_show_Tooltip(active_show_div.children[i], 'active_skill', active_slots[i]); //添加鼠标移动之后展示该槽位设置的主动技能
+            add_click_Active_skill_worn_remove(active_show_div.children[i], i);
         }
     }
-    let use_slots_num = P_Askill.get_use_active_slots_num();
-    let un_use_active_time_frame = document.getElementById('un_use_active_time_frame');
-    un_use_active_time_frame.style.width = `${100 * ((num - use_slots_num) / num)}%`;
 }
-
 //更新玩家主动技能进度条的进度
 function updata_player_active_time_bar() {
     //
     let P_Askill = player.get_player_ASkill_Manage();
-    let use_slots_num = P_Askill.get_use_active_slots_num();
-    let max_ratio = 100 * (use_slots_num / P_Askill.active_slot_num);
-    let bar_ratio = (P_Askill.now_round_time / P_Askill.max_round_time) * max_ratio;
-    if (bar_ratio > max_ratio) {
-        bar_ratio = max_ratio;
+    let now_run_slot = P_Askill.now_run_slot;
+    let now_run_slot_time = P_Askill.now_run_slot_time;
+    let any_slot_time = P_Askill.any_slot_time;
+    let bar_ratio = (now_run_slot_time / any_slot_time[now_run_slot]) * 100;
+
+    let active_time_bar_div = document.getElementById('active_time_bar_div');
+    for (let i = 0; i < 9; i++) {
+        if (i < now_run_slot) {
+            active_time_bar_div.children[i].children[0].children[0].style.width = '100%';
+        } else if (i == now_run_slot) {
+            active_time_bar_div.children[i].children[0].children[0].style.width = bar_ratio + '%';
+        } else if (i > now_run_slot) {
+            active_time_bar_div.children[i].children[0].children[0].style.width = '0%';
+        }
     }
-    const active_time_bar = document.getElementById('active_time_bar');
-    active_time_bar.children[0].children[0].style.width = `${bar_ratio}%`;
 }
 //更新战斗界面中的所有敌人
 function update_enemy_show() {
@@ -320,12 +352,15 @@ function updata_player_EQP() {
 }
 //玩家主动技能发生变动，更新相关界面
 function updata_player_active() {
+    //清空原有界面的内容
+    delete_player_active_div();
+    delete_active_show_div();
+    //更新主动技能相关布局的展示情况
+    updata_player_active_slots_num();
     //更新玩家属性
     player.updata_attr(true);
-    //更新主动技能框的展示内容
+    //在主动技能相关布局中填入技能信息
     updata_player_active_show();
-    //更新主动技能进度条的总长度
-    updata_player_active_slots_num();
 }
 //更新右下角的游戏规划中战斗规划的主动技能规划部分的内容
 function updata_ASP_value() {

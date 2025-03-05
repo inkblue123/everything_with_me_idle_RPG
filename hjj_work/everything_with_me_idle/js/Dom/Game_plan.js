@@ -37,13 +37,11 @@ var Game_plan = crtElement('div', 'game_plan', null, '');
             var ASP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
             addElement_radio(ASP_radio_div, `ASP_button`, 'CBP_switch', `ASP_button`, `主动技能规划`);
             ASP_radio_div.children[0].checked = true; //初始激活该按钮
-            // var ASP_droptable = addElement(CBP_classification_div, 'div', 'ASP_droptable', 'dropdown_table');
-            // var ASP_all_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
-            var test = addElement(CBP_classification_div, 'div', 'ASP_droptable', 'dropdown_table');
-            var ASP_droptable = addElement(test, 'div', 'test_div', 'page_columns_1');
+            var ASP_droptable = addElement(CBP_classification_div, 'div', 'ASP_droptable', 'dropdown_table');
             var ASP_all_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
 
             addElement_radio(ASP_all_radio_div, `ASP_all`, 'ASP_switch', `ASP_all`, `全部主动技能`);
+            ASP_all_radio_div.children[0].checked = true; //初始激活该按钮
             // var ASP_U_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
             // addElement_radio(ASP_U_radio_div, `ASP_U`, 'ASP_switch', `ASP_U`, `当前可用技能`);
             var ASP_N_radio_div = addElement(ASP_droptable, 'button', 'ASP_N_button', 'dropdown_button_2');
@@ -81,7 +79,7 @@ var Game_plan = crtElement('div', 'game_plan', null, '');
                 var ASP_value_div = addElement(CBP_div, 'div', 'ASP_value_div');
                 var active_scroll_box = addElement(ASP_value_div, 'div', 'active_scroll_box', 'overflow_y_div');
                 var active_value_div = addElement(active_scroll_box, 'div', 'active_value_div');
-                // for (let i = 0; i < 9; i++) {
+                // for (let i = 0; i < 2; i++) {
                 //     let askill = addElement(active_value_div, 'div', null, 'active_value');
                 //     askill.innerHTML = '技能' + i;
                 // }

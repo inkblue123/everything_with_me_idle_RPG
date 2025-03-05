@@ -34,11 +34,13 @@ function state_game() {
 
 //更新游戏界面中的信息
 function updata_game() {
+    //左上玩家属性展示界面更新
     updata_HP();
     updata_MP();
     updata_ENP();
     updata_player_name();
     updata_attribute_show();
+    //
     updata_player_active_time_bar();
     if (global.get_combat_statu()) {
         update_enemy_show();

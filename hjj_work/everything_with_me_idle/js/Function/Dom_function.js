@@ -5,7 +5,7 @@ import { P_skills } from '../Data/Skill/Skill.js';
 import { player } from '../Player/Player.js';
 import { show_active_EQP } from './show_func.js';
 import { hex2Rgba } from './Function.js';
-import { updata_player_EQP, updata_BP_value, updata_attribute_show } from './Updata_func.js';
+import { updata_player_EQP, updata_BP_value, updata_attribute_show, updata_player_active } from './Updata_func.js';
 import { get_object_only_key, get_EQP_wp_data } from './Get_func.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
@@ -182,10 +182,41 @@ function add_click_Equipment_worn_remove(target_div, wp) {
 function add_ASP_skill(skill_id) {
     let active_value_div = document.getElementById('active_value_div');
     let askill = addElement(active_value_div, 'div', null, 'active_value');
-    // askill.Data = JSON.parse(JSON.stringify(player_item));
     askill.innerHTML = P_skills[skill_id].name;
-    // add_show_Tooltip(askill, 'item', askill.Data);
+    //鼠标点击之后可以设置到玩家身上
+    add_click_Active_skill_worn(askill, skill_id);
 }
+
+//  向主动技能组件添加鼠标点击设置到身上主动技能槽的功能
+function add_click_Active_skill_worn(target_div, tip_value) {
+    target_div.addEventListener('click', () => {
+        let ASkill_Manage = player.get_player_ASkill_Manage();
+        //获取从左到右首个空闲的主动技能槽位置
+        let slot = ASkill_Manage.get_unuse_active_slots_num();
+        if (slot == -1) {
+            //身上主动技能槽全满，不设置
+            return false;
+        }
+        //向空闲槽添加该技能
+        ASkill_Manage.set_active_skill(tip_value, slot);
+        updata_player_active();
+    });
+}
+// 向目标组件添加 点击之后可以从玩家身上卸下指定的主动技能的功能
+function add_click_Active_skill_worn_remove(target_div, tip_value) {
+    //输入的tip_value表示要卸下玩家身上第几个槽的技能，从0开始计数
+    target_div.addEventListener('click', () => {
+        //从玩家身上卸下指定槽位的主动技能
+        let ASkill_Manage = player.get_player_ASkill_Manage();
+        ASkill_Manage.remove_solt_active_skill(tip_value);
+        //主动技能发生变动，更新相关界面
+        updata_player_active();
+        //关闭提示窗
+        let tooltip = document.getElementById('tooltip');
+        tooltip.CloseTip(); //清空小窗口
+    });
+}
+
 export {
     crtElement,
     addElement,
@@ -198,4 +229,5 @@ export {
     add_click_Equipment_worn_remove,
     add_aEQP_data,
     add_ASP_skill,
+    add_click_Active_skill_worn_remove,
 };
