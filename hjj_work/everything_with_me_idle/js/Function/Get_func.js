@@ -107,28 +107,6 @@ function get_EQP_wp_data(EQP_column, wp) {
     }
     return EQP_wp_data;
 }
-//获取当前战斗场地里的敌人数量
-function get_combat_place_enemynum(enemy_id) {
-    let enemy_num = 0;
-    let place_manage = global.get_place_manage();
-    let enemy_field = place_manage.get_combat_place_enemys();
-    for (let key in enemy_field) {
-        let field = enemy_field[key];
-
-        for (let i = 0; i < 9; i++) {
-            if (field[i].statu) {
-                if (!enemy_id) {
-                    //如果没指定敌人id，获取全部敌人的数量
-                    enemy_num++;
-                } else if (enemy_slot.id == enemy_id) {
-                    //获取指定id的敌人数量
-                    enemy_num++;
-                }
-            }
-        }
-    }
-    return enemy_num;
-}
 //获取主动技能规划界面的过滤条件
 function get_ASP_type() {
     const radios = document.querySelectorAll('input[name="ASP_switch"]');
@@ -147,6 +125,5 @@ export {
     get_object_only_key,
     get_EQP_data,
     get_EQP_wp_data,
-    get_combat_place_enemynum,
     get_ASP_type,
 };

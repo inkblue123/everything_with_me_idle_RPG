@@ -6,7 +6,9 @@ export class Place {
         this.name; //地点名称
         this.desc; //地点描述
         this.type; //地点类型
-        this.connected_place = new Array(); //可联通其他地方的id
+        this.other_normal_place = new Array(); //可以联通的其他普通地点
+        this.other_combat_place = new Array(); //可以联通的其他战斗地点
+        this.other_NPC = new Array(); //位于此处的NPC
         this.init_Place_name_desc(id);
     }
 
@@ -29,9 +31,22 @@ export class Place {
             }
         }
     }
-    add_connected_place(...args) {
+    //添加这个地点可以联通的其他普通地点
+    add_other_normal_place(...args) {
         for (let id of args) {
-            this.connected_place.push(id);
+            this.other_normal_place.push(id);
+        }
+    }
+    //添加这个地点可以联通的其他战斗地点
+    add_other_combat_place(...args) {
+        for (let id of args) {
+            this.other_combat_place.push(id);
+        }
+    }
+    //添加这个地点存在的NPC
+    add_other_NPC(...args) {
+        for (let id of args) {
+            this.other_NPC.push(id);
         }
     }
 }
@@ -47,6 +62,19 @@ export class P_combat extends Place {
         this.type = 'combat';
         this.enemy = new Array();
         this.max_enemy_num = 0;
+    }
+}
+export class P_NPC extends Place {
+    constructor(id) {
+        super(id);
+        this.type = 'NPC';
+        this.behaviors = new Array();
+    }
+    //添加在这个npc面前可以做的行动
+    add_behavior_place(...args) {
+        for (let id of args) {
+            this.behaviors.push(id);
+        }
     }
 }
 
@@ -71,5 +99,12 @@ function add_combat_Place(places, newid) {
         console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
+function add_NPC_Place(places, newid) {
+    if (places[newid] === undefined) {
+        places[newid] = new P_NPC(newid);
+    } else {
+        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+    }
+}
 
-export { add_Place_object, add_normal_Place, add_combat_Place };
+export { add_Place_object, add_normal_Place, add_combat_Place, add_NPC_Place };

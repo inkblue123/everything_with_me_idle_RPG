@@ -185,6 +185,8 @@ function add_ASP_skill(skill_id) {
     askill.innerHTML = P_skills[skill_id].name;
     //鼠标点击之后可以设置到玩家身上
     add_click_Active_skill_worn(askill, skill_id);
+    //添加鼠标移动之后展示该技能详情
+    add_show_Tooltip(askill, 'show_active_skill', skill_id);
 }
 
 //  向主动技能组件添加鼠标点击设置到身上主动技能槽的功能

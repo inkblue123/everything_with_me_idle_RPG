@@ -181,6 +181,11 @@ export class Enemy_manage {
         }
         this.last_add_enemy_time = 0; //上次刷怪时间
     }
+    //重置刷怪参数
+    reset_enemy_data() {
+        this.last_add_enemy_time = global.get_game_now_time();
+    }
+    //获取当前地点的怪物对象
     get_combat_place_enemys() {
         return this.combat_place_enemys;
     }

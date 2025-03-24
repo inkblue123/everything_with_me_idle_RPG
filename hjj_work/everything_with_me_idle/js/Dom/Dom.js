@@ -1,12 +1,12 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 
 import { player_status } from './Player_status.js';
-import { Backpack } from './Backpack.js';
+import { Combat_plan } from './Combat_plan.js';
 import { Option } from './Option.js';
 import { Tooltip } from './Tooltip.js';
 import { Control } from './Control.js';
 import { Combat } from './Combat.js';
-import { Game_plan } from './Game_plan.js';
+import { Game_data } from './Game_data.js';
 
 var dom = new Object();
 
@@ -15,7 +15,7 @@ var dom = new Object();
     //角色属性装备界面
     dom.player_status = player_status;
     //物品、技能、图鉴展示界面
-    dom.backpack = Backpack;
+    dom.combat_plan = Combat_plan;
     //设置界面
     dom.option_dom = Option;
     //游离于游戏布局之上，跟随鼠标的小窗口
@@ -25,18 +25,16 @@ var dom = new Object();
     //战斗界面
     dom.combat = Combat;
     //游戏规划界面（战斗规划，生活技能规划）
-    dom.game_plan = Game_plan;
-    // dom.game_plan = crtElement('div', 'game_plan', 'section', '', '#ff33a1');
-    // dom.game_plan.textContent = '战斗规划界面';
+    dom.game_data = Game_data;
 
-    dom.create = crtElement('div', 'create', 'section', '', '#ffff00');
-    dom.create.textContent = '合成制作界面';
+    dom.live_plan = crtElement('div', 'live_plan', 'section', '', '#ffff00');
+    dom.live_plan.textContent = '生活规划界面';
 
     dom.map = crtElement('div', null, 'section', '', '#33fff9');
     dom.map.textContent = '地图界面';
 
-    dom.remenber = crtElement('div', null, 'section', '', '#3357ff');
-    dom.remenber.textContent = '脑海界面';
+    // dom.remenber = crtElement('div', null, 'section', '', '#3357ff');
+    // dom.remenber.textContent = '脑海界面';
 }
 
 //创建布局
@@ -64,21 +62,20 @@ var dom = new Object();
     dom.game_dom.appendChild(dom.game_left);
     dom.game_dom.appendChild(dom.game_right);
 
-    dom.game_left.appendChild(dom.player_status);
-    dom.game_left.appendChild(dom.backpack);
+    dom.game_left.appendChild(dom.player_status); //左上 角色状态
+    dom.game_left.appendChild(dom.combat_plan); //坐下 战斗规划
 
     dom.game_right.appendChild(dom.game_up_combat);
     dom.game_right.appendChild(dom.game_up_nomal);
     dom.game_right.appendChild(dom.game_down_nomal);
 
-    dom.game_up_combat.appendChild(dom.combat);
+    dom.game_up_combat.appendChild(dom.combat); //战斗时，中上和右上，战斗详情
 
-    dom.game_up_nomal.appendChild(dom.remenber);
-    dom.game_up_nomal.appendChild(dom.map);
+    dom.game_up_nomal.appendChild(dom.live_plan); //非战斗，中上，生活规划
+    dom.game_up_nomal.appendChild(dom.map); //非战斗，右上，地图
 
-    dom.game_down_nomal.appendChild(dom.control);
-    dom.game_down_nomal.appendChild(dom.create);
-    dom.game_down_nomal.appendChild(dom.game_plan);
+    dom.game_down_nomal.appendChild(dom.control); //中下，玩家控制
+    dom.game_down_nomal.appendChild(dom.game_data); //右下，游戏数据
 
     dom.main_dom.appendChild(dom.option_dom);
     dom.main_dom.appendChild(dom.tooltip);

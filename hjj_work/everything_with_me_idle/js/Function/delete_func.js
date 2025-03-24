@@ -27,11 +27,11 @@ function delete_equipment_show(EQP_column) {
     EQP_Armor_div.replaceChildren();
     EQP_deputy_div.replaceChildren();
     //重新创建展示框
-    addElement(EQP_arms_div, 'div', null, 'EQP_show', '');
+    addElement(EQP_arms_div, 'div', null, 'hand_EQP_show', '');
     for (let j = 0; j < 4; j++) {
         addElement(EQP_Armor_div, 'div', null, 'EQP_show', '');
     }
-    addElement(EQP_deputy_div, 'div', null, 'EQP_show', '');
+    addElement(EQP_deputy_div, 'div', null, 'hand_EQP_show', '');
     let EQP_div_data = get_EQP_data(EQP_column);
     //初始化展示框内容
     for (let i in EQP_div_data) {

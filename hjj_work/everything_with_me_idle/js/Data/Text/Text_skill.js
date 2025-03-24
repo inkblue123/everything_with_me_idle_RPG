@@ -6,7 +6,10 @@ function init_attack_skill(texts) {
     add_text_object(texts, id);
     texts[id].skill_name = '普通攻击-近战';
     texts[id].mini_skill_name = '普攻-近';
-    // texts[id].place_desc = '这里是普通地点1，这里不会进行战斗，可以通往其他地方';
+    id = 'energy_storage_attack';
+    add_text_object(texts, id);
+    texts[id].skill_name = '蓄力攻击';
+    // texts[id].mini_skill_name = ;
 }
 //技能描述
 function init_skill_desc(texts) {

@@ -210,3 +210,32 @@ html {
     overflow: hidden;
     max-height: 0;
 }
+
+/* 进度条组件：最大的父元素 */
+.progress_bar {
+    position: relative; /* 父元素需要设置相对定位 */
+    width: 100%; /* 宽度为整个窗口的85% */
+    height: 15px; /* 高度固定为15px */
+}
+/* 进度条组件：进度条外框的样式 */
+.progress_bar_frame {
+    margin: 0% auto; /* 居中显示 */
+    width: 85%; /* 宽度为整个窗口的85% */
+    height: 15px; /* 高度固定为15px */
+}
+/* 进度条组件：进度条中央，长度随当前血量变化的色块 */
+.progress_bar_current {
+    height: 15px;
+}
+/* 进度条组件：显示的数字 */
+.progress_bar_number {
+    position: absolute; /* 启动绝对定位 */
+    text-align: center;
+    top: 0;
+    width: 100%;
+    line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
+    font-size: 15px; /*文本大小*/
+    /* 文本不可选中 */
+    user-select: none;
+    color: white;
+}

@@ -1,8 +1,9 @@
 import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
 import { isEmptyObject } from '../Function/Function.js';
-import { updata_place } from '../Function/Updata_func.js';
+// import { updata_place } from '../Function/Updata_func.js';
 import { places } from '../Data/Place/Place.js';
 import { texts } from '../Data/Text/Text.js';
+import { global } from '../GameRun/global_class.js';
 
 var Control = crtElement('div', 'control', null, '');
 
@@ -22,26 +23,87 @@ var Control = crtElement('div', 'control', null, '');
 {
 }
 
-//移动到指定地点，读取新地点库信息，展示到控制界面中
-Control.change_place = function (id) {
+//移动到指定地点，读取地点库信息，展示到控制界面中
+Control.show_now_place = function () {
     empty_dom(Place_desc_div); //清空原本地点描述
     empty_dom(player_Control_div); //清空原本地点的可执行操作
 
-    let new_place = places[id];
+    let place_manage = global.get_place_manage();
+    let now_place_id = place_manage.get_now_place();
+
+    let new_place = places[now_place_id];
+    let new_place_name = places[now_place_id].name;
 
     //展示新地点的描述
     Place_desc_div.innerHTML = new_place.desc;
-    //展示新地点的可执行操作
-    //可以前往其他区域
-    if (!isEmptyObject(new_place.connected_place)) {
-        for (let next_place_id of new_place.connected_place) {
-            var move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button'); //血条中，条的外框
+
+    //可以前往其他普通区域
+    if (!isEmptyObject(new_place.other_normal_place)) {
+        for (let next_place_id of new_place.other_normal_place) {
+            let move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button');
 
             move_place_button.innerHTML = '前往' + places[next_place_id].name;
             move_place_button.addEventListener('click', function () {
-                updata_place(next_place_id);
+                place_manage.set_next_place(next_place_id);
+            });
+        }
+    }
+    //可以前往其他战斗区域
+    if (!isEmptyObject(new_place.other_combat_place)) {
+        for (let next_place_id of new_place.other_combat_place) {
+            let move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button');
+
+            move_place_button.innerHTML = '前往' + places[next_place_id].name;
+            move_place_button.addEventListener('click', function () {
+                place_manage.set_next_place(next_place_id);
+            });
+        }
+    }
+    //此处有其他NPC
+    if (!isEmptyObject(new_place.other_NPC)) {
+        for (let next_place_id of new_place.other_NPC) {
+            let move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button');
+
+            move_place_button.innerHTML = places[next_place_id].name;
+            move_place_button.addEventListener('click', function () {
+                place_manage.set_next_place(next_place_id);
+            });
+        }
+    }
+    //此处可以执行行动
+    if (!isEmptyObject(new_place.behaviors)) {
+        for (let next_place_id of new_place.behaviors) {
+            let move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button');
+
+            move_place_button.innerHTML = places[next_place_id].name;
+            move_place_button.addEventListener('click', function () {
+                place_manage.set_next_place(next_place_id);
             });
         }
     }
 };
+//移动到指定NPC面前，读取地点库信息，将可以进行的行动展示到控制界面中
+// Control.show_new_NPC = function (id) {
+//     empty_dom(Place_desc_div); //清空原本地点描述
+//     empty_dom(player_Control_div); //清空原本地点的可执行操作
+
+//     let new_NPC = places[id];
+
+//     //展示新地点的描述
+//     Place_desc_div.innerHTML = new_NPC.desc;
+//     //展示新地点的可执行操作
+//     //可以前往其他区域
+//     if (!isEmptyObject(new_NPC.connected_place)) {
+//         //前往其他区域的按钮
+//         for (let next_place_id of new_NPC.connected_place) {
+//             let move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button');
+
+//             move_place_button.innerHTML = '前往' + places[next_place_id].name;
+//             move_place_button.addEventListener('click', function () {
+//                 let place_manage = global.get_place_manage();
+//                 place_manage.set_next_place(next_place_id);
+//             });
+//         }
+//     }
+// };
 export { Control };

@@ -1,6 +1,6 @@
 'use strict';
 import { items } from '../Data/Item/Item.js';
-import { P_skills } from '../Data/Skill/Skill.js';
+import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 import { skill_levelup_exp_algorithm } from '../Function/math_func.js';
 
 //玩家拥有的技能
@@ -28,6 +28,25 @@ class Player_skill {
 class Player_A_skill extends Player_skill {
     constructor(id) {
         super(id);
+        this.init();
+        this.active_slots = new Array();
+        for (let i = 0; i < P_skills[id].need_slot_num; i++) {
+            //
+            this.active_slots[i] = new Object();
+            this.init_A_skill_aslot(this.active_slots[i], id, i);
+        }
+    }
+    init_A_skill_aslot(active_slots, id, i) {
+        let B_id = P_skills[id].need_slot_id[i];
+        this.active_slots[i].id = id; //技能id
+        this.active_slots[i].slot_num = i; //所处槽数
+        this.active_slots[i].active_condition = B_skills[B_id].active_condition; //限制条件
+        this.active_slots[i].active_type = B_skills[B_id].active_type; //辅助类型
+        this.active_slots[i].attr_correct = B_skills[B_id].attr_correct; //哪些属性作为基础数值进行计算
+        this.active_slots[i].algorithm = B_skills[B_id].algorithm; //使用哪个算法进行计算
+        this.active_slots[i].start_time = B_skills[B_id].start_time; //结束时计算
+        this.active_slots[i].effect = B_skills[B_id].effect; //技能效果
+        this.active_slots[i].desc = B_skills[B_id].desc; //技能描述
     }
 }
 //玩家拥有的被动技能

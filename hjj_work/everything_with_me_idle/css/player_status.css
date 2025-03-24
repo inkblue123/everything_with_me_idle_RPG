@@ -1,24 +1,51 @@
 /* 角色属性界面的样式 */
 #player_status {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
     /* 单列布局 */
-    /* grid-template-columns: 1fr; */
-    /* grid-template-rows: repeat(auto-fit, minmax(95px, 1fr)); */
-    /* grid-template-rows: auto; */
-    /* color: white; */
-    /* font-size: 24px; */
     /* height: 50%; */
     box-sizing: border-box;
-    border: 2px solid #797691; /* 内框 */
+    border: 2px solid #797691;
+}
+
+/* 角色状态n个子界面的切换按钮 */
+#player_status_switch_div {
+    height: 10%;
+}
+/* 角色状态n个子界面的切换按钮 */
+.player_status_switch_button {
+    flex: 1;
+    font-size: 15px;
+    border: 1px solid #797691; /* 内框 */
+}
+#player_status_value_div {
+    height: 90%;
+}
+/* 角色状态界面的样式 */
+#PAB_div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    /* 单列布局 */
+    /* height: 50%; */
+    box-sizing: border-box;
+    border: 2px solid #797691;
 }
 
 /* 展示角色血条的div的样式 */
 #bar_div {
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 5px;
     color: white;
-    height: 95px;
-    /* font-size: 24px; */
-    /* height: 50%; */
-    /* border: 3px solid #797691;  */
 }
 
 /* 角色名：父元素 */
@@ -41,148 +68,77 @@
 
 /* 血条组件：最大的父元素 */
 #HP_bar {
-    display: grid;
-    position: relative; /* 设置所有子元素相对于它进行定位 */
-    width: 100%; /* 宽度为整个窗口的85% */
-    height: 15px; /* 高度固定为15px */
-    margin-top: 10px; /* 和上边的元素距离30px */
+    flex: 1;
 }
 /* 血条组件：血条外框的样式 */
 #HP_frame {
-    margin: 0% auto; /* 居中显示 */
-    width: 85%; /* 宽度为整个窗口的85% */
-    height: 15px; /* 高度固定为15px */
     outline: 2px solid rgb(201, 16, 16); /* 外框 */
     background-color: rgba(255, 46, 46, 0.3);
 }
 /* 血条组件：血条中央，长度随当前血量变化的色块 */
 #HP_current {
-    height: 15px;
     background-color: rgb(255, 0, 0);
 }
-/* 血条组件：显示的数字 */
-#HP_number {
-    position: absolute; /* 启动绝对定位 */
-    text-align: center;
-    width: 100%;
-    line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
-    font-size: 15px; /*文本大小*/
-    /* 文本不可选中 */
-    user-select: none;
-    color: white;
-}
+
 /* 蓝条组件：最大的父元素 */
 #MP_bar {
-    display: grid;
-    position: relative; /* 设置所有子元素相对于它进行定位 */
-    margin-top: 10px; /* 和上边的元素距离 */
-    width: 100%; /* 宽度为整个窗口的85% */
-    height: 15px; /* 高度固定为15px */
+    flex: 1;
 }
 /* 蓝条组件：外框的样式 */
 #MP_frame {
-    margin: 0% auto; /* 左右居中显示 */
-    width: 85%;
-    height: 15px; /* 高度固定为15px */
     outline: 2px solid rgb(0, 0, 127); /* 外框 */
     background-color: rgba(0, 0, 255, 0.3);
 }
 /* 蓝条组件：血条中央，长度随当前血量变化的色块 */
 #MP_current {
-    height: 15px;
     background-color: rgb(15, 15, 255);
 }
-/* 蓝条组件：显示的数字 */
-#MP_number {
-    position: absolute; /* 启动绝对定位 */
-    text-align: center;
-    width: 100%;
-    line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
-    font-size: 15px; /*文本大小*/
-    /* 文本不可选中 */
-    user-select: none;
-    color: white;
-}
+
 /* 精力条组件：最大的父元素 */
 #ENP_bar {
-    display: grid;
-    position: relative; /* 设置所有子元素相对于它进行定位 */
-    margin-top: 10px;
-    width: 100%;
-    height: 15px;
+    flex: 1;
 }
 /* 精力条组件：血条外框的样式 */
 #ENP_frame {
-    margin: 0% auto; /* 左右居中显示 */
-    width: 85%; /* 宽度为整个窗口的85% */
-    height: 15px; /* 高度固定为15px */
     outline: 2px solid rgb(0, 127, 0); /* 外框 */
     background-color: rgba(0, 255, 0, 0.3);
 }
 /* 精力条组件：血条中央，长度随当前血量变化的色块 */
 #ENP_current {
-    height: 15px;
     background-color: rgb(0, 196, 0);
 }
-/* 精力条组件：显示的数字 */
-#ENP_number {
-    position: absolute; /* 启动绝对定位 */
-    text-align: center;
-    width: 100%;
-    line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
-    font-size: 15px; /*文本大小*/
-    /* 文本不可选中 */
-    user-select: none;
-    color: white;
-}
+
 /* 展示玩家属性和装备栏的div的样式 */
 #attr_equip_div {
-    /* display: grid; */
-    /* grid-template-columns: 1fr; 单列布局 */
-    /* grid-template-rows: repeat(auto-fit, minmax(95px, 1fr)); */
-    /* grid-template-rows: auto; */
-    /* color: white; */
-    /* font-size: 24px; */
-
-    height: 200px;
-    /* border: 3px solid #797691; 内框 */
+    flex: 1;
+    display: flex;
+    align-items: center;
+    /* height: 200px; */
 }
 
 /* 背包物品界面的样式 */
 #player_equipment {
     display: flex;
     flex-wrap: nowrap; /* 防止换行 */
-    /* color: white; */
-    /* font-size: 24px; */
-    /* height: 50%; */
     border: 3px solid #797691; /* 内框 */
 }
 /* 属性展示表格父元素 */
 #attribute_show {
-    /* display: grid; */
     margin: auto;
-    margin-top: 20px; /* 和上边的元素距离30px */
     gap: 0px 5px;
     width: 90%; /* 宽度为整个窗口的85% */
 }
 /* 战斗属性展示表格 */
 #combat_attribute_show {
-    /* margin: auto; */
     gap: 5px;
-    /* width: 85%;  */
 }
 /* 玩家属性展示表格 */
 #Player_attribute_show {
-    /* margin: auto; */
     gap: 5px;
-    /* width: 85%;  */
 }
 /* 一个装备栏父元素 */
 #equipment_show {
-    /* display: grid; */
     margin: auto;
-    /* 和上边的元素距离20px */
-    margin-top: 10px;
     gap: 0px 5px;
     width: 90%; /* 宽度为整个窗口的85% */
 }
@@ -207,8 +163,23 @@
     /* gap: 5px; */
     /* width: 85%;  */
 }
-/* 单个装备展示单元格 */
+/* 防具装备展示单元格 */
 .EQP_show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 30px;
+    background-color: rgb(255, 255, 255);
+    font-size: 15px; /*文本大小*/
+    line-height: 1;
+    text-align: center; /* 水平居中 */
+    /* white-space: nowrap; */
+    border: 2px solid #797691; /* 内框 */
+    user-select: none;
+}
+/* 手持的装备展示单元格 */
+.hand_EQP_show {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -232,16 +203,14 @@
 }
 /* 容纳切换属性和装备栏按钮的div */
 #Player_attr_switch_div {
+    flex: 0 1 auto;
     margin: auto;
-    /* gap: 5px; */
     width: 85%;
-    height: 70px;
+    padding: 5px 0px;
 }
-
+/* 容纳切换到属性展示按钮的div */
 #PA_switch_div {
     margin: auto;
-    /* gap: 5px; */
-    /* width: 85%; */
 }
 /* 玩家属性展示按钮 */
 .PA_switch_button {
@@ -250,7 +219,6 @@
     background-color: rgb(255, 255, 255);
     font-size: 15px; /*文本大小*/
     white-space: pre-wrap; /* 让文本按照换行符换行，同时保留空格 */
-
     border: 2px solid #797691; /* 内框 */
 }
 /* 背包物品分类单选按钮 */
@@ -260,10 +228,6 @@
 
 /* 装备栏选择多选框，和圆点绑定的文本 */
 .EQP_switch_radio_div label {
-    /* 水平居中 */
-    /* justify-content: center;  */
-    /* 垂直居中 */
-    /* align-items: center;  */
     width: 50px;
     height: 50px;
     font-size: 15px; /*文本大小*/
@@ -278,4 +242,56 @@
 .EQP_switch_radio_div input[type='radio']:checked + label {
     color: #fff;
     background-color: #3597db;
+}
+
+/* 容纳具体技能内容的div */
+#PSK_div {
+    background-color: #ffd700;
+}
+
+/* 角色状态界面中，分类单选按钮 */
+/* 100%宽度 */
+.PS_switch_radio_div_1 label {
+    padding: 10px 0;
+    width: 100%;
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}
+/* 80%宽度 */
+.PS_switch_radio_div_2 label {
+    padding: 10px 0;
+    width: 80%;
+    /* cursor: pointer; */
+    /* height: 50px; */
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    /* border-radius: 5px; */
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}
+/* 60%宽度 */
+.PS_switch_radio_div_3 label {
+    padding: 10px 0;
+    width: 60%;
+    /* cursor: pointer; */
+    /* height: 50px; */
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    /* border-radius: 5px; */
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
 }

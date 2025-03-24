@@ -5,6 +5,7 @@ import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { P_skills } from '../Data/Skill/Skill.js';
+import { player } from '../Player/Player.js';
 
 const TOOLTIP_WIDTH = 320;
 
@@ -23,6 +24,9 @@ Tooltip.InitTip = function (type, value) {
     } else if (type == 'active_skill') {
         //初始化主动技能介绍内容
         init_active_skill_tip(value);
+    } else if (type == 'show_active_skill') {
+        //初始化主动技能介绍内容
+        init_show_active_skill_tip(value);
     }
 };
 //移动小窗口
@@ -53,10 +57,13 @@ Tooltip.MoveTip = function (event) {
         if (mouseX + tooltipWidth + 10 > windowWidth) {
             left = mouseX - tooltipWidth - 10; // 显示在左侧
         }
-
         // 如果小窗口靠近浏览器底部边缘，改为显示在上方
         if (mouseY + tooltipHeight + 10 > windowHeight) {
             top = mouseY - tooltipHeight - 10; // 显示在上方
+        }
+        //如果小窗口初步调整后超过浏览器左侧边缘，改为在浏览器居中显示
+        if (left < 0) {
+            left = (windowWidth - tooltipWidth) / 2; //在整个浏览器的中央位置显示
         }
     }
     // 更新小窗口的位置
@@ -270,10 +277,12 @@ function show_material_type(show_item) {
 //追加展示材料来源和用处
 function show_material_source_use(show_item) {}
 
-//传入玩家的一个主动技能拷贝对象，展示这个主动技能的详细信息
-function init_active_skill_tip(active_skill) {
-    let id = active_skill.id;
-    let slot_num = active_skill.slot_num;
+//传入触发展示的玩家主动技能槽数，从玩家类身上获取该槽上的技能，展示这个主动技能的详细信息
+function init_active_skill_tip(show_slot_num) {
+    let P_Askill = player.get_player_ASkill_Manage();
+    // let active_skill = P_Askill.active_slots[show_slot_num];
+    let id = P_Askill.active_slots[show_slot_num].id; //要展示的技能的id
+    let slot_num = P_Askill.active_slots[show_slot_num].slot_num; //触发本次展示的，是要展示技能的第几个槽
     if (isEmptyObject(P_skills[id])) {
         //技能库没有相关内容，简单展示信息
         let name = addElement(Tooltip, 'div', null, 'lable_down');
@@ -290,7 +299,8 @@ function init_active_skill_tip(active_skill) {
     for (let i = 0; i < P_skills[id].need_slot_num; i++) {
         let slot_value_div = addElement(slot_div, 'div', null, 'slot_value_div');
 
-        //展示物品的名称和描述
+        let i_slot_num = show_slot_num - slot_num + i; //从要展示的技能的第一个槽开始
+        let active_skill = P_Askill.active_slots[i_slot_num]; //获取对应槽中的主动技能信息
         let desc = addElement(slot_value_div, 'div', null, 'lable_down');
         desc.innerHTML = active_skill.desc; //这个槽的技能描述
         //追加展示技能类型-伤害类型信息
@@ -300,6 +310,7 @@ function init_active_skill_tip(active_skill) {
         show_active_skill_condition(slot_value_div, active_skill);
         //追加展示技能的属性补正
         show_active_skill_attr_correct(slot_value_div, active_skill);
+
         //对多槽技能，非当前展示的槽的展示内容上覆盖一层半透明颜色
         if (i != slot_num) {
             addElement(slot_value_div, 'div', null, 'cover');
@@ -394,4 +405,40 @@ function show_active_skill_attr_correct(slot_value_div, active_skill) {
     }
     return true;
 }
+//传入玩家拥有的一个主动技能，展示它的详情信息
+function init_show_active_skill_tip(skill_id) {
+    let All_Skills = player.get_player_All_Skills();
+    // let active_skill = P_Askill.active_slots[show_slot_num];
+    // let id = P_Askill.active_slots[show_slot_num].id; //要展示的技能的id
+    // let slot_num = P_Askill.active_slots[show_slot_num].slot_num; //触发本次展示的，是要展示技能的第几个槽
+    if (isEmptyObject(P_skills[skill_id])) {
+        //技能库没有相关内容，简单展示信息
+        let name = addElement(Tooltip, 'div', null, 'lable_down');
+        name.innerHTML = '未定义技能';
+        let desc = addElement(Tooltip, 'div', null, 'lable_down');
+        desc.innerHTML = '技能id为 : ' + id;
+        return false;
+    }
+    //创造主动技能展示的布局
+    Tooltip.style.width = `${P_skills[skill_id].need_slot_num * TOOLTIP_WIDTH}px`;
+    let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
+    name_lable.innerHTML = P_skills[skill_id].name; //技能名
+    let slot_div = addElement(Tooltip, 'div', null, 'slot_div');
+    for (let i = 0; i < P_skills[skill_id].need_slot_num; i++) {
+        let slot_value_div = addElement(slot_div, 'div', null, 'slot_value_div');
+
+        // let i_slot_num = show_slot_num - slot_num + i; //从要展示的技能的第一个槽开始
+        let active_skill = All_Skills[skill_id].active_slots[i]; //获取对应槽中的主动技能信息
+        let desc = addElement(slot_value_div, 'div', null, 'lable_down');
+        desc.innerHTML = active_skill.desc; //这个槽的技能描述
+        //追加展示技能类型-伤害类型信息
+        //不同类型的技能似乎展示效果不好，有待优化
+        show_active_skill_type(slot_value_div, active_skill);
+        //追加展示技能的限制条件
+        show_active_skill_condition(slot_value_div, active_skill);
+        //追加展示技能的属性补正
+        show_active_skill_attr_correct(slot_value_div, active_skill);
+    }
+}
+
 export { Tooltip };

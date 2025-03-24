@@ -1,7 +1,6 @@
 import { player, Player_Object } from '../Player/Player.js';
 import {
     updata_equipment_show,
-    updata_place,
     updata_BP_value,
     updata_player_active_slots_num,
     updata_player_active_show,
@@ -38,6 +37,9 @@ function player_init() {
     let All_Skills = player.get_player_All_Skills();
     All_Skills.player_unlock_skill('normal_sword');
     All_Skills.player_unlock_skill('normal_attack_Melee');
+    All_Skills.player_unlock_skill('energy_storage_attack');
+    All_Skills.player_unlock_skill('test_3_slot_skill');
+    All_Skills.player_unlock_skill('test_4_slot_skill');
     //测试物品和装备系统
     player.Player_get_item('Oak_logs', 10);
     player.Player_get_item('wood_sword', 1, 'damaged');
@@ -55,7 +57,8 @@ function player_init() {
     player.Player_get_item('test_boomerang', 8, 'epic');
     player.Player_get_item('wood_bow', 1, 'ordinary'); //远程武器测试
     let P_Askill = player.get_player_ASkill_Manage();
-    P_Askill.set_active_skill('normal_attack_Melee', 0); //在第0个主动技能槽里设置普通攻击
+    P_Askill.set_active_skill('energy_storage_attack', 0); //在第0个主动技能槽里设置普通攻击
+    // P_Askill.set_active_skill('normal_attack_Melee', 0); //在第0个主动技能槽里设置普通攻击
 }
 //游戏界面初始化
 function dom_init() {
@@ -77,7 +80,8 @@ function dom_init() {
         updata_equipment_show(radio.value);
     }
     //移动到初始位置
-    updata_place('test_combat1');
-    // updata_place('test_normal1');
+    let place_manage = global.get_place_manage();
+    place_manage.set_now_place('village_home');
+    place_manage.set_next_place('village_home');
 }
 export { LoadSaveFile };

@@ -32,46 +32,43 @@ function show_active_EQP() {
     let EQP_value = get_EQP_switch();
     document.getElementById(EQP_value).style.display = '';
 }
-//切换背包、技能、图鉴的按钮
-function change_BP_SK_IB(button_id) {
+//切换角色状态界面中的角色属性、角色技能界面的按钮
+function change_Player_status_div(button_id) {
+    const PAB_div = document.getElementById('PAB_div');
+    const PSK_div = document.getElementById('PSK_div');
+    if (button_id == 'PAB_switch_button') {
+        PAB_div.style.display = '';
+        PSK_div.style.display = 'none';
+    }
+    if (button_id == 'PSK_switch_button') {
+        PAB_div.style.display = 'none';
+        PSK_div.style.display = '';
+    }
+}
+//切换战斗规划界面中背包、战斗规划窗口的按钮
+function change_Combat_plan_div(button_id) {
     const BP_div = document.getElementById('BP_div');
-    const SK_div = document.getElementById('SK_div');
-    const IB_div = document.getElementById('IB_div');
+    const CBP_div = document.getElementById('CBP_div');
     if (button_id == 'BP_switch_button') {
         BP_div.style.display = '';
-        SK_div.style.display = 'none';
-        IB_div.style.display = 'none';
+        CBP_div.style.display = 'none';
     }
-    if (button_id == 'SK_switch_button') {
+    if (button_id == 'CBP_switch_button') {
         BP_div.style.display = 'none';
-        SK_div.style.display = '';
+        CBP_div.style.display = '';
+    }
+}
+//切换游戏数据界面中的脑海、图鉴界面的按钮
+function change_Game_data_div(button_id) {
+    const MD_div = document.getElementById('MD_div');
+    const IB_div = document.getElementById('IB_div');
+    if (button_id == 'MD_switch_button') {
+        MD_div.style.display = '';
         IB_div.style.display = 'none';
     }
     if (button_id == 'IB_switch_button') {
-        BP_div.style.display = 'none';
-        SK_div.style.display = 'none';
+        MD_div.style.display = 'none';
         IB_div.style.display = '';
-    }
-}
-//切换战斗规划、生活技能、创造合成界面的按钮
-function change_CBP_LVP_CTP(button_id) {
-    const CBP_div = document.getElementById('CBP_div');
-    const LVP_div = document.getElementById('LVP_div');
-    const CTP_div = document.getElementById('CTP_div');
-    if (button_id == 'CBP_switch_button') {
-        CBP_div.style.display = '';
-        LVP_div.style.display = 'none';
-        CTP_div.style.display = 'none';
-    }
-    if (button_id == 'LVP_switch_button') {
-        CBP_div.style.display = 'none';
-        LVP_div.style.display = '';
-        CTP_div.style.display = 'none';
-    }
-    if (button_id == 'CTP_switch_button') {
-        CBP_div.style.display = 'none';
-        LVP_div.style.display = 'none';
-        CTP_div.style.display = '';
     }
 }
 //按下战斗规划中，主动技能规划、自动恢复规划、自动撤离规划按钮之后，切换到对应的界面
@@ -138,34 +135,25 @@ function show_dropdown_table(classification_div, table_id) {
 function show_combat_game_div() {
     const game_up_combat = document.getElementById('game_up_combat');
     const game_up_nomal = document.getElementById('game_up_nomal');
-    const create = document.getElementById('create');
-    const game_plan = document.getElementById('game_plan');
 
     game_up_combat.style.display = '';
     game_up_nomal.style.display = 'none';
-
-    create.style.display = 'none';
-    game_plan.style.display = '';
 }
 //展示非战斗时的游戏界面
 function show_normal_game_div() {
     const game_up_combat = document.getElementById('game_up_combat');
     const game_up_nomal = document.getElementById('game_up_nomal');
-    const create = document.getElementById('create');
-    const game_plan = document.getElementById('game_plan');
 
     game_up_combat.style.display = 'none';
     game_up_nomal.style.display = '';
-
-    create.style.display = '';
-    game_plan.style.display = 'none';
 }
 
 export {
     change_PA,
     show_active_EQP,
-    change_BP_SK_IB,
-    change_CBP_LVP_CTP,
+    change_Player_status_div,
+    change_Combat_plan_div,
+    change_Game_data_div,
     change_ASP_ARP_AEP,
     show_dropdown_table,
     show_combat_game_div,

@@ -4,8 +4,8 @@ import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
 import { Combat_manage } from './combat_class.js';
 import { Exp_manage } from './exp_class.js';
+import { Global_flag_manage } from './global_flag_class.js';
 import { places } from '../Data/Place/Place.js';
-import { updata_place } from '../Function/Updata_func.js';
 //记录全局参数和游戏状态的对象
 class Global {
     constructor() {
@@ -16,6 +16,7 @@ class Global {
         this.random_manage; //随机数管理类
         this.combat_manage; //战斗管理类
         this.exp_manage; //技能经验管理类
+        this.global_flag_manage; //全局标记管理类
     }
     init() {
         //获取配置
@@ -33,6 +34,7 @@ class Global {
         this.random_manage = new Random_manage();
         this.combat_manage = new Combat_manage();
         this.exp_manage = new Exp_manage();
+        this.global_flag_manage = new Global_flag_manage();
     }
     init_config() {
         //
@@ -58,7 +60,13 @@ class Global {
     get_exp_manage() {
         return this.exp_manage;
     }
+    get_global_flag_manage() {
+        return this.global_flag_manage;
+    }
     //对外提供一些常用功能的接口
+    get_game_status() {
+        return this.global_flag_manage.get_game_status();
+    }
     update_FPS_manage() {
         return this.fps_manage.update_FPS_manage();
     }
@@ -95,7 +103,7 @@ class Global {
     //玩家死亡，处理相关逻辑
     player_death() {
         //移动到安全的地方
-        updata_place('test_normal1');
+        this.place_manage.set_next_place('village_home');
         //清空玩家buff
         //清空战斗区域的临时加成
     }

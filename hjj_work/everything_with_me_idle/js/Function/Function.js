@@ -102,7 +102,7 @@ function ASP_type_handle(type_switch) {
                     }
                     break;
                 case 'ASP_A': //可以攻击的主动技能
-                    for (let slot_id in P_skills[skill_id].need_slot_id) {
+                    for (let slot_id of P_skills[skill_id].need_slot_id) {
                         if (B_skills[slot_id].active_type == 'attack') {
                             arr.push(skill_id);
                             break;
@@ -110,7 +110,7 @@ function ASP_type_handle(type_switch) {
                     }
                     break;
                 case 'ASP_D': //可以防御的主动技能
-                    for (let slot_id in P_skills[skill_id].need_slot_id) {
+                    for (let slot_id of P_skills[skill_id].need_slot_id) {
                         if (B_skills[slot_id].active_type == 'defense') {
                             arr.push(skill_id);
                             break;
@@ -118,7 +118,7 @@ function ASP_type_handle(type_switch) {
                     }
                     break;
                 case 'ASP_R': //可以恢复的主动技能
-                    for (let slot_id in P_skills[skill_id].need_slot_id) {
+                    for (let slot_id of P_skills[skill_id].need_slot_id) {
                         if (B_skills[slot_id].active_type == 'recovery') {
                             arr.push(skill_id);
                             break;
@@ -126,7 +126,7 @@ function ASP_type_handle(type_switch) {
                     }
                     break;
                 case 'ASP_F': //可以辅助的主动技能
-                    for (let slot_id in P_skills[skill_id].need_slot_id) {
+                    for (let slot_id of P_skills[skill_id].need_slot_id) {
                         if (B_skills[slot_id].active_type == 'auxiliary') {
                             arr.push(skill_id);
                             break;
