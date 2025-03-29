@@ -32,7 +32,7 @@ export class FPS_manage {
         this.game_speed = game_speed;
     }
     //一帧开始，更新相关时间
-    update_FPS_start() {
+    updata_FPS_start() {
         //更新真实时间
         this.now_time = Date.now();
         this.last_start_time = this.start_time;
@@ -43,7 +43,7 @@ export class FPS_manage {
         this.last_game_now_time = this.game_now_time;
     }
     //一帧结束，更新相关时间
-    update_FPS_end() {
+    updata_FPS_end() {
         this.now_time = Date.now();
         this.end_time = this.now_time;
         let run_ms = this.end_time - this.start_time;

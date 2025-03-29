@@ -12,6 +12,7 @@ export class Attack_effect {
         this.precision = 0; //精准
         this.critical_chance = 0; //暴击率
         this.critical_damage = 0; //暴击伤害
+        this.damage_type; //伤害类型
     }
 }
 export class P_Attack_effect {
@@ -31,7 +32,7 @@ export class Combat_manage {
         this.player_Attack = new P_Attack_effect();
         this.enemy_Attacks = new Array();
         this.combat_place_enemys; //战斗场地内敌人的浅拷贝
-        this.combat_flag; //当前帧是否需要进行战斗的标记
+        this.enemy_combat_flag; //当前帧是否需要进行战斗的标记
         this.player_combat_flag; //当前帧玩家战斗是否成功的标记
     }
     //设置玩家即将造成的攻击
@@ -39,34 +40,40 @@ export class Combat_manage {
         if (main_Attack) this.player_Attack.main_Attack = main_Attack;
         if (deputy_Attack) this.player_Attack.deputy_Attack = deputy_Attack;
         if (other_Attack) this.player_Attack.other_Attack = other_Attack;
-        if (main_Attack || deputy_Attack || other_Attack) this.combat_flag = true;
+        if (main_Attack || deputy_Attack || other_Attack) {
+            this.player_combat_flag = true;
+        }
     }
     //设置敌人即将造成的攻击
     set_enemy_next_attack(enemy_Attack) {
         this.enemy_Attacks.push(enemy_Attack);
-        this.combat_flag = true;
+        this.enemy_combat_flag = true;
     }
     //结算这一帧的战斗结果
     run_combat() {
-        if (!this.combat_flag) {
+        if (!this.enemy_combat_flag && !this.player_combat_flag) {
             return false;
         }
 
         let enemy_manage = global.get_enemy_manage();
         this.combat_place_enemys = enemy_manage.get_combat_place_enemys();
         //玩家攻击
-        this.PAE_manage();
+        if (this.player_combat_flag) {
+            this.PAE_manage();
+        }
         //敌人攻击
-        this.EAP_manage();
+        if (this.enemy_combat_flag) {
+            this.EAP_manage();
+        }
         //战斗结束，重置相关参数
         this.reset_combat_data();
         return true;
     }
     //重置战斗相关参数
     reset_combat_data() {
-        this.player_Attack = new Attack_effect();
+        this.player_Attack = new P_Attack_effect();
         this.enemy_Attacks = new Array();
-        this.combat_flag = false;
+        this.enemy_combat_flag = false;
         this.player_combat_flag = false;
     }
     //玩家攻击敌人的战斗结果
@@ -78,7 +85,7 @@ export class Combat_manage {
             return true;
         }
         //攻击n次
-        this.player_combat_flag = true;
+        // this.player_combat_flag = true;
         let end_attack_damage = 0;
         let end_attack_num = 0;
         for (let i = 0; i < enemys.length; i++) {
@@ -91,7 +98,11 @@ export class Combat_manage {
                     enemys[i].health_point -= this.player_Attack.main_Attack.base_damage;
                 }
                 if (enemys[i].health_point <= 0) {
+                    //击杀了一个敌人，记录相关数据
                     enemys[i].statu = false;
+
+                    let game_event_manage = global.get_game_event_manage();
+                    game_event_manage.record_kill_enemy_num(this.player_Attack.main_Attack);
                     break;
                 }
             }
@@ -113,7 +124,7 @@ export class Combat_manage {
             //玩家生命归零，进入死亡逻辑
             if (P_attr.health_point <= 0) {
                 P_attr.health_point = 0;
-                global.player_death();
+                this.player_death();
                 break;
             }
         }
@@ -135,6 +146,20 @@ export class Combat_manage {
             lock_enemys = enemy_manage.get_min_distance_enemy(this.player_Attack.lock_enemy_type.num);
             return lock_enemys;
         }
+    }
+    //玩家死亡，处理相关逻辑
+    player_death() {
+        let global_flag_manage = global.get_global_flag_manage();
+        if (global_flag_manage.get_game_status('game_event')) {
+            //如果玩家处于事件中，死亡意味着事件失败，只退出事件
+            let game_event_manage = global.get_game_event_manage();
+            game_event_manage.end_game_event(false);
+        } else {
+            //非事件中，移动到安全的地方
+            this.place_manage.set_next_place('village_home');
+        }
+        //清空玩家buff
+        //清空战斗区域的临时加成
     }
 }
 

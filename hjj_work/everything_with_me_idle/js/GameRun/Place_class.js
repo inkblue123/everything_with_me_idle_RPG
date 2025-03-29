@@ -18,6 +18,9 @@ export class Place_manage {
         this.last_place = this.now_place;
         this.now_place = place;
     }
+    set_next_place(next_place) {
+        this.next_place = next_place;
+    }
     get_now_place() {
         return this.now_place;
     }
@@ -27,15 +30,15 @@ export class Place_manage {
     get_next_place_type() {
         return places[this.next_place].type;
     }
-    set_next_place(next_place) {
-        this.next_place = next_place;
-    }
     get_last_place() {
         return this.last_place;
     }
+    //获取上一个普通地点
     get_last_normal_place() {
         return this.last_normal_place;
     }
+
+    //判断是否需要更新地点
     is_need_change_place() {
         if (this.next_place) {
             return true;

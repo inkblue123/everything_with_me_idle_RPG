@@ -3,7 +3,8 @@ import { Attack_effect } from './combat_class.js';
 import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { E_skills } from '../Data/Skill/Skill.js';
-import { get_random, get_random_enemy_distance } from '../Function/math_func.js';
+import { get_random, get_random_enemy_distance, Askill_effect_algorithm } from '../Function/math_func.js';
+
 //场地内的敌人对象
 class place_enemy {
     constructor(id) {
@@ -114,17 +115,28 @@ class place_enemy {
     }
     //激活敌人的这一次主动技能
     start_enemy_active() {
-        //
         let id = this.now_active_id;
         let stage = this.now_active_stage;
+        let E_SK = E_skills[id];
+
+        //伤害类型
+        this.enemy_Attack_effect.damage_type = E_SK.effect[stage].damage_type;
+        //攻击次数
+        if (E_SK.effect[stage].attack_num.type == 'add') {
+            this.enemy_Attack_effect.attack_num += E_SK.effect[stage].attack_num.num;
+        } else if (E_SK.effect[stage].attack_num.type == 'fixed') {
+            this.enemy_Attack_effect.attack_num = E_SK.effect[stage].attack_num.num;
+        }
+
         //计算主动技能需要的敌人属性
         let askill_base_attr = this.combat_attack_attr['attack'];
         //计算主动技能应该得到的效果
-        let Askill_algorithm = E_skills[id].algorithm[stage];
-        Askill_algorithm(askill_base_attr, this.enemy_Attack_effect);
+        let algorithm = E_SK.algorithm[stage];
+        Askill_effect_algorithm(algorithm, askill_base_attr, this.enemy_Attack_effect);
+        // Askill_algorithm(askill_base_attr, this.enemy_Attack_effect);
 
         //根据主动技能类型，产生这次效果
-        if (E_skills[id].active_type[stage] == 'attack') {
+        if (E_SK.active_type[stage] == 'attack') {
             //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
             let combat_manage = global.get_combat_manage();
             combat_manage.set_enemy_next_attack(this.enemy_Attack_effect);
@@ -138,6 +150,7 @@ class place_enemy {
     reset_round() {
         this.last_attack_time = this.now_time;
         this.attack_point = 0;
+        //应该要按照敌人
         if (this.now_active_stage + 1 < E_skills[this.now_active_id].skill_stage) {
             this.now_active_stage++;
         } else {

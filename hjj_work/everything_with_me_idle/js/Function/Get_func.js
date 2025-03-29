@@ -117,6 +117,8 @@ function get_ASP_type() {
         }
     }
 }
+//获取当前日期在村庄兵营里属于轮周第几日
+function get_village_barracks_week() {}
 
 export {
     get_BP_type,
@@ -126,4 +128,5 @@ export {
     get_EQP_data,
     get_EQP_wp_data,
     get_ASP_type,
+    get_village_barracks_week,
 };

@@ -11,7 +11,7 @@ import {
     updata_BP_value,
     updata_attribute_show,
     updata_player_name,
-    update_enemy_show,
+    updata_enemy_show,
     updata_player_active_time_bar,
     updata_game_dom,
 } from '../Function/Updata_func.js';
@@ -19,7 +19,7 @@ import { show_combat_game_div, show_normal_game_div } from '../Function/show_fun
 
 function state_game() {
     let FPS_manage = global.get_fps_manage();
-    FPS_manage.update_FPS_start();
+    FPS_manage.updata_FPS_start();
 
     //更新需要变动的游戏界面
     updata_game_dom();
@@ -30,7 +30,7 @@ function state_game() {
     //更新需要即时变动的游戏界面内的数据
     updata_game_data();
 
-    FPS_manage.update_FPS_end();
+    FPS_manage.updata_FPS_end();
     //一帧运行完毕，睡眠一段时间，保证游戏一秒运行帧数次
     let sleep_ms = global.get_sleep_ms();
     setTimeout(state_game, sleep_ms);
@@ -38,7 +38,7 @@ function state_game() {
 
 //更新需要即时变动的游戏界面内的数据
 function updata_game_data() {
-    //左上玩家属性展示界面更新
+    //界面中的数值更新
     updata_HP();
     updata_MP();
     updata_ENP();
@@ -46,9 +46,16 @@ function updata_game_data() {
     updata_attribute_show();
     //
     updata_player_active_time_bar();
-    if (global.get_combat_statu()) {
-        update_enemy_show();
+
+    let global_flag_manage = global.get_global_flag_manage();
+    if (global_flag_manage.get_game_status('combat_statu')) {
+        updata_enemy_show();
     }
+    if (global_flag_manage.get_game_status('game_event')) {
+        let game_event_manage = global.get_game_event_manage();
+        game_event_manage.updata_game_event();
+    }
+    global_flag_manage.updata_short_game_status();
 }
 //战斗中，计算一帧之后的战斗内容
 function updata_combat() {

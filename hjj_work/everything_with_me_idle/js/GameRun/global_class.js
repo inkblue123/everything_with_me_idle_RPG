@@ -4,8 +4,8 @@ import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
 import { Combat_manage } from './combat_class.js';
 import { Exp_manage } from './exp_class.js';
+import { Game_event_manage } from './game_event.js';
 import { Global_flag_manage } from './global_flag_class.js';
-import { places } from '../Data/Place/Place.js';
 //记录全局参数和游戏状态的对象
 class Global {
     constructor() {
@@ -16,6 +16,7 @@ class Global {
         this.random_manage; //随机数管理类
         this.combat_manage; //战斗管理类
         this.exp_manage; //技能经验管理类
+        this.game_event_manage; //全局标记管理类
         this.global_flag_manage; //全局标记管理类
     }
     init() {
@@ -34,7 +35,10 @@ class Global {
         this.random_manage = new Random_manage();
         this.combat_manage = new Combat_manage();
         this.exp_manage = new Exp_manage();
+        this.game_event_manage = new Game_event_manage();
+        this.game_event_manage.init();
         this.global_flag_manage = new Global_flag_manage();
+        this.global_flag_manage.init();
     }
     init_config() {
         //
@@ -60,15 +64,15 @@ class Global {
     get_exp_manage() {
         return this.exp_manage;
     }
+    get_game_event_manage() {
+        return this.game_event_manage;
+    }
     get_global_flag_manage() {
         return this.global_flag_manage;
     }
     //对外提供一些常用功能的接口
-    get_game_status() {
-        return this.global_flag_manage.get_game_status();
-    }
-    update_FPS_manage() {
-        return this.fps_manage.update_FPS_manage();
+    updata_FPS_manage() {
+        return this.fps_manage.updata_FPS_manage();
     }
     get_sleep_ms() {
         return this.fps_manage.get_sleep_ms();
@@ -80,11 +84,12 @@ class Global {
         return this.fps_manage.get_game_now_time();
     }
     get_combat_statu() {
-        let now_place = this.place_manage.get_now_place();
-        if (places[now_place].type == 'combat') {
-            return true;
-        }
-        return false;
+        return this.global_flag_manage.get_game_status('combat_statu');
+        // let now_place = this.place_manage.get_now_place();
+        // if (places[now_place].type == 'combat') {
+        //     return true;
+        // }
+        // return false;
     }
     add_new_enemy() {
         let now_place = this.place_manage.get_now_place();
@@ -100,13 +105,13 @@ class Global {
         //玩家被动技能
         //玩家临时buff
     }
-    //玩家死亡，处理相关逻辑
-    player_death() {
-        //移动到安全的地方
-        this.place_manage.set_next_place('village_home');
-        //清空玩家buff
-        //清空战斗区域的临时加成
-    }
+    // //玩家死亡，处理相关逻辑
+    // player_death() {
+    //     //移动到安全的地方
+    //     this.place_manage.set_next_place('village_home');
+    //     //清空玩家buff
+    //     //清空战斗区域的临时加成
+    // }
 }
 //记录全局参数和游戏状态的对象
 var global = new Global();

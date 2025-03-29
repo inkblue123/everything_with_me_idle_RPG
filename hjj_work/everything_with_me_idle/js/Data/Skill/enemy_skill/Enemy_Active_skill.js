@@ -15,6 +15,12 @@ function init_Enemy_Active_skill(E_skills) {
     E_skills[id].algorithm = [1]; //每个阶段使用哪个算法进行计算
     E_skills[id].start_time = ['end']; //每个阶段何时计算
     E_skills[id].attack_speed = [0]; //每个阶段的攻击速度，0表示使用敌人自身的攻击速度
+    E_skills[id].effect = [
+        {
+            damage_type: 'melee',
+            attack_num: { type: 'add', num: 1 },
+        },
+    ];
 }
 
 export { init_Enemy_Active_skill };

@@ -5,7 +5,9 @@ function normal_enemy(texts) {
     let id = 'Training_Dummy';
     add_text_object(texts, id);
     texts[id].enemy_name = '训练假人';
-    // texts[id].place_desc = '这里是普通地点1，这里不会进行战斗，可以通往其他地方';
+    id = 'Attack_Dummy';
+    add_text_object(texts, id);
+    texts[id].enemy_name = '攻击假人';
 }
 //初始化文本数据库中与敌人相关的文本
 function init_Text_enemy(texts) {

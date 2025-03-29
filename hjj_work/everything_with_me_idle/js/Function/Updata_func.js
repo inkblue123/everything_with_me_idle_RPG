@@ -288,7 +288,7 @@ function updata_player_active_time_bar() {
     }
 }
 //更新战斗界面中的所有敌人
-function update_enemy_show() {
+function updata_enemy_show() {
     let enemy_manage = global.get_enemy_manage();
     let combat_place_enemys = enemy_manage.get_combat_place_enemys();
     for (let place_x in combat_place_enemys) {
@@ -324,12 +324,13 @@ function updata_game_dom() {
     if (place_manage.is_need_change_place()) {
         //需要前往新地点，更新相关内容
         let next_place_type = place_manage.get_next_place_type();
-        if (next_place_type == 'normal') {
+        if (next_place_type == 'normal' || next_place_type == 'NPC') {
             updata_to_normal_place();
         } else if (next_place_type == 'combat') {
             updata_to_combat_place();
-        } else if (next_place_type == 'NPC') {
         }
+        //  else if (next_place_type == 'NPC') {
+        // }
         //在全局配置中更新地点
         place_manage.goto_next_place();
         // 获取玩家控制界面
@@ -345,6 +346,9 @@ function updata_to_normal_place() {
     if (now_place_type == 'combat') {
         //从战斗地点进入普通地点，执行转场
         show_normal_game_div();
+        //退出战斗状态
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.set_game_status('combat_statu', false);
     }
 }
 //移动到新的战斗地点，更新相关参数
@@ -354,16 +358,20 @@ function updata_to_combat_place() {
     let enemy_manage = global.get_enemy_manage();
     enemy_manage.delete_all_enemy(); //清除战斗区域的怪物
     enemy_manage.reset_enemy_data(); //重置刷怪参数
-    update_enemy_show();
+    updata_enemy_show();
     //玩家主动技能重置
     let P_Askill = player.get_player_ASkill_Manage();
     P_Askill.reset_round();
 
     let place_manage = global.get_place_manage();
     let now_place_type = place_manage.get_now_place_type();
-    if (now_place_type == 'normal') {
-        //从普通地点进入战斗地点，执行转场
+    if (now_place_type != 'combat') {
+        // if (now_place_type == 'normal' || now_place_type == 'NPC') {
+        //从非战斗地点进入战斗地点，执行转场
         show_combat_game_div();
+        //进入战斗状态
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.set_game_status('combat_statu', true);
     }
 }
 
@@ -411,7 +419,7 @@ export {
     updata_equipment_show,
     updata_attribute_show,
     updata_player_EQP,
-    update_enemy_show,
+    updata_enemy_show,
     updata_player_active_slots_num,
     updata_player_active_show,
     updata_player_active,

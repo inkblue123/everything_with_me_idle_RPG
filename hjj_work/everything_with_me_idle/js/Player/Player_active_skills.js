@@ -332,6 +332,8 @@ export class Player_active_skills_Manage {
         if (start_skill.active_type == 'attack') {
             //处理攻击类技能特有的内容
             let effect = start_skill.effect;
+            //伤害类型
+            this.main_Attack.damage_type = effect.damage_type;
             //攻击次数
             if (effect.attack_num.type == 'add') {
                 this.main_Attack.attack_num += effect.attack_num.num;

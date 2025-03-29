@@ -189,8 +189,12 @@ function check_Equipment(id, equip_rarity) {
 function isEmptyObject(obj) {
     //未定义内容会返回真
     if (obj === undefined) return true;
+    //空指针会返回真
+    if (obj === null) return true;
     //没有任何内容的对象会返回真
-    return JSON.stringify(obj) === '{}';
+    if (JSON.stringify(obj) === '{}') return true;
+
+    return false;
 }
 //将hex颜色和透明度转换成rgba颜色
 function hex2Rgba(bgColor, alpha = 1) {

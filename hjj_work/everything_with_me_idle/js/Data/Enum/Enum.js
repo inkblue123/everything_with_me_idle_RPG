@@ -3,6 +3,7 @@ import { init_Enum_item } from './Enum_item.js';
 import { init_Enum_attr } from './Enum_attr.js';
 import { init_Enum_material } from './Enum_material.js';
 import { init_Enum_type } from './Enum_type.js';
+import { init_Enum_game_status } from './Enum_game_status.js';
 
 //创建新的内容之前建议先用add_Enum_Array,重名情况会用console.log输出
 //如果已经有过内容则应该考虑换个名字
@@ -18,5 +19,7 @@ init_Enum_attr(enums);
 init_Enum_material(enums);
 //初始化枚举库中与类型相关的内容
 init_Enum_type(enums);
+//初始化枚举库中与游戏状态参数相关的内容
+init_Enum_game_status(enums);
 
 export { enums };
