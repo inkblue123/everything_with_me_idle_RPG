@@ -12,6 +12,22 @@
     border: 2px solid #797691; /* 内框 */
 }
 
+/* 左边显示当前地点，右边显示时间的div*/
+#control_name_div {
+    display: flex;
+    /* 占据一整行，类型在左，内容在右 */
+    justify-content: space-between;
+}
+/* 左边显示地点名称的div*/
+#place_name_div {
+    font-size: 15px;
+}
+/* 右边显示时间的div*/
+#time_div {
+    font-size: 15px;
+    text-align: right;
+}
+
 /* 用来描述角色所处位置的容器 */
 #Place_desc_div {
     display: flex;

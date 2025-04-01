@@ -1,4 +1,4 @@
-import { FPS_manage } from './FPS_class.js';
+import { Time_manage } from './Time_class.js';
 import { Place_manage } from './Place_class.js';
 import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
@@ -23,7 +23,7 @@ class Global {
         //获取配置
         this.init_config();
         //初始化
-        this.fps_manage = new FPS_manage();
+        this.fps_manage = new Time_manage();
         this.fps_manage.init(this.config.fps);
 
         this.place_manage = new Place_manage();
@@ -84,7 +84,7 @@ class Global {
         return this.fps_manage.get_game_now_time();
     }
     get_combat_statu() {
-        return this.global_flag_manage.get_game_status('combat_statu');
+        return this.global_flag_manage.get_game_status('GS_combat_statu');
         // let now_place = this.place_manage.get_now_place();
         // if (places[now_place].type == 'combat') {
         //     return true;
@@ -104,6 +104,13 @@ class Global {
         this.enemy_manage.run_enemy_active_skill();
         //玩家被动技能
         //玩家临时buff
+    }
+
+    get_flag(flag_name) {
+        return this.global_flag_manage.get_flag(flag_name);
+    }
+    set_flag(flag_name, flag_value) {
+        return this.global_flag_manage.set_flag(flag_name, flag_value);
     }
     // //玩家死亡，处理相关逻辑
     // player_death() {

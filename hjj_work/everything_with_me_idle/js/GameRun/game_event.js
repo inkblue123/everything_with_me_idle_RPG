@@ -21,7 +21,7 @@ export class Game_event_manage {
         }
         //进入事件状态
         let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('game_event', true);
+        global_flag_manage.set_game_status('GS_game_event', true);
         this.now_event_id = event_id;
 
         //启动短期游戏参数监测
@@ -47,12 +47,12 @@ export class Game_event_manage {
             }
         }
         if (finish_flag) {
-            this.end_game_event(true);
+            this.end_game_event('finish');
         }
     }
     //结束当前游戏事件
     end_game_event(flag) {
-        if (flag) {
+        if (flag == 'finish') {
             //当前事件正常完成
             let finish_reward = game_events[this.now_event_id].finish_reward;
             for (let key in finish_reward) {
@@ -67,9 +67,15 @@ export class Game_event_manage {
                 //     //给予物品奖励
                 // }
             }
-        } else {
-            //当前事件中断退出
         }
+        // else if (flag == 'exit') {
+        //     //当前事件是玩家中断退出
+        // } else if (flag == 'death') {
+        //     //当前事件是玩家中断退出
+        // }
+        //事件退出原因设置
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.set_short_game_status(this.now_event_id, flag);
 
         //如果当前事件有专属地点，则退出这个地点，回到进入事件的位置
         if (game_events[this.now_event_id].place) {
@@ -80,8 +86,8 @@ export class Game_event_manage {
         //清除数据
         this.reset_monitor_data();
         //关闭事件状态
-        let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('game_event', false);
+        // let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.set_game_status('GS_game_event', false);
     }
     get_now_event_id() {
         return this.now_event_id;

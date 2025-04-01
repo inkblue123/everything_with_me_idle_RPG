@@ -1,6 +1,5 @@
 import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
 import { isEmptyObject } from '../Function/Function.js';
-// import { updata_place } from '../Function/Updata_func.js';
 import { places } from '../Data/Place/Place.js';
 import { game_events } from '../Data/game_event/Game_Event.js';
 import { texts } from '../Data/Text/Text.js';
@@ -10,12 +9,18 @@ var Control = crtElement('div', 'control', null, '');
 
 //创建中下，玩家控制界面内的详细组件
 {
+    //角色所处的时间地点名称
+    // let control_name_div = crtElement('div', 'control_name_div', null, '');
+    // let T_type = addElement(type_div, 'div', null, 'TLV_left');
+    // T_type.innerHTML = '装备类型：';
+    // let T_value = addElement(type_div, 'div', null, 'TLV_right');
     //角色所处位置描述
     var Place_desc_div = crtElement('div', 'Place_desc_div', null, '');
     //容纳角色在这里能做的事情的div
     var player_Control_div = crtElement('div', 'player_Control_div', null, '');
 
     //组件放入角色属性装备界面中
+    // Control.appendChild(control_name_div);
     Control.appendChild(Place_desc_div);
     Control.appendChild(player_Control_div);
 }
@@ -38,7 +43,7 @@ Control.show_now_place = function () {
         show_new_NPC(places[now_place_id]);
     }
     let global_flag_manage = global.get_global_flag_manage();
-    if (global_flag_manage.get_game_status('game_event')) {
+    if (global_flag_manage.get_game_status('GS_game_event')) {
         add_control_button_end_event('退出', null);
     }
 };
@@ -70,7 +75,9 @@ function show_new_place(new_place) {
 //移动到指定NPC面前，读取地点库信息，将可以进行的行动展示到控制界面中
 function show_new_NPC(new_NPC) {
     //展示新地点的描述
-    Place_desc_div.innerHTML = new_NPC.desc;
+
+    Place_desc_div.innerHTML = make_NPC_chat(new_NPC);
+    // Place_desc_div.innerHTML = new_NPC.desc;
 
     //可以回到上一个普通区域
     let place_manage = global.get_place_manage();
@@ -119,7 +126,7 @@ function add_control_button_end_event(front_text, after_text) {
     move_place_button.innerHTML = button_text;
     move_place_button.addEventListener('click', function () {
         let game_event_manage = global.get_game_event_manage();
-        game_event_manage.end_game_event(false);
+        game_event_manage.end_game_event('exit');
     });
 }
 //构建按钮上的文本
@@ -130,24 +137,26 @@ function make_button_text(front_text, name, after_text) {
     if (after_text) button_text += after_text;
     return button_text;
 }
+//根据当前游戏状态，选择NPC说的话
 function make_NPC_chat(NPC) {
     let text = NPC.name + '：';
     //按照优先级，判断游戏状态是否符合说话的条件
     let global_flag_manage = global.get_global_flag_manage();
-    for (let i = 0; i < NPC.chat.length; i++) {
+    for (let i = 0; i < NPC.meet_chat.length; i++) {
         //
-        let status_type = NPC.chat[i].status_type;
-        let id = NPC.chat[i].status_id;
-        let value = NPC.chat[i].value;
+        let status_type = NPC.meet_chat[i].status_type;
+        let id = NPC.meet_chat[i].status_id;
+        let value = NPC.meet_chat[i].value;
         if (status_type == 'short_game_status') {
             let status = global_flag_manage.get_short_game_status(id);
             if (status && status == value) {
-                text += NPC.chat[i].text;
+                text += NPC.meet_chat[i].text;
                 break;
             }
         } else if (status_type == 'game_status') {
         }
     }
+    return text;
 }
 
 export { Control };

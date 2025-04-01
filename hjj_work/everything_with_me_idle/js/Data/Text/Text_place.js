@@ -44,6 +44,12 @@ function NPC_place(texts) {
     add_text_object(texts, id);
     texts[id].place_name = '兵营教练';
     texts[id].place_desc = '村庄内兵营的教练';
+    texts[id].SGS_new_player_combat_test_exit =
+        '基本训练都做不到吗，无论你是少了装备还是不会用主动技能，我的课上都有教，过几天再来好好看好好学';
+    texts[id].SGS_new_player_combat_test_finish =
+        '你完成了基本战斗训练，看来你恢复的很好，按照约定，村庄里不会再限制你。如果你想变得更强，村外有更凶猛的野兽，找它们去练手吧';
+    texts[id].SGS_new_player_combat_test_death =
+        '我发现你受伤不轻，就叫人把你带出来了，基本训练对你来说应该太早，再去练练身板吧';
 }
 //初始化文本数据库中与地点相关的文本
 function init_Text_place(texts) {

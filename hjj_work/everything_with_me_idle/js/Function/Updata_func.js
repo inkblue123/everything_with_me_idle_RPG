@@ -20,7 +20,6 @@ import {
     get_EQP_switch,
     get_object_only_key, //
     get_EQP_data,
-    get_ASP_type,
 } from './Get_func.js';
 import { show_combat_game_div, show_normal_game_div } from './show_func.js';
 import {
@@ -348,7 +347,7 @@ function updata_to_normal_place() {
         show_normal_game_div();
         //退出战斗状态
         let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('combat_statu', false);
+        global_flag_manage.set_game_status('GS_combat_statu', false);
     }
 }
 //移动到新的战斗地点，更新相关参数
@@ -371,7 +370,7 @@ function updata_to_combat_place() {
         show_combat_game_div();
         //进入战斗状态
         let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('combat_statu', true);
+        global_flag_manage.set_game_status('GS_combat_statu', true);
     }
 }
 
@@ -401,7 +400,8 @@ function updata_ASP_value() {
     //清空主动技能规划界面的所有元素
     delete_ASP_div();
     //获取应该展示的主动技能过滤条件
-    let ASP_type = get_ASP_type();
+
+    let ASP_type = global.get_flag('UGS_ASP_type');
     //获取在这个过滤条件下应该展示的技能id
     let arr = ASP_type_handle(ASP_type);
     //展示这些技能

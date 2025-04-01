@@ -107,16 +107,6 @@ function get_EQP_wp_data(EQP_column, wp) {
     }
     return EQP_wp_data;
 }
-//获取主动技能规划界面的过滤条件
-function get_ASP_type() {
-    const radios = document.querySelectorAll('input[name="ASP_switch"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            // 找到一个选中的按钮后可以结束循环
-            return radio.value;
-        }
-    }
-}
 //获取当前日期在村庄兵营里属于轮周第几日
 function get_village_barracks_week() {}
 
@@ -127,6 +117,5 @@ export {
     get_object_only_key,
     get_EQP_data,
     get_EQP_wp_data,
-    get_ASP_type,
     get_village_barracks_week,
 };

@@ -150,7 +150,7 @@ export class Combat_manage {
     //玩家死亡，处理相关逻辑
     player_death() {
         let global_flag_manage = global.get_global_flag_manage();
-        if (global_flag_manage.get_game_status('game_event')) {
+        if (global_flag_manage.get_game_status('GS_game_event')) {
             //如果玩家处于事件中，死亡意味着事件失败，只退出事件
             let game_event_manage = global.get_game_event_manage();
             game_event_manage.end_game_event(false);

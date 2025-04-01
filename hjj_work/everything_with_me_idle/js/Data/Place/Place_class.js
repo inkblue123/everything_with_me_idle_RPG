@@ -69,11 +69,27 @@ export class P_NPC extends Place {
         super(id);
         this.type = 'NPC';
         this.behaviors = new Array();
+        this.meet_chat = new Array();
     }
     //添加在这个npc面前可以做的行动
     add_behavior_place(...args) {
         for (let id of args) {
             this.behaviors.push(id);
+        }
+    }
+    //初始化见面时说的话
+    add_meet_chat(status_type, status_id, value) {
+        let i = this.meet_chat.length;
+        this.meet_chat[i] = new Object();
+        this.meet_chat[i].status_type = status_type;
+        this.meet_chat[i].status_id = status_id;
+        this.meet_chat[i].value = value;
+        let text_id = status_id + '_' + value;
+        if (texts[this.id][text_id] === undefined) {
+            console.log('texts[%s][%s]未定义', this.id, text_id);
+            this.meet_chat[i].text = 'texts[%s][%s]未定义';
+        } else {
+            this.meet_chat[i].text = texts[this.id][text_id];
         }
     }
 }

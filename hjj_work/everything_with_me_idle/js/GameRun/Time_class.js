@@ -1,5 +1,5 @@
 //帧率和时间库
-export class FPS_manage {
+export class Time_manage {
     constructor() {
         //真实时间，取自Date.now()
         this.FPS;
@@ -15,6 +15,8 @@ export class FPS_manage {
         this.game_speed; //游戏速度
         this.game_now_time; //当前游戏时间
         this.last_game_now_time; //上一帧的游戏时间
+
+        this.game_date = new Object(); //当前游戏日期
     }
     // 初始化
     init(global_fps) {
@@ -26,6 +28,13 @@ export class FPS_manage {
         this.game_speed = 1;
         this.game_now_time = this.now_time;
         this.last_game_now_time = this.now_time;
+        //初始化游戏日期
+        this.game_date.year = 2025;
+        this.game_date.month = 4;
+        this.game_date.day = 1;
+        this.game_date.hours = 16;
+        this.game_date.minutes = 0;
+        this.game_date.start_time = this.now_time;
     }
     //修改游戏速度
     set_game_speed(game_speed) {
@@ -41,6 +50,8 @@ export class FPS_manage {
         let last_run_ms = this.start_time - this.last_start_time;
         this.game_now_time = this.last_game_now_time + last_run_ms * this.game_speed;
         this.last_game_now_time = this.game_now_time;
+        //更新游戏日期
+        this.updata_game_date(this.game_now_time);
     }
     //一帧结束，更新相关时间
     updata_FPS_end() {
@@ -74,5 +85,40 @@ export class FPS_manage {
     //获取当前游戏时间
     get_game_now_time() {
         return this.game_now_time;
+    }
+    //更新游戏日期
+    updata_game_date(game_now_time) {
+        let newTime = new Date(game_now_time);
+        let gameDateTime = new Date(this.game_date.start_time);
+
+        if (newTime.getSeconds() - gameDateTime.getSeconds() >= 1) {
+            this.game_date.minutes++;
+            if (this.game_date.minutes >= 60) {
+                this.game_date.minutes = 0;
+                this.game_date.hours++;
+            }
+            if (this.game_date.hours >= 24) {
+                this.game_date.hours = 0;
+                this.game_date.day++;
+            }
+            if (this.game_date.day >= 31) {
+                this.game_date.day = 1;
+                this.game_date.month++;
+            }
+            if (this.game_date.month >= 13) {
+                this.game_date.month = 1;
+                this.game_date.year++;
+            }
+            this.game_date.start_time = game_now_time;
+
+            // console.log('%s', this.get_game_date());
+        }
+    }
+    //获取游戏日期
+    get_game_date() {
+        let date = this.game_date;
+        let ch = date.year + '.' + date.month + '.' + date.day;
+        ch += '-' + date.hours + ':' + date.minutes;
+        return ch;
     }
 }
