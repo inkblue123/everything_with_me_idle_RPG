@@ -10,22 +10,36 @@
     /* height: 50%; */
     box-sizing: border-box;
     border: 2px solid #797691; /* 内框 */
+    user-select: none;
 }
 
 /* 左边显示当前地点，右边显示时间的div*/
 #control_name_div {
     display: flex;
+    padding: 0 5px;
     /* 占据一整行，类型在左，内容在右 */
     justify-content: space-between;
 }
+#control_name_left_div {
+    text-align: left;
+}
+#control_name_right_div {
+    text-align: right;
+}
+
 /* 左边显示地点名称的div*/
 #place_name_div {
-    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 /* 右边显示时间的div*/
 #time_div {
-    font-size: 15px;
     text-align: right;
+}
+.control_text_div {
+    display: flex;
+    font-size: 15px;
 }
 
 /* 用来描述角色所处位置的容器 */
@@ -36,7 +50,7 @@
     justify-content: center;
     align-items: center;
     min-height: 50px;
-
+    white-space: pre-wrap; /* 保留空格和换行 */
     /* background-color: rgb(19, 250, 54); */
     border: 1px solid #797691; /* 内框 */
 }
@@ -45,7 +59,6 @@
     box-sizing: border-box;
     /* background-color: rgb(250, 19, 19); */
     border: 1px solid #797691;
-    user-select: none;
 }
 
 /* 可执行操作按钮 */
@@ -56,5 +69,4 @@
     /* background-color: rgb(250, 19, 19); */
     border-top: 1px solid #797691; /* 内框 */
     border-bottom: 1px solid #797691; /* 内框 */
-    user-select: none;
 }

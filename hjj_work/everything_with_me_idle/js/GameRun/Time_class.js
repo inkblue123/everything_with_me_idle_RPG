@@ -35,6 +35,7 @@ export class Time_manage {
         this.game_date.hours = 16;
         this.game_date.minutes = 0;
         this.game_date.start_time = this.now_time;
+        this.show_game_date();
     }
     //修改游戏速度
     set_game_speed(game_speed) {
@@ -89,9 +90,11 @@ export class Time_manage {
     //更新游戏日期
     updata_game_date(game_now_time) {
         let newTime = new Date(game_now_time);
+        let newSeconds = newTime.getTime() / 1000;
         let gameDateTime = new Date(this.game_date.start_time);
+        let gameDateSeconds = gameDateTime.getTime() / 1000;
 
-        if (newTime.getSeconds() - gameDateTime.getSeconds() >= 1) {
+        if (newSeconds - gameDateSeconds >= 1) {
             this.game_date.minutes++;
             if (this.game_date.minutes >= 60) {
                 this.game_date.minutes = 0;
@@ -110,15 +113,21 @@ export class Time_manage {
                 this.game_date.year++;
             }
             this.game_date.start_time = game_now_time;
-
-            // console.log('%s', this.get_game_date());
+            this.show_game_date();
         }
+    }
+    //展示游戏日期
+    show_game_date() {
+        let game_date_div = document.getElementById('game_date_div');
+
+        let date = this.game_date;
+        let ch = '当前日期：';
+        ch += date.year + '年' + date.month + '月' + date.day + '日';
+        ch += '-' + date.hours + ':' + date.minutes;
+        game_date_div.innerHTML = ch;
     }
     //获取游戏日期
     get_game_date() {
-        let date = this.game_date;
-        let ch = date.year + '.' + date.month + '.' + date.day;
-        ch += '-' + date.hours + ':' + date.minutes;
-        return ch;
+        return this.game_date;
     }
 }

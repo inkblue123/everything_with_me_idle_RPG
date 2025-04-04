@@ -6,21 +6,14 @@ import { enemys } from '../Data/Enemy/Enemy.js';
 import { P_skills } from '../Data/Skill/Skill.js';
 import { places } from '../Data/Place/Place.js';
 import {
-    addElement,
     addBP_item,
     addBP_equipment,
     add_show_Tooltip,
-    add_click_Equipment_worn_remove,
     add_aEQP_data,
     add_ASP_skill,
     add_click_Active_skill_worn_remove,
 } from './Dom_function.js';
-import {
-    get_BP_type,
-    get_EQP_switch,
-    get_object_only_key, //
-    get_EQP_data,
-} from './Get_func.js';
+import { get_BP_type, get_EQP_switch, get_EQP_data } from './Get_func.js';
 import { show_combat_game_div, show_normal_game_div } from './show_func.js';
 import {
     delete_BP_div,
@@ -408,6 +401,19 @@ function updata_ASP_value() {
     for (let skill_id of arr) {
         add_ASP_skill(skill_id);
     }
+}
+//更新中下的玩家控制界面的当前所在区域和当前地点名称
+function updata_control_place_name() {
+    //
+    let area_name_div = document.getElementById('area_name_div');
+    let place_name_div = document.getElementById('place_name_div');
+    let place_manage = global.get_place_manage();
+    let now_place_id = place_manage.get_now_place();
+    let place_name = places[now_place_id].name;
+    let area_id = places[now_place_id].area_id;
+    let area_name = texts[area_id].area_name;
+    area_name_div.innerHTML = area_name;
+    place_name_div.innerHTML = place_name;
 }
 
 export {

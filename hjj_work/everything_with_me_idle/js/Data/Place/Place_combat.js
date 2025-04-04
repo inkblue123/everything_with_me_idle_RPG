@@ -4,7 +4,7 @@ import { add_combat_Place } from './Place_class.js';
 function init_Place_combat(places) {
     {
         let id = 'test_combat1';
-        add_combat_Place(places, id);
+        add_combat_Place(places, id, 'test');
         //可联通地点的id
         places[id].add_other_normal_place('test_normal1');
         //战斗地点-刷怪相关内容
@@ -21,7 +21,7 @@ function init_Place_combat(places) {
     }
     {
         let id = 'VB_melee_train'; //村庄兵营-近战训练场地
-        add_combat_Place(places, id);
+        add_combat_Place(places, id, 'village');
         places[id].add_other_normal_place('village_barracks');
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'fixed'; //刷怪方式-固定位置
@@ -38,7 +38,7 @@ function init_Place_combat(places) {
 
     {
         let id = 'VB_range_train'; //村庄兵营-远程训练场地
-        add_combat_Place(places, id);
+        add_combat_Place(places, id, 'village');
         places[id].add_other_normal_place('village_barracks');
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'random'; //刷怪方式随机位置
@@ -50,7 +50,7 @@ function init_Place_combat(places) {
 
     {
         let id = 'new_player_combat_test'; //新手战斗训练场所
-        add_combat_Place(places, id);
+        add_combat_Place(places, id, 'village');
         // places[id].add_other_normal_place('village_barracks');
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'fixed'; //刷怪方式-固定位置

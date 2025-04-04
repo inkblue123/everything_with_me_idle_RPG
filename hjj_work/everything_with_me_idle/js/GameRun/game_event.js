@@ -2,6 +2,7 @@ import { isEmptyObject } from '../Function/Function.js';
 import { game_events } from '../Data/game_event/Game_Event.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_class.js';
+import { player } from '../Player/Player.js';
 
 //游戏事件类
 export class Game_event_manage {
@@ -19,6 +20,14 @@ export class Game_event_manage {
             console.log('未定义事件%s', event_id);
             return;
         }
+        if (game_events[event_id].type == 'challenge') {
+            this.start_challenge(event_id);
+        } else if (game_events[event_id].type == 'mini_event') {
+            this.start_mini_event(event_id);
+        }
+    }
+    //启动挑战事件
+    start_challenge(event_id) {
         //进入事件状态
         let global_flag_manage = global.get_global_flag_manage();
         global_flag_manage.set_game_status('GS_game_event', true);
@@ -35,6 +44,53 @@ export class Game_event_manage {
             // place_manage.set_event_start_place(now_place);
             place_manage.set_next_place(game_events[event_id].place);
         }
+    }
+    //启动迷你事件
+    start_mini_event(event_id) {
+        // 获取玩家控制界面
+        let control = document.getElementById('control');
+        //展示新地点的内容
+        control.show_mini_event_process(event_id, 'first');
+    }
+    updata_mini_event(event_id, now_process_id, i) {
+        //获取当前迷你事件的所处流程
+        let now_process = game_events[event_id].process[now_process_id];
+        //判断玩家触发的下一流程要做什么
+        // let button_data = now_process.button[i];
+        for (let thing of now_process.button[i].thing) {
+            if (thing.type == 'get_skill') {
+                //给予技能
+                let All_Skills = player.get_player_All_Skills();
+                for (let value of thing.value) {
+                    All_Skills.player_unlock_skill(value);
+                }
+            } else if (thing.type == 'get_item') {
+                //给予物品
+            }
+            //属性判定
+            //技能判定
+            //物品判定
+        }
+        //
+        //处理完毕，进入下一流程
+        // 获取玩家控制界面
+        let next_process_id = now_process.button[i].next;
+        if (next_process_id == 'end') {
+            this.end_mini_event(event_id, 'finish');
+        } else {
+            let control = document.getElementById('control');
+            control.show_mini_event_process(event_id, next_process_id);
+        }
+    }
+    //迷你事件结束
+    end_mini_event(event_id, flag) {
+        //迷你事件退出原因设置
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.set_short_game_status(event_id, flag);
+        //迷你事件结束，回到当前地点
+        let place_manage = global.get_place_manage();
+        let now_place_id = place_manage.get_now_place();
+        place_manage.set_next_place(now_place_id);
     }
     //更新当前游戏事件
     updata_game_event() {

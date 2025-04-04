@@ -10,7 +10,7 @@ class ShortGameStatus {
         this.init_time();
     }
     init_time() {
-        let Time_manage = global.get_fps_manage();
+        let Time_manage = global.get_time_manage();
         this.set_time = Time_manage.get_game_now_time();
     }
 }
@@ -154,7 +154,7 @@ export class Global_flag_manage {
         this.short_game_status[SGS_flag_name].value = flag_value;
     }
     updata_short_game_status() {
-        let Time_manage = global.get_fps_manage();
+        let Time_manage = global.get_time_manage();
         let now_time = Time_manage.get_game_now_time();
         for (let flag_name in this.short_game_status) {
             let set_time = this.short_game_status[flag_name].set_time;
@@ -188,6 +188,9 @@ export class Global_flag_manage {
             case 'UGS_ASP_type':
                 flag_value = this.get_ASP_type();
                 break;
+            case 'UGS_village_barracks_week':
+                flag_value = this.get_village_barracks_week();
+                break;
 
             default:
                 console.log('未定义%s临用游戏状态标记的获取函数', flag_name);
@@ -204,6 +207,15 @@ export class Global_flag_manage {
                 return radio.value;
             }
         }
+    }
+    //临用游戏状态-当前游戏日期属于村庄轮周的第几日
+    get_village_barracks_week() {
+        //
+        let time_manage = global.get_time_manage();
+        let game_date = time_manage.get_game_date();
+        let all_day = game_date.year * 360 + game_date.month * 30 + game_date.day;
+        all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
+        return (all_day % 5) + 1;
     }
 
     // find_flag_obj(flag_name) {

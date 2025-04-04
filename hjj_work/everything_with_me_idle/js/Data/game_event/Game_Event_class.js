@@ -46,6 +46,12 @@ export class Challenge extends Game_Event {
         this.type = 'challenge';
     }
 }
+export class Mini_event extends Game_Event {
+    constructor(id) {
+        super(id);
+        this.type = 'mini_event';
+    }
+}
 
 function add_Game_Event_object(game_events, newid) {
     if (game_events[newid] === undefined) {
@@ -75,5 +81,12 @@ function add_Challenge_obj(game_events, newid) {
         console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
+function add_Mini_event_obj(game_events, newid) {
+    if (game_events[newid] === undefined) {
+        game_events[newid] = new Mini_event(newid);
+    } else {
+        console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+    }
+}
 
-export { add_Game_Event_object, add_Page_obj, add_Achievement_obj, add_Challenge_obj };
+export { add_Game_Event_object, add_Page_obj, add_Achievement_obj, add_Challenge_obj, add_Mini_event_obj };

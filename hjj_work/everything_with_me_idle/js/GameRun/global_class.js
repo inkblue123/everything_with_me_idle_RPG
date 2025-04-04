@@ -10,7 +10,7 @@ import { Global_flag_manage } from './global_flag_class.js';
 class Global {
     constructor() {
         this.config; //全局设置
-        this.fps_manage; //帧率和时间类
+        this.time_manage; //帧率和时间类
         this.place_manage; //玩家所处地点类
         this.enemy_manage; //场地内敌人类
         this.random_manage; //随机数管理类
@@ -23,8 +23,8 @@ class Global {
         //获取配置
         this.init_config();
         //初始化
-        this.fps_manage = new Time_manage();
-        this.fps_manage.init(this.config.fps);
+        this.time_manage = new Time_manage();
+        this.time_manage.init(this.config.fps);
 
         this.place_manage = new Place_manage();
         this.place_manage.init();
@@ -46,8 +46,8 @@ class Global {
         this.config.fps = 30;
     }
     //如果需要，可以拿整个对象去调接口
-    get_fps_manage() {
-        return this.fps_manage;
+    get_time_manage() {
+        return this.time_manage;
     }
     get_place_manage() {
         return this.place_manage;
@@ -71,17 +71,17 @@ class Global {
         return this.global_flag_manage;
     }
     //对外提供一些常用功能的接口
-    updata_FPS_manage() {
-        return this.fps_manage.updata_FPS_manage();
+    updata_time_manage() {
+        return this.time_manage.updata_time_manage();
     }
     get_sleep_ms() {
-        return this.fps_manage.get_sleep_ms();
+        return this.time_manage.get_sleep_ms();
     }
     get_now_time() {
-        return this.fps_manage.get_now_time();
+        return this.time_manage.get_now_time();
     }
     get_game_now_time() {
-        return this.fps_manage.get_game_now_time();
+        return this.time_manage.get_game_now_time();
     }
     get_combat_statu() {
         return this.global_flag_manage.get_game_status('GS_combat_statu');

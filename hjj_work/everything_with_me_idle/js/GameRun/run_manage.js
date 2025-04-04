@@ -18,7 +18,7 @@ import {
 import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 
 function state_game() {
-    let Time_manage = global.get_fps_manage();
+    let Time_manage = global.get_time_manage();
     Time_manage.updata_FPS_start();
 
     //更新需要变动的游戏界面

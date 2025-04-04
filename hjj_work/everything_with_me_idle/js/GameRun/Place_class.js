@@ -17,6 +17,8 @@ export class Place_manage {
         }
         this.last_place = this.now_place;
         this.now_place = place;
+
+        updata_control_place_name(place);
     }
     set_next_place(next_place) {
         this.next_place = next_place;
@@ -48,7 +50,23 @@ export class Place_manage {
     }
     //前往要移动到的新地点
     goto_next_place() {
-        this.set_now_place(this.next_place);
+        if (this.next_place == this.now_place) {
+            //新地点就是当前地点，不需要变更参数
+        } else {
+            //新地点不等于当前地点，需要变更参数
+            this.set_now_place(this.next_place);
+        }
         this.next_place = null;
     }
+}
+
+//更新中下的玩家控制界面的当前所在区域和当前地点名称
+function updata_control_place_name(now_place_id) {
+    //
+    let area_name_div = document.getElementById('area_name_div');
+    let place_name_div = document.getElementById('place_name_div');
+    let place_ch = '当前地点：' + places[now_place_id].name;
+    let area_name = '当前区域：' + places[now_place_id].area_name;
+    area_name_div.innerHTML = area_name;
+    place_name_div.innerHTML = place_ch;
 }

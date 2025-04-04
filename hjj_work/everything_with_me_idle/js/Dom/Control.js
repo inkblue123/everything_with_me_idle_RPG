@@ -10,17 +10,23 @@ var Control = crtElement('div', 'control', null, '');
 //创建中下，玩家控制界面内的详细组件
 {
     //角色所处的时间地点名称
-    // let control_name_div = crtElement('div', 'control_name_div', null, '');
-    // let T_type = addElement(type_div, 'div', null, 'TLV_left');
-    // T_type.innerHTML = '装备类型：';
-    // let T_value = addElement(type_div, 'div', null, 'TLV_right');
+    let control_name_div = crtElement('div', 'control_name_div', null, '');
+    let left_div = addElement(control_name_div, 'div', 'control_name_left_div', null);
+    var area_name_div = addElement(left_div, 'div', 'area_name_div', 'control_text_div');
+    area_name_div.innerHTML = '区域';
+    var place_name_div = addElement(left_div, 'div', 'place_name_div', 'control_text_div');
+    place_name_div.innerHTML = '地点';
+    let right_div = addElement(control_name_div, 'div', 'control_name_right_div', null);
+    var game_date_div = addElement(right_div, 'div', 'game_date_div', 'control_text_div');
+    game_date_div.innerHTML = '当前时间';
+
     //角色所处位置描述
     var Place_desc_div = crtElement('div', 'Place_desc_div', null, '');
     //容纳角色在这里能做的事情的div
     var player_Control_div = crtElement('div', 'player_Control_div', null, '');
 
     //组件放入角色属性装备界面中
-    // Control.appendChild(control_name_div);
+    Control.appendChild(control_name_div);
     Control.appendChild(Place_desc_div);
     Control.appendChild(player_Control_div);
 }
@@ -72,12 +78,30 @@ function show_new_place(new_place) {
         }
     }
 }
+
+//展示迷你事件的其中一幕
+Control.show_mini_event_process = function (event_id, process_id) {
+    empty_dom(Place_desc_div); //清空原本描述
+    empty_dom(player_Control_div); //清空原本的可执行操作按钮
+    //展示文本
+    let process = game_events[event_id].process[process_id];
+    let text_id = process.control_dest_text;
+    Place_desc_div.innerHTML = texts[event_id][text_id];
+    //添加按钮
+    for (let i = 0; i < process.button.length; i++) {
+        let move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button');
+        move_place_button.innerHTML = texts[event_id][process.button[i].text];
+        move_place_button.addEventListener('click', function () {
+            let game_event_manage = global.get_game_event_manage();
+            game_event_manage.updata_mini_event(event_id, process_id, i);
+        });
+    }
+};
+
 //移动到指定NPC面前，读取地点库信息，将可以进行的行动展示到控制界面中
 function show_new_NPC(new_NPC) {
     //展示新地点的描述
-
-    Place_desc_div.innerHTML = make_NPC_chat(new_NPC);
-    // Place_desc_div.innerHTML = new_NPC.desc;
+    Place_desc_div.innerHTML = make_NPC_condition_meet_chat(new_NPC);
 
     //可以回到上一个普通区域
     let place_manage = global.get_place_manage();
@@ -87,7 +111,17 @@ function show_new_NPC(new_NPC) {
     //可以进行的事件
     if (!isEmptyObject(new_NPC.behaviors)) {
         for (let next_place_id of new_NPC.behaviors) {
-            add_control_button_start_event(next_place_id, '前往', null);
+            add_control_button_start_event(next_place_id, '进行', null);
+        }
+    }
+    //有条件出现的事件
+    if (!isEmptyObject(new_NPC.condition_behaviors)) {
+        let global_flag_manage = global.get_global_flag_manage();
+        for (let obj of new_NPC.condition_behaviors) {
+            let status = global_flag_manage.get_flag(obj.status_id); //当前需要判断的游戏状态的内容
+            if (status == obj.value) {
+                add_control_button_start_event(obj.event_id, '进行', null);
+            }
         }
     }
 }
@@ -138,23 +172,24 @@ function make_button_text(front_text, name, after_text) {
     return button_text;
 }
 //根据当前游戏状态，选择NPC说的话
-function make_NPC_chat(NPC) {
+function make_NPC_condition_meet_chat(NPC) {
     let text = NPC.name + '：';
+    let flag = false;
     //按照优先级，判断游戏状态是否符合说话的条件
     let global_flag_manage = global.get_global_flag_manage();
-    for (let i = 0; i < NPC.meet_chat.length; i++) {
-        //
-        let status_type = NPC.meet_chat[i].status_type;
-        let id = NPC.meet_chat[i].status_id;
-        let value = NPC.meet_chat[i].value;
-        if (status_type == 'short_game_status') {
-            let status = global_flag_manage.get_short_game_status(id);
-            if (status && status == value) {
-                text += NPC.meet_chat[i].text;
-                break;
-            }
-        } else if (status_type == 'game_status') {
+    for (let i = 0; i < NPC.condition_meet_chat.length; i++) {
+        let id = NPC.condition_meet_chat[i].status_id; //需要判断的游戏状态
+        let value = NPC.condition_meet_chat[i].value; //游戏状态的目标数值
+        let status = global_flag_manage.get_flag(id); //当前这个游戏状态的内容
+        if (status == value) {
+            text += NPC.condition_meet_chat[i].text;
+            flag = true;
+            break;
         }
+    }
+    //需要满足游戏状态的对话都不满足，使用默认对话
+    if (!flag) {
+        text += NPC.default_meet_chat;
     }
     return text;
 }
