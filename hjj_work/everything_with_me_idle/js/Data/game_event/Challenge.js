@@ -3,7 +3,7 @@ import { add_Challenge_obj } from './Game_Event_class.js';
 function init_Challenge(game_events) {
     let id = 'new_player_combat_test';
     add_Challenge_obj(game_events, id);
-    // game_events[id].add_behavior_place('new_player_combat_test');
+    // game_events[id].add_behavior('new_player_combat_test');
     game_events[id].place = 'new_player_combat_test'; //挑战开始地点
     game_events[id].finish_condition = {
         melee_kill: 5, //近战击杀5个敌人

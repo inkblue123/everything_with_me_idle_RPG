@@ -28,6 +28,8 @@ export class Skill {
         let desc;
         if (this.active_type == 'attack') {
             desc = this.create_attack_skill_desc();
+        } else if (this.active_type == 'defense') {
+            desc = this.create_defense_skill_desc();
         } else {
             //缺少必要参数，中止这个槽的描述生成
             desc = '缺少技能类型，无法生成描述';
@@ -74,6 +76,23 @@ export class Skill {
         desc = desc + texts['damage_type'].skill_desc[damage_type] + '伤害';
         return desc;
     }
+    //创造防御型技能的描述
+    create_defense_skill_desc() {
+        //受到敌人攻击时减少{减伤类型}的伤害
+        let desc = '收到敌人攻击时减少';
+
+        //减伤类型
+        let defense_type = this.effect.defense_type;
+        if (defense_type == 'damage_reduction_number') {
+            //固定数值伤害减免
+            desc = desc + '固定数值的伤害';
+        } else if (defense_type == 'damage_reduction_ratio') {
+            //固定数值伤害减免
+            desc = desc + '一定比例的伤害';
+        }
+        return desc;
+    }
+
     //设置通过经验升级的技能的相关参数
     set_skill_levelup_data(base_exp, max_level, algorithm) {
         if (base_exp) this.base_exp = base_exp; //第一级需要的经验
@@ -122,28 +141,28 @@ function add_Skill_object(skills, newid) {
     if (skills[newid] === undefined) {
         skills[newid] = new Skill(newid);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log(`创建skills[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
 function add_P_Passive_skill(skills, newid) {
     if (skills[newid] === undefined) {
         skills[newid] = new P_Passive_skill(newid);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log(`创建skills[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
 function add_P_Active_skill(skills, newid) {
     if (skills[newid] === undefined) {
         skills[newid] = new P_Active_skill(newid);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log(`创建skills[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
 function add_E_Active_skill(skills, newid) {
     if (skills[newid] === undefined) {
         skills[newid] = new E_Active_skill(newid);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log(`创建skills[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
 

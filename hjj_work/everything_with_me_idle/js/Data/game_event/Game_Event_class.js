@@ -1,4 +1,5 @@
 import { texts } from '../Text/Text.js';
+import { isEmptyObject } from '../../Function/Function.js';
 
 export class Game_Event {
     constructor(id) {
@@ -50,7 +51,36 @@ export class Mini_event extends Game_Event {
     constructor(id) {
         super(id);
         this.type = 'mini_event';
+        this.conditions_appear = new Array();
+        this.process = new Object();
     }
+    set_conditions_appear(...args) {
+        if (args.length % 2 != 0) {
+            console.log('输入的条件个数不是偶数，需要确认输入的条件是否正确');
+            return;
+        }
+        let j = this.conditions_appear.length;
+        for (let i = 0; i < args.length; i += 2) {
+            this.conditions_appear[j] = new Object();
+            this.conditions_appear[j].status_id = args[i];
+            this.conditions_appear[j].value = args[i + 1];
+            j++;
+        }
+    }
+    set_process(process_id, type, control_dest_text) {
+        if (isEmptyObject(this.process[process_id])) {
+            this.process[process_id] = new Object();
+        }
+        this.process[process_id].type = type;
+        this.process[process_id].control_dest_text = control_dest_text;
+        this.process[process_id].button = new Array();
+    }
+    // add_process_button(process_id, text, next) {
+    //     let i = this.process[process_id].button.length;
+    //     this.process[process_id].button[i] = new Object();
+    //     this.process[process_id].button[i].text = text;
+    //     this.process[process_id].button[i].next = next;
+    // }
 }
 
 function add_Game_Event_object(game_events, newid) {

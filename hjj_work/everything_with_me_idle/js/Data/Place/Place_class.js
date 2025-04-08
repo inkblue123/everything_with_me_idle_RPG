@@ -97,13 +97,13 @@ export class P_NPC extends Place {
         this.default_meet_chat = texts[place_id].default_meet_chat; //默认见面对话
     }
     //添加在这个npc面前可以做的行动
-    add_behavior_place(...args) {
+    add_behavior(...args) {
         for (let id of args) {
             this.behaviors.push(id);
         }
     }
     //添加在这个npc面前满足条件才可以做的行动
-    add_condition_behavior_place(status_type, status_id, value, event_id) {
+    add_condition_behavior(status_type, status_id, value, event_id) {
         let i = this.condition_behaviors.length;
         this.condition_behaviors[i] = new Object();
         this.condition_behaviors[i].status_type = status_type;

@@ -299,7 +299,9 @@ function init_Enum_equipment(enums) {
         'chest_armor', //胸甲
         'leg_armor', //腿甲
         'shoes', //鞋子
-        'deputy', //副手装备
+        //副手
+        'shield', //盾牌
+
         'ornament', //饰品
     ];
     //装备类型及其对应的伤害类型

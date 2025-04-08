@@ -1,6 +1,7 @@
 import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
 import { show_dropdown_table, change_Combat_plan_div, change_ASP_ARP_AEP } from '../Function/show_func.js';
-import { updata_BP_value, updata_ASP_value } from '../Function/Updata_func.js';
+import { updata_BP_value } from '../Function/Updata_func.js';
+import { player } from '../Player/Player.js';
 
 var Combat_plan = crtElement('div', 'Combat_plan', null, '');
 
@@ -227,13 +228,16 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
                 //关闭其他下拉框
                 show_dropdown_table('CBP_classification_div');
             }
+            let All_Skills = player.get_player_All_Skills();
+            All_Skills.updata_ASP_value();
         });
     });
     //主动技能过滤
     radios = CBP_div.querySelectorAll('input[type="radio"][name="ASP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
-            updata_ASP_value();
+            let All_Skills = player.get_player_All_Skills();
+            All_Skills.updata_ASP_value();
         });
     });
 }

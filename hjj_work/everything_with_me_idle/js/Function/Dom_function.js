@@ -178,16 +178,6 @@ function add_click_Equipment_worn_remove(target_div, wp) {
     });
 }
 
-// 向战斗规划界面的主动技能规划界面添加一个主动技能
-function add_ASP_skill(skill_id) {
-    let active_value_div = document.getElementById('active_value_div');
-    let askill = addElement(active_value_div, 'div', null, 'active_value');
-    askill.innerHTML = P_skills[skill_id].name;
-    //鼠标点击之后可以设置到玩家身上
-    add_click_Active_skill_worn(askill, skill_id);
-    //添加鼠标移动之后展示该技能详情
-    add_show_Tooltip(askill, 'show_active_skill', skill_id);
-}
 
 //  向主动技能组件添加鼠标点击设置到身上主动技能槽的功能
 function add_click_Active_skill_worn(target_div, tip_value) {
@@ -229,7 +219,7 @@ export {
     add_show_Tooltip,
     add_click_Equipment_worn,
     add_click_Equipment_worn_remove,
+    add_click_Active_skill_worn,
     add_aEQP_data,
-    add_ASP_skill,
     add_click_Active_skill_worn_remove,
 };

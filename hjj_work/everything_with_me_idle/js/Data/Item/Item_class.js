@@ -86,11 +86,14 @@ let Equipment_class = (extendsClass) =>
                 this.wearing_position.push('legs'); //这件装备可以放在腿部
             } else if (e_type == 'shoes') {
                 this.wearing_position.push('feet'); //这件装备可以放在脚部
-            } else if (e_type == 'deputy') {
+            } else if (e_type == 'shield') {
                 this.wearing_position.push('deputy'); //这件装备可以放在副手位置
             } else if (e_type == 'ornament') {
                 this.wearing_position.push('ornament'); //这件装备可以放在饰品位置
+            } else {
+                console.log('该装备的小分类%s不明，需要重新定义', e_type);
             }
+
             //手弩可以同时放在主手和副手
             if (e_type == 'hand_gun') {
                 this.wearing_position.push('deputy');

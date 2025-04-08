@@ -5,7 +5,6 @@ import {
     updata_player_active_slots_num,
     updata_player_active_show,
     updata_player_active,
-    updata_ASP_value,
 } from '../Function/Updata_func.js';
 import { show_normal_game_div, show_combat_game_div } from '../Function/show_func.js';
 import { dom } from '../Dom/Dom.js';
@@ -36,27 +35,29 @@ function player_init() {
     //初始化玩家一开始就应该拥有的0级技能
     let All_Skills = player.get_player_All_Skills();
     All_Skills.player_unlock_skill('normal_sword');
-    // All_Skills.player_unlock_skill('normal_attack_Melee');
+
+    All_Skills.player_unlock_skill('shield_defense');
+    All_Skills.player_unlock_skill('normal_attack_Melee');
     // All_Skills.player_unlock_skill('energy_storage_attack');
     // All_Skills.player_unlock_skill('test_3_slot_skill');
     // All_Skills.player_unlock_skill('test_4_slot_skill');
     //测试物品和装备系统
-    player.Player_get_item('Oak_logs', 10);
-    player.Player_get_item('wood_sword', 1, 'damaged');
-    player.Player_get_item('wood_sword', 2, 'ordinary');
-    player.Player_get_item('wood_sword', 2, 'excellent');
-    player.Player_get_item('wood_battle_axe', 2, 'ordinary'); //双手武器测试
-    player.Player_get_item('wood_battle_axe', 2, 'excellent');
-    player.Player_get_item('test_hand_gun', 1, 'ordinary'); //复合可穿戴位置装备测试
-    player.Player_get_item('test_hand_gun', 1, 'excellent');
+    // player.Player_get_item('Oak_logs', 10);
+    // player.Player_get_item('wood_sword', 1, 'damaged');
+    // player.Player_get_item('wood_sword', 2, 'ordinary');
+    // player.Player_get_item('wood_sword', 2, 'excellent');
+    // player.Player_get_item('wood_battle_axe', 2, 'ordinary'); //双手武器测试
+    // player.Player_get_item('wood_battle_axe', 2, 'excellent');
+    // player.Player_get_item('test_hand_gun', 1, 'ordinary'); //复合可穿戴位置装备测试
+    // player.Player_get_item('test_hand_gun', 1, 'excellent');
     player.Player_get_item('test_shield', 1, 'ordinary'); //盾牌测试
-    player.Player_get_item('test_shield', 1, 'excellent');
-    player.Player_get_item('test_boomerang', 1, 'ordinary');
-    player.Player_get_item('test_boomerang', 3, 'excellent');
-    player.Player_get_item('test_boomerang', 5, 'rare');
-    player.Player_get_item('test_boomerang', 8, 'epic');
-    player.Player_get_item('wood_bow', 1, 'ordinary'); //远程武器测试
-    let P_Askill = player.get_player_ASkill_Manage();
+    // player.Player_get_item('test_shield', 1, 'excellent');
+    // player.Player_get_item('test_boomerang', 1, 'ordinary');
+    // player.Player_get_item('test_boomerang', 3, 'excellent');
+    // player.Player_get_item('test_boomerang', 5, 'rare');
+    // player.Player_get_item('test_boomerang', 8, 'epic');
+    // player.Player_get_item('wood_bow', 1, 'ordinary'); //远程武器测试
+    // let P_Askill = player.get_player_ASkill_Manage();
     // P_Askill.set_active_skill('energy_storage_attack', 0); //在第0个主动技能槽里设置普通攻击
     // P_Askill.set_active_skill('normal_attack_Melee', 0); //在第0个主动技能槽里设置普通攻击
 }
@@ -72,8 +73,9 @@ function dom_init() {
 
     //初始化玩家背包
     updata_BP_value();
-    //初始化玩家拥有的技能
-    updata_ASP_value();
+    //更新右下角的游戏规划中战斗规划的主动技能规划部分的内容
+    let All_Skills = player.get_player_All_Skills();
+    All_Skills.updata_ASP_value();
     // 将每个装备栏中的信息初始化
     const radios = document.querySelectorAll('input[name="EQP_switch"]');
     for (const radio of radios) {

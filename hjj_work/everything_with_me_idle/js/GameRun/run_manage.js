@@ -8,7 +8,6 @@ import {
     updata_HP,
     updata_MP,
     updata_ENP,
-    updata_BP_value,
     updata_attribute_show,
     updata_player_name,
     updata_enemy_show,

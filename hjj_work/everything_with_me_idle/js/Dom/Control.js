@@ -116,11 +116,10 @@ function show_new_NPC(new_NPC) {
     }
     //有条件出现的事件
     if (!isEmptyObject(new_NPC.condition_behaviors)) {
-        let global_flag_manage = global.get_global_flag_manage();
-        for (let obj of new_NPC.condition_behaviors) {
-            let status = global_flag_manage.get_flag(obj.status_id); //当前需要判断的游戏状态的内容
-            if (status == obj.value) {
-                add_control_button_start_event(obj.event_id, '进行', null);
+        for (let event_id of new_NPC.condition_behaviors) {
+            //对每个事件的出现条件进行判断，满足条件才在界面中添加按钮
+            if (check_condition_appear_behaviors(event_id)) {
+                add_control_button_start_event(event_id, '进行', null);
             }
         }
     }
@@ -192,6 +191,24 @@ function make_NPC_condition_meet_chat(NPC) {
         text += NPC.default_meet_chat;
     }
     return text;
+}
+//根据当前游戏状态，判断该事件是否满足出现条件
+function check_condition_appear_behaviors(event_id) {
+    //没有条件，视作异常情况，不出现
+    if (isEmptyObject(game_events[event_id].conditions_appear)) {
+        console.log('事件%s设定为有条件出现的事件，但没有定义条件');
+        return false;
+    }
+    let flag = true;
+    let global_flag_manage = global.get_global_flag_manage();
+    for (let obj of game_events[event_id].conditions_appear) {
+        let status = global_flag_manage.get_flag(obj.status_id); //当前需要判断的游戏状态的内容
+        if (status != obj.value) {
+            flag = false;
+            break;
+        }
+    }
+    return flag;
 }
 
 export { Control };

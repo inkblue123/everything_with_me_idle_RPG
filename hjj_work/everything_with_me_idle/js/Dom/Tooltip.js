@@ -339,7 +339,7 @@ function show_active_skill_condition(slot_value_div, active_skill) {
         //没有设定限制条件，默认为允许执行
         condition_name_div.innerHTML = '限制条件：无';
     } else {
-        condition_name_div.innerHTML = '限制条件';
+        // condition_name_div.innerHTML = '限制条件';
         let condition_value_div = addElement(slot_value_div, 'div', null, 'page_columns_11');
         for (let condition_key in active_skill.active_condition) {
             let C_value_div = addElement(condition_value_div, 'div', null, 'condition_value_div');
@@ -348,27 +348,20 @@ function show_active_skill_condition(slot_value_div, active_skill) {
 
             if (condition_key == 'weapon_type') {
                 //武器类型限制
-                C_desc_div.innerHTML = '手持武器：';
+                C_desc_div.innerHTML = '装备了';
                 let AC_WT = active_skill.active_condition.weapon_type;
                 if (isEmptyObject(AC_WT)) {
                     C_desc_div.innerHTML += '未设定';
                     console.log(`没设定${id}技能的武器类型限制条件`);
                 } else {
+                    // for (let w_type of AC_WT) {
                     for (let i in AC_WT) {
                         let w_type = AC_WT[i];
-                        if (enums['damage_type'].includes(w_type)) {
-                            //如果限制条件是伤害类型
+                        if (enums['equipment_type'].includes(w_type)) {
                             if (i == 0) {
-                                C_desc_div.innerHTML += texts['damage_type'].skill_desc[w_type] + '武器';
+                                C_desc_div.innerHTML += texts[w_type].type_name;
                             } else {
-                                C_desc_div.innerHTML += '、' + texts['damage_type'].skill_desc[w_type] + '武器';
-                            }
-                        } else if (enums['equipment_type'].includes(w_type)) {
-                            //如果限制条件是武器类型
-                            if (i == 0) {
-                                C_desc_div.innerHTML += texts['type_name'].type_name;
-                            } else {
-                                C_desc_div.innerHTML += '、' + texts['type_name'].type_name;
+                                C_desc_div.innerHTML += '、' + texts[w_type].type_name;
                             }
                         } else {
                             console.log('该技能的武器类型限制条件填写错误');
@@ -376,6 +369,9 @@ function show_active_skill_condition(slot_value_div, active_skill) {
                         }
                     }
                 }
+            } else if (condition_key == 'damage_type') {
+                let damage_type = active_skill.active_condition.damage_type;
+                C_desc_div.innerHTML = '手持武器为' + texts['damage_type'].skill_desc[damage_type] + '武器';
             }
             // else if (condition_key == '') {
             //     //其他限制条件

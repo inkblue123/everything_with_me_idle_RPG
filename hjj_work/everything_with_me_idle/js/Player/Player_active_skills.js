@@ -286,37 +286,76 @@ export class Player_active_skills_Manage {
     judge_active_condition(run_slot) {
         let flag = true;
         let active_condition = this.active_slots[run_slot].active_condition;
-        //武器类型判定
-        if (active_condition.weapon_type) {
-            let weapon_type_flag = false;
-            for (let skw of active_condition.weapon_type) {
-                if (enums['damage_type'].includes(skw)) {
-                    //如果限制条件是伤害类型，遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
-                    for (let pw of this.player_end_attr['weapon_type']) {
-                        let p_damage_type = enums.weapon_damage_type[pw];
-                        if (skw == p_damage_type) {
+        if (isEmptyObject(active_condition)) {
+            //没有设定限制条件，默认为允许执行
+            return true;
+        } else {
+            for (let condition_key in active_condition) {
+                if (condition_key == 'weapon_type') {
+                    //限制条件是装备了特定类型的装备
+                    //遍历每种玩家穿着的装备，找到一样的就算成功
+                    let weapon_type_flag = false;
+                    for (let w_type of active_condition.weapon_type) {
+                        if (this.player_end_attr['weapon_type'].includes(w_type)) {
                             weapon_type_flag = true;
                             break;
                         }
                     }
-                    if (weapon_type_flag) {
+                    if (weapon_type_flag == false) {
+                        //玩家穿着的装备不满足技能需求
+                        flag = false;
                         break;
                     }
-                } else if (enums['equipment_type'].includes(skw)) {
-                    //如果限制条件是武器类型，遍历每种玩家武器，找到一样的就算成功
-                    if (this.player_end_attr['weapon_type'].includes(skw)) {
-                        weapon_type_flag = true;
+                } else if (condition_key == 'damage_type') {
+                    //限制条件是玩家当前手持的武器属于什么伤害类型的武器
+                    //遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
+                    let damage_type_flag = false;
+                    let damage_type = active_condition.damage_type;
+                    for (let pw of this.player_end_attr['weapon_type']) {
+                        let p_damage_type = enums.weapon_damage_type[pw];
+                        if (damage_type == p_damage_type) {
+                            damage_type_flag = true;
+                            break;
+                        }
+                    }
+                    if (damage_type_flag == false) {
+                        flag = false;
                         break;
                     }
-                } else {
-                    console.log('该技能的武器类型限制条件填写错误');
-                    break;
                 }
             }
-            if (weapon_type_flag == false) flag = false;
-
-            return flag;
         }
+
+        // //武器类型判定
+        // if (active_condition.weapon_type) {
+        //     let weapon_type_flag = false;
+        //     for (let skw of active_condition.weapon_type) {
+        //         if (enums['damage_type'].includes(skw)) {
+        //             //如果限制条件是伤害类型，遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
+        //             for (let pw of this.player_end_attr['weapon_type']) {
+        //                 let p_damage_type = enums.weapon_damage_type[pw];
+        //                 if (skw == p_damage_type) {
+        //                     weapon_type_flag = true;
+        //                     break;
+        //                 }
+        //             }
+        //             if (weapon_type_flag) {
+        //                 break;
+        //             }
+        //         } else if (enums['weapon_type'].includes(skw)) {
+        //             //如果限制条件是武器类型，遍历每种玩家武器，找到一样的就算成功
+        //             if (this.player_end_attr['weapon_type'].includes(skw)) {
+        //                 weapon_type_flag = true;
+        //                 break;
+        //             }
+        //         } else {
+        //             console.log('该技能的武器类型限制条件填写错误');
+        //             break;
+        //         }
+        //     }
+        //     if (weapon_type_flag == false) flag = false;
+
+        return flag;
     }
     //激活玩家的第start_slot个主动技能
     start_player_active(start_slot) {

@@ -35,6 +35,7 @@ export class Global_flag_manage {
         this.important_nodes.page = new Object();
         this.important_nodes.challenge = new Object(); //挑战完成标记
         this.important_nodes.achievement = new Object(); //成就完成标记
+        this.important_nodes.mini_event = new Object(); //迷你事件完成标记
 
         //临用游戏状态，用于记录游戏某些不需要即时更新的值
         //如当前激活了哪个装备栏，只在涉及到装备栏变化的时候才用到
@@ -64,6 +65,9 @@ export class Global_flag_manage {
             }
             if (game_events[event_id].type == 'achievement') {
                 this.important_nodes.achievement[event_id] = false;
+            }
+            if (game_events[event_id].type == 'mini_event') {
+                this.important_nodes.mini_event[event_id] = false;
             }
             this.flag_name_enum[event_id] = game_events[event_id].type;
         }
@@ -95,6 +99,7 @@ export class Global_flag_manage {
         if (enums['important_nodes']['page'].includes(id)) return 'page';
         if (enums['important_nodes']['challenge'].includes(id)) return 'challenge';
         if (enums['important_nodes']['achievement'].includes(id)) return 'achievement';
+        if (enums['important_nodes']['mini_event'].includes(id)) return 'mini_event';
 
         console.log('获取%s的游戏状态类型错误，未在枚举库中定义归属', id);
     }
@@ -111,13 +116,12 @@ export class Global_flag_manage {
         if (type == 'page') return this.important_nodes.page;
         if (type == 'challenge') return this.important_nodes.challenge;
         if (type == 'achievement') return this.important_nodes.achievement;
+        if (type == 'mini_event') return this.important_nodes.mini_event;
 
         console.log('错误的游戏状态类型 %s', type);
     }
-    set_flag(flag_name, flag_type, flag_value) {
-        if (!flag_type) {
-            flag_type = this.get_flag_type(flag_name);
-        }
+    set_flag(flag_name, flag_value) {
+        let flag_type = this.get_flag_type(flag_name);
         if (flag_type == 'short_game_status') {
             this.set_short_game_status(flag_name, flag_value);
         } else if (flag_type == 'use_game_status') {
@@ -145,13 +149,13 @@ export class Global_flag_manage {
     }
     //设置短期游戏状态标记
     set_short_game_status(flag_name, flag_value) {
-        let SGS_flag_name = 'SGS_' + flag_name;
-        if (!enums['short_game_status'].includes(SGS_flag_name)) {
-            console.log('未定义的短期游戏状态标记，%s', SGS_flag_name);
-            return;
-        }
-        this.short_game_status[SGS_flag_name] = new ShortGameStatus();
-        this.short_game_status[SGS_flag_name].value = flag_value;
+        // let SGS_flag_name = 'SGS_' + flag_name;
+        // if (!enums['short_game_status'].includes(flag_name)) {
+        //     console.log('未定义的短期游戏状态标记，%s', flag_name);
+        //     return;
+        // }
+        this.short_game_status[flag_name] = new ShortGameStatus();
+        this.short_game_status[flag_name].value = flag_value;
     }
     updata_short_game_status() {
         let Time_manage = global.get_time_manage();
@@ -165,10 +169,10 @@ export class Global_flag_manage {
     }
     //读取短期游戏状态标记
     get_short_game_status(flag_name) {
-        if (!enums['short_game_status'].includes(flag_name)) {
-            console.log('未定义的短期游戏状态标记，%s', flag_name);
-            return;
-        }
+        // if (!enums['short_game_status'].includes(flag_name)) {
+        //     console.log('未定义的短期游戏状态标记，%s', flag_name);
+        //     return;
+        // }
         let flag_value;
         if (!isEmptyObject(this.short_game_status[flag_name])) {
             flag_value = this.short_game_status[flag_name].value;
@@ -214,7 +218,7 @@ export class Global_flag_manage {
         let time_manage = global.get_time_manage();
         let game_date = time_manage.get_game_date();
         let all_day = game_date.year * 360 + game_date.month * 30 + game_date.day;
-        all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
+        // all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
         return (all_day % 5) + 1;
     }
 

@@ -1,6 +1,5 @@
 import { crtElement, empty_dom, addElement, addElement_radio } from '../Function/Dom_function.js';
 import { show_dropdown_table, change_Game_data_div, change_ASP_ARP_AEP } from '../Function/show_func.js';
-import { updata_ASP_value } from '../Function/Updata_func.js';
 
 var Game_data = crtElement('div', 'game_data', null, '');
 

@@ -3,27 +3,23 @@ import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
-import { P_skills } from '../Data/Skill/Skill.js';
 import { places } from '../Data/Place/Place.js';
 import {
     addBP_item,
     addBP_equipment,
     add_show_Tooltip,
     add_aEQP_data,
-    add_ASP_skill,
     add_click_Active_skill_worn_remove,
 } from './Dom_function.js';
 import { get_BP_type, get_EQP_switch, get_EQP_data } from './Get_func.js';
 import { show_combat_game_div, show_normal_game_div } from './show_func.js';
 import {
     delete_BP_div,
-    delete_ASP_div,
     delete_equipment_show,
     delete_player_active_div,
     delete_active_show_div,
 } from './delete_func.js';
-import { Item_type_handle, BP_type_handle, isEmptyObject, hex2Rgba, ASP_type_handle } from './Function.js';
-import { dom } from '../Dom/Dom.js';
+import { Item_type_handle, BP_type_handle, isEmptyObject } from './Function.js';
 import { global } from '../GameRun/global_class.js';
 //更新血条上的数值
 function updata_HP() {
@@ -388,20 +384,6 @@ function updata_player_active() {
     //在主动技能相关布局中填入技能信息
     updata_player_active_show();
 }
-//更新右下角的游戏规划中战斗规划的主动技能规划部分的内容
-function updata_ASP_value() {
-    //清空主动技能规划界面的所有元素
-    delete_ASP_div();
-    //获取应该展示的主动技能过滤条件
-
-    let ASP_type = global.get_flag('UGS_ASP_type');
-    //获取在这个过滤条件下应该展示的技能id
-    let arr = ASP_type_handle(ASP_type);
-    //展示这些技能
-    for (let skill_id of arr) {
-        add_ASP_skill(skill_id);
-    }
-}
 //更新中下的玩家控制界面的当前所在区域和当前地点名称
 function updata_control_place_name() {
     //
@@ -430,6 +412,5 @@ export {
     updata_player_active_show,
     updata_player_active,
     updata_player_active_time_bar,
-    updata_ASP_value,
     updata_game_dom,
 };

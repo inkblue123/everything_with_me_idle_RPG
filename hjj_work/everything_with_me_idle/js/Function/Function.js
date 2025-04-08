@@ -72,76 +72,6 @@ function BP_type_handle(BP_type) {
 
     return BP_item_type;
 }
-//按照主动技能规划的过滤或筛选条件，获得应该展示的技能id队列
-function ASP_type_handle(type_switch) {
-    let arr = new Array();
-    for (let skill_id in player.All_Skills) {
-        if (P_skills[skill_id].type == 'Active') {
-            switch (type_switch) {
-                case 'ASP_all': //全部主动技能
-                    arr.push(skill_id);
-                    break;
-                case 'ASP_N_1': //占用1槽的主动技能
-                    if (P_skills[skill_id].need_slot_num == 1) {
-                        arr.push(skill_id);
-                    }
-                    break;
-                case 'ASP_N_2': //占用2槽的主动技能
-                    if (P_skills[skill_id].need_slot_num == 2) {
-                        arr.push(skill_id);
-                    }
-                    break;
-                case 'ASP_N_3': //占用3槽的主动技能
-                    if (P_skills[skill_id].need_slot_num == 3) {
-                        arr.push(skill_id);
-                    }
-                    break;
-                case 'ASP_N_4': //占用4槽的主动技能
-                    if (P_skills[skill_id].need_slot_num == 4) {
-                        arr.push(skill_id);
-                    }
-                    break;
-                case 'ASP_A': //可以攻击的主动技能
-                    for (let slot_id of P_skills[skill_id].need_slot_id) {
-                        if (B_skills[slot_id].active_type == 'attack') {
-                            arr.push(skill_id);
-                            break;
-                        }
-                    }
-                    break;
-                case 'ASP_D': //可以防御的主动技能
-                    for (let slot_id of P_skills[skill_id].need_slot_id) {
-                        if (B_skills[slot_id].active_type == 'defense') {
-                            arr.push(skill_id);
-                            break;
-                        }
-                    }
-                    break;
-                case 'ASP_R': //可以恢复的主动技能
-                    for (let slot_id of P_skills[skill_id].need_slot_id) {
-                        if (B_skills[slot_id].active_type == 'recovery') {
-                            arr.push(skill_id);
-                            break;
-                        }
-                    }
-                    break;
-                case 'ASP_F': //可以辅助的主动技能
-                    for (let slot_id of P_skills[skill_id].need_slot_id) {
-                        if (B_skills[slot_id].active_type == 'auxiliary') {
-                            arr.push(skill_id);
-                            break;
-                        }
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
-    return arr;
-}
 //将属性补正数值转义成简写字母
 function attr_correct_handle(attr_correct) {
     //
@@ -228,7 +158,6 @@ export {
     printf_play_item, //
     Item_type_handle,
     BP_type_handle,
-    ASP_type_handle,
     check_Equipment,
     isEmptyObject,
     hex2Rgba,

@@ -11,6 +11,12 @@ function init_attack_skill(texts) {
     texts[id].skill_name = '蓄力攻击';
     // texts[id].mini_skill_name = ;
 }
+//防御型技能的文本
+function init_defense_skill(texts) {
+    let id = 'shield_defense';
+    add_text_object(texts, id);
+    texts[id].skill_name = '盾牌防御';
+}
 //技能描述
 function init_skill_desc(texts) {
     //
@@ -61,8 +67,8 @@ function init_skill_condition_desc(texts) {
 function init_Text_skill(texts) {
     //攻击型技能的文本
     init_attack_skill(texts);
-    // //防御型技能的文本
-    // defense_skill(texts);
+    //防御型技能的文本
+    init_defense_skill(texts);
 
     //技能描述的文本
     init_skill_desc(texts);

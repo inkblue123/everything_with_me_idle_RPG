@@ -77,9 +77,9 @@ function Equipment_type(texts) {
     texts['shoes'].type_name = '鞋子';
     texts['shoes'].type_desc = '脚部防护装备';
     //副手
-    add_text_object(texts, 'deputy');
-    texts['deputy'].type_name = '副手';
-    texts['deputy'].type_desc = '辅助战斗的装备';
+    add_text_object(texts, 'shield');
+    texts['shield'].type_name = '盾牌';
+    texts['shield'].type_desc = '副手使用的防御敌人攻击的装备';
     //饰品
     add_text_object(texts, 'ornament');
     texts['ornament'].type_name = '饰品';
@@ -124,7 +124,7 @@ function Equipment_wearing_position(texts) {
     // add_text_object(texts, 'ornament');//重名，不需要重复new
     texts['ornament'].wearing_name = '饰品';
     texts['ornament'].wearing_desc = '这件装备可以放在饰品位置';
-    // add_text_object(texts, 'deputy');//重名，不需要重复new
+    add_text_object(texts, 'deputy');
     texts['deputy'].wearing_name = '副手';
     texts['deputy'].wearing_desc = '这件装备可以放在副手';
 }

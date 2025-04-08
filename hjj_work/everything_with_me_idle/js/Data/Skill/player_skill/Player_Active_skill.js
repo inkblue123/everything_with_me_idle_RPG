@@ -43,6 +43,15 @@ function init_Player_Active_skill(P_skills) {
     ];
     // P_skills[id].init_skill_desc();
     P_skills[id].levelup_flag = false;
+
+    //盾牌防御
+    id = 'shield_defense';
+    add_P_Active_skill(P_skills, id);
+    P_skills[id].need_slot_num = 1; //需要几个技能槽
+    //这个技能的每个槽使用哪个基础技能
+    P_skills[id].need_slot_id = ['shield_defense'];
+    // P_skills[id].init_skill_desc();
+    P_skills[id].levelup_flag = false;
 }
 
 export { init_Player_Active_skill };

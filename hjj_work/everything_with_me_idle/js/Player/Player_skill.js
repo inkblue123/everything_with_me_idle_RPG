@@ -1,7 +1,10 @@
 'use strict';
 import { items } from '../Data/Item/Item.js';
+import { addElement } from '../Function/Dom_function.js';
 import { P_skills, B_skills } from '../Data/Skill/Skill.js';
+import { global } from '../GameRun/global_class.js';
 import { skill_levelup_exp_algorithm } from '../Function/math_func.js';
+import { add_click_Active_skill_worn, add_show_Tooltip } from '../Function/Dom_function.js';
 
 //玩家拥有的技能
 class Player_skill {
@@ -84,6 +87,8 @@ export class Player_skills {
                 //新的主动技能
                 this[id] = new Player_A_skill(id);
             }
+            //解锁了新主动技能，更新需要展示这个技能的界面
+            this.updata_ASP_value();
         }
     }
     //给技能增加一定的经验
@@ -138,4 +143,105 @@ export class Player_skills {
     }
     //获取玩家拥有的指定技能
     get_skills() {}
+
+    //玩家技能发生变动时需要展示出来，调用这些接口更新界面
+    //更新左下角的游戏规划中战斗规划的主动技能规划部分的内容
+    updata_ASP_value() {
+        //清空主动技能规划界面的所有元素
+        this.delete_ASP_div();
+        //获取应该展示的主动技能过滤条件
+        let ASP_type = global.get_flag('UGS_ASP_type');
+        //获取在这个过滤条件下应该展示的技能id
+        let arr = this.ASP_type_handle(ASP_type);
+        //展示这些技能
+        for (let skill_id of arr) {
+            this.add_ASP_skill(skill_id);
+        }
+    }
+    //清空左下角的游戏规划中战斗规划的主动技能规划部分的内容
+    delete_ASP_div() {
+        let active_value_div = document.getElementById('active_value_div');
+        active_value_div.replaceChildren();
+    }
+    //按照主动技能规划的过滤或筛选条件，获得应该展示的技能id队列
+    ASP_type_handle(type_switch) {
+        let arr = new Array();
+        // for (let skill_id in player.All_Skills) {
+        for (let skill_id in this) {
+            if (P_skills[skill_id].type == 'Active') {
+                switch (type_switch) {
+                    case 'ASP_all': //全部主动技能
+                        arr.push(skill_id);
+                        break;
+                    case 'ASP_N_1': //占用1槽的主动技能
+                        if (P_skills[skill_id].need_slot_num == 1) {
+                            arr.push(skill_id);
+                        }
+                        break;
+                    case 'ASP_N_2': //占用2槽的主动技能
+                        if (P_skills[skill_id].need_slot_num == 2) {
+                            arr.push(skill_id);
+                        }
+                        break;
+                    case 'ASP_N_3': //占用3槽的主动技能
+                        if (P_skills[skill_id].need_slot_num == 3) {
+                            arr.push(skill_id);
+                        }
+                        break;
+                    case 'ASP_N_4': //占用4槽的主动技能
+                        if (P_skills[skill_id].need_slot_num == 4) {
+                            arr.push(skill_id);
+                        }
+                        break;
+                    case 'ASP_A': //可以攻击的主动技能
+                        for (let slot_id of P_skills[skill_id].need_slot_id) {
+                            if (B_skills[slot_id].active_type == 'attack') {
+                                arr.push(skill_id);
+                                break;
+                            }
+                        }
+                        break;
+                    case 'ASP_D': //可以防御的主动技能
+                        for (let slot_id of P_skills[skill_id].need_slot_id) {
+                            if (B_skills[slot_id].active_type == 'defense') {
+                                arr.push(skill_id);
+                                break;
+                            }
+                        }
+                        break;
+                    case 'ASP_R': //可以恢复的主动技能
+                        for (let slot_id of P_skills[skill_id].need_slot_id) {
+                            if (B_skills[slot_id].active_type == 'recovery') {
+                                arr.push(skill_id);
+                                break;
+                            }
+                        }
+                        break;
+                    case 'ASP_F': //可以辅助的主动技能
+                        for (let slot_id of P_skills[skill_id].need_slot_id) {
+                            if (B_skills[slot_id].active_type == 'auxiliary') {
+                                arr.push(skill_id);
+                                break;
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return arr;
+    }
+    // 向战斗规划界面的主动技能规划界面添加一个主动技能
+    add_ASP_skill(skill_id) {
+        let active_value_div = document.getElementById('active_value_div');
+        let askill = addElement(active_value_div, 'div', null, 'active_value');
+        askill.innerHTML = P_skills[skill_id].name;
+        //鼠标点击之后可以设置到玩家身上
+        add_click_Active_skill_worn(askill, skill_id);
+        //添加鼠标移动之后展示该技能详情
+        add_show_Tooltip(askill, 'show_active_skill', skill_id);
+    }
 }

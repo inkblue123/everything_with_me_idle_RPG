@@ -1,4 +1,5 @@
 import { isEmptyObject } from '../Function/Function.js';
+import { updata_BP_value } from '../Function/Updata_func.js';
 import { game_events } from '../Data/game_event/Game_Event.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_class.js';
@@ -47,10 +48,26 @@ export class Game_event_manage {
     }
     //启动迷你事件
     start_mini_event(event_id) {
+        //判断该事件是否满足启动条件
+        let ret = this.check_mini_event_start(event_id);
+        if (ret != 'start') {
+            //事件不能启动
+            this.end_mini_event(event_id, ret);
+            return;
+        }
         // 获取玩家控制界面
         let control = document.getElementById('control');
         //展示新地点的内容
         control.show_mini_event_process(event_id, 'first');
+    }
+    //判断迷你事件是否满足启动条件
+    check_mini_event_start(event_id) {
+        if (game_events[event_id].isrepeat == false) {
+            if (global.get_flag(event_id) == true) {
+                return 'repeat_false';
+            }
+        }
+        return 'start';
     }
     updata_mini_event(event_id, now_process_id, i) {
         //获取当前迷你事件的所处流程
@@ -61,11 +78,15 @@ export class Game_event_manage {
             if (thing.type == 'get_skill') {
                 //给予技能
                 let All_Skills = player.get_player_All_Skills();
-                for (let value of thing.value) {
-                    All_Skills.player_unlock_skill(value);
+                for (let skill_id of thing.skill_id) {
+                    All_Skills.player_unlock_skill(skill_id);
                 }
             } else if (thing.type == 'get_item') {
                 //给予物品
+                for (let item of thing.item) {
+                    player.Player_get_item(item.id, item.num, item.equip_rarity);
+                }
+                updata_BP_value();
             }
             //属性判定
             //技能判定
@@ -84,9 +105,14 @@ export class Game_event_manage {
     }
     //迷你事件结束
     end_mini_event(event_id, flag) {
-        //迷你事件退出原因设置
         let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_short_game_status(event_id, flag);
+        if (flag == 'finish') {
+            //事件完成
+            global_flag_manage.set_flag(event_id, flag);
+        }
+        //迷你事件退出原因设置
+        let SGS_flag_name = 'SGS_' + event_id;
+        global_flag_manage.set_flag(SGS_flag_name, flag);
         //迷你事件结束，回到当前地点
         let place_manage = global.get_place_manage();
         let now_place_id = place_manage.get_now_place();
@@ -131,7 +157,8 @@ export class Game_event_manage {
         // }
         //事件退出原因设置
         let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_short_game_status(this.now_event_id, flag);
+        let SGS_flag_name = 'SGS_' + this.now_event_id;
+        global_flag_manage.set_short_game_status(SGS_flag_name, flag);
 
         //如果当前事件有专属地点，则退出这个地点，回到进入事件的位置
         if (game_events[this.now_event_id].place) {
