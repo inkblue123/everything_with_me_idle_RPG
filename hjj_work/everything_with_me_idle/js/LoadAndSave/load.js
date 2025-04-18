@@ -1,16 +1,16 @@
-import { player, Player_Object } from '../Player/Player.js';
+import { player } from '../Player/Player.js';
 import {
     updata_equipment_show,
     updata_BP_value,
-    updata_player_active_slots_num,
-    updata_player_active_show,
+    // updata_player_active_slots_num,
+    // updata_player_active_show,
     updata_player_active,
 } from '../Function/Updata_func.js';
-import { show_normal_game_div, show_combat_game_div } from '../Function/show_func.js';
-import { dom } from '../Dom/Dom.js';
+import { show_normal_game_div } from '../Function/show_func.js';
+
 import { global } from '../GameRun/global_class.js';
 
-//
+//游戏存档加载
 function LoadSaveFile(save_file) {
     if (save_file) {
         //读取存档文件
@@ -57,8 +57,8 @@ function player_init() {
     // player.Player_get_item('test_boomerang', 5, 'rare');
     // player.Player_get_item('test_boomerang', 8, 'epic');
     // player.Player_get_item('wood_bow', 1, 'ordinary'); //远程武器测试
-    // let P_Askill = player.get_player_ASkill_Manage();
-    // P_Askill.set_active_skill('energy_storage_attack', 0); //在第0个主动技能槽里设置普通攻击
+    let P_Askill = player.get_player_ASkill_Manage();
+    P_Askill.set_active_skill('shield_defense', 0); //在第0个主动技能槽里设置普通攻击
     // P_Askill.set_active_skill('normal_attack_Melee', 0); //在第0个主动技能槽里设置普通攻击
 }
 //游戏界面初始化
@@ -73,7 +73,7 @@ function dom_init() {
 
     //初始化玩家背包
     updata_BP_value();
-    //更新右下角的游戏规划中战斗规划的主动技能规划部分的内容
+    //更新左下角的战斗规划的主动技能规划部分的内容
     let All_Skills = player.get_player_All_Skills();
     All_Skills.updata_ASP_value();
     // 将每个装备栏中的信息初始化
@@ -83,7 +83,9 @@ function dom_init() {
     }
     //移动到初始位置
     let place_manage = global.get_place_manage();
-    place_manage.set_now_place('village_home');
-    place_manage.set_next_place('village_home');
+    place_manage.set_now_place('test_normal1');
+    place_manage.set_next_place('test_combat1');
+    // place_manage.set_now_place('village_home');
+    // place_manage.set_next_place('village_home');
 }
 export { LoadSaveFile };

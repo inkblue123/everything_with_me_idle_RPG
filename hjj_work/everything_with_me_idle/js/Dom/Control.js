@@ -1,7 +1,7 @@
 import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
 import { isEmptyObject } from '../Function/Function.js';
 import { places } from '../Data/Place/Place.js';
-import { game_events } from '../Data/game_event/Game_Event.js';
+import { game_events } from '../Data/Game_event/Game_Event.js';
 import { texts } from '../Data/Text/Text.js';
 import { global } from '../GameRun/global_class.js';
 

@@ -4,7 +4,7 @@ import { isEmptyObject } from '../Function/Function.js';
 
 export class Attack_effect {
     constructor() {
-        this.id;
+        this.id; //这次攻击的主动技能id
         this.lock_enemy_type = new Object(); //索敌逻辑
 
         this.attack_num = 0; //攻击次数
@@ -15,9 +15,31 @@ export class Attack_effect {
         this.damage_type; //伤害类型
     }
 }
+export class Defense_effect {
+    constructor() {
+        this.id; //这次防御的主动技能id
+        this.defense_type; //防御类型
+        this.defense_num = 0; //防御次数
+        //伤害减免 damage_reduction DR
+        this.DR_math_type; //减伤的计算方式
+        this.DR_damage_type; //减伤适用的伤害类型
+        this.DR_num; //减伤固定数值
+        this.DR_ratio; //减伤比例
+        //伤害吸收 damage_absorb DA
+        this.DA_damage_type; //伤害吸收适用的伤害类型
+        this.DA_num; //伤害吸收的数值
+        //格挡 block BK
+        //格挡不限伤害
+        this.BK_num; //格挡次数
+        //反击 counterattack CAK
+        this.CAK_flag; //防御成功是否反击
+        this.CAK_time; //触发反击的时间点
+        this.CAK_effect = new Attack_effect(); //反击的效果
+    }
+}
 export class P_Attack_effect {
     constructor() {
-        this.id;
+        // this.id; //这次攻击的主动技能id，实际上没用
         this.lock_enemy_type = new Object(); //索敌逻辑
 
         this.main_Attack = new Attack_effect();
@@ -25,15 +47,32 @@ export class P_Attack_effect {
         this.other_Attack = new Attack_effect();
     }
 }
+export class P_Defense_effect {
+    constructor() {
+        // this.defense_flag;
+        this.main_Defense = new Defense_effect();
+    }
+}
+export class E_Attack_effect {
+    constructor() {
+        this.id; //造成这次攻击的敌人的id
+        this.place_x; //造成这次攻击的敌人的所在区域（little_distance近，middle_distance中，remote_distance远）
+        this.place_y; //造成这次攻击的敌人在区域里的哪个位置（0-8）
+
+        this.main_Attack = new Attack_effect();
+    }
+}
 
 //战斗管理类
 export class Combat_manage {
     constructor() {
+        this.player_attack_flag; //当前帧是否需要玩家攻击的标记
         this.player_Attack = new P_Attack_effect();
-        this.enemy_Attacks = new Array();
+        this.player_defense_flag; //当前帧玩家是否有防御效果的标记
+        this.player_Defense = new P_Defense_effect();
+        this.enemy_attack_flag; //当前帧是否需要敌人攻击的标记
+        this.enemy_Attacks = new Array(); //数组每个都是E_Attack_effect结构
         this.combat_place_enemys; //战斗场地内敌人的浅拷贝
-        this.enemy_combat_flag; //当前帧是否需要进行战斗的标记
-        this.player_combat_flag; //当前帧玩家战斗是否成功的标记
     }
     //设置玩家即将造成的攻击
     set_player_next_attack(main_Attack, deputy_Attack, other_Attack) {
@@ -41,40 +80,65 @@ export class Combat_manage {
         if (deputy_Attack) this.player_Attack.deputy_Attack = deputy_Attack;
         if (other_Attack) this.player_Attack.other_Attack = other_Attack;
         if (main_Attack || deputy_Attack || other_Attack) {
-            this.player_combat_flag = true;
+            this.player_attack_flag = true;
         }
     }
+    //设置玩家当前帧激活的防御效果
+    set_player_defense(main_defense) {
+        if (!isEmptyObject(main_defense)) this.player_Defense.main_Defense = main_defense;
+        // if (main_Attack) {
+        this.player_defense_flag = true;
+        // }
+    }
     //设置敌人即将造成的攻击
-    set_enemy_next_attack(enemy_Attack) {
-        this.enemy_Attacks.push(enemy_Attack);
-        this.enemy_combat_flag = true;
+    set_enemy_next_attack(e_Attack_effect) {
+        this.enemy_Attacks.push(e_Attack_effect);
+        this.enemy_attack_flag = true;
     }
     //结算这一帧的战斗结果
     run_combat() {
-        if (!this.enemy_combat_flag && !this.player_combat_flag) {
+        if (!this.enemy_attack_flag && !this.player_attack_flag) {
             return false;
         }
 
         let enemy_manage = global.get_enemy_manage();
         this.combat_place_enemys = enemy_manage.get_combat_place_enemys();
         //玩家攻击
-        if (this.player_combat_flag) {
+        if (this.player_attack_flag) {
             this.PAE_manage();
+            this.reset_player_attack_data();
         }
         //敌人攻击
-        if (this.enemy_combat_flag) {
+        if (this.enemy_attack_flag) {
             this.EAP_manage();
+            this.reset_enemy_attack_data();
         }
         //战斗结束，重置相关参数
-        this.reset_combat_data();
+        // this.reset_combat_data();
         return true;
     }
     //重置战斗相关参数
     reset_combat_data() {
+        this.reset_player_attack_data();
+        this.reset_player_defense_data();
+        this.reset_enemy_attack_data();
+    }
+    //重置玩家的战斗参数
+    reset_palyer_combat_data() {
+        this.reset_player_attack_data();
+        this.reset_player_defense_data();
+    }
+    reset_player_attack_data() {
+        this.player_attack_flag = false;
         this.player_Attack = new P_Attack_effect();
+    }
+    reset_player_defense_data() {
+        this.player_defense_flag = false;
+        this.player_Defense = new P_Defense_effect();
+    }
+    reset_enemy_attack_data() {
+        this.enemy_attack_flag = false;
         this.enemy_Attacks = new Array();
-        this.enemy_combat_flag = false;
-        this.player_combat_flag = false;
     }
     //玩家攻击敌人的战斗结果
     PAE_manage() {
@@ -84,33 +148,45 @@ export class Combat_manage {
             //没有找到敌人，攻击结束
             return true;
         }
-        //攻击n次
-        // this.player_combat_flag = true;
-        let end_attack_damage = 0;
-        let end_attack_num = 0;
+        let main_Attack = this.player_Attack.main_Attack;
+        let end_attack_damage = 0; //这一帧总共造成了多少伤害
+        let end_attack_num = 0; //这一帧总共攻击了几次
+        let global_flag_manage = global.get_global_flag_manage();
+        //对每个目标都攻击
         for (let i = 0; i < enemys.length; i++) {
-            for (let j = 0; j < this.player_Attack.main_Attack.attack_num; j++) {
-                if (enemys[i].health_point < this.player_Attack.main_Attack.base_damage) {
-                    end_attack_damage += enemys[i].health_point;
-                    enemys[i].health_point = 0;
-                } else {
-                    end_attack_damage += this.player_Attack.main_Attack.base_damage;
-                    enemys[i].health_point -= this.player_Attack.main_Attack.base_damage;
+            //攻击n次
+            for (let j = 0; j < main_Attack.attack_num; j++) {
+                let p_damage = main_Attack.base_damage;
+                if (enemys[i].health_point < p_damage) {
+                    p_damage = enemys[i].health_point;
                 }
+                enemys[i].health_point -= p_damage;
+
+                global_flag_manage.set_player_attack_game_log(main_Attack, p_damage, enemys[i].id);
+                // if (enemys[i].health_point < main_Attack.base_damage) {
+                //     end_attack_damage += enemys[i].health_point;
+                //     enemys[i].health_point = 0;
+                //     //玩家攻击日志
+                // } else {
+                //     end_attack_damage += main_Attack.base_damage;
+                //     enemys[i].health_point -= main_Attack.base_damage;
+                //     //玩家攻击日志
+                //     global_flag_manage.set_player_attack_game_log(main_Attack, main_Attack.base_damage);
+                // }
                 if (enemys[i].health_point <= 0) {
                     //击杀了一个敌人，记录相关数据
                     enemys[i].statu = false;
 
                     let game_event_manage = global.get_game_event_manage();
-                    game_event_manage.record_kill_enemy_num(this.player_Attack.main_Attack);
-                    break;
+                    game_event_manage.record_kill_enemy_num(main_Attack);
+                    continue;
                 }
             }
         }
-        end_attack_num = this.player_Attack.main_Attack.attack_num;
+        end_attack_num = main_Attack.attack_num;
         //结算经验
         let exp_manage = global.get_exp_manage();
-        exp_manage.set_Active_skill_exp(this.player_Attack.main_Attack.id, end_attack_damage);
+        exp_manage.set_Active_skill_exp(main_Attack.id, end_attack_damage);
         exp_manage.set_combat_leveling_behavior(end_attack_num, end_attack_damage);
     }
     //敌人攻击玩家的战斗结果
@@ -118,9 +194,7 @@ export class Combat_manage {
         let P_attr = player.get_player_attributes();
         //处理这一帧每个敌人的攻击
         for (let i = 0; i < this.enemy_Attacks.length; i++) {
-            for (let j = 0; j < this.enemy_Attacks[i].attack_num; j++) {
-                P_attr.health_point -= this.enemy_Attacks[i].base_damage;
-            }
+            this.player_attacted(this.enemy_Attacks[i]);
             //玩家生命归零，进入死亡逻辑
             if (P_attr.health_point <= 0) {
                 P_attr.health_point = 0;
@@ -129,6 +203,46 @@ export class Combat_manage {
             }
         }
     }
+    //玩家受击逻辑
+    player_attacted(E_Attack_effect) {
+        let P_attr = player.get_player_attributes();
+        let global_flag_manage = global.get_global_flag_manage();
+
+        for (let j = 0; j < E_Attack_effect.main_Attack.attack_num; j++) {
+            let e_damage = E_Attack_effect.main_Attack.base_damage; //敌人这一次攻击会造成的伤害
+            //根据玩家防御效果改变要受到的伤害
+            if (this.player_defense_flag == true) {
+                //玩家启动了防御技能，优先结算防御技能的效果
+                let main_Defense = this.player_Defense.main_Defense;
+                if (main_Defense.defense_num == 'infinite' || main_Defense.defense_num > 0) {
+                    //防御效果还有，结算防御效果
+                    if (typeof main_Defense.defense_num == 'number') {
+                        main_Defense.defense_num--; //使用一层防御效果
+                    }
+                    if (main_Defense.defense_type == 'damage_reduction') {
+                        if (main_Defense.DR_math_type == 'num') {
+                            e_damage -= main_Defense.DR_num;
+                        } else if (main_Defense.DR_math_type == 'ratio') {
+                            e_damage = e_damage * (1 - main_Defense.DR_num * 0.01);
+                        }
+                    }
+                } else {
+                    //防御效果用完，清除防御技能的效果，剩余的敌人攻击直接结算
+                    this.reset_player_defense_data();
+                }
+            } else {
+                //没有启动防御技能，不改变伤害，直接结算
+            }
+            //计算完毕，攻击打到玩家身上
+            P_attr.health_point -= e_damage;
+            global_flag_manage.set_enemy_attack_game_log(
+                E_Attack_effect.id,
+                e_damage,
+                E_Attack_effect.main_Attack.damage_type
+            );
+        }
+    }
+
     //获取当前玩家攻击的索敌目标
     get_lock_enemy() {
         let lock_enemys = new Array();
@@ -156,7 +270,8 @@ export class Combat_manage {
             game_event_manage.end_game_event(false);
         } else {
             //非事件中，移动到安全的地方
-            this.place_manage.set_next_place('village_home');
+            let place_manage = global.get_place_manage();
+            place_manage.set_next_place('village_home');
         }
         //清空玩家buff
         //清空战斗区域的临时加成

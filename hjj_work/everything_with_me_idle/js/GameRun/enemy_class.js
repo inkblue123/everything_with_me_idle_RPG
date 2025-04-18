@@ -1,9 +1,9 @@
 import { global } from './global_class.js';
-import { Attack_effect } from './combat_class.js';
+import { Attack_effect, E_Attack_effect } from './combat_class.js';
 import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { E_skills } from '../Data/Skill/Skill.js';
-import { get_random, get_random_enemy_distance, Askill_effect_algorithm } from '../Function/math_func.js';
+import { get_random, get_random_enemy_distance, Attack_effect_algorithm } from '../Function/math_func.js';
 
 //场地内的敌人对象
 class place_enemy {
@@ -11,8 +11,11 @@ class place_enemy {
         this.id = id; //唯一id
         this.health_point = 0; //当前血量
         this.attack_point = 0; //当前攻击进度
+
         this.statu = false; //死活状态
-        this.distance = 0;
+        this.distance = 0; //敌人与玩家的距离数值
+        this.place_x; //敌人在战斗区域的近中远哪个区域
+        this.place_y; //敌人在区域里的第几个位置（0-8）
         //战斗攻击属性
         this.combat_attack_attr = new Object();
         //战斗防御属性
@@ -108,7 +111,7 @@ class place_enemy {
             if (this.attack_point >= this.now_skill_attack_speed) {
                 start_skill = true;
             }
-        } else if (start_time == 'continued') {
+        } else if (start_time == 'continue') {
             start_skill = true;
         }
         return start_skill;
@@ -132,14 +135,19 @@ class place_enemy {
         let askill_base_attr = this.combat_attack_attr['attack'];
         //计算主动技能应该得到的效果
         let algorithm = E_SK.algorithm[stage];
-        Askill_effect_algorithm(algorithm, askill_base_attr, this.enemy_Attack_effect);
+        Attack_effect_algorithm(algorithm, askill_base_attr, this.enemy_Attack_effect);
         // Askill_algorithm(askill_base_attr, this.enemy_Attack_effect);
 
         //根据主动技能类型，产生这次效果
         if (E_SK.active_type[stage] == 'attack') {
             //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
             let combat_manage = global.get_combat_manage();
-            combat_manage.set_enemy_next_attack(this.enemy_Attack_effect);
+            let E_Attack = new E_Attack_effect();
+            E_Attack.id = this.id;
+            E_Attack.place_x = this.place_x;
+            E_Attack.place_y = this.place_y;
+            E_Attack.main_Attack = this.enemy_Attack_effect;
+            combat_manage.set_enemy_next_attack(E_Attack);
             this.reset_enemy_Attack_effect();
         }
     }
@@ -300,6 +308,8 @@ export class Enemy_manage {
         field[place_y] = new place_enemy(enemy_id);
         field[place_y].init();
         field[place_y].distance = get_random_enemy_distance(place_x, place_y);
+        field[place_y].place_x = place_x;
+        field[place_y].place_y = place_y;
 
         return field[place_y];
     }

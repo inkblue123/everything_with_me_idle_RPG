@@ -1,10 +1,10 @@
 'use strict';
 import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 import { enums } from '../Data/Enum/Enum.js';
-import { Attack_effect } from '../GameRun/combat_class.js';
+import { Attack_effect, Defense_effect } from '../GameRun/combat_class.js';
 import { global } from '../GameRun/global_class.js';
 import { isEmptyObject } from '../Function/Function.js';
-import { get_Askill_base_attr, Askill_effect_algorithm } from '../Function/math_func.js';
+import { get_Askill_base_attr, Attack_effect_algorithm, Defense_effect_algorithm } from '../Function/math_func.js';
 import { get_object_only_key } from '../Function/Get_func.js';
 
 const MAX_slot_num = 9;
@@ -44,17 +44,18 @@ export class Player_active_skills_Manage {
         this.now_time; //当前时间
         this.round_start_time; //当前回合开始时间
         this.now_round_time = 0; //当前回合运行了多久的时间
-        this.now_run_slot = 0; //当前运行到了哪个槽
+        this.now_run_slot = 0; //当前帧运行到了哪个槽
+        this.new_slot_flag = true; //当前帧有没有运行到一个新槽
         this.now_run_slot_time = 0; //当前运行到的槽运行了多久时间
-        // this.max_round_time = 9000; //当前回合最大时间
+        this.continue_skill_falg = true; //当前槽的技能如果是持续激活技能，是否满足激活条件
         this.any_slot_time = new Array(); //每个槽的技能需要运行的时间
 
-        this.last_run_slot; //上一个运行完毕的槽的编号
-        this.last_run_time; //上一次运行的时间
         this.player_end_attr = new Object(); //玩家最终属性拷贝，方便调用
         this.main_Attack = new Attack_effect(); //玩家主手攻击效果
         this.deputy_Attack = new Attack_effect(); //玩家副手攻击效果
         this.other_Attack = new Attack_effect(); //其他可能的攻击效果
+
+        this.main_defense = new Defense_effect(); //玩家主动技能防御效果
     }
     //初始化主动技能槽
     init(slot_num = 3) {
@@ -143,23 +144,24 @@ export class Player_active_skills_Manage {
     //获取当前运行到了哪个槽
     get_now_run_slot() {
         let now_run_slot = 0;
-        let now_round_time_cp = this.now_round_time;
+        let now_round_time = this.now_round_time;
         for (let i = 0; i < this.active_slot_num; i++) {
-            if (this.now_round_time >= this.any_slot_time[i]) {
+            if (now_round_time >= this.any_slot_time[i]) {
                 now_run_slot++;
-                now_round_time_cp -= this.any_slot_time[i];
+                now_round_time -= this.any_slot_time[i];
             } else {
                 break;
             }
         }
         return now_run_slot;
     }
-    //更新当前时间相关信息
-    updata_now_run_slot() {
+    //一帧开始，更新相关信息
+    updata_run_start() {
         this.now_time = global.get_game_now_time();
         this.now_round_time = this.now_time - this.round_start_time;
 
         let now_run_slot = 0;
+        let last_slot = this.now_run_slot;
         let now_run_slot_time = this.now_round_time;
         for (let i = 0; i < this.active_slot_num; i++) {
             if (now_run_slot_time >= this.any_slot_time[i]) {
@@ -169,10 +171,16 @@ export class Player_active_skills_Manage {
                 break;
             }
         }
+        if (last_slot != now_run_slot) {
+            this.new_slot_flag = true;
+            this.continue_skill_falg = true;
+        }
         this.now_run_slot = now_run_slot; //当前运行到了哪个槽
         this.now_run_slot_time = now_run_slot_time; //当前运行到的槽运行了多久时间
-
-        // return now_run_slot;
+    }
+    //一帧结束，更新相关信息
+    updata_run_end() {
+        this.new_slot_flag = false;
     }
     //更新角色属性
     updata_player_data(player_end_attr, reset_flag) {
@@ -209,12 +217,14 @@ export class Player_active_skills_Manage {
     reset_round() {
         this.round_start_time = global.get_game_now_time();
         this.now_round_time = 0;
-        this.last_run_slot = 0;
-        //重置玩家攻击
-        this.reset_player_Attack_effect();
+        this.now_run_slot = 0;
+        this.new_slot_flag = true;
+        this.continue_skill_falg = true;
+        //重置玩家技能效果
+        this.reset_active_skill_effect();
     }
-    //重置玩家攻击
-    reset_player_Attack_effect() {
+    //重置玩家技能效果
+    reset_active_skill_effect() {
         this.main_Attack = new Attack_effect();
         this.deputy_Attack = new Attack_effect();
         this.deputy_Attack = new Attack_effect();
@@ -234,55 +244,57 @@ export class Player_active_skills_Manage {
             this.other_Attack.critical_chance = this.player_end_attr['critical_chance'];
             this.other_Attack.critical_damage = this.player_end_attr['critical_damage'];
         }
+        this.main_defense = new Defense_effect();
     }
-    //判断当前运行的槽中的技能是否准备就绪
+    //判断当前帧应该处理哪些槽中的技能
     judge_active_start() {
-        let now_run_slot = this.now_run_slot;
-        // let now_run_slot = Math.floor(this.now_round_time / (this.player_end_attr.attack_speed * 1000));
-        let start_slot = -1;
-        if (now_run_slot >= this.last_run_slot) {
-            for (let i = this.last_run_slot; i <= now_run_slot; i++) {
-                if (isEmptyObject(this.active_slots[i])) {
-                    this.last_run_slot++;
-                    continue;
-                }
-                let start_time = this.active_slots[i].start_time;
-                if (start_time == 'start') {
-                    //当前技能应该在当前攻速时间的启动时激活
-                    this.last_run_slot++;
-                    start_slot = i;
-                    break;
-                } else if (start_time == 'end') {
-                    //当前技能应该在当前攻速时间的结束时激活，也就是下一个攻速时间的开始时
-                    if (this.last_run_slot + 1 <= now_run_slot) {
-                        this.last_run_slot++;
-                        start_slot = i;
-                        break;
-                    } else {
-                        continue;
-                    }
-                } else if (start_time == 'continued') {
-                    //当前技能应该在当前攻速时间内全程激活
-                    if (i == now_run_slot) {
-                        start_slot = i + 1;
-                        break;
-                    } else {
-                        this.last_run_slot++;
-                        continue;
+        if (this.new_slot_flag) {
+            //这一帧运行到了新槽，属于旧槽的结束和新槽的开始，启动相关逻辑
+            let old_slot = this.now_run_slot - 1;
+            if (old_slot == -1) {
+                //旧槽是-1，意味着当前属于一回合的第一帧，实际上没有旧槽，跳过处理
+            } else {
+                if (!isEmptyObject(this.active_slots[old_slot])) {
+                    //旧槽有技能，现在应该清除可能的残留效果
+                    let combat_manage = global.get_combat_manage();
+                    combat_manage.reset_palyer_combat_data();
+                    if (this.active_slots[old_slot].start_time == 'end') {
+                        //旧槽的技能是结束时触发，也就是现在
+                        if (this.judge_active_condition(old_slot)) {
+                            //目前运行的技能满足运行条件
+                            this.start_player_active(old_slot);
+                        }
                     }
                 }
             }
-            //判断即将运行的技能的限制条件是否满足
-            if (start_slot != -1) {
-                if (!this.judge_active_condition(start_slot)) {
-                    //目前运行的技能不满足限定条件
-                    start_slot = -1;
+            let new_slot = this.now_run_slot;
+            if (!isEmptyObject(this.active_slots[new_slot])) {
+                if (this.active_slots[new_slot].start_time == 'start') {
+                    //新槽的技能是启动时触发，也就是现在
+                    if (this.judge_active_condition(new_slot)) {
+                        //目前运行的技能满足运行条件
+                        this.start_player_active(new_slot);
+                    }
+                }
+            }
+        } else {
+            //这一帧运行在某个槽中，只有持续触发类技能需要处理
+            let now_slot = this.now_run_slot;
+            if (!isEmptyObject(this.active_slots[now_slot])) {
+                if (this.active_slots[now_slot].start_time == 'continue') {
+                    //当前槽的技能是持续触发，也就是现在
+                    if (this.continue_skill_falg && this.judge_active_condition(now_slot)) {
+                        //目前运行的技能满足运行条件
+                        this.start_player_active(now_slot);
+                    } else {
+                        //对持续运行类技能来说，如果中途不满足条件了，那么接下来的持续时间里也不再恢复
+                        this.continue_skill_falg = false;
+                    }
                 }
             }
         }
-        return start_slot;
     }
-    //判断当前运行的槽中的技能是否满足激活条件
+    //判断指定槽中的技能是否满足激活条件
     judge_active_condition(run_slot) {
         let flag = true;
         let active_condition = this.active_slots[run_slot].active_condition;
@@ -291,69 +303,44 @@ export class Player_active_skills_Manage {
             return true;
         } else {
             for (let condition_key in active_condition) {
-                if (condition_key == 'weapon_type') {
-                    //限制条件是装备了特定类型的装备
-                    //遍历每种玩家穿着的装备，找到一样的就算成功
-                    let weapon_type_flag = false;
-                    for (let w_type of active_condition.weapon_type) {
-                        if (this.player_end_attr['weapon_type'].includes(w_type)) {
-                            weapon_type_flag = true;
-                            break;
-                        }
-                    }
-                    if (weapon_type_flag == false) {
-                        //玩家穿着的装备不满足技能需求
-                        flag = false;
-                        break;
-                    }
-                } else if (condition_key == 'damage_type') {
-                    //限制条件是玩家当前手持的武器属于什么伤害类型的武器
-                    //遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
-                    let damage_type_flag = false;
-                    let damage_type = active_condition.damage_type;
-                    for (let pw of this.player_end_attr['weapon_type']) {
-                        let p_damage_type = enums.weapon_damage_type[pw];
-                        if (damage_type == p_damage_type) {
-                            damage_type_flag = true;
-                            break;
-                        }
-                    }
-                    if (damage_type_flag == false) {
-                        flag = false;
-                        break;
-                    }
+                //任意条件不满足，该技能就不可以激活
+                if (!this.judge_active_condition_key(condition_key, active_condition[condition_key])) {
+                    return false;
                 }
+                // if (condition_key == 'weapon_type') {
+                //     //限制条件是装备了特定类型的装备
+                //     //遍历每种玩家穿着的装备，找到一样的就算成功
+                //     let weapon_type_flag = false;
+                //     for (let w_type of active_condition.weapon_type) {
+                //         if (this.player_end_attr['weapon_type'].includes(w_type)) {
+                //             weapon_type_flag = true;
+                //             break;
+                //         }
+                //     }
+                //     if (weapon_type_flag == false) {
+                //         //玩家穿着的装备不满足技能需求
+                //         flag = false;
+                //         break;
+                //     }
+                // } else if (condition_key == 'damage_type') {
+                //     //限制条件是玩家当前手持的武器属于什么伤害类型的武器
+                //     //遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
+                //     let damage_type_flag = false;
+                //     let damage_type = active_condition.damage_type;
+                //     for (let pw of this.player_end_attr['weapon_type']) {
+                //         let p_damage_type = enums.weapon_damage_type[pw];
+                //         if (damage_type == p_damage_type) {
+                //             damage_type_flag = true;
+                //             break;
+                //         }
+                //     }
+                //     if (damage_type_flag == false) {
+                //         flag = false;
+                //         break;
+                //     }
+                // }
             }
         }
-
-        // //武器类型判定
-        // if (active_condition.weapon_type) {
-        //     let weapon_type_flag = false;
-        //     for (let skw of active_condition.weapon_type) {
-        //         if (enums['damage_type'].includes(skw)) {
-        //             //如果限制条件是伤害类型，遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
-        //             for (let pw of this.player_end_attr['weapon_type']) {
-        //                 let p_damage_type = enums.weapon_damage_type[pw];
-        //                 if (skw == p_damage_type) {
-        //                     weapon_type_flag = true;
-        //                     break;
-        //                 }
-        //             }
-        //             if (weapon_type_flag) {
-        //                 break;
-        //             }
-        //         } else if (enums['weapon_type'].includes(skw)) {
-        //             //如果限制条件是武器类型，遍历每种玩家武器，找到一样的就算成功
-        //             if (this.player_end_attr['weapon_type'].includes(skw)) {
-        //                 weapon_type_flag = true;
-        //                 break;
-        //             }
-        //         } else {
-        //             console.log('该技能的武器类型限制条件填写错误');
-        //             break;
-        //         }
-        //     }
-        //     if (weapon_type_flag == false) flag = false;
 
         return flag;
     }
@@ -365,10 +352,10 @@ export class Player_active_skills_Manage {
             return true;
         }
         let id = start_skill.id;
-        //记录使用了哪个技能
-        this.main_Attack.id = id;
         //根据主动技能类型，产生这次效果
         if (start_skill.active_type == 'attack') {
+            //记录使用了哪个技能
+            this.main_Attack.id = id;
             //处理攻击类技能特有的内容
             let effect = start_skill.effect;
             //伤害类型
@@ -383,29 +370,35 @@ export class Player_active_skills_Manage {
             let askill_base_attr = get_Askill_base_attr(start_skill.attr_correct, this.player_end_attr);
             //计算攻击效果
             let algorithm = start_skill.algorithm;
-            Askill_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);
+            Attack_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);
             //计算玩家装备的额外效果
             //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
             let combat_manage = global.get_combat_manage();
             combat_manage.set_player_next_attack(this.main_Attack);
-            this.reset_player_Attack_effect();
+        } else if (start_skill.active_type == 'defense') {
+            //防御类技能
+            this.main_defense.id = id;
+            //计算主动技能需要的玩家属性
+            let askill_base_attr = get_Askill_base_attr(start_skill.attr_correct, this.player_end_attr);
+            //计算主动技能防御效果
+            Defense_effect_algorithm(start_skill, askill_base_attr, this.main_defense);
+            let combat_manage = global.get_combat_manage();
+            combat_manage.set_player_defense(this.main_defense);
         }
+        this.reset_active_skill_effect();
     }
     //游戏运行一帧，计算主动技能部分内容
     run_player_active_skill() {
-        //更新时间
-        this.updata_now_run_slot();
-        // this.now_time = global.get_game_now_time();
-        // this.now_round_time = this.now_time - this.round_start_time;
-        //如果运行到某个技能准备就绪
-        let start_slot = this.judge_active_start();
-        if (start_slot != -1) {
-            this.start_player_active(start_slot);
-            // console.log(`${start_slot}`);
-        }
-        //如果运行到一回合结束，
+        //一帧启动
+        this.updata_run_start();
+
+        //判断当前是否有技能满足运行条件，并调用对应技能
+        this.judge_active_start();
+
+        //一帧结束
+        this.updata_run_end();
+        //如果运行到一回合结束
         if (this.now_run_slot >= this.get_use_active_slots_num()) {
-            // if (this.now_run_slot >= this.active_slot_num) {
             //重置时间，循环到下一回合
             this.reset_round();
         }
@@ -420,5 +413,28 @@ export class Player_active_skills_Manage {
         for (let i = 0; i < P_skills[skill_id].need_slot_num; i++) {
             this.active_slots[slot_id + i - skill_slot_num] = new Object();
         }
+    }
+    //判断当前状态是否满足一个具体的condition_key
+    judge_active_condition_key(condition_key, condition_value) {
+        if (condition_key == 'weapon_type') {
+            //限制条件是装备了特定类型的装备
+            //遍历每种玩家穿着的装备，找到一样的就算成功
+            for (let w_type of condition_value) {
+                if (this.player_end_attr['weapon_type'].includes(w_type)) {
+                    return true;
+                }
+            }
+        } else if (condition_key == 'damage_type') {
+            //限制条件是玩家当前手持的武器属于什么伤害类型的武器
+            //遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
+            let damage_type = condition_value;
+            for (let pw of this.player_end_attr['weapon_type']) {
+                let p_damage_type = enums.weapon_damage_type[pw];
+                if (damage_type == p_damage_type) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

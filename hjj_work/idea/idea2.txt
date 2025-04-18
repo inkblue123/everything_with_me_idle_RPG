@@ -137,7 +137,7 @@ ui设计
     主动技能规划窗口                combat_setting
 )
 玩家决定主角去做何事的主界面     control
-游戏日志窗口                    game_data
+游戏日志窗口                    game_log
 {
     脑海窗口                        game_log
     物品怪物图鉴窗口                library

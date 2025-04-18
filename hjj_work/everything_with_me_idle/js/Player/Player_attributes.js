@@ -64,15 +64,6 @@ export class Player_attributes {
             let EQP = worn_EQP[wp];
             let id = EQP.id;
             let rarity = get_object_only_key(EQP.rarity);
-            let num = EQP.rarity[rarity];
-            //记录两个手中的武器的类型
-            if (wp == 'main_hand' || wp == 'deputy' || wp == 'main_hand_two') {
-                for (let equipment_type of items[id].equipment_type) {
-                    //纯副手装备不视作武器
-                    if (wp == 'deputy' && equipment_type == 'deputy') continue;
-                    this.EQP_attr['weapon_type'].push(equipment_type);
-                }
-            }
             //记录每件装备的每条属性
             for (let i in items[id].equip_attr) {
                 if (items[id].equip_attr[i] == 0) continue;
@@ -84,6 +75,7 @@ export class Player_attributes {
                 if (wp == 'deputy' && i == 'attack_speed') continue;
                 //回旋武器的攻速单独计算
                 if (items[id].equipment_type.includes('boomerang') && i == 'attack_speed') {
+                    let num = EQP.rarity[rarity];
                     this.EQP_attr[i] += items[id].equip_attr[i] / num;
                     continue;
                 }
@@ -91,8 +83,22 @@ export class Player_attributes {
                 this.EQP_attr[i] += items[id].equip_attr[i];
             }
         }
-        this.EQP_attr['weapon_type'] = get_uniqueArr(this.EQP_attr['weapon_type']);
-        if (this.EQP_attr['weapon_type'].length == 0) {
+    }
+    //获取手持武器的武器类型
+    Summary_worn_EQP_weapon_type(worn_EQP) {
+        this.EQP_attr['weapon_type'] = new Array();
+
+        if (!isEmptyObject(worn_EQP['main_hand'])) {
+            //带了单手武器
+            let item_id = worn_EQP['main_hand'].id; //主手位置的装备的id
+            let item_eqt = items[item_id].equipment_type; //该装备的武器类型
+            this.EQP_attr['weapon_type'] = this.EQP_attr['weapon_type'].concat(item_eqt);
+        } else if (!isEmptyObject(worn_EQP['main_hand_two'])) {
+            //带了双手武器
+            let item_id = worn_EQP['main_hand_two'].id; //双手位置的装备的id
+            let item_eqt = items[item_id].equipment_type; //该装备的武器类型
+            this.EQP_attr['weapon_type'] = this.EQP_attr['weapon_type'].concat(item_eqt);
+        } else {
             //没有带武器，空手
             this.EQP_attr['weapon_type'].push('gloves'); //视作拥有拳套
             //解锁之后空手也可以视作投掷工具
@@ -100,6 +106,14 @@ export class Player_attributes {
             //解锁之后空手也可以视作施法核心
             // this.EQP_attr['weapon_type'].push('putmagic_core');
         }
+        if (!isEmptyObject(worn_EQP['deputy'])) {
+            //带了副手装备
+            let item_id = worn_EQP['deputy'].id; //主手位置的装备的id
+            let item_eqt = items[item_id].equipment_type; //该装备的武器类型
+            this.EQP_attr['weapon_type'] = this.EQP_attr['weapon_type'].concat(item_eqt);
+        }
+        //去重
+        this.EQP_attr['weapon_type'] = get_uniqueArr(this.EQP_attr['weapon_type']);
     }
     get_health_point() {
         return this.health_point;

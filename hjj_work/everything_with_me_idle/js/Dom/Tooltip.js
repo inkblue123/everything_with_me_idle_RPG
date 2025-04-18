@@ -22,10 +22,10 @@ Tooltip.InitTip = function (type, value) {
         //初始化物品介绍内容
         init_item_tip(value);
     } else if (type == 'active_skill') {
-        //初始化主动技能介绍内容
+        //初始化装载在玩家主动技能槽里的主动技能内容
         init_active_skill_tip(value);
     } else if (type == 'show_active_skill') {
-        //初始化主动技能介绍内容
+        //初始化战斗规划中，玩家拥有的主动技能的介绍内容
         init_show_active_skill_tip(value);
     }
 };
@@ -376,6 +376,16 @@ function show_active_skill_condition(slot_value_div, active_skill) {
             // else if (condition_key == '') {
             //     //其他限制条件
             // }
+            //该限制条件当前是否满足
+            let P_Askill = player.get_player_ASkill_Manage();
+            let ret = P_Askill.judge_active_condition_key(condition_key, active_skill.active_condition[condition_key]);
+            if (ret) {
+                C_flag_div.innerHTML = '✔';
+                C_flag_div.style.color = '#00c400';
+            } else {
+                C_flag_div.innerHTML = '✖';
+                C_flag_div.style.color = '#ff0000';
+            }
         }
     }
     return true;

@@ -1,29 +1,58 @@
 import { crtElement, empty_dom, addElement, addElement_radio } from '../Function/Dom_function.js';
-import { show_dropdown_table, change_Game_data_div, change_ASP_ARP_AEP } from '../Function/show_func.js';
+import { show_dropdown_table, change_Game_log_div, change_RA_IE } from '../Function/show_func.js';
+import { global } from '../GameRun/global_class.js';
 
-var Game_data = crtElement('div', 'game_data', null, '');
+var Game_log = crtElement('div', 'game_log', null, '');
 
 //创建右下，游戏数据界面中的详细组件
 {
     //界面上部，区分当前展示的内容的按钮
-    var Game_data_switch = crtElement('div', 'Game_data_switch_div', 'page_flex', '');
+    var Game_log_switch = crtElement('div', 'Game_log_switch_div', 'page_flex', '');
     //脑海 mind MD
-    var MD_switch_button = addElement(Game_data_switch, 'button', 'MD_switch_button', 'GD_switch_button');
+    var MD_switch_button = addElement(Game_log_switch, 'button', 'MD_switch_button', 'GL_switch_button');
     //图鉴窗口 library IB
-    var IB_switch_button = addElement(Game_data_switch, 'button', 'IB_switch_button', 'GD_switch_button');
+    var IB_switch_button = addElement(Game_log_switch, 'button', 'IB_switch_button', 'GL_switch_button');
     MD_switch_button.innerHTML = `脑海`;
     IB_switch_button.innerHTML = `图鉴`;
     //界面下部，具体展示内容的窗口
-    var Game_data_value_div = crtElement('div', 'Game_data_value_div', 'page_columns_1', '');
-    var MD_div = addElement(Game_data_value_div, 'div', 'MD_div', 'page_columns_12');
-    var IB_div = addElement(Game_data_value_div, 'div', 'IB_div', 'page_columns_12', 'none');
+    var Game_log_value_div = crtElement('div', 'Game_log_value_div', 'page_columns_1', '');
+    var MD_div = addElement(Game_log_value_div, 'div', 'MD_div', 'page_columns_12');
+    var IB_div = addElement(Game_log_value_div, 'div', 'IB_div', 'page_columns_12', 'none');
 
     // 脑海（日志）mind MD
     {
         // 左侧的分类下拉表格界面
-        // var IB_scroll_box = addElement(IB_div, 'div', 'IB_scroll_box', 'overflow_y_div');
-        // var IB_classification_div = addElement(IB_scroll_box, 'div', 'IB_classification_div', 'classification_div');
-        // 全部
+        {
+            var MD_scroll_box = addElement(MD_div, 'div', 'MD_scroll_box', 'overflow_y_div');
+            var MD_classification_div = addElement(MD_scroll_box, 'div', 'MD_classification_div', 'classification_div');
+            //流水账 running_account RA
+            var RA_radio_div = addElement(MD_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+            addElement_radio(RA_radio_div, `RA_button`, 'MD_switch', `RA_button`, `流水账`);
+            RA_radio_div.children[0].checked = true; //初始激活该按钮
+            var RA_droptable = addElement(MD_classification_div, 'div', 'RA_droptable', 'dropdown_table');
+            var RA_all_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            addElement_radio(RA_all_radio_div, `RA_all`, 'RA_switch', `RA_all`, `全部`);
+            RA_all_radio_div.children[0].checked = true; //初始激活该按钮
+            var RA_combat_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            addElement_radio(RA_combat_radio_div, `RA_combat`, 'RA_switch', `RA_combat`, `战斗`);
+            var RA_item_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            addElement_radio(RA_item_radio_div, `RA_item`, 'RA_switch', `RA_item`, `物品`);
+            var RA_other_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            addElement_radio(RA_other_radio_div, `RA_other`, 'RA_switch', `RA_other`, `其他`);
+            //重要事件 important_event IE
+            var IE_radio_div = addElement(MD_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+            addElement_radio(IE_radio_div, `IE_button`, 'MD_switch', `IE_button`, `重要事件`);
+        }
+        //右侧具体的内容
+        {
+            // var MD_value_div = addElement(MD_div, 'div', 'MD_value_div', null);
+            //流水账 running_account RA
+            var RA_value_scroll_box = addElement(MD_div, 'div', 'RA_value_scroll_box', 'overflow_y_div', '');
+            var RA_value_div = addElement(RA_value_scroll_box, 'div', 'RA_value_div', 'classification_div');
+            //重要事件 important_event IE
+            var IE_value_scroll_box = addElement(MD_div, 'div', 'IE_value_scroll_box', 'overflow_y_div', 'none');
+            var IE_value_div = addElement(IE_value_scroll_box, 'div', 'IE_value_div', 'classification_div');
+        }
     }
     // 图鉴窗口 library IB
     {
@@ -143,19 +172,44 @@ var Game_data = crtElement('div', 'game_data', null, '');
     // }
 
     //组件放入游戏数据界面中
-    Game_data.appendChild(Game_data_switch);
-    Game_data.appendChild(Game_data_value_div);
+    Game_log.appendChild(Game_log_switch);
+    Game_log.appendChild(Game_log_value_div);
 }
 
 // 为组件添加触发事件
 {
     //切换脑海、图鉴的按钮
     MD_switch_button.onclick = function () {
-        change_Game_data_div(this.id);
+        change_Game_log_div(this.id);
     };
     IB_switch_button.onclick = function () {
-        change_Game_data_div(this.id);
+        change_Game_log_div(this.id);
     };
+    //选择脑海界面的具体功能
+    let radios = MD_div.querySelectorAll('input[type="radio"][name="MD_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            if (this.id == 'RA_button') {
+                //针对流水账按钮，按下之后打开流水账的过滤按钮
+                show_dropdown_table('MD_classification_div', 'RA_droptable');
+                //激活“全部”分类
+                RA_all_radio_div.children[0].checked = true;
+            } else {
+                show_dropdown_table('MD_classification_div');
+            }
+            // 流水账与重要事件的切换
+            change_RA_IE(this.id);
+        });
+    });
+
+    //选择脑海流水账功能的过滤条件
+    radios = MD_div.querySelectorAll('input[type="radio"][name="RA_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.show_game_log_status(this.id);
+        });
+    });
 
     IB_item_button.onclick = function () {
         show_dropdown_table('IB_classification_div', 'IB_item_droptable');
@@ -171,4 +225,4 @@ var Game_data = crtElement('div', 'game_data', null, '');
     };
 }
 
-export { Game_data };
+export { Game_log };

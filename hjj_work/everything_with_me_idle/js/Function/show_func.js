@@ -59,7 +59,7 @@ function change_Combat_plan_div(button_id) {
     }
 }
 //切换游戏数据界面中的脑海、图鉴界面的按钮
-function change_Game_data_div(button_id) {
+function change_Game_log_div(button_id) {
     const MD_div = document.getElementById('MD_div');
     const IB_div = document.getElementById('IB_div');
     if (button_id == 'MD_switch_button') {
@@ -71,7 +71,7 @@ function change_Game_data_div(button_id) {
         IB_div.style.display = '';
     }
 }
-//按下战斗规划中，主动技能规划、自动恢复规划、自动撤离规划按钮之后，切换到对应的界面
+//按下战斗规划中，主动技能规划、自动恢复规划、自动撤离规划按钮之后，切换到对应的子界面
 function change_ASP_ARP_AEP(button_id) {
     const ASP_value_scroll_box = document.getElementById('ASP_value_div');
     const ARP_value_scroll_box = document.getElementById('ARP_value_scroll_box');
@@ -90,6 +90,19 @@ function change_ASP_ARP_AEP(button_id) {
         ASP_value_scroll_box.style.display = 'none';
         ARP_value_scroll_box.style.display = 'none';
         AEP_value_scroll_box.style.display = '';
+    }
+}
+//按下游戏日志中，流水账、重要事件按钮之后，切换到对应的子界面
+function change_RA_IE(button_id) {
+    const RA_value_scroll_box = document.getElementById('RA_value_scroll_box');
+    const IE_value_scroll_box = document.getElementById('IE_value_scroll_box');
+    if (button_id == 'RA_button') {
+        RA_value_scroll_box.style.display = '';
+        IE_value_scroll_box.style.display = 'none';
+    }
+    if (button_id == 'IE_button') {
+        RA_value_scroll_box.style.display = 'none';
+        IE_value_scroll_box.style.display = '';
     }
 }
 //点击了隐藏下拉框的按钮之后，展示当前按钮相关的下拉框，隐藏其他下拉框
@@ -153,8 +166,9 @@ export {
     show_active_EQP,
     change_Player_status_div,
     change_Combat_plan_div,
-    change_Game_data_div,
+    change_Game_log_div,
     change_ASP_ARP_AEP,
+    change_RA_IE,
     show_dropdown_table,
     show_combat_game_div,
     show_normal_game_div, //

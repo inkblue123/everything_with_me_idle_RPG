@@ -55,6 +55,7 @@ function updata_game_data() {
         game_event_manage.updata_game_event();
     }
     global_flag_manage.updata_short_game_status();
+    global_flag_manage.updata_new_game_log_status();
 }
 //战斗中，计算一帧之后的战斗内容
 function updata_combat() {

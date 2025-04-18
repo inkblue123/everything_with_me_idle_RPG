@@ -1,6 +1,6 @@
 import { isEmptyObject } from '../Function/Function.js';
 import { updata_BP_value } from '../Function/Updata_func.js';
-import { game_events } from '../Data/game_event/Game_Event.js';
+import { game_events } from '../Data/Game_event/Game_Event.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_class.js';
 import { player } from '../Player/Player.js';

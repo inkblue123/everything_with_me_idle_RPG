@@ -1,0 +1,100 @@
+/* 玩家控制界面的样式 */
+#game_log {
+    box-sizing: border-box;
+    user-select: none;
+    border: 2px solid #797691; /* 内框 */
+}
+/* 容纳切换战斗规划、生活技能、创造合成三个按钮的div */
+#Game_log_switch_div {
+    height: 10%;
+    background-color: #ffd700;
+}
+.GL_switch_button {
+    flex: 1;
+    font-size: 15px;
+    /* height: 40px; */
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}
+/* 容纳具体的战斗规划、生活技能、创造合成内容的div */
+#Game_log_value_div {
+    height: 90%;
+}
+
+/* 容纳具体生活技能内容的div */
+/* #LVP_div {
+    background-color: #ffd700;
+} */
+/* 容纳具体创造合成内容的div */
+/* #CTP_div {
+    background-color: #1100ff;
+} */
+/* 容纳脑海内容的div */
+#MD_div {
+    background-color: #ffd700;
+}
+/* 游戏日志界面-脑海-流水账内容的div */
+#RA_value_div {
+    background-color: #00ff2a;
+}
+/* 游戏日志界面-脑海-流水账内容的div */
+#IE_value_div {
+    background-color: #ff0095;
+}
+/* 容纳具体图鉴内容的div */
+#IB_div {
+    /* display: grid;
+    grid-template-columns: 1fr 2fr; */
+    /* width: 100vw; */
+    /* color: white; */
+    /* 测试颜色 */
+    background-color: #1100ff;
+    /* height: 90%; */
+}
+
+/* 战斗规划界面中，分类单选按钮 */
+/* 100%宽度 */
+.GL_switch_radio_div_1 label {
+    padding: 10px 0;
+    width: 100%;
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}
+/* 80%宽度 */
+.GL_switch_radio_div_2 label {
+    padding: 10px 0;
+    width: 80%;
+    /* cursor: pointer; */
+    /* height: 50px; */
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    /* border-radius: 5px; */
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}
+/* 60%宽度 */
+.GL_switch_radio_div_3 label {
+    padding: 10px 0;
+    width: 60%;
+    /* cursor: pointer; */
+    /* height: 50px; */
+    font-size: 15px; /*文本大小*/
+    text-align: center;
+    /* border-radius: 5px; */
+    /* 让文本按照换行符换行，同时保留空格 */
+    white-space: pre-wrap;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}

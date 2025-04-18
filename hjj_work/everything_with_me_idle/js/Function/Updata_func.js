@@ -213,7 +213,7 @@ function updata_player_active_slots_num() {
         un_use_active_time_frame.style.width = un_use_len + 'px';
     }
 
-    //游戏规划界面-战斗规划-主动技能规划中展示的主动技能槽数量
+    //战斗规划界面-战斗规划-主动技能规划中展示的主动技能槽数量
     let active_show_div = document.getElementById('active_show_div');
     for (let i = 0; i < 9; i++) {
         if (i < num) {
@@ -383,19 +383,6 @@ function updata_player_active() {
     player.updata_attr(true);
     //在主动技能相关布局中填入技能信息
     updata_player_active_show();
-}
-//更新中下的玩家控制界面的当前所在区域和当前地点名称
-function updata_control_place_name() {
-    //
-    let area_name_div = document.getElementById('area_name_div');
-    let place_name_div = document.getElementById('place_name_div');
-    let place_manage = global.get_place_manage();
-    let now_place_id = place_manage.get_now_place();
-    let place_name = places[now_place_id].name;
-    let area_id = places[now_place_id].area_id;
-    let area_name = texts[area_id].area_name;
-    area_name_div.innerHTML = area_name;
-    place_name_div.innerHTML = place_name;
 }
 
 export {

@@ -36,7 +36,7 @@ function delete_equipment_show(EQP_column) {
         EQP_div_data[i].style.opacity = 0.5;
     }
 }
-//重新生成右上战斗界面的玩家主动技能部分
+//重新生成战斗界面的玩家主动技能部分
 function delete_player_active_div() {
     let player_active_div = document.getElementById('player_active_div');
     player_active_div.replaceChildren(); //清空现有主动技能槽内容
@@ -45,7 +45,7 @@ function delete_player_active_div() {
         addElement(player_active, 'div', null, 'player_active_text');
     }
 }
-//重新生成右下游戏规划界面中战斗规划界面的主动技能展示部分
+//重新生成左下战斗规划界面中战斗规划界面的主动技能展示部分
 function delete_active_show_div() {
     let active_show_div = document.getElementById('active_show_div');
     active_show_div.replaceChildren(); //清空现有内容

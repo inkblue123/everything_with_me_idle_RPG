@@ -5,6 +5,10 @@ function init_Place_normal(places) {
     add_normal_Place(places, id, 'test');
     //可联通地点的id
     places[id].add_other_normal_place('test_combat1');
+    id = 'test_normal1';
+    add_normal_Place(places, id, 'test');
+    //可联通地点的id
+    places[id].add_other_normal_place('test_combat1');
 
     id = 'village_home'; //村中房屋
     add_normal_Place(places, id, 'village');

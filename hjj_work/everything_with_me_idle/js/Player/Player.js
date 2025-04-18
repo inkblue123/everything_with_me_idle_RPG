@@ -116,6 +116,9 @@ export class Player_Object {
         let worn_EQP = this.worn_EQP.get_worn_EQP();
         //更新装备的属性加成
         this.attributes.Summary_worn_EQP_attr(worn_EQP);
+        //更新玩家穿戴的装备类型
+        this.attributes.Summary_worn_EQP_weapon_type(worn_EQP);
+
         //获取当前拥有的技能
         //更新技能的加成
 

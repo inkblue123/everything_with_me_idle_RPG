@@ -27,11 +27,12 @@ function init_game_status(enums) {
 function init_short_game_status(enums) {
     let id = 'short_game_status';
     add_Enum_Array(enums, id);
-    enums[id] = [
-        'SGS_new_player_combat_test', //新手战斗训练
-        'SGS_new_player_teach_1',
-        'SGS_new_player_teach_2',
-    ];
+    //短期游戏状态由SGS_开头，不需要辨别
+    // enums[id] = [
+    //     'SGS_new_player_combat_test', //新手战斗训练
+    //     'SGS_new_player_teach_1',
+    //     'SGS_new_player_teach_2',
+    // ];
 }
 //初始化枚举库中与重要节点参数相关的内容
 function init_important_nodes(enums) {
@@ -41,9 +42,10 @@ function init_important_nodes(enums) {
     add_Enum_Array(enums[id], 'challenge');
     add_Enum_Array(enums[id], 'achievement');
     add_Enum_Array(enums[id], 'mini_event');
-    enums[id].page = ['page_1'];
-    enums[id].challenge = ['new_player_combat_test'];
-    enums[id].mini_event = ['new_player_teach_1', 'new_player_teach_2'];
+    //每种重要节点具体有哪些事件的枚举在Data.js中初始化
+    // enums[id].page = ['page_1'];
+    // enums[id].challenge = ['new_player_combat_test'];
+    // enums[id].mini_event = ['new_player_teach_1', 'new_player_teach_2'];
 }
 //初始化枚举库中与临用游戏状态参数相关的内容
 function init_use_game_status(enums) {

@@ -41,10 +41,12 @@ function init_base_Active_skill(B_skills) {
     B_skills[id].active_type = 'defense'; //防御类型
     B_skills[id].attr_correct = { power: 1 }; //哪些属性作为基础数值进行计算
     B_skills[id].algorithm = 1; //使用哪个算法进行计算
-    B_skills[id].start_time = 'attacted'; //受击时结算
+    B_skills[id].start_time = 'start'; //启动时计算
     //技能效果
     B_skills[id].effect = {
-        defense_type: 'damage_reduction_number', //固定数值减伤
+        defense_type: 'damage_reduction', //伤害减免类型
+        defense_num: 1, //防御1次
+        DR_math_type: 'num', //固定数值减免
     };
     B_skills[id].init_skill_desc();
 }

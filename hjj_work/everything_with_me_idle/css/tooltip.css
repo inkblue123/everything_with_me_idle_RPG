@@ -101,6 +101,9 @@
 /* 当前限制条件是否满足的标记 */
 .condition_flag_div {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    /* text-align: center; */
     width: 15%;
     border: 1px solid darkgrey;
 }

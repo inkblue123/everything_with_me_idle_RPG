@@ -145,7 +145,7 @@ export class Player_skills {
     get_skills() {}
 
     //玩家技能发生变动时需要展示出来，调用这些接口更新界面
-    //更新左下角的游戏规划中战斗规划的主动技能规划部分的内容
+    //更新左下角的战斗规划界面中战斗规划的主动技能规划部分的内容
     updata_ASP_value() {
         //清空主动技能规划界面的所有元素
         this.delete_ASP_div();
@@ -158,7 +158,7 @@ export class Player_skills {
             this.add_ASP_skill(skill_id);
         }
     }
-    //清空左下角的游戏规划中战斗规划的主动技能规划部分的内容
+    //清空左下角的战斗规划界面中战斗规划的主动技能规划部分的内容
     delete_ASP_div() {
         let active_value_div = document.getElementById('active_value_div');
         active_value_div.replaceChildren();

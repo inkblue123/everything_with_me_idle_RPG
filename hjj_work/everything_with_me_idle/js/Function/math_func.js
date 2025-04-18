@@ -68,29 +68,55 @@ function get_random_enemy_distance(place_x, place_y) {
 }
 
 //主动技能效果计算函数1号
-function Askill_algorithm_1(base_attr, Attack_effect) {
+function Askill_algorithm_1(base_attr) {
+    let end_data;
     //只支持0-1000范围内的属性
     if (base_attr > 1000) {
         base_attr = 1000;
     }
     if (base_attr <= 100) {
         //每点属性+0.1补正伤害
-        Attack_effect.base_damage = base_attr * 0.1;
+        end_data = base_attr * 0.1;
     } else if (base_attr > 100 && base_attr <= 1000) {
         //属性开根号得到补正伤害
-        Attack_effect.base_damage = Math.sqrt(base_attr);
+        end_data = Math.sqrt(base_attr);
     }
-    return Attack_effect;
+    return end_data;
 }
-//主动技能效果计算函数
-function Askill_effect_algorithm(id, base_attr, Attack_effect) {
+//攻击技能效果计算函数
+function Attack_effect_algorithm(id, base_attr, Attack_effect) {
+    let data;
     switch (id) {
         case 1: //1号函数，
-            Askill_algorithm_1(base_attr, Attack_effect);
+            data = Askill_algorithm_1(base_attr);
+            Attack_effect.base_damage = data;
             break;
 
         default:
             break;
+    }
+}
+//防御技能效果计算函数
+function Defense_effect_algorithm(skill_data, base_attr, Defense_effect) {
+    let data = 0;
+    switch (skill_data.algorithm) {
+        case 1: //1号函数
+            data = Askill_algorithm_1(base_attr);
+            break;
+
+        default:
+            break;
+    }
+    let skill_effect = skill_data.effect;
+    Defense_effect.defense_type = skill_effect.defense_type;
+    Defense_effect.defense_num = skill_effect.defense_num;
+    if (skill_effect.defense_type == 'damage_reduction') {
+        Defense_effect.DR_math_type = skill_effect.DR_math_type;
+        if (skill_effect.DR_math_type == 'num') {
+            Defense_effect.DR_num = data;
+        } else if (skill_effect.DR_math_type == 'ratio') {
+            Defense_effect.DR_ratio = data;
+        }
     }
 }
 //技能升级经验需求计算函数1号
@@ -115,15 +141,12 @@ function skill_levelup_exp_algorithm(id, base_exp, now_level) {
     }
     return levelup_exp;
 }
-// for (let i = 0; i <= 10; i++) {
-//     let levelup_exp = skill_levelup_exp_1(10, i);
-//     console.log(levelup_exp);
-// }
 
 export {
     get_random, //
     get_Askill_base_attr,
     get_random_enemy_distance,
-    Askill_effect_algorithm,
+    Attack_effect_algorithm,
+    Defense_effect_algorithm,
     skill_levelup_exp_algorithm,
 };

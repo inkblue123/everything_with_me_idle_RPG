@@ -3,7 +3,7 @@ import { add_combat_Place } from './Place_class.js';
 //战斗地点初始化
 function init_Place_combat(places) {
     {
-        let id = 'test_combat1';
+        let id = 'test_combat1';//测试战斗地点
         add_combat_Place(places, id, 'test');
         //可联通地点的id
         places[id].add_other_normal_place('test_normal1');
@@ -14,9 +14,9 @@ function init_Place_combat(places) {
             field: 'little_distance', //只允许刷在近距离
             // distance: 50, //只允许刷在指定距离
         };
-        places[id].enemy = ['Training_Dummy']; //能刷什么敌人
-        places[id].max_enemy_num = 5;
-        places[id].add_enemy_time = 3; //刷怪间隔
+        places[id].enemy = ['Attack_Dummy']; //能刷什么敌人
+        places[id].max_enemy_num = 1;
+        places[id].add_enemy_time = 1; //刷怪间隔
         places[id].unlimited_add_flag = true; //是否无限刷怪
     }
     {
