@@ -6,6 +6,7 @@ import { Player_backpack } from './Player_backpack.js';
 import { Player_worn } from './Player_worn_EQP.js';
 import { Player_active_skills_Manage } from './Player_active_skills.js';
 import { Player_skills } from './Player_skill.js';
+import { global } from '../GameRun/global_class.js';
 
 export class Player_Object {
     constructor() {
@@ -55,18 +56,44 @@ export class Player_Object {
     }
     //给玩家背包添加物品，js版函数重载
     Player_get_item(...args) {
+        let id, num, equip_rarity;
         if (typeof args[0] == 'object') {
             //输入的是一格物品，是一个Player_Item对象
-            let id = args[0].id;
-            let num = args[0].num;
+            id = args[0].id;
+            num = args[0].num;
             let keys = Object.keys(args[0].rarity);
-            let equip_rarity = keys[0];
-            this.backpack_items.Player_get_item(id, num, equip_rarity);
+            equip_rarity = keys[0];
         } else {
             // 有多个参数，输入的是物品的id、数量、稀有度等等信息
-            this.backpack_items.Player_get_item(args[0], args[1], args[2]);
+            id = args[0];
+            num = args[1];
+            equip_rarity = args[2];
+        }
+        let ret = this.backpack_items.Player_get_item(id, num, equip_rarity);
+        if (ret >= 0) {
+            //物品添加正常，记录日志
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_get_item_game_log(id, num, equip_rarity);
         }
     }
+    //给玩家背包添加物品，不触发日志的接口
+    Player_get_item_nolog(...args) {
+        let id, num, equip_rarity;
+        if (typeof args[0] == 'object') {
+            //输入的是一格物品，是一个Player_Item对象
+            id = args[0].id;
+            num = args[0].num;
+            let keys = Object.keys(args[0].rarity);
+            equip_rarity = keys[0];
+        } else {
+            // 有多个参数，输入的是物品的id、数量、稀有度等等信息
+            id = args[0];
+            num = args[1];
+            equip_rarity = args[2];
+        }
+        let ret = this.backpack_items.Player_get_item(id, num, equip_rarity);
+    }
+
     //从玩家背包里去掉武器装备
     Player_lose_Equipment(...args) {
         if (typeof args[0] == 'object') {
@@ -93,7 +120,7 @@ export class Player_Object {
         let keys = Object.keys(raw_worn_E);
         for (let key of keys) {
             //如果原位置已有装备，则将原装备放回背包
-            if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item(raw_worn_E[key]);
+            if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item_nolog(raw_worn_E[key]);
         }
 
         //将装备放到身上装备栏里对应的位置
@@ -107,7 +134,7 @@ export class Player_Object {
         let keys = Object.keys(raw_worn_E);
         for (let key of keys) {
             //如果原位置已有装备，则将原装备放回背包
-            if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item(raw_worn_E[key]);
+            if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item_nolog(raw_worn_E[key]);
         }
     }
     //根据玩家当前的加成更新属性

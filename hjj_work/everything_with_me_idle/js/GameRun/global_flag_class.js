@@ -3,6 +3,7 @@ import { addElement } from '../Function/Dom_function.js';
 import { game_events } from '../Data/Game_event/Game_Event.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { texts } from '../Data/Text/Text.js';
+import { items } from '../Data/Item/Item.js';
 import { global } from './global_class.js';
 //短期游戏状态标记
 class ShortGameStatus {
@@ -19,7 +20,7 @@ class ShortGameStatus {
 //环形队列
 class CircularQueue {
     constructor(max_size) {
-        this.items = new Array(max_size);
+        this.QueueData = new Array(max_size);
         this.max_size = max_size;
         this.front = 0;
         this.rear = -1;
@@ -29,7 +30,7 @@ class CircularQueue {
     enqueue(element) {
         if (this.isFull()) return false;
         this.rear = (this.rear + 1) % this.max_size;
-        this.items[this.rear] = element;
+        this.QueueData[this.rear] = element;
         this.size++;
         return true;
     }
@@ -40,12 +41,12 @@ class CircularQueue {
             this.front = (this.front + 1) % this.max_size;
             //正常入队新日志
             this.rear = (this.rear + 1) % this.max_size;
-            this.items[this.rear] = element;
+            this.QueueData[this.rear] = element;
             //哈希表数量不变
             return false;
         } else {
             this.rear = (this.rear + 1) % this.max_size;
-            this.items[this.rear] = element;
+            this.QueueData[this.rear] = element;
             this.size++;
             return true;
         }
@@ -53,7 +54,7 @@ class CircularQueue {
     //队列出队
     dequeue() {
         if (this.isEmpty()) return null;
-        const item = this.items[this.front];
+        const item = this.QueueData[this.front];
         this.front = (this.front + 1) % this.max_size;
         this.size--;
         return item;
@@ -63,7 +64,7 @@ class CircularQueue {
         let log_arr = new Array();
         for (let i = 0; i < this.size; i++) {
             let j = (this.front + i) % this.max_size;
-            log_arr.push(this.items[j]);
+            log_arr.push(this.QueueData[j]);
         }
         return log_arr;
     }
@@ -256,11 +257,14 @@ export class Global_flag_manage {
         }
         let flag_value;
         switch (flag_name) {
-            case 'UGS_ASP_type':
+            case 'UGS_ASP_type': //主动技能规划界面的过滤条件
                 flag_value = this.get_ASP_type();
                 break;
-            case 'UGS_village_barracks_week':
+            case 'UGS_village_barracks_week': //当前游戏日期属于村庄轮周的第几日
                 flag_value = this.get_village_barracks_week();
+                break;
+            case 'UGS_BP_weight': //当前玩家背包物品的负重
+                flag_value = this.get_BP_weight();
                 break;
 
             default:
@@ -281,19 +285,31 @@ export class Global_flag_manage {
     }
     //临用游戏状态-当前游戏日期属于村庄轮周的第几日
     get_village_barracks_week() {
-        //
         let time_manage = global.get_time_manage();
         let game_date = time_manage.get_game_date();
         let all_day = game_date.year * 360 + game_date.month * 30 + game_date.day;
-        // all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
-        all_day += 1; //初始日期2025.4.1是周二，在这里重置成周一
+        all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
         return (all_day % 5) + 1;
     }
-    //添加一条游戏日志
-    // set_game_log_status(type, value) {
-    //     if (type == 'player_attack' || type == 'enemy_attack') {
-    //     }
-    // }
+    //临用游戏状态-当前玩家背包物品的负重
+    get_BP_weight() {
+        var BP_weight = 0;
+        let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
+        for (let play_item_id of arr) {
+            if (items[play_item_id] === undefined) {
+                //玩家拥有的物品不在数据库中，应该清除
+                delete player.backpack_items[play_item_id];
+            } else {
+                let aitem_num = player.backpack_items[play_item_id].num;
+                BP_weight += Math.floor(aitem_num / items[play_item_id].maxStack);
+                if (aitem_num % items[play_item_id].maxStack != 0) {
+                    BP_weight++;
+                }
+            }
+        }
+        console.log('玩家当前背包负重%d', BP_weight);
+        return BP_weight;
+    }
     //添加一条玩家攻击的游戏日志
     set_player_attack_game_log(main_Attack, damage, enemy_id) {
         //例句：我使用普通攻击对敌人造成了1近战伤害
@@ -323,12 +339,40 @@ export class Global_flag_manage {
         this.game_log_status.combat_log.enLog(log_obj);
         this.game_log_status.new_log.enLog(log_obj);
     }
+    //添加一条获得物品的游戏日志
+    set_get_item_game_log(id, num, equip_rarity) {
+        let ch;
+        let item_name = items[id].name;
+        if (items[id].main_type.includes('equipment')) {
+            //物品是装备，
+            //例句：获得了普通木剑
+            let rarity_name = texts[equip_rarity].rarity_name;
+            if (num == 1) {
+                ch = '获得了' + rarity_name + item_name;
+            } else {
+                ch = '获得了' + rarity_name + item_name + 'x' + num;
+            }
+        } else {
+            //其他物品
+            //例句：获得了1个普通木头
+            ch = '获得了' + num + '个' + item_name;
+        }
+        let log_obj = new Object();
+        log_obj.type = 'RA_item';
+        log_obj.ch = ch;
+        this.game_log_status.item_log.enLog(log_obj);
+        this.game_log_status.all_log.enLog(log_obj);
+        this.game_log_status.new_log.enLog(log_obj);
+    }
     //更新游戏日志信息，将这一帧新的日志打印到脑海界面里
     updata_new_game_log_status() {
+        //如果当前帧没有新消息，就不用更新
+        if (this.game_log_status.new_log.isEmpty()) return;
         //获取当前展示的脑海界面中流水账功能的按钮
         let radios = document.getElementById('RA_button');
         //如果没有启动，就不用更新
         if (!radios.checked) return;
+
         //获取当前流水账功能需要展示的日志类型
         let RA_type;
         radios = document.querySelectorAll('input[name="RA_switch"]');
@@ -344,8 +388,8 @@ export class Global_flag_manage {
         for (let i = 0; i < new_log_num; i++) {
             let a_new_log = this.game_log_status.new_log.dequeue();
             // let a_type = 'RA_' + a_new_log.type;
-            if (a_new_log.type == RA_type || RA_type == 'RA_all') {
-                var new_log_div = addElement(RA_value_div, 'div', null, null);
+            if (a_new_log.type == RA_type || RA_type == 'RA_new') {
+                var new_log_div = addElement(RA_value_div, 'div', null, 'RA_log_div');
                 new_log_div.innerHTML = a_new_log.ch;
                 if (a_new_log.type == 'RA_combat') new_log_div.style.color = '#a71111';
                 if (a_new_log.type == 'RA_item') new_log_div.style.color = '#07d93c';
@@ -353,7 +397,7 @@ export class Global_flag_manage {
             }
         }
         //去除过多的信息
-        while (RA_value_div.childNodes.length >= 10) {
+        while (RA_value_div.childNodes.length > 10) {
             const firstChild = RA_value_div.childNodes[0]; // 获取第一个子节点
             if (firstChild) {
                 RA_value_div.removeChild(firstChild); // 删除第一个子节点
@@ -368,13 +412,13 @@ export class Global_flag_manage {
 
         //获取要展示的日志的列表
         let log_arr;
-        if (RA_type == 'RA_all') log_arr = this.game_log_status.all_log.getAllLog();
+        if (RA_type == 'RA_new') log_arr = this.game_log_status.all_log.getAllLog();
         else if (RA_type == 'RA_combat') log_arr = this.game_log_status.combat_log.getAllLog();
         else if (RA_type == 'RA_item') log_arr = this.game_log_status.item_log.getAllLog();
         else if (RA_type == 'RA_other') log_arr = this.game_log_status.other_log.getAllLog();
 
         for (let i = 0; i < log_arr.length; i++) {
-            var new_log_div = addElement(RA_value_div, 'div', null, null);
+            var new_log_div = addElement(RA_value_div, 'div', null, 'RA_log_div');
             let a_new_log = log_arr[i];
             new_log_div.innerHTML = a_new_log.ch;
             if (a_new_log.type == 'RA_combat') new_log_div.style.color = '#a71111';
@@ -384,7 +428,7 @@ export class Global_flag_manage {
 
         //去除过多的信息
         //单个日志队列只能保存10个信息，并且在展示之前已经清空了原本日志，理论上不会过多
-        // while (RA_value_div.childNodes.length >= 10) {
+        // while (RA_value_div.childNodes.length > 10) {
         //     const firstChild = RA_value_div.childNodes[0]; // 获取第一个子节点
         //     if (firstChild) {
         //         RA_value_div.removeChild(firstChild); // 删除第一个子节点

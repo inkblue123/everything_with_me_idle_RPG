@@ -107,15 +107,5 @@ function get_EQP_wp_data(EQP_column, wp) {
     }
     return EQP_wp_data;
 }
-//获取当前日期在村庄兵营里属于轮周第几日
-function get_village_barracks_week() {}
 
-export {
-    get_BP_type,
-    get_EQP_switch,
-    get_BP_weight,
-    get_object_only_key,
-    get_EQP_data,
-    get_EQP_wp_data,
-    get_village_barracks_week,
-};
+export { get_BP_type, get_EQP_switch, get_BP_weight, get_object_only_key, get_EQP_data, get_EQP_wp_data };

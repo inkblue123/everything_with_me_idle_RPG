@@ -66,6 +66,7 @@ export class Exp_manage {
         this.Active_skill_exp = new Object(); //玩家主动技能获得的经验
         this.Passive_skill_exp = new Object(); //玩家被动技能获得的经验
     }
+
     //结算玩家应该获得的技能经验
     player_get_exp() {
         //主动技能获得经验

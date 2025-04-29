@@ -30,9 +30,9 @@ var Game_log = crtElement('div', 'game_log', null, '');
             addElement_radio(RA_radio_div, `RA_button`, 'MD_switch', `RA_button`, `流水账`);
             RA_radio_div.children[0].checked = true; //初始激活该按钮
             var RA_droptable = addElement(MD_classification_div, 'div', 'RA_droptable', 'dropdown_table');
-            var RA_all_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
-            addElement_radio(RA_all_radio_div, `RA_all`, 'RA_switch', `RA_all`, `全部`);
-            RA_all_radio_div.children[0].checked = true; //初始激活该按钮
+            var RA_new_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            addElement_radio(RA_new_radio_div, `RA_new`, 'RA_switch', `RA_new`, `最新消息`);
+            RA_new_radio_div.children[0].checked = true; //初始激活该按钮
             var RA_combat_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
             addElement_radio(RA_combat_radio_div, `RA_combat`, 'RA_switch', `RA_combat`, `战斗`);
             var RA_item_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
@@ -192,8 +192,8 @@ var Game_log = crtElement('div', 'game_log', null, '');
             if (this.id == 'RA_button') {
                 //针对流水账按钮，按下之后打开流水账的过滤按钮
                 show_dropdown_table('MD_classification_div', 'RA_droptable');
-                //激活“全部”分类
-                RA_all_radio_div.children[0].checked = true;
+                //激活“最新消息”分类
+                RA_new_radio_div.children[0].checked = true;
             } else {
                 show_dropdown_table('MD_classification_div');
             }

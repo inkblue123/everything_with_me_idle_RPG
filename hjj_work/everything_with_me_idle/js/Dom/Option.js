@@ -1,5 +1,5 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
-import { updata_HP, updata_BP_value } from '../Function/Updata_func.js';
+import { updata_BP_value } from '../Function/Updata_func.js';
 import { printf_play_item } from '../Function/Function.js';
 import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 import { get_BP_weight } from '../Function/Get_func.js';

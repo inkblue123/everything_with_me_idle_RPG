@@ -105,6 +105,7 @@ export class P_Passive_skill extends Skill {
     constructor(id) {
         super(id);
         this.type = 'Passive';
+        this.initial_flag; //是否属于玩家初始技能
         this.rewards; //常态等级加成
         this.milepost; // 关键等级节点
     }

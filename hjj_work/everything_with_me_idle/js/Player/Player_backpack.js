@@ -1,6 +1,7 @@
 'use strict';
 import { items } from '../Data/Item/Item.js';
 import { check_Equipment } from '../Function/Function.js';
+import { global } from '../GameRun/global_class.js';
 //玩家背包中的一个物品
 class Player_Item {
     constructor(id) {
@@ -24,7 +25,7 @@ export class Player_backpack {
         if (items[id] === undefined) {
             //添加的物品不在数据库中
             console.log('Player_get_item:未定义物品：%s', id);
-            return;
+            return -1;
         }
         //要添加的物品如果是武器装备，则必须要有稀有度，否则给予0稀有度物品
         //为玩家添加武器装备
@@ -37,6 +38,7 @@ export class Player_backpack {
             }
             this[id].num += num;
         }
+        return 0;
     }
 
     //为玩家添加武器装备

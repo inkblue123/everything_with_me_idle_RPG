@@ -61,6 +61,14 @@ class Player_P_skill extends Player_skill {
 
 export class Player_skills {
     constructor() {}
+    //玩家获得基础技能
+    player_get_base_skil() {
+        //当玩家进行战斗或者生活技能之后，要根据行为给对应的技能加经验
+        //那程序显然应该遍历玩家身上拥有的技能，找到可以加经验的才加
+        //意味着玩家身上应该拥有所有不需要解锁的技能，这里称为初始技能
+        //这些技能一开始就在玩家身上，0级，只有当达到1级的时候才会呈现到游戏界面中，并提供效果
+        // for()
+    }
     //为玩家解锁某个技能
     player_unlock_skill(id) {
         if (P_skills[id] === undefined) {

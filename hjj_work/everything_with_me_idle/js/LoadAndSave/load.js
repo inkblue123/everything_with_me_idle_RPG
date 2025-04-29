@@ -52,10 +52,10 @@ function player_init() {
     // player.Player_get_item('test_hand_gun', 1, 'excellent');
     player.Player_get_item('test_shield', 1, 'ordinary'); //盾牌测试
     // player.Player_get_item('test_shield', 1, 'excellent');
-    // player.Player_get_item('test_boomerang', 1, 'ordinary');
-    // player.Player_get_item('test_boomerang', 3, 'excellent');
-    // player.Player_get_item('test_boomerang', 5, 'rare');
-    // player.Player_get_item('test_boomerang', 8, 'epic');
+    player.Player_get_item('test_boomerang', 1, 'ordinary');
+    player.Player_get_item('test_boomerang', 3, 'excellent');
+    player.Player_get_item('test_boomerang', 5, 'rare');
+    player.Player_get_item('test_boomerang', 8, 'epic');
     // player.Player_get_item('wood_bow', 1, 'ordinary'); //远程武器测试
     let P_Askill = player.get_player_ASkill_Manage();
     P_Askill.set_active_skill('shield_defense', 0); //在第0个主动技能槽里设置普通攻击
@@ -83,9 +83,9 @@ function dom_init() {
     }
     //移动到初始位置
     let place_manage = global.get_place_manage();
-    place_manage.set_now_place('test_normal1');
-    place_manage.set_next_place('test_combat1');
-    // place_manage.set_now_place('village_home');
-    // place_manage.set_next_place('village_home');
+    // place_manage.set_now_place('test_normal1');
+    // place_manage.set_next_place('test_combat1');
+    place_manage.set_now_place('village_home');
+    place_manage.set_next_place('village_home');
 }
 export { LoadSaveFile };

@@ -3,7 +3,6 @@ import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
-import { places } from '../Data/Place/Place.js';
 import {
     addBP_item,
     addBP_equipment,
