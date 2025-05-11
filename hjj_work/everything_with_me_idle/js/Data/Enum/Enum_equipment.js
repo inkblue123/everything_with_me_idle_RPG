@@ -136,12 +136,48 @@ function set_equipment_type_attr_Presets(enums) {
     // 'spread_core', //扩散核心
     // 'summon_core', //召唤核心
     // //防具
-    // 'helmet', //头盔
-    // 'chest_armor', //胸甲
-    // 'leg_armor', //腿甲
-    // 'shoes', //鞋子
+    //头盔
+    add_Enum_Object(enums.equipment_type_attr_Presets, 'helmet');
+    enums.equipment_type_attr_Presets.helmet = {
+        defense: 'normal', //防御正常
+        evade: 'more', //闪避较高
+        resistance_point: 'less', //抵抗力较低
+        move_speed: 'min', //移动速度最低
+    };
+    //胸甲
+    add_Enum_Object(enums.equipment_type_attr_Presets, 'chest_armor');
+    enums.equipment_type_attr_Presets.chest_armor = {
+        defense: 'more', //防御较高
+        evade: 'min', //闪避最低
+        resistance_point: 'normal', //抵抗力正常
+        move_speed: 'less', //移动速度较低
+    };
+    //腿甲
+    add_Enum_Object(enums.equipment_type_attr_Presets, 'leg_armor');
+    enums.equipment_type_attr_Presets.leg_armor = {
+        defense: 'less', //防御较低
+        evade: 'min', //闪避最低
+        resistance_point: 'more', //抵抗力较高
+        move_speed: 'normal', //移动速度正常
+    };
+    //鞋子
+    add_Enum_Object(enums.equipment_type_attr_Presets, 'shoes');
+    enums.equipment_type_attr_Presets.shoes = {
+        defense: 'min', //防御最低
+        evade: 'less', //闪避较低
+        resistance_point: 'normal', //抵抗力正常
+        move_speed: 'more', //移动速度较高
+    };
     // 'deputy', //副手装备
     // 'ornament', //饰品
+    //盾牌
+    add_Enum_Object(enums.equipment_type_attr_Presets, 'shield');
+    enums.equipment_type_attr_Presets.shield = {
+        defense: 'normal', //防御正常
+        evade: 'min', //闪避最低
+        resistance_point: 'normal', //抵抗力正常
+        move_speed: 'min', //移动速度最低
+    };
 }
 //设置L1的属性预设
 function set_L1_attr_Presets(enums) {
@@ -152,22 +188,16 @@ function set_L1_attr_Presets(enums) {
     enums.equipment_attr_level.L1.defense = new Object();
     enums.equipment_attr_level.L1.survival = new Object();
     enums.equipment_attr_level.L1.player_base = new Object();
-    let L1_attack = enums.equipment_attr_level.L1.attack;
     //L1的近战武器，
-    L1_attack.melee = {
-        //攻击
-        attack: { max: 8, more: 6, normal: 5, less: 3, min: 1 },
-        //精准
-        precision: { max: 15, more: 13, normal: 10, less: 8, min: 5 },
-        //暴击率
-        critical_chance: { max: 10, more: 8, normal: 5, less: 3, min: 0 },
-        //暴击伤害
-        critical_damage: { max: 40, more: 35, normal: 20, less: 10, min: 0 },
-        //攻击速度，数值越小在战斗中优势越大
-        attack_speed: { max: 0, more: 1, normal: 2, less: 3, min: 4 },
+    enums.equipment_attr_level.L1.attack.melee = {
+        attack: { max: 8, more: 6, normal: 5, less: 3, min: 1 }, //攻击
+        precision: { max: 15, more: 13, normal: 10, less: 8, min: 5 }, //精准
+        critical_chance: { max: 10, more: 8, normal: 5, less: 3, min: 0 }, //暴击率
+        critical_damage: { max: 40, more: 35, normal: 20, less: 10, min: 0 }, //暴击伤害
+        attack_speed: { max: 0, more: 1, normal: 2, less: 3, min: 4 }, //攻击速度，数值越小在战斗中优势越大
     };
     //远程武器，一次攻击需要走两个攻速时间，所以会有补偿
-    L1_attack.ranged = {
+    enums.equipment_attr_level.L1.attack.ranged = {
         attack: { max: 15, more: 12, normal: 8, less: 3, min: 1 },
         precision: { max: 15, more: 13, normal: 10, less: 8, min: 5 },
         critical_chance: { max: 10, more: 8, normal: 5, less: 3, min: 0 },
@@ -175,52 +205,35 @@ function set_L1_attr_Presets(enums) {
         attack_speed: { max: 0, more: 0, normal: 1, less: 3, min: 5 },
     };
     //魔法武器，一次攻击需要走三个攻速时间
-    L1_attack.magic = {
+    enums.equipment_attr_level.L1.attack.magic = {
         attack: { max: 24, more: 18, normal: 15, less: 9, min: 3 },
         precision: { max: 15, more: 13, normal: 10, less: 8, min: 5 },
         critical_chance: { max: 10, more: 8, normal: 5, less: 3, min: 0 },
         critical_damage: { max: 15, more: 13, normal: 10, less: 8, min: 5 },
         attack_speed: { max: 0, more: 0, normal: 0, less: 1, min: 2 },
     };
-    let L1_defense = enums.equipment_attr_level.L1.defense;
     //L1装备的防御属性预设
-    L1_defense.helmet = {
-        //防御
-        defense: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //闪避
-        evade: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //抵抗力
-        resistance_point: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //移动速度
-        move_speed: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
+    enums.equipment_attr_level.L1.defense = {
+        defense: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //防御
+        evade: { max: 4, more: 3, normal: 2, less: 1, min: 0 }, //闪避
+        resistance_point: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //抵抗力
+        move_speed: { max: 4, more: 3, normal: 2, less: 1, min: 0 }, //移动速度
     };
-    let L1_survival = enums.equipment_attr_level.L1.survival;
     //L1装备的生存属性预设
-    L1_survival = {
-        //最大血量上限
-        health_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 },
-        //最大魔力上限
-        magic_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 },
-        //最大精力上限
-        energy_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 },
+    enums.equipment_attr_level.L1.survival = {
+        health_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 }, //最大血量上限
+        magic_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 }, //最大魔力上限
+        energy_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 }, //最大精力上限
     };
-    let L1_player_base = enums.equipment_attr_level.L1.player_base;
     //L1装备的玩家基础属性预设
-    L1_player_base = {
-        //体格
-        physique: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //经脉
-        Meridians: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //魂魄
-        soul: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //力量
-        power: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //敏捷
-        agile: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //智力
-        intelligence: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
-        //技巧
-        technique: { max: 5, more: 4, normal: 3, less: 2, min: 1 },
+    enums.equipment_attr_level.L1.player_base = {
+        physique: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //体格
+        Meridians: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //经脉
+        soul: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //魂魄
+        power: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //力量
+        agile: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //敏捷
+        intelligence: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //智力
+        technique: { max: 5, more: 4, normal: 3, less: 2, min: 1 }, //技巧
     };
 }
 //设置每种等级的属性预设

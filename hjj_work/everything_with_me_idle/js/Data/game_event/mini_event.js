@@ -84,7 +84,7 @@ function init_mini_event(game_events) {
             thing: [
                 {
                     type: 'get_skill',
-                    skill_id: ['normal_attack_Melee'],
+                    skill_id: ['shield_defense'],
                 },
                 {
                     type: 'get_item',

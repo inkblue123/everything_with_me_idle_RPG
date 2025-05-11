@@ -154,8 +154,6 @@ function add_click_Equipment_worn(target_div, tip_value) {
         show_active_EQP();
         //将要穿戴的物品放到目前激活的装备栏的指定位置
         player.worn_Equipment(tip_value.id, tip_value.num, rarity);
-        //刷新背包界面
-        updata_BP_value();
         //装备信息发生变动，更新相关界面
         updata_player_EQP();
         //关闭提示窗
@@ -168,8 +166,6 @@ function add_click_Equipment_worn_remove(target_div, wp) {
     target_div.addEventListener('click', () => {
         //从玩家身上脱下指定位置的装备
         player.remove_worn_Equipment(wp);
-        //刷新背包界面
-        updata_BP_value();
         //装备信息发生变动，更新相关界面
         updata_player_EQP();
         //关闭提示窗
@@ -177,7 +173,6 @@ function add_click_Equipment_worn_remove(target_div, wp) {
         tooltip.CloseTip(); //清空小窗口
     });
 }
-
 
 //  向主动技能组件添加鼠标点击设置到身上主动技能槽的功能
 function add_click_Active_skill_worn(target_div, tip_value) {

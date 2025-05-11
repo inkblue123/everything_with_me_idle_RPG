@@ -4,6 +4,7 @@ import { game_events } from '../Data/Game_event/Game_Event.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { texts } from '../Data/Text/Text.js';
 import { items } from '../Data/Item/Item.js';
+import { P_skills } from '../Data/Skill/Skill.js';
 import { global } from './global_class.js';
 //短期游戏状态标记
 class ShortGameStatus {
@@ -80,7 +81,7 @@ class CircularQueue {
     }
 }
 
-//记录全局完成标记相关内容的对象
+//记录游戏发生了什么的相关标记的对象
 export class Global_flag_manage {
     constructor() {
         //游戏状态标记，用于判定当前游戏正在做的，有明确起始和结束的事件
@@ -114,6 +115,13 @@ export class Global_flag_manage {
         //如玩家战斗时造成了多少伤害，被敌人攻击受到了多少伤害，获得了什么物品等
         //内部分成战斗日志，物品日志
         this.game_log_status = new Object();
+
+        //玩家行为记录，记录玩家干了什么事情，主要用于调用其他接口
+        //如玩家攻击了一次，打死了一个怪，吃了一个食物，进行了一次探索等等
+        //玩家执行了这些动作，有时候要给主动被动技能添加经验，有时候要判断是否满足了当前事件的达成条件
+        //此处只负责调用接口，并不会记录下每种行为的数据
+        //也就是说实际上这个对象啥都没存
+        this.game_behavior_status = new Object();
     }
     init() {
         //读取数据库中的事件
@@ -158,7 +166,9 @@ export class Global_flag_manage {
     }
     get_flag_type(id) {
         //这部分游戏状态涉及调用不同的逻辑，需要在枚举库中手动定义
-        if (enums['game_status'].includes(id)) return 'game_status';
+        //游戏状态都以“GS_”开头
+        if (id.startsWith('GS_')) return 'game_status';
+        // if (enums['game_status'].includes(id)) return 'game_status';
         //这部分游戏状态对会影响游戏内容，原本也需要在枚举库中定义，现在已经在初始化时自动完成定义
         if (enums['important_nodes']['page'].includes(id)) return 'page';
         if (enums['important_nodes']['challenge'].includes(id)) return 'challenge';
@@ -166,7 +176,7 @@ export class Global_flag_manage {
         if (enums['important_nodes']['mini_event'].includes(id)) return 'mini_event';
         //短期游戏状态都以“SGS_”开头，不用在枚举库中定义了
         if (id.startsWith('SGS_')) return 'short_game_status';
-        //短期游戏状态都以“UGS_”开头，不用在枚举库中定义了
+        //临用游戏状态都以“UGS_”开头，不用在枚举库中定义了
         if (id.startsWith('UGS_')) return 'use_game_status';
 
         console.log('获取%s的游戏状态类型错误，未在枚举库中定义归属', id);
@@ -244,8 +254,11 @@ export class Global_flag_manage {
         let flag_value;
         if (!isEmptyObject(this.short_game_status[flag_name])) {
             flag_value = this.short_game_status[flag_name].value;
-            // flag_value = JSON.parse(JSON.stringify(this.short_game_status[flag_name]));
-            delete this.short_game_status[flag_name];
+            //原来设计，短期游戏状态只会保存1秒，然后希望只读一次用掉就不用了
+            //这样可以实现在玩家达成某个特殊状态的时候，游戏界面可以监测到，给出反应
+            //并且只会在刚刚达成的这个特殊时候反应，其他时间点都正常
+            //现在发现程序遍历的时候不可避免会读取多次，所以只保留1秒保质期的逻辑，不再设计单次读取就删除了
+            // delete this.short_game_status[flag_name];
         }
         return flag_value;
     }
@@ -258,13 +271,13 @@ export class Global_flag_manage {
         let flag_value;
         switch (flag_name) {
             case 'UGS_ASP_type': //主动技能规划界面的过滤条件
-                flag_value = this.get_ASP_type();
+                flag_value = this.get_UGS_ASP_type();
                 break;
             case 'UGS_village_barracks_week': //当前游戏日期属于村庄轮周的第几日
-                flag_value = this.get_village_barracks_week();
+                flag_value = this.get_UGS_village_barracks_week();
                 break;
             case 'UGS_BP_weight': //当前玩家背包物品的负重
-                flag_value = this.get_BP_weight();
+                flag_value = this.get_UGS_BP_weight();
                 break;
 
             default:
@@ -274,7 +287,7 @@ export class Global_flag_manage {
         return flag_value;
     }
     //临用游戏状态-主动技能规划界面的过滤条件
-    get_ASP_type() {
+    get_UGS_ASP_type() {
         const radios = document.querySelectorAll('input[name="ASP_switch"]');
         for (const radio of radios) {
             if (radio.checked) {
@@ -284,15 +297,15 @@ export class Global_flag_manage {
         }
     }
     //临用游戏状态-当前游戏日期属于村庄轮周的第几日
-    get_village_barracks_week() {
+    get_UGS_village_barracks_week() {
         let time_manage = global.get_time_manage();
         let game_date = time_manage.get_game_date();
         let all_day = game_date.year * 360 + game_date.month * 30 + game_date.day;
-        all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
+        // all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
         return (all_day % 5) + 1;
     }
     //临用游戏状态-当前玩家背包物品的负重
-    get_BP_weight() {
+    get_UGS_BP_weight() {
         var BP_weight = 0;
         let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
         for (let play_item_id of arr) {
@@ -361,6 +374,32 @@ export class Global_flag_manage {
         log_obj.type = 'RA_item';
         log_obj.ch = ch;
         this.game_log_status.item_log.enLog(log_obj);
+        this.game_log_status.all_log.enLog(log_obj);
+        this.game_log_status.new_log.enLog(log_obj);
+    }
+    //玩家解锁了新的主动技能的日志
+    set_unluck_active_skill_game_log(id) {
+        //例句：学会了施展“普通攻击-近战”
+        let ch;
+        let skill_name = P_skills[id].name;
+        ch = '学会了施展"' + skill_name + '"';
+        let log_obj = new Object();
+        log_obj.type = 'RA_other';
+        log_obj.ch = ch;
+        this.game_log_status.other_log.enLog(log_obj);
+        this.game_log_status.all_log.enLog(log_obj);
+        this.game_log_status.new_log.enLog(log_obj);
+    }
+    //玩家完成了某个事件
+    set_finish_event_game_log(event_id) {
+        //例句：完成了“周一新手教学”事件
+        let ch;
+        let event_name = texts[event_id].event_name;
+        ch = '完成了"' + event_name + '"';
+        let log_obj = new Object();
+        log_obj.type = 'RA_other';
+        log_obj.ch = ch;
+        this.game_log_status.other_log.enLog(log_obj);
         this.game_log_status.all_log.enLog(log_obj);
         this.game_log_status.new_log.enLog(log_obj);
     }
@@ -434,5 +473,41 @@ export class Global_flag_manage {
         //         RA_value_div.removeChild(firstChild); // 删除第一个子节点
         //     }
         // }
+    }
+    //玩家行为-击杀敌人记录
+    record_kill_enemy_num(main_Attack) {
+        let game_event_manage = global.get_game_event_manage();
+        game_event_manage.record_kill_enemy_num(main_Attack);
+    }
+    //玩家行为-受击次数记录
+    record_attacted_num() {
+        let game_event_manage = global.get_game_event_manage();
+        game_event_manage.record_attacted_num();
+    }
+    //玩家行为-攻击次数记录
+    record_attack_num() {
+        let game_event_manage = global.get_game_event_manage();
+        game_event_manage.record_attack_num();
+    }
+    //玩家行为-主动技能使用
+    record_active_skill_use(id, damage) {
+        // // let game_event_manage = global.get_game_event_manage();
+        // // game_event_manage.record_active_skill_use(id);
+        let exp_manage = global.get_exp_manage();
+        exp_manage.set_Active_skill_exp(id, damage);
+    }
+    //玩家行为-防御技能生效
+    record_defense_skill_effect(id) {
+        // let exp_manage = global.get_exp_manage();
+        // exp_manage.set_Active_skill_exp(id, damage);
+        let game_event_manage = global.get_game_event_manage();
+        game_event_manage.record_defense_skill_effect(id);
+    }
+    //玩家行为-战斗数据记录
+    record_combat_behavior(attack_num, attack_damage) {
+        // let game_event_manage = global.get_game_event_manage();
+        // game_event_manage.record_active_skill_use(id);
+        let exp_manage = global.get_exp_manage();
+        exp_manage.set_combat_leveling_behavior(attack_num, attack_damage);
     }
 }

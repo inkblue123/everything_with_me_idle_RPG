@@ -34,7 +34,7 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
             var BP_scroll_box = addElement(BP_div, 'div', 'BP_scroll_box', 'overflow_y_div');
             var BP_classification_div = addElement(BP_scroll_box, 'div', 'BP_classification_div', 'classification_div');
             // 全部
-            var BP_ALL_radio_div = addElement(BP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+            var BP_ALL_radio_div = addElement(BP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(BP_ALL_radio_div, `BP_all`, 'BP_switch', `all`, `全部`);
             //默认激活"全部"过滤条件
             BP_ALL_radio_div.children[0].checked = true;
@@ -43,42 +43,42 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
             var BP_EQP_button = addElement(BP_classification_div, 'button', 'BP_EQP_button', 'dropdown_button_1');
             BP_EQP_button.innerHTML = `武器装备`;
             var BP_EQP_droptable = addElement(BP_classification_div, 'div', 'BP_EQP_droptable', 'dropdown_table');
-            var BP_EQP_all_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_EQP_all_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_EQP_all_radio_div, `BP_EQP_all`, 'BP_switch', `EQP_all`, `全部`);
-            var BP_EQP_W_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_EQP_W_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_EQP_W_radio_div, `BP_EQP_W`, 'BP_switch', `EQP_W`, `主手武器`);
-            var BP_EQP_A_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_EQP_A_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_EQP_A_radio_div, `BP_EQP_A`, 'BP_switch', `EQP_A`, `防具`);
-            var BP_EQP_D_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_EQP_D_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_EQP_D_radio_div, `BP_EQP_D`, 'BP_switch', `EQP_D`, `副手`);
-            var BP_EQP_O_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_EQP_O_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_EQP_O_radio_div, `BP_EQP_O`, 'BP_switch', `EQP_O`, `饰品`);
 
             //消耗品 consumable
             var BP_CSB_button = addElement(BP_classification_div, 'button', 'BP_CSB_button', 'dropdown_button_1');
             BP_CSB_button.innerHTML = `消耗品`;
             var BP_CSB_droptable = addElement(BP_classification_div, 'div', 'BP_CSB_droptable', 'dropdown_table');
-            var BP_CSB_all_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_CSB_all_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_CSB_all_radio_div, `BP_CSB_all`, 'BP_switch', `CSB_all`, `全部`);
-            var BP_CSB_F_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_CSB_F_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_CSB_F_radio_div, `BP_CSB_F`, 'BP_switch', `CSB_F`, `食品`);
-            var BP_CSB_A_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_CSB_A_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_CSB_A_radio_div, `BP_CSB_A`, 'BP_switch', `CSB_A`, `弹药`);
-            var BP_CSB_L_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_CSB_L_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_CSB_L_radio_div, `BP_CSB_L`, 'BP_switch', `CSB_L`, `生活消耗品`);
             //材料 Material
             var BP_MTR_button = addElement(BP_classification_div, 'button', 'BP_MTR_button', 'dropdown_button_1');
             BP_MTR_button.innerHTML = `材料物品`;
             var BP_MTR_droptable = addElement(BP_classification_div, 'div', 'BP_MTR_droptable', 'dropdown_table');
-            var BP_MTR_all_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_MTR_all_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_MTR_all_radio_div, `BP_MTR_all`, 'BP_switch', `MTR_all`, `全部`);
-            var BP_MTR_R_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_MTR_R_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_MTR_R_radio_div, `BP_MTR_R`, 'BP_switch', `MTR_R`, `自然材料`);
-            var BP_MTR_P_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_MTR_P_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_MTR_P_radio_div, `BP_MTR_B`, 'BP_switch', `MTR_P`, `人工材料`);
-            var BP_MTR_F_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_MTR_F_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_MTR_F_radio_div, `BP_MTR_C`, 'BP_switch', `MTR_F`, `成品`);
-            var BP_MTR_O_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var BP_MTR_O_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(BP_MTR_O_radio_div, `BP_MTR_L`, 'BP_switch', `MTR_O`, `其他物品`);
         }
         //右侧具体的背包物品
@@ -97,42 +97,42 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
                 'classification_div'
             );
             // 主动技能规划 Active_skill_plan ASP
-            var ASP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+            var ASP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(ASP_radio_div, `ASP_button`, 'CBP_switch', `ASP_button`, `主动技能规划`);
             ASP_radio_div.children[0].checked = true; //初始激活该按钮
             var ASP_droptable = addElement(CBP_classification_div, 'div', 'ASP_droptable', 'dropdown_table');
-            var ASP_all_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var ASP_all_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div switch_radio_div_2');
 
             addElement_radio(ASP_all_radio_div, `ASP_all`, 'ASP_switch', `ASP_all`, `全部主动技能`);
             ASP_all_radio_div.children[0].checked = true; //初始激活该按钮
-            // var ASP_U_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            // var ASP_U_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             // addElement_radio(ASP_U_radio_div, `ASP_U`, 'ASP_switch', `ASP_U`, `当前可用技能`);
             var ASP_N_radio_div = addElement(ASP_droptable, 'button', 'ASP_N_button', 'dropdown_button_2');
             ASP_N_radio_div.innerHTML = `占槽数分类`;
             var ASP_N_droptable = addElement(ASP_droptable, 'div', 'ASP_N_droptable', 'dropdown_table');
-            var ASP_N_1_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div GP_switch_radio_div_3');
+            var ASP_N_1_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div switch_radio_div_3');
             addElement_radio(ASP_N_1_radio_div, `ASP_N_1`, 'ASP_switch', `ASP_N_1`, `1 槽`);
-            var ASP_N_2_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div GP_switch_radio_div_3');
+            var ASP_N_2_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div switch_radio_div_3');
             addElement_radio(ASP_N_2_radio_div, `ASP_N_2`, 'ASP_switch', `ASP_N_2`, `2 槽`);
-            var ASP_N_3_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div GP_switch_radio_div_3');
+            var ASP_N_3_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div switch_radio_div_3');
             addElement_radio(ASP_N_3_radio_div, `ASP_N_3`, 'ASP_switch', `ASP_N_3`, `3 槽`);
-            var ASP_N_4_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div GP_switch_radio_div_3');
+            var ASP_N_4_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div switch_radio_div_3');
             addElement_radio(ASP_N_4_radio_div, `ASP_N_4`, 'ASP_switch', `ASP_N_4`, `4 槽`);
 
-            var ASP_A_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var ASP_A_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(ASP_A_radio_div, `ASP_A`, 'ASP_switch', `ASP_A`, `可攻击的技能`);
-            var ASP_D_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var ASP_D_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(ASP_D_radio_div, `ASP_D`, 'ASP_switch', `ASP_D`, `可防御的技能`);
-            var ASP_R_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var ASP_R_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(ASP_R_radio_div, `ASP_R`, 'ASP_switch', `ASP_R`, `可恢复的技能`);
-            var ASP_F_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div GP_switch_radio_div_2');
+            var ASP_F_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(ASP_F_radio_div, `ASP_F`, 'ASP_switch', `ASP_F`, `可辅助的技能`);
 
             //自动恢复规划 Auto_recovery_plan ARP
-            var ARP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+            var ARP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(ARP_radio_div, `ARP_button`, 'CBP_switch', `ARP_button`, `自动恢复规划`);
             //自动撤离规划 Auto_evacuate_plan AEP
-            var AEP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+            var AEP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(AEP_radio_div, `AEP_button`, 'CBP_switch', `AEP_button`, `自动撤离规划`);
         }
         //右侧具体的内容

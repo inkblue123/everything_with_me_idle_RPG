@@ -16,7 +16,7 @@ function init_Place_normal(places) {
 
     id = 'village_square'; //村庄大广场
     add_normal_Place(places, id, 'village');
-    places[id].add_other_normal_place('village_home', 'village_barracks');
+    places[id].add_other_normal_place('village_home', 'village_barracks', 'village_hospital');
     places[id].condition_connected_place = {
         // village_market: ['finish_page_1'], //完成第一章才允许进入集市
         // village_outside_mountain: ['finish_page_1'], //完成第一章才允许进入村外后山
@@ -31,6 +31,10 @@ function init_Place_normal(places) {
     places[id].add_other_normal_place('village_square');
     places[id].add_other_combat_place('VB_melee_train', 'VB_range_train');
     places[id].add_other_NPC('village_Combat_coach');
+
+    id = 'village_hospital'; //村庄诊所
+    add_normal_Place(places, id, 'village');
+    places[id].add_other_normal_place('village_square');
 }
 
 export { init_Place_normal };

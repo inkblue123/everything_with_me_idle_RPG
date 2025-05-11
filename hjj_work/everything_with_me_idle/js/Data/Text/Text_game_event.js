@@ -1,5 +1,11 @@
 import { add_text_object } from './Text_class.js';
 
+//游戏章节的文本
+function page_text(texts) {
+    let id = 'page_1';
+    add_text_object(texts, id);
+    texts[id].event_name = '第一章';
+}
 //挑战的文本
 function Challenge_text(texts) {
     let id = 'new_player_combat_test';
@@ -29,13 +35,28 @@ function mini_event_text(texts) {
         '        兵营教练：今天要教的是怎么用盾牌，我知道有些人打到上头就不管死活只顾输出，这是非常愚蠢的事情，所以我得教你们如何保护好自己，就靠这个盾，像这样…………';
     texts[id].text2 = '获得“木制盾牌”<br>学会了“盾牌防御”';
 }
-
+//事件完成条件的文本
+function event_finish_condition_text(texts) {
+    let id = 'melee_kill';
+    add_text_object(texts, id);
+    texts[id].condition_name = '近战击杀';
+    id = 'ATD_all_armor';
+    add_text_object(texts, id);
+    texts[id].condition_name = '4个防具部位都有穿着的情况下受击';
+    id = 'DSE_shield_defense';
+    add_text_object(texts, id);
+    texts[id].condition_name = '使用“盾牌防御”技能抵挡敌人攻击';
+}
 //初始化文本数据库中与游戏事件相关的文本
 function init_Text_game_event(texts) {
+    //章节的文本
+    page_text(texts);
     //挑战的文本
     Challenge_text(texts);
-    //挑战的文本
+    //迷你事件的文本
     mini_event_text(texts);
+    //事件完成条件的文本
+    event_finish_condition_text(texts);
 }
 
 export { init_Text_game_event };

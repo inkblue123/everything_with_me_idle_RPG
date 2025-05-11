@@ -39,7 +39,7 @@ export class Exp_manage {
     }
     //记录指定主动技能应该获得的经验
     set_Active_skill_exp(id, damage) {
-        if (this.Active_skill_exp[id]) {
+        if (isEmptyObject(this.Active_skill_exp[id])) {
             this.Active_skill_exp[id] = 0;
         }
         this.Active_skill_exp[id] += damage;

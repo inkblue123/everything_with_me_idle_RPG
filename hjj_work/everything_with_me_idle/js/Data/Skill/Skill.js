@@ -21,11 +21,12 @@ import { init_base_Active_skill } from './skill_addition/Base_skill.js';
 //     //特殊功法 super
 //     // 暂无
 // });
-
+//组成主动技能的各个基础技能
 var B_skills = new Object();
 //初始化主动技能需要的基础技能参数
 init_base_Active_skill(B_skills);
 
+//玩家所有技能
 var P_skills = new Object();
 //初始化技能数据库中与玩家被动技能相关的内容
 init_Plyaer_Passive_skill(P_skills);
@@ -33,6 +34,7 @@ init_Plyaer_Passive_skill(P_skills);
 init_Player_Active_skill(P_skills);
 // init_P_Active_skill(P_skills);
 
+//敌人所有技能
 var E_skills = new Object();
 //初始化技能数据库中与敌人被动技能相关的内容
 // init_Enemy_Passive_skill(P_skills);

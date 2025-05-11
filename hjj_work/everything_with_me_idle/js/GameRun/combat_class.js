@@ -161,33 +161,21 @@ export class Combat_manage {
                     p_damage = enemys[i].health_point;
                 }
                 enemys[i].health_point -= p_damage;
-
                 global_flag_manage.set_player_attack_game_log(main_Attack, p_damage, enemys[i].id);
-                // if (enemys[i].health_point < main_Attack.base_damage) {
-                //     end_attack_damage += enemys[i].health_point;
-                //     enemys[i].health_point = 0;
-                //     //玩家攻击日志
-                // } else {
-                //     end_attack_damage += main_Attack.base_damage;
-                //     enemys[i].health_point -= main_Attack.base_damage;
-                //     //玩家攻击日志
-                //     global_flag_manage.set_player_attack_game_log(main_Attack, main_Attack.base_damage);
-                // }
                 if (enemys[i].health_point <= 0) {
                     //击杀了一个敌人，记录相关数据
                     enemys[i].statu = false;
 
-                    let game_event_manage = global.get_game_event_manage();
-                    game_event_manage.record_kill_enemy_num(main_Attack);
+                    let global_flag_manage = global.get_global_flag_manage();
+                    global_flag_manage.record_kill_enemy_num(main_Attack);
                     continue;
                 }
             }
         }
         end_attack_num = main_Attack.attack_num;
-        //结算经验
-        let exp_manage = global.get_exp_manage();
-        exp_manage.set_Active_skill_exp(main_Attack.id, end_attack_damage);
-        exp_manage.set_combat_leveling_behavior(end_attack_num, end_attack_damage);
+        // 玩家行为记录
+        global_flag_manage.record_active_skill_use(main_Attack.id, end_attack_damage);
+        global_flag_manage.record_combat_behavior(end_attack_num, end_attack_damage);
     }
     //敌人攻击玩家的战斗结果
     EAP_manage() {
@@ -209,7 +197,8 @@ export class Combat_manage {
         let global_flag_manage = global.get_global_flag_manage();
 
         for (let j = 0; j < E_Attack_effect.main_Attack.attack_num; j++) {
-            let e_damage = E_Attack_effect.main_Attack.base_damage; //敌人这一次攻击会造成的伤害
+            //敌人这一次攻击会造成的伤害
+            let e_damage = E_Attack_effect.main_Attack.base_damage;
             //根据玩家防御效果改变要受到的伤害
             if (this.player_defense_flag == true) {
                 //玩家启动了防御技能，优先结算防御技能的效果
@@ -226,20 +215,34 @@ export class Combat_manage {
                             e_damage = e_damage * (1 - main_Defense.DR_num * 0.01);
                         }
                     }
-                } else {
-                    //防御效果用完，清除防御技能的效果，剩余的敌人攻击直接结算
+                    global_flag_manage.record_defense_skill_effect(main_Defense.id);
+                }
+                if (main_Defense.defense_num != 'infinite' && main_Defense.defense_num <= 0) {
+                    //防御效果用完，清除防御技能的效果，剩余的敌人攻击继续结算
                     this.reset_player_defense_data();
                 }
             } else {
-                //没有启动防御技能，不改变伤害，直接结算
+                //没有启动防御技能，不改变伤害，继续结算
             }
+            //结算玩家防御数值
+            if (P_attr.end_attr.defense * 0.1 > e_damage) {
+                e_damage = 0;
+            } else {
+                e_damage = e_damage - P_attr.end_attr.defense * 0.1;
+                e_damage = Math.floor(e_damage);
+            }
+
             //计算完毕，攻击打到玩家身上
             P_attr.health_point -= e_damage;
+
+            //添加一条敌人攻击的游戏日志
             global_flag_manage.set_enemy_attack_game_log(
                 E_Attack_effect.id,
                 e_damage,
                 E_Attack_effect.main_Attack.damage_type
             );
+            //记录玩家受击行为
+            global_flag_manage.record_attacted_num(e_damage);
         }
     }
 

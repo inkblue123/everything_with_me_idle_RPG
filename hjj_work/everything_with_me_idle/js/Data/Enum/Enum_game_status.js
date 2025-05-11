@@ -6,9 +6,10 @@ function init_monitor_data(enums) {
     add_Enum_Array(enums, id);
     enums[id] = [];
 
-    id = 'Player_attacted_status'; //玩家受击相关参数
-    add_Enum_Array(enums, id);
-    enums[id] = ['all_armor_attacted'];
+    //玩家受击的行为由ATD_开头，所以不用在枚举库中定义
+    // id = 'Player_attacted_status'; //玩家受击相关参数
+    // add_Enum_Array(enums, id);
+    // enums[id] = ['ATD_all_armor'];
 
     id = 'Player_kill_enemy_status'; //玩家击杀敌人相关参数
     add_Enum_Array(enums, id);
@@ -16,6 +17,7 @@ function init_monitor_data(enums) {
 }
 //初始化枚举库中与游戏状态参数相关的内容
 function init_game_status(enums) {
+    //游戏状态由GS_开头，并且游戏开始时需要初始化，所以要在这里定义
     let id = 'game_status';
     add_Enum_Array(enums, id);
     enums[id] = [
@@ -25,9 +27,9 @@ function init_game_status(enums) {
 }
 //初始化枚举库中与短期游戏状态参数相关的内容
 function init_short_game_status(enums) {
-    let id = 'short_game_status';
-    add_Enum_Array(enums, id);
     //短期游戏状态由SGS_开头，不需要辨别
+    // let id = 'short_game_status';
+    // add_Enum_Array(enums, id);
     // enums[id] = [
     //     'SGS_new_player_combat_test', //新手战斗训练
     //     'SGS_new_player_teach_1',
@@ -49,12 +51,13 @@ function init_important_nodes(enums) {
 }
 //初始化枚举库中与临用游戏状态参数相关的内容
 function init_use_game_status(enums) {
-    let id = 'use_game_status'; //玩家攻击相关参数
-    add_Enum_Array(enums, id);
-    enums[id] = [
-        'UGS_village_barracks_week', //当前日期在村庄中属于轮周的第几天
-        'UGS_ASP_type', //主动技能规划界面的过滤条件
-    ];
+    //临用游戏状态由UGS_开头，不需要在枚举库里添加了
+    // let id = 'use_game_status'; //玩家攻击相关参数
+    // add_Enum_Array(enums, id);
+    // enums[id] = [
+    //     'UGS_village_barracks_week', //当前日期在村庄中属于轮周的第几天
+    //     'UGS_ASP_type', //主动技能规划界面的过滤条件
+    // ];
 }
 
 //初始化枚举库中与游戏状态参数相关的内容

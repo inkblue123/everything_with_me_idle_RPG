@@ -26,7 +26,7 @@ function get_EQP_switch() {
     }
 }
 //根据玩家背包物品获得负重
-function get_BP_weight() {
+function get_UGS_BP_weight() {
     var BP_weight = 0;
     let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
     for (let play_item_id of arr) {
@@ -108,4 +108,4 @@ function get_EQP_wp_data(EQP_column, wp) {
     return EQP_wp_data;
 }
 
-export { get_BP_type, get_EQP_switch, get_BP_weight, get_object_only_key, get_EQP_data, get_EQP_wp_data };
+export { get_BP_type, get_EQP_switch, get_UGS_BP_weight, get_object_only_key, get_EQP_data, get_EQP_wp_data };

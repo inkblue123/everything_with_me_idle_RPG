@@ -120,7 +120,7 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
                 'classification_div'
             );
             // 全部
-            var PSK_ALL_radio_div = addElement(PSK_classification_div, 'div', null, 'radio_div PS_switch_radio_div_1');
+            var PSK_ALL_radio_div = addElement(PSK_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(PSK_ALL_radio_div, `PSK_all`, 'PSK_switch', `PSK_all`, `全部`);
             //默认激活"全部"过滤条件
             PSK_ALL_radio_div.children[0].checked = true;
@@ -129,50 +129,50 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
             var PSK_B_button = addElement(PSK_classification_div, 'button', 'PSK_B_button', 'dropdown_button_1');
             PSK_B_button.innerHTML = `根基技能`;
             var PSK_B_droptable = addElement(PSK_classification_div, 'div', 'PSK_B_droptable', 'dropdown_table');
-            var PSK_B_all_radio_div = addElement(PSK_B_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_B_all_radio_div = addElement(PSK_B_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_B_all_radio_div, `PSK_B_all`, 'PSK_switch', `B_all`, `全部`);
 
             //战斗技能 combat C
             var PSK_C_button = addElement(PSK_classification_div, 'button', 'PSK_C_button', 'dropdown_button_1');
             PSK_C_button.innerHTML = `战斗技能`;
             var PSK_C_droptable = addElement(PSK_classification_div, 'div', 'PSK_C_droptable', 'dropdown_table');
-            var PSK_C_all_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_C_all_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_C_all_radio_div, `PSK_C_all`, 'PSK_switch', `C_all`, `全部`);
-            var PSK_C_W_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_C_W_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_C_W_radio_div, `PSK_C_W`, 'PSK_switch', `C_W`, `武器技能`);
-            var PSK_C_S_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_C_S_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_C_S_radio_div, `PSK_C_S`, 'PSK_switch', `C_S`, `战斗姿态技能`);
-            var PSK_C_Env_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_C_Env_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_C_Env_radio_div, `PSK_C_Env`, 'PSK_switch', `C_Env`, `环境适应技能`);
-            var PSK_C_Ene_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_C_Ene_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_C_Ene_radio_div, `PSK_C_Ene`, 'PSK_switch', `C_Ene`, `对敌精通技能`);
 
             //生活技能 life L
             var PSK_L_button = addElement(PSK_classification_div, 'button', 'PSK_L_button', 'dropdown_button_1');
             PSK_L_button.innerHTML = `生活技能`;
             var PSK_L_droptable = addElement(PSK_classification_div, 'div', 'PSK_L_droptable', 'dropdown_table');
-            var PSK_L_all_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_L_all_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_L_all_radio_div, `PSK_L_all`, 'PSK_switch', `L_all`, `全部`);
-            var PSK_L_Raw_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_L_Raw_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_L_Raw_radio_div, `PSK_L_Raw`, 'PSK_switch', `L_Raw`, `原料获取技能`);
-            var PSK_L_P_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_L_P_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_L_P_radio_div, `PSK_L_P`, 'PSK_switch', `L_P`, `原料加工技能`);
-            var PSK_L_F_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_L_F_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_L_F_radio_div, `PSK_L_F`, 'PSK_switch', `L_F`, `成品使用技能`);
-            var PSK_L_Rec_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_L_Rec_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_L_Rec_radio_div, `PSK_L_Rec`, 'PSK_switch', `L_Rec`, `回收利用技能`);
 
             // 主动技能 active A
             var PSK_A_button = addElement(PSK_classification_div, 'button', 'PSK_A_button', 'dropdown_button_1');
             PSK_A_button.innerHTML = `主动技能`;
             var PSK_A_droptable = addElement(PSK_classification_div, 'div', 'PSK_A_droptable', 'dropdown_table');
-            var PSK_A_all_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_A_all_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_A_all_radio_div, `PSK_A_all`, 'PSK_switch', `A_all`, `全部`);
             // 特殊功法 super S
             var PSK_S_button = addElement(PSK_classification_div, 'button', 'PSK_S_button', 'dropdown_button_1');
             PSK_S_button.innerHTML = `特殊功法`;
             var PSK_S_droptable = addElement(PSK_classification_div, 'div', 'PSK_S_droptable', 'dropdown_table');
-            var PSK_S_all_radio_div = addElement(PSK_S_droptable, 'div', null, 'radio_div PS_switch_radio_div_2');
+            var PSK_S_all_radio_div = addElement(PSK_S_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_S_all_radio_div, `PSK_S_all`, 'PSK_switch', `S_all`, `全部`);
         }
         //

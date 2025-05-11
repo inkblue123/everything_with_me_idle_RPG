@@ -127,6 +127,13 @@ export class P_NPC extends Place {
         }
     }
 }
+export class P_store extends Place {
+    constructor(place_id, area_id) {
+        super(place_id, area_id);
+        this.type = 'store';
+        this.goods = new Array();
+    }
+}
 
 function add_Place_object(places, newid, area) {
     if (places[newid] === undefined) {
@@ -156,5 +163,12 @@ function add_NPC_Place(places, newid, area) {
         console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
+function add_store_Place(places, newid, area) {
+    if (places[newid] === undefined) {
+        places[newid] = new P_store(newid, area);
+    } else {
+        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+    }
+}
 
-export { add_Place_object, add_normal_Place, add_combat_Place, add_NPC_Place };
+export { add_Place_object, add_normal_Place, add_combat_Place, add_NPC_Place, add_store_Place };

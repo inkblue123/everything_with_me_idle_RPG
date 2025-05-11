@@ -50,10 +50,10 @@ function updata_game_data() {
     if (global_flag_manage.get_game_status('GS_combat_statu')) {
         updata_enemy_show();
     }
-    if (global_flag_manage.get_game_status('GS_game_event')) {
-        let game_event_manage = global.get_game_event_manage();
-        game_event_manage.updata_game_event();
-    }
+    // if (global_flag_manage.get_game_status('GS_game_event')) {
+    //     let game_event_manage = global.get_game_event_manage();
+    //     game_event_manage.updata_game_event();
+    // }
     global_flag_manage.updata_short_game_status();
     global_flag_manage.updata_new_game_log_status();
 }

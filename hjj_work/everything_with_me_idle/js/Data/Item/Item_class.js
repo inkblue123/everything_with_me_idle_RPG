@@ -142,26 +142,41 @@ let Equipment_class = (extendsClass) =>
         //可能会给某些不应该填的属性填上数值
         set_attr_level(level, attr_type) {
             //枚举库中没有该等级的预设，直接结束
-            if (enums.equipment_attr_level[level] == undefined) return;
+            if (enums.equipment_attr_level[level] == undefined) {
+                console.log('预设装备属性时，枚举库没有%s等级的预设', level);
+                return;
+            }
             //枚举库中没有对应类型的预设，直接结束
-            if (enums.equipment_attr_level[level][attr_type] == undefined) return;
+            if (enums.equipment_attr_level[level][attr_type] == undefined) {
+                console.log('预设装备属性时，枚举库没有%s类型的预设', attr_type);
+                return;
+            }
             //复合类型装备或者未定义类型的装备，不支持属性预设，直接结束
-            if (this.equipment_type.length != 1) return;
+            if (this.equipment_type.length != 1) {
+                console.log('预设装备属性时，复合类型装备或者未定义类型的装备不支持属性预设');
+                return;
+            }
             //枚举库中没有对该装备类型设置属性倾向，直接结束
-            if (enums.equipment_type_attr_Presets[this.equipment_type[0]] == undefined) return;
+            if (enums.equipment_type_attr_Presets[this.equipment_type[0]] == undefined) {
+                console.log('预设装备属性时，枚举库中没有对该装备类型设置属性倾向');
+                return;
+            }
             //获取数值预设
             let Level_attr = enums.equipment_attr_level[level][attr_type];
             //针对武器，获取该等级下具体伤害类型的属性预设
             if (this.secon_type[0] == 'weapon') {
                 let damage_type = enums.weapon_damage_type[this.equipment_type[0]];
                 //枚举库中没设置该种伤害类型的属性预设，直接结束
-                if (Level_attr[damage_type] == undefined) return;
+                if (Level_attr[damage_type] == undefined) {
+                    console.log('预设装备属性时，枚举库中没设置%s伤害类型的属性预设', damage_type);
+                    return;
+                }
                 Level_attr = Level_attr[damage_type];
             }
             //获取属性倾向
             let attr_Presets = enums.equipment_type_attr_Presets[this.equipment_type[0]];
 
-            //获取需要填的属性名称
+            //获取需要填的属性名称，例如攻击攻速暴击
             let need_attr_name;
             if (attr_type == 'attack') {
                 need_attr_name = enums['combat_attack_attr'];
@@ -177,6 +192,10 @@ let Equipment_class = (extendsClass) =>
             }
 
             for (let attr_name of need_attr_name) {
+                if (attr_Presets[attr_name] == undefined) {
+                    console.log('预设装备属性时，没有为装备预设%s类型的属性倾向', attr_type);
+                    return;
+                }
                 //获取attr_name属性倾向，例如最高较高普通较低最低
                 let Presets = attr_Presets[attr_name];
                 //获取level等级下，属性倾向的具体数值

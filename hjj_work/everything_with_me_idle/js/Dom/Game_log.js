@@ -26,21 +26,21 @@ var Game_log = crtElement('div', 'game_log', null, '');
             var MD_scroll_box = addElement(MD_div, 'div', 'MD_scroll_box', 'overflow_y_div');
             var MD_classification_div = addElement(MD_scroll_box, 'div', 'MD_classification_div', 'classification_div');
             //流水账 running_account RA
-            var RA_radio_div = addElement(MD_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+            var RA_radio_div = addElement(MD_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(RA_radio_div, `RA_button`, 'MD_switch', `RA_button`, `流水账`);
             RA_radio_div.children[0].checked = true; //初始激活该按钮
             var RA_droptable = addElement(MD_classification_div, 'div', 'RA_droptable', 'dropdown_table');
-            var RA_new_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            var RA_new_radio_div = addElement(RA_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(RA_new_radio_div, `RA_new`, 'RA_switch', `RA_new`, `最新消息`);
             RA_new_radio_div.children[0].checked = true; //初始激活该按钮
-            var RA_combat_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            var RA_combat_radio_div = addElement(RA_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(RA_combat_radio_div, `RA_combat`, 'RA_switch', `RA_combat`, `战斗`);
-            var RA_item_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            var RA_item_radio_div = addElement(RA_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(RA_item_radio_div, `RA_item`, 'RA_switch', `RA_item`, `物品`);
-            var RA_other_radio_div = addElement(RA_droptable, 'div', null, 'radio_div GL_switch_radio_div_2');
+            var RA_other_radio_div = addElement(RA_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(RA_other_radio_div, `RA_other`, 'RA_switch', `RA_other`, `其他`);
             //重要事件 important_event IE
-            var IE_radio_div = addElement(MD_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+            var IE_radio_div = addElement(MD_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(IE_radio_div, `IE_button`, 'MD_switch', `IE_button`, `重要事件`);
         }
         //右侧具体的内容
@@ -121,7 +121,7 @@ var Game_log = crtElement('div', 'game_log', null, '');
     //             LVP_classification_div,
     //             'div',
     //             null,
-    //             'radio_div GP_switch_radio_div_1'
+    //             'radio_div switch_radio_div_1'
     //         );
     //         addElement_radio(Woodcutting_radio_div, `Woodcutting_button`, 'LVP_switch', `Woodcutting_button`, `伐木`);
     //         // 木雕 Woodcarving WCV
@@ -129,18 +129,18 @@ var Game_log = crtElement('div', 'game_log', null, '');
     //             LVP_classification_div,
     //             'div',
     //             null,
-    //             'radio_div GP_switch_radio_div_1'
+    //             'radio_div switch_radio_div_1'
     //         );
     //         addElement_radio(Woodcarving_radio_div, `Woodcarving_button`, 'LVP_switch', `Woodcarving_button`, `木雕`);
     //         // 挖矿 mining MNG
-    //         var mining_radio_div = addElement(LVP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+    //         var mining_radio_div = addElement(LVP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
     //         addElement_radio(mining_radio_div, `mining_button`, 'LVP_switch', `mining_button`, `挖矿`);
     //         // 考古 Archaeology ACO
     //         var Archaeology_radio_div = addElement(
     //             LVP_classification_div,
     //             'div',
     //             null,
-    //             'radio_div GP_switch_radio_div_1'
+    //             'radio_div switch_radio_div_1'
     //         );
     //         addElement_radio(Archaeology_radio_div, `Archaeology_button`, 'LVP_switch', `Archaeology_button`, `考古`);
     //         // 采集 collection CLC
@@ -148,17 +148,17 @@ var Game_log = crtElement('div', 'game_log', null, '');
     //             LVP_classification_div,
     //             'div',
     //             null,
-    //             'radio_div GP_switch_radio_div_1'
+    //             'radio_div switch_radio_div_1'
     //         );
     //         addElement_radio(collection_radio_div, `collection_button`, 'LVP_switch', `collection_button`, `采集`);
     //         // 探索 explore
-    //         var explore_radio_div = addElement(LVP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+    //         var explore_radio_div = addElement(LVP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
     //         addElement_radio(explore_radio_div, `explore_button`, 'LVP_switch', `explore_button`, `探索`);
     //         // 钓鱼 fishing
-    //         var fishing_radio_div = addElement(LVP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+    //         var fishing_radio_div = addElement(LVP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
     //         addElement_radio(fishing_radio_div, `fishing_button`, 'LVP_switch', `fishing_button`, `钓鱼`);
     //         // 潜水 diving
-    //         var diving_radio_div = addElement(LVP_classification_div, 'div', null, 'radio_div GP_switch_radio_div_1');
+    //         var diving_radio_div = addElement(LVP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
     //         addElement_radio(diving_radio_div, `diving_button`, 'LVP_switch', `diving_button`, `潜水`);
     //     }
     //     //

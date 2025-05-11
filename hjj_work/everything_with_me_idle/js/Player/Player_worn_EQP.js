@@ -177,4 +177,14 @@ export class Player_worn {
             this.Remove_position_Equipment(wearing_positions[0], raw_worn_E);
         }
     }
+    //判断当前是否每个防具部位都穿着了装备
+    if_all_armor_attacted() {
+        let EQP_switct = get_EQP_switch();
+        let ac_EQP = this.worn_EQP[EQP_switct];
+        if (isEmptyObject(ac_EQP['head'])) return false;
+        if (isEmptyObject(ac_EQP['chest'])) return false;
+        if (isEmptyObject(ac_EQP['legs'])) return false;
+        if (isEmptyObject(ac_EQP['feet'])) return false;
+        return true;
+    }
 }

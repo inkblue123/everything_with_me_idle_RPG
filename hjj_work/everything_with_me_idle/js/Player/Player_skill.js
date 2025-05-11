@@ -17,6 +17,7 @@ class Player_skill {
         this.levelmax_flag; //当前技能满级标记
     }
     init() {
+        this.levelup_flag = P_skills[this.id].levelup_flag;
         if (P_skills[this.id].levelup_flag) {
             //该技能可以升级，初始化经验相关
             this.next_level_need_exp = P_skills[this.id].base_exp; //升到下一级需要的经验
@@ -24,7 +25,6 @@ class Player_skill {
             //该技能不可通过累计经验升级，只能直接给予等级
         }
         this.levelmax_flag = false;
-        this.levelup_flag = P_skills[this.id].levelup_flag;
     }
 }
 //玩家拥有的主动技能
@@ -32,6 +32,7 @@ class Player_A_skill extends Player_skill {
     constructor(id) {
         super(id);
         this.init();
+        this.level = 1; //主动技能初始就是可用的1级
         this.active_slots = new Array();
         for (let i = 0; i < P_skills[id].need_slot_num; i++) {
             //
@@ -56,18 +57,26 @@ class Player_A_skill extends Player_skill {
 class Player_P_skill extends Player_skill {
     constructor(id) {
         super(id);
+        this.level = 1; //被动技能初始0级，不可用
     }
 }
 
 export class Player_skills {
     constructor() {}
+    init() {
+        this.player_get_initial_skil();
+    }
     //玩家获得基础技能
-    player_get_base_skil() {
+    player_get_initial_skil() {
         //当玩家进行战斗或者生活技能之后，要根据行为给对应的技能加经验
         //那程序显然应该遍历玩家身上拥有的技能，找到可以加经验的才加
         //意味着玩家身上应该拥有所有不需要解锁的技能，这里称为初始技能
         //这些技能一开始就在玩家身上，0级，只有当达到1级的时候才会呈现到游戏界面中，并提供效果
-        // for()
+        for (let id in P_skills) {
+            if (P_skills[id].initial_flag == true) {
+                this[id] = new Player_P_skill(id);
+            }
+        }
     }
     //为玩家解锁某个技能
     player_unlock_skill(id) {
@@ -94,6 +103,9 @@ export class Player_skills {
             } else {
                 //新的主动技能
                 this[id] = new Player_A_skill(id);
+                //记录日志
+                let global_flag_manage = global.get_global_flag_manage();
+                global_flag_manage.set_unluck_active_skill_game_log(id);
             }
             //解锁了新主动技能，更新需要展示这个技能的界面
             this.updata_ASP_value();
@@ -102,8 +114,9 @@ export class Player_skills {
     //给技能增加一定的经验
     get_skill_exp(id, exp) {
         if (!this[id]) {
-            //玩家没有该技能，将其初始化出来
-            this.player_unlock_skill(id);
+            //玩家没有该技能
+            console.log('get_skill_exp:未拥有技能：%s', id);
+            return -1;
         }
         if (this[id].levelmax_flag) {
             //该技能满级了，不加经验
@@ -149,7 +162,7 @@ export class Player_skills {
             this[id].level = P_skills[id].max_level;
         }
     }
-    //获取玩家拥有的指定技能
+    //获取玩家拥有的指定技能对象
     get_skills() {}
 
     //玩家技能发生变动时需要展示出来，调用这些接口更新界面
@@ -174,7 +187,6 @@ export class Player_skills {
     //按照主动技能规划的过滤或筛选条件，获得应该展示的技能id队列
     ASP_type_handle(type_switch) {
         let arr = new Array();
-        // for (let skill_id in player.All_Skills) {
         for (let skill_id in this) {
             if (P_skills[skill_id].type == 'Active') {
                 switch (type_switch) {

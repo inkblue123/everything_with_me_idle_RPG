@@ -4,7 +4,7 @@ import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
 import { Combat_manage } from './combat_class.js';
 import { Exp_manage } from './exp_class.js';
-import { Game_event_manage } from './game_event.js';
+import { Game_event_manage } from './game_event_class.js';
 import { Global_flag_manage } from './global_flag_class.js';
 //记录全局参数和游戏状态的对象
 class Global {

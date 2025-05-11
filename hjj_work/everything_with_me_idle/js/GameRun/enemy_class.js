@@ -220,7 +220,7 @@ export class Enemy_manage {
                     if (!enemy_id) {
                         //如果没指定敌人id，获取全部敌人的数量
                         enemy_num++;
-                    } else if (enemy_slot.id == enemy_id) {
+                    } else if (field[i].id == enemy_id) {
                         //获取指定id的敌人数量
                         enemy_num++;
                     }
@@ -290,13 +290,51 @@ export class Enemy_manage {
             //位置已被占据，此次刷怪中止
             return false;
         }
+
         //获取这次要刷的敌人id
-        let et_num = places[this.now_place].enemy.length;
-        let et_ran = get_random(0, et_num - 1);
-        let enemy_id = places[this.now_place].enemy[et_ran];
+        let enemy_id = this.get_random_chance_enemy_id(places[this.now_place].enemy);
+        //判断这次要刷的怪有没有限制条件，现在能不能刷
+        if (!this.judge_add_new_enemy_id(enemy_id)) {
+            return false;
+        }
 
         //在指定位置新增这个怪
         let enemy = this.add_enemy(place_x, place_y, enemy_id);
+        return true;
+    }
+    //根据能刷的所有怪的刷新概率权重，随机得到一个敌人id
+    get_random_chance_enemy_id(enemys) {
+        let all_chance = 0;
+        for (let id in enemys) {
+            all_chance += enemys[id].chance;
+        }
+        let chance = get_random(0, all_chance);
+        let enemy_id;
+        let id;
+        for (id in enemys) {
+            if (chance > enemys[id].chance) {
+                chance -= enemys[id].chance;
+            } else {
+                break;
+            }
+        }
+        enemy_id = id;
+        return enemy_id;
+    }
+    //判断当前要刷的这个怪，是否满足它的限制条件
+    judge_add_new_enemy_id(enemy_id) {
+        let enemy_obj = places[this.now_place].enemy[enemy_id];
+        for (let key in enemy_obj) {
+            if (key == 'chance') {
+                continue;
+            } else if (key == 'now_place_max_num') {
+                let now_place_num = this.get_combat_place_enemynum(enemy_id);
+                let now_place_max_num = places[this.now_place].enemy[enemy_id][key];
+                if (now_place_num >= now_place_max_num) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
     //在指定位置刷出一个敌人

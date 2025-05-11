@@ -6,8 +6,9 @@ function init_Challenge(game_events) {
     // game_events[id].add_behavior('new_player_combat_test');
     game_events[id].place = 'new_player_combat_test'; //挑战开始地点
     game_events[id].finish_condition = {
-        melee_kill: 5, //近战击杀5个敌人
-        all_armor_attacted: 10, //4个部位防具都穿着的情况下受击10次
+        melee_kill: 3, //近战击杀3个敌人
+        ATD_all_armor: 10, //4个部位防具都穿着的情况下受击10次
+        DSE_shield_defense: 3, //使用“盾牌防御”技能抵挡敌人3次攻击
     }; //挑战完成条件
     game_events[id].finish_reward = {
         //标记完成了相关内容

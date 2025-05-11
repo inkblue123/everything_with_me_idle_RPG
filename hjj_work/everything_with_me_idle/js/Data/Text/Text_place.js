@@ -22,6 +22,10 @@ function normal_place(texts) {
     add_text_object(texts, id);
     texts[id].place_name = '村庄兵营';
     texts[id].place_desc = '村里训练战士的场所';
+    id = 'village_hospital';
+    add_text_object(texts, id);
+    texts[id].place_name = '村庄诊所';
+    texts[id].place_desc = '可以在此治病，可以买到药物，真希望少来这里';
 }
 //战斗地点的文本
 function combat_place(texts) {
@@ -37,6 +41,10 @@ function combat_place(texts) {
     add_text_object(texts, id);
     texts[id].place_name = '远程训练场地';
     texts[id].place_desc = '村庄兵营中专门进行远程训练的地方，机关会随机位置布置假人';
+    id = 'new_player_combat_test';
+    add_text_object(texts, id);
+    texts[id].place_name = '新手战斗训练场地';
+    texts[id].place_desc = '村庄兵营为考验新的战士准备的地方';
 }
 //NPC地点的文本
 function NPC_place(texts) {

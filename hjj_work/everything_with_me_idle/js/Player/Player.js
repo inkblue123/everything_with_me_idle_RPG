@@ -1,5 +1,6 @@
 'use strict';
 import { check_Equipment, isEmptyObject } from '../Function/Function.js';
+import { updata_BP_value } from '../Function/Updata_func.js';
 
 import { Player_attributes } from './Player_attributes.js';
 import { Player_backpack } from './Player_backpack.js';
@@ -33,6 +34,7 @@ export class Player_Object {
         this.worn_EQP.init();
         //玩家所有技能
         this.All_Skills = new Player_skills();
+        this.All_Skills.init();
         //初始化主动技能槽
         this.ASkill_Manage = new Player_active_skills_Manage();
         this.ASkill_Manage.init();
@@ -74,6 +76,8 @@ export class Player_Object {
             //物品添加正常，记录日志
             let global_flag_manage = global.get_global_flag_manage();
             global_flag_manage.set_get_item_game_log(id, num, equip_rarity);
+            //背包物品变动，刷新背包界面
+            updata_BP_value();
         }
     }
     //给玩家背包添加物品，不触发日志的接口
@@ -120,11 +124,14 @@ export class Player_Object {
         let keys = Object.keys(raw_worn_E);
         for (let key of keys) {
             //如果原位置已有装备，则将原装备放回背包
-            if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item_nolog(raw_worn_E[key]);
+            if (!isEmptyObject(raw_worn_E[key])) {
+                this.Player_get_item_nolog(raw_worn_E[key]);
+            }
         }
-
         //将装备放到身上装备栏里对应的位置
         this.worn_EQP.worn_Equipment(id, num, equip_rarity);
+        //背包物品变动，刷新背包界面
+        updata_BP_value();
     }
     //脱掉一件装备
     remove_worn_Equipment(wp) {
@@ -136,6 +143,8 @@ export class Player_Object {
             //如果原位置已有装备，则将原装备放回背包
             if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item_nolog(raw_worn_E[key]);
         }
+        //背包物品变动，刷新背包界面
+        updata_BP_value();
     }
     //根据玩家当前的加成更新属性
     updata_attr(active_reset_flag) {

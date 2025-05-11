@@ -35,56 +35,56 @@ function init_Item_Equipment(items) {
     let item_type = 'equipment';
     //近战武器
     {
-        //木剑
-        add_Item_object(items, 'wood_sword', item_type); //id，物品主要分类
-        // add_Item_object(items, 'equipment', 'wood_sword');
-        items['wood_sword'].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
-        items['wood_sword'].init_Equipment('sword'); //物品小分类，是否特制
-        items['wood_sword'].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
+        let id = 'wood_sword'; //木剑
+        add_Item_object(items, id, item_type); //id，物品主要分类
+        items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
+        items[id].init_Equipment('sword'); //物品小分类，是否特制
+        items[id].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
         //攻击，精准，暴击率，暴击伤害，攻击速度
-        // items['wood_sword'].init_Equipment_attack_attr(5, 5, 5, 20, 2);//手动设置攻击属性
-        //木制战斧
-        add_Item_object(items, 'wood_battle_axe', item_type);
-        items['wood_battle_axe'].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
-        items['wood_battle_axe'].init_Equipment('battle_axe'); //物品小分类
-        items['wood_battle_axe'].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
-        // items['wood_battle_axe'].init_Equipment_attack_attr(10, 5, 0, 0, 3);
-        //木制棍棒
-        add_Item_object(items, 'wood_sticks', item_type);
-        items['wood_sticks'].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
-        items['wood_sticks'].init_Equipment('sticks'); //物品小分类
-        items['wood_sticks'].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
-        // items['wood_sticks'].init_Equipment_attack_attr(5, 5, 5, 20, 2);
-        //木制大锤
-        add_Item_object(items, 'wood_hammers', item_type);
-        items['wood_hammers'].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
-        items['wood_hammers'].init_Equipment('hammers'); //物品小分类
-        items['wood_hammers'].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
-        // items['wood_hammers'].init_Equipment_attack_attr(10, 5, 0, 0, 3);
+        // items[id].init_Equipment_attack_attr(5, 5, 5, 20, 2);//手动设置攻击属性
+        id = 'wood_battle_axe'; //木制战斧
+        add_Item_object(items, id, item_type);
+        items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
+        items[id].init_Equipment('battle_axe'); //物品小分类
+        items[id].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
+        // items[id].init_Equipment_attack_attr(10, 5, 0, 0, 3);
+        id = 'wood_sticks'; //木制棍棒
+        add_Item_object(items, id, item_type);
+        items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
+        items[id].init_Equipment('sticks'); //物品小分类
+        items[id].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
+        // items[id].init_Equipment_attack_attr(5, 5, 5, 20, 2);
+        id = 'wood_hammers'; //木制大锤
+        add_Item_object(items, id, item_type);
+        items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
+        items[id].init_Equipment('hammers'); //物品小分类
+        items[id].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
+        // items[id].init_Equipment_attack_attr(10, 5, 0, 0, 3);
     }
     //远程武器
     {
-        add_Item_object(items, 'wood_bow', item_type);
-        items['wood_bow'].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
-        items['wood_bow'].init_Equipment('bow'); //物品小分类
-        items['wood_bow'].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
-        // items['wood_bow'].init_Equipment_attack_attr(8, 5, 5, 20, 1);
+        let id = 'wood_bow'; //木弓
+        add_Item_object(items, id, item_type);
+        items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
+        items[id].init_Equipment('bow'); //物品小分类
+        items[id].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
+        // items[id].init_Equipment_attack_attr(8, 5, 5, 20, 1);
 
-        //测试手弩
-        add_Item_object(items, 'test_hand_gun', item_type);
-        items['test_hand_gun'].name = '测试用手弩';
-        items['test_hand_gun'].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
-        items['test_hand_gun'].init_Equipment('hand_gun'); //物品小分类
-        items['test_hand_gun'].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
-        // items['test_hand_gun'].init_Equipment_attack_attr(3, 5, 10, 50, 2);
+        id = 'test_hand_gun'; //测试手弩
+        add_Item_object(items, id, item_type);
+        items[id].name = '测试用手弩';
+        items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
+        items[id].init_Equipment('hand_gun'); //物品小分类
+        items[id].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
+        // items[id].init_Equipment_attack_attr(3, 5, 10, 50, 2);
 
-        //测试回旋武器
-        add_Item_object(items, 'test_boomerang', item_type);
-        items['test_boomerang'].name = '测试用回旋武器';
-        items['test_boomerang'].init_Item_other(5, ['weapon']); //堆叠数量，物品次要分类
-        items['test_boomerang'].init_Equipment('boomerang'); //物品小分类
-        items['test_boomerang'].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
-        // items['test_boomerang'].init_Equipment_attack_attr(8, 5, 10, 50, 5);
+        id = 'test_boomerang'; //测试回旋武器
+        add_Item_object(items, id, item_type);
+        items[id].name = '测试用回旋武器';
+        items[id].init_Item_other(5, ['weapon']); //堆叠数量，物品次要分类
+        items[id].init_Equipment('boomerang'); //物品小分类
+        items[id].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
+        // items[id].init_Equipment_attack_attr(8, 5, 10, 50, 5);
     }
     //魔法武器
     {
@@ -96,6 +96,7 @@ function init_Item_Equipment(items) {
         items[id].name = '测试头盔';
         items[id].init_Item_other(1, ['armor']); //堆叠数量，物品次要分类
         items[id].init_Equipment('helmet'); //物品小分类
+        items[id].set_attr_level('L1', 'defense'); //调用L1级的防御属性预设
         id = 'test_chest_armor';
         add_Item_object(items, id, item_type);
         items[id].name = '测试胸甲';
@@ -117,21 +118,25 @@ function init_Item_Equipment(items) {
         items[id].name = '木制头盔';
         items[id].init_Item_other(1, ['armor']); //堆叠数量，物品次要分类
         items[id].init_Equipment('helmet'); //物品小分类
+        items[id].set_attr_level('L1', 'defense'); //调用L1级的防御属性预设
         id = 'wood_chest_armor';
         add_Item_object(items, id, item_type);
         items[id].name = '木制胸甲';
         items[id].init_Item_other(1, ['armor']); //堆叠数量，物品次要分类
         items[id].init_Equipment('chest_armor'); //物品小分类
+        items[id].set_attr_level('L1', 'defense'); //调用L1级的防御属性预设
         id = 'wood_leg_armor';
         add_Item_object(items, id, item_type);
         items[id].name = '木制腿甲';
         items[id].init_Item_other(1, ['armor']); //堆叠数量，物品次要分类
         items[id].init_Equipment('leg_armor'); //物品小分类
+        items[id].set_attr_level('L1', 'defense'); //调用L1级的防御属性预设
         id = 'wood_shoes';
         add_Item_object(items, id, item_type);
         items[id].name = '木制鞋子';
         items[id].init_Item_other(1, ['armor']); //堆叠数量，物品次要分类
         items[id].init_Equipment('shoes'); //物品小分类
+        items[id].set_attr_level('L1', 'defense'); //调用L1级的防御属性预设
     }
     //副手
     {
@@ -145,6 +150,7 @@ function init_Item_Equipment(items) {
         items[id].name = '木制盾牌';
         items[id].init_Item_other(1, ['deputy']); //堆叠数量，物品次要分类
         items[id].init_Equipment('shield'); //物品小分类
+        items[id].set_attr_level('L1', 'defense'); //调用L1级的防御属性预设
     }
     //饰品
 }

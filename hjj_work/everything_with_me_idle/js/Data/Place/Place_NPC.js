@@ -1,7 +1,7 @@
 import { add_NPC_Place } from './Place_class.js';
 
 function init_Place_NPC(places) {
-    let id = 'village_Combat_coach';
+    let id = 'village_Combat_coach'; //兵营教练
     add_NPC_Place(places, id, 'village');
     places[id].add_behavior('new_player_combat_test');
     // places[id].add_condition_behavior('use_game_status', 'UGS_village_barracks_week', 1, 'new_player_teach_1');
