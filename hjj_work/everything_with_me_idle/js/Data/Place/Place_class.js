@@ -1,4 +1,5 @@
 import { texts } from '../Text/Text.js';
+import { items } from '../Item/Item.js';
 
 export class Place {
     constructor(place_id, area_id) {
@@ -73,12 +74,14 @@ export class Place {
         }
     }
 }
+//普通地点
 export class P_normal extends Place {
     constructor(place_id, area_id) {
         super(place_id, area_id);
         this.type = 'normal';
     }
 }
+//战斗地点
 export class P_combat extends Place {
     constructor(place_id, area_id) {
         super(place_id, area_id);
@@ -87,6 +90,7 @@ export class P_combat extends Place {
         this.max_enemy_num = 0;
     }
 }
+//npc地点
 export class P_NPC extends Place {
     constructor(place_id, area_id) {
         super(place_id, area_id);
@@ -127,11 +131,50 @@ export class P_NPC extends Place {
         }
     }
 }
+//商店地点
 export class P_store extends Place {
     constructor(place_id, area_id) {
         super(place_id, area_id);
         this.type = 'store';
         this.goods = new Array();
+    }
+    add_goods(id, type, rise_num, rise_data, unrise_time, inventory, replenish_time, replenish_event) {
+        let good_obj = new Object();
+        good_obj.id = id;
+        good_obj.base_price = items[id].price;
+        good_obj.type = type;
+        // 根据商品类型，填充其他信息
+        switch (type) {
+            case 1: //1：无限商品，没有什么特别的
+                //没有其他信息
+                break;
+            case 2: //2：无限商品，买到一定程度之后涨价，定时恢复
+                good_obj.rise_num = rise_num; //购买几个物品涨价一次
+                good_obj.rise_data = rise_data; //涨价一次的幅度
+                good_obj.unrise_time = unrise_time; //每隔多久时间恢复价格
+                break;
+            case 3: //3：有限商品，没有什么特别的，不补货
+                good_obj.inventory = inventory; //这个商品有多少存货
+                break;
+            case 4: //4：有限商品，买到一定程度之后涨价，定时恢复价格，定时补货
+                good_obj.inventory = inventory; //这个商品有多少存货
+                good_obj.rise_num = rise_num; //购买几个物品涨价一次
+                good_obj.rise_data = rise_data; //涨价一次的幅度
+                good_obj.unrise_time = unrise_time; //每隔多久时间恢复价格
+                good_obj.replenish_time = replenish_time; //每隔多久时间补货
+                break;
+            case 5: //5：有限商品，定时补货
+                good_obj.inventory = inventory; //这个商品有多少存货
+                good_obj.replenish_time = replenish_time; //每隔多久时间补货
+                break;
+            case 6: //6：有限商品，特定事件补货
+                good_obj.inventory = inventory; //这个商品有多少存货
+                good_obj.replenish_event = replenish_event; //遇到什么事件会补货
+                break;
+            default:
+                break;
+        }
+        this.goods.push(good_obj);
     }
 }
 

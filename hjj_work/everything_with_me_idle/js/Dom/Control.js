@@ -79,21 +79,32 @@ function show_new_place(new_place) {
     }
 }
 
-//展示迷你事件的其中一幕
-Control.show_mini_event_process = function (event_id, process_id) {
+//展示迷你事件的其中一个流程
+Control.show_mini_event_process = function (event_id, process_id, click_button_id) {
     empty_dom(Place_desc_div); //清空原本描述
     empty_dom(player_Control_div); //清空原本的可执行操作按钮
     //展示文本
     let process = game_events[event_id].process[process_id];
-    let text_id = process.control_dest_text;
+    let text_id;
+    if (click_button_id == undefined) {
+        text_id = process.control_dest_text; //没有特殊情况，展示默认文本
+    } else {
+        text_id = process.button[click_button_id].click_text; //是点击按钮之后重新展示当前流程，所以展示按钮上绑定的文本
+    }
     Place_desc_div.innerHTML = texts[event_id][text_id];
+
     //添加按钮
-    for (let i = 0; i < process.button.length; i++) {
-        let move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button');
-        move_place_button.innerHTML = texts[event_id][process.button[i].text];
-        move_place_button.addEventListener('click', function () {
-            let game_event_manage = global.get_game_event_manage();
-            game_event_manage.updata_mini_event(event_id, process_id, i);
+    let game_event_manage = global.get_game_event_manage();
+    for (let button_id in process.button) {
+        //判断按钮的出现条件
+        if (!game_event_manage.check_mini_event_button_condition(event_id, process_id, button_id)) {
+            continue;
+        }
+        //满足出现条件，在控制界面中添加按钮
+        let control_button = addElement(player_Control_div, 'button', null, 'player_Control_button');
+        control_button.innerHTML = texts[event_id][process.button[button_id].text];
+        control_button.addEventListener('click', function () {
+            game_event_manage.updata_mini_event(event_id, process_id, button_id);
         });
     }
 };

@@ -32,7 +32,7 @@ function game_dom_init() {
         dom.live_plan = crtElement('div', 'live_plan', 'section', '', '#ffff00');
         dom.live_plan.textContent = '生活规划界面';
 
-        dom.map = crtElement('div', null, 'section', '', '#33fff9');
+        dom.map = crtElement('div', 'map', 'section', '', '#33fff9');
         dom.map.textContent = '地图界面';
 
         // dom.remenber = crtElement('div', null, 'section', '', '#3357ff');

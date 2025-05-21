@@ -29,18 +29,14 @@ export class Time_manage {
         this.game_now_time = this.now_time;
         this.last_game_now_time = this.now_time;
         //初始化游戏日期
-        this.game_date.year = 2025;
-        this.game_date.month = 4;
-        this.game_date.day = 1;
-        this.game_date.hours = 16;
-        this.game_date.minutes = 0;
-        this.game_date.start_time = this.now_time;
+        this.reset_game_date();
         this.show_game_date();
     }
     //修改游戏速度
     set_game_speed(game_speed) {
         this.game_speed = game_speed;
     }
+
     //一帧开始，更新相关时间
     updata_FPS_start() {
         //更新真实时间
@@ -86,6 +82,16 @@ export class Time_manage {
     //获取当前游戏时间
     get_game_now_time() {
         return this.game_now_time;
+    }
+    //设置游戏日期到初始值
+    reset_game_date() {
+        this.game_date.year = 2025;
+        this.game_date.month = 4;
+        this.game_date.day = 1;
+        this.game_date.hours = 16;
+        this.game_date.minutes = 0;
+        this.game_date.start_time = this.now_time;
+        this.show_game_date();
     }
     //更新游戏日期
     updata_game_date(game_now_time) {

@@ -8,7 +8,7 @@ function normal_place(texts) {
     texts[id].place_desc = '这里是普通地点1，这里不会进行战斗，可以通往其他地方';
     id = 'village_home';
     add_text_object(texts, id);
-    texts[id].place_name = '村中房屋';
+    texts[id].place_name = '村中住所';
     texts[id].place_desc = '你在村中的居所，大部分物件都被变卖或抢走，目前只留空房';
     id = 'village_square';
     add_text_object(texts, id);

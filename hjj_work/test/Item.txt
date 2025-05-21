@@ -1,37 +1,71 @@
-薪资
-低了，想要更高（重点），画饼说会涨（涨了也没到预期）
+import { isEmptyObject } from '../Function/Function.js';
+import { addElement } from '../Function/Dom_function.js';
+import { updata_BP_value } from '../Function/Updata_func.js';
+import { game_events } from '../Data/Game_event/Game_Event.js';
+import { enums } from '../Data/Enum/Enum.js';
+import { texts } from '../Data/Text/Text.js';
+import { global } from './global_class.js';
+import { player } from '../Player/Player.js';
 
-工作内容，
-还行，现在有点摸到我的上限，之后到部署的时候就超纲了，感觉做不了，或者会很累（重点），
-而且做这个项目的同事总共5个离职了2个，他们做的内容我不了解，万一出问题也是工作量
-但是有很强的领导能带，所以综合来说还行
+//游戏事件类
+export class Game_event_manage {
+    constructor() {}
+    init() {
+        this.now_event_id = null; //当前进行的事件id
+        this.event_start_place; //当前进行的事件的启动地点
+        this.monitor_data = new Object(); //需要监控的行为的监控数值
+        this.monitor_target = new Object(); //需要监控的行为以及目标数值
+        this.mini_event_button_flag = new Object(); //迷你事件的按键情况记录
+    }
 
-上班考勤，
-很好，双休，5*8工作时间
-通勤半小时，公交也不怎么堵
+    //启动迷你事件
+    start_mini_event(event_id) {
+        //判断该事件是否满足启动条件
+        let ret = this.check_mini_event_start(event_id);
+        if (ret != 'start') {
+            //事件不能启动
+            this.end_mini_event(event_id, ret);
+            return;
+        }
+        // 获取玩家控制界面
+        let control = document.getElementById('control');
+        //展示新地点的内容
+        control.show_mini_event_process(event_id, 'first');
+    }
 
-同事领导，
-很好，很好沟通，很好合作
+    //玩家在迷你事件的一个流程中点击了一个按钮，更新迷你事件
+    updata_mini_event(event_id, now_process_id, button_id) {
+        //获取当前迷你事件的所处流程
+        let now_process = game_events[event_id].process[now_process_id];
+        let click_button = now_process.button[button_id];
 
-物价，
-房租和饮食占收入的30%，目前感觉可以接受
-离家远，不可能定居，不可能成家
+        //如果这个按钮有要做的事
+        if (!isEmptyObject(click_button.thing)) {
+            this.handle_button_thing(click_button);
+        }
+        //如果这个按钮是进入下一流程的按钮
+        if (click_button.click_type == 'next_process') {
+            let next_process_id = click_button.next;
+            if (next_process_id == 'end') {
+                //下一流程是结束流程，进入结束的函数
+                this.end_mini_event(event_id, 'finish');
+            } else {
+                //正常进入下一流程
+                let control = document.getElementById('control');
+                control.show_mini_event_process(event_id, next_process_id);
+            }
+        } else if (click_button.click_type == 'chat') {
+            this.set_mini_event_button_click();
+        }
+    }
 
-喜好，
-因为工作难度的问题，不喜欢这个工作内容了，就是辞了之后考公和做自己的项目都会更开心
+    //记录按下了迷你事件中的一个按钮
+    set_mini_event_button_click(event_id, now_process_id, button_id) {
+        let now_process = game_events[event_id].process[now_process_id];
+        //记录这个按键
+        this.mini_event_button_flag[button_id] = true;
+        //重新展示当前流程
+        control.show_mini_event_process(event_id, now_process_id, button_id);
+    }
 
-未来，
-组里会钟招新人，应该会我带新人，分工给他们，有新项目
-但是做小领导非我所愿，
-
-还不能摊牌，能干就继续干下去，但得找新的了
-找新的时间点：看看就业环境，
-
-上策，
-就业环境尚可，一段时间后借口不想做了辞职，休息一段时间，学习新技术了再找
-中策，
-就业环境尚可，现在就换个理想薪资的工作，运气好那就一切顺利，运气不好那就是用命换钱
-下策，
-就业环境不行，一段时间后因为涨薪不理想，工作不想干而离职，
-但找不到同水平的新工作，被迫回家全职考公，从一种不想过的生活变成另一种不想过的生活
-
+}

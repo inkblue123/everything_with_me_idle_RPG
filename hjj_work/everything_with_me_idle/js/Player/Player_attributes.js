@@ -115,22 +115,25 @@ export class Player_attributes {
         //去重
         this.EQP_attr['weapon_type'] = get_uniqueArr(this.EQP_attr['weapon_type']);
     }
-    get_health_point() {
-        return this.health_point;
-    }
-    get_magic_point() {
-        return this.magic_point;
-    }
-    get_energy_point() {
-        return this.energy_point;
-    }
+    //根据id设置玩家的属性，只能设置玩家的属性，不会修改装备上、技能上的属性，
+    set_a_attr() {}
     //根据id获取属性
     get_a_attr(id) {
-        return this.end_attr[id];
+        if (id == 'health_point') {
+            return this.health_point;
+        } else if (id == 'magic_point') {
+            return this.magic_point;
+        } else if (id == 'energy_point') {
+            return this.energy_point;
+        } else {
+            return this.end_attr[id];
+        }
     }
+
     get_end_attr() {
         return this.end_attr;
     }
+
     //更新最终属性
     updata_end_attr() {
         this.end_attr = new Object();

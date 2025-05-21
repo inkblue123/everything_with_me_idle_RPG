@@ -302,6 +302,7 @@ export class Global_flag_manage {
         let game_date = time_manage.get_game_date();
         let all_day = game_date.year * 360 + game_date.month * 30 + game_date.day;
         // all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
+        // all_day += 1; //初始日期2025.4.1是周二，在这里重置成周三
         return (all_day % 5) + 1;
     }
     //临用游戏状态-当前玩家背包物品的负重

@@ -67,20 +67,83 @@ export class Mini_event extends Game_Event {
             j++;
         }
     }
-    set_process(process_id, type, control_dest_text) {
+    //向迷你事件中新增一个流程
+    set_new_process(process_id, control_dest_text) {
         if (isEmptyObject(this.process[process_id])) {
             this.process[process_id] = new Object();
         }
-        this.process[process_id].type = type;
         this.process[process_id].control_dest_text = control_dest_text;
-        this.process[process_id].button = new Array();
+        this.process[process_id].button = new Object();
     }
-    // add_process_button(process_id, text, next) {
-    //     let i = this.process[process_id].button.length;
-    //     this.process[process_id].button[i] = new Object();
-    //     this.process[process_id].button[i].text = text;
-    //     this.process[process_id].button[i].next = next;
-    // }
+    //向迷你事件的一个流程里添加一个按钮
+    add_process_button(process_id, button_id, button_text, next_process) {
+        let button_obj = new Object();
+        button_obj.id = button_id; //按钮的id
+        button_obj.text = button_text; //按钮上的文本
+        this.process[process_id].button[button_id] = button_obj;
+    }
+    //设置一个按钮的点击效果
+    add_process_button_click(process_id, button_id, click_type, ...click_value) {
+        let button_obj = this.process[process_id].button[button_id];
+        button_obj.click_type = click_type;
+        if (click_type == 'next_process') {
+            //按钮是进入下一个流程的，需要记录下一流程的id
+            button_obj.next = click_value[0];
+        } else if (click_type == 'chat') {
+            //按钮是对话，按下之后会展示屏幕上的对话内容，并且标记这个按钮已经按过
+            button_obj.click_text = click_value[0];
+        }
+    }
+    //设置一个按钮的出现条件
+    add_process_button_condition(process_id, button_id, ...condition_value) {
+        let button_obj = this.process[process_id].button[button_id];
+        if (button_obj.condition == undefined) {
+            button_obj.condition = new Object();
+        }
+        for (let i = 0; i < condition_value.length; i += 2) {
+            let condition_name = condition_value[i];
+            let condition_status = condition_value[i + 1];
+            button_obj.condition[condition_name] = condition_status;
+        }
+    }
+    //设置一个按钮按下之后要做的事
+    add_process_button_thing(process_id, button_id, thing_type, ...thing_value) {
+        let button_obj = this.process[process_id].button[button_id];
+        if (button_obj.thing == undefined) {
+            button_obj.thing = new Object();
+        }
+        let thing_obj = button_obj.thing;
+        if (thing_obj[thing_type] == undefined) {
+            thing_obj[thing_type] = new Array();
+        }
+        if (thing_type == 'get_item') {
+            if (thing_value.length % 3 != 0) {
+                console.log('给予物品时没有给3的倍数的参数，需要确认输入是否正确');
+                return;
+            }
+            for (let i = 0; i < thing_value.length; i += 3) {
+                let aitem = new Object();
+                aitem.id = thing_value[i];
+                aitem.num = thing_value[i + 1];
+                aitem.equip_rarity = thing_value[i + 2];
+                thing_obj[thing_type].push(aitem);
+            }
+        } else if (thing_type == 'get_skill') {
+            for (let skill_id of thing_value) {
+                thing_obj[thing_type].push(skill_id);
+            }
+        } else if (thing_type == 'show_div') {
+            for (let dom_id of thing_value) {
+                thing_obj[thing_type].push(dom_id);
+            }
+        } else if (thing_type == 'move_place') {
+            for (let place_id of thing_value) {
+                thing_obj[thing_type].push(place_id);
+            }
+        } else if (thing_type == 'reset_time') {
+            thing_obj[thing_type] = true;
+        }
+    }
 }
 
 function add_Game_Event_object(game_events, newid) {

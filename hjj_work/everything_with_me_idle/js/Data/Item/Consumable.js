@@ -41,9 +41,11 @@ const consumable_type = Object.freeze({
 function init_Item_Consumable(items) {
     //弹药
     {
-        add_Item_object(items,  'wood_arrow','consumable',);
-        items['wood_arrow'].init_Item_other(100, ['ammo_CSB']); //堆叠数量，物品大分类
-        items['wood_arrow'].init_Consumable('arrow'); //物品小分类，是否特制
+        let id = 'wood_arrow'; //木制箭矢
+        add_Item_object(items, id, 'consumable');
+        items[id].init_Item_other(100, ['ammo_CSB']); //堆叠数量，物品大分类
+        items[id].init_Consumable('arrow'); //物品小分类，是否特制
+        items[id].init_Item_price('coin', 3); //物品价值
     }
 }
 

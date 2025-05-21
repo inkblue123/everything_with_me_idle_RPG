@@ -19,6 +19,7 @@
     padding: 0 5px;
     /* 占据一整行，类型在左，内容在右 */
     justify-content: space-between;
+    border: 2px solid #797691; /* 内框 */
 }
 #control_name_left_div {
     text-align: left;
@@ -50,9 +51,10 @@
     justify-content: center;
     align-items: center;
     min-height: 50px;
+    margin: 0px 5px;
     white-space: pre-wrap; /* 保留空格和换行 */
     /* background-color: rgb(19, 250, 54); */
-    border: 1px solid #797691; /* 内框 */
+    /* border: 1px solid #797691;  */
 }
 /* 用来容纳角色当前位置可以进行的操作的容器 */
 #player_Control_div {
@@ -65,7 +67,9 @@
 .player_Control_button {
     box-sizing: border-box;
     min-height: 30px;
+    width: 100%;
     text-align: center;
+    cursor: pointer;
     /* background-color: rgb(250, 19, 19); */
     border-top: 1px solid #797691; /* 内框 */
     border-bottom: 1px solid #797691; /* 内框 */

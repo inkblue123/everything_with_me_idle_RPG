@@ -41,35 +41,49 @@ const material_type = Object.freeze({
 function init_Item_Material(items) {
     //自然材料
     {
-        add_Item_object(items, 'Oak_logs', 'material');
-        items['Oak_logs'].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
-        items['Oak_logs'].init_Material('for_logging'); //材料小分类
+        let id = 'Oak_logs'; //橡树原木
+        add_Item_object(items, id, 'material');
+        items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
+        items[id].init_Material('for_logging'); //材料小分类
+        items[id].init_Item_price('coin', 5); //物品价值
 
-        add_Item_object(items, 'Oak_woodchip', 'material');
-        items['Oak_woodchip'].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
-        items['Oak_woodchip'].init_Material('for_logging'); //材料小分类
+        id = 'Oak_woodchip'; //橡树木屑
+        add_Item_object(items, id, 'material');
+        items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+        items[id].init_Material('for_logging'); //材料小分类
+        items[id].init_Item_price('coin', 1); //物品价值
 
-        add_Item_object(items, 'Willow_logs', 'material');
-        items['Willow_logs'].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
-        items['Willow_logs'].init_Material('for_logging'); //材料小分类
-        add_Item_object(items, 'Willow_woodchip', 'material');
-        items['Willow_woodchip'].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
-        items['Willow_woodchip'].init_Material('for_logging'); //材料小分类
+        id = 'Willow_logs'; //柳树原木
+        add_Item_object(items, id, 'material');
+        items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
+        items[id].init_Material('for_logging'); //材料小分类
+        items[id].init_Item_price('coin', 6); //物品价值
+
+        id = 'Willow_woodchip'; //柳树木屑
+        add_Item_object(items, id, 'material');
+        items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+        items[id].init_Material('for_logging'); //材料小分类
+        items[id].init_Item_price('coin', 2); //物品价值
     }
     //人工材料
     {
-        //普通木板
-        add_Item_object(items, 'normal_board', 'material');
-        items['normal_board'].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
-        items['normal_board'].init_Material('for_making'); //材料小分类
-        //橡木板
-        add_Item_object(items, 'Oak_board', 'material');
-        items['Oak_board'].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
-        items['Oak_board'].init_Material('for_making'); //材料小分类
-        //柳木板
-        add_Item_object(items, 'Willow_board', 'material');
-        items['Willow_board'].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
-        items['Willow_board'].init_Material('for_making'); //材料小分类
+        let id = 'normal_board'; //普通木板
+        add_Item_object(items, id, 'material');
+        items[id].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
+        items[id].init_Material('for_making'); //材料小分类
+        items[id].init_Item_price('coin', 10); //物品价值
+
+        id = 'Oak_board'; //橡木板
+        add_Item_object(items, id, 'material');
+        items[id].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
+        items[id].init_Material('for_making'); //材料小分类
+        items[id].init_Item_price('coin', 12); //物品价值
+
+        id = 'Willow_board'; //柳木板
+        add_Item_object(items, id, 'material');
+        items[id].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
+        items[id].init_Material('for_making'); //材料小分类
+        items[id].init_Item_price('coin', 14); //物品价值
     }
 }
 

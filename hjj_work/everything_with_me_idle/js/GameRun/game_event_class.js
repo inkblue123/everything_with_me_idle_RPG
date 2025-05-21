@@ -1,5 +1,5 @@
 import { isEmptyObject } from '../Function/Function.js';
-import { addElement } from '../Function/Dom_function.js';
+import { addElement, Gradient_div } from '../Function/Dom_function.js';
 import { updata_BP_value } from '../Function/Updata_func.js';
 import { game_events } from '../Data/Game_event/Game_Event.js';
 import { enums } from '../Data/Enum/Enum.js';
@@ -15,6 +15,7 @@ export class Game_event_manage {
         this.event_start_place; //当前进行的事件的启动地点
         this.monitor_data = new Object(); //需要监控的行为的监控数值
         this.monitor_target = new Object(); //需要监控的行为以及目标数值
+        this.mini_event_button_flag = new Object(); //迷你事件的按键情况记录
     }
     //启动一个游戏事件，激活相关接口
     start_game_event(event_id) {
@@ -242,39 +243,101 @@ export class Game_event_manage {
         }
         return 'start';
     }
-    //更新当前迷你事件，进入下一流程
-    updata_mini_event(event_id, now_process_id, i) {
+    //玩家在迷你事件的一个流程中点击了一个按钮，更新迷你事件
+    updata_mini_event(event_id, now_process_id, button_id) {
         //获取当前迷你事件的所处流程
         let now_process = game_events[event_id].process[now_process_id];
-        //判断玩家触发的下一流程要做什么
-        // let button_data = now_process.button[i];
-        for (let thing of now_process.button[i].thing) {
-            if (thing.type == 'get_skill') {
+        let click_button = now_process.button[button_id];
+
+        //如果这个按钮有要做的事
+        if (!isEmptyObject(click_button.thing)) {
+            this.handle_button_thing(click_button);
+        }
+        if (click_button.click_type == 'next_process') {
+            //如果这个按钮是进入下一流程的按钮
+            this.handle_button_next_process(event_id, click_button);
+        } else if (click_button.click_type == 'chat') {
+            //如果这个按钮是对话按钮
+            this.handle_button_chat(event_id, now_process_id, button_id);
+        }
+    }
+    //处理按下按钮之后要做的事情
+    handle_button_thing(click_button) {
+        let thing_obj = click_button.thing;
+        for (let thing_type in thing_obj) {
+            if (thing_type == 'get_skill') {
                 //给予技能
                 let All_Skills = player.get_player_All_Skills();
-                for (let skill_id of thing.skill_id) {
+                for (let skill_id of thing_obj[thing_type]) {
                     All_Skills.player_unlock_skill(skill_id);
                 }
-            } else if (thing.type == 'get_item') {
+            } else if (thing_type == 'get_item') {
                 //给予物品
-                for (let item of thing.item) {
-                    player.Player_get_item(item.id, item.num, item.equip_rarity);
+                for (let item_obj of thing_obj[thing_type]) {
+                    let id = item_obj.id;
+                    let num = item_obj.num;
+                    let equip_rarity = item_obj.equip_rarity;
+                    player.Player_get_item(id, num, equip_rarity);
                 }
+            } else if (thing_type == 'show_div') {
+                //渐变显示div
+                for (let div_id of thing_obj[thing_type]) {
+                    Gradient_div(div_id);
+                }
+            } else if (thing_type == 'move_place') {
+                //移动到新地点
+                let place_manage = global.get_place_manage();
+                let place_id = thing_obj[thing_type][0];
+                place_manage.set_now_place(place_id);
+            } else if (thing_type == 'reset_time') {
+                //刷新游戏日期
+                let time_manage = global.get_time_manage();
+                time_manage.reset_game_date();
             }
-            //属性判定
-            //技能判定
-            //物品判定
         }
-        //
-        //处理完毕，进入下一流程
-        // 获取玩家控制界面
-        let next_process_id = now_process.button[i].next;
+    }
+    //处理按下按钮之后触发的对话
+    handle_button_chat(event_id, now_process_id, button_id) {
+        // let now_process = game_events[event_id].process[now_process_id];
+        //记录这个按钮按过了
+        this.mini_event_button_flag[button_id] = true;
+        //重新展示当前流程，完成对话
+        let control = document.getElementById('control');
+        control.show_mini_event_process(event_id, now_process_id, button_id);
+    }
+    //处理按下按钮之后，迷你事件进入下一流程
+    handle_button_next_process(event_id, click_button) {
+        let next_process_id = click_button.next;
         if (next_process_id == 'end') {
+            //下一流程是结束流程，进入结束的函数
             this.end_mini_event(event_id, 'finish');
         } else {
+            //正常进入下一流程
             let control = document.getElementById('control');
             control.show_mini_event_process(event_id, next_process_id);
         }
+    }
+    //判断当前是否满足迷你事件中的一个按钮的出现条件
+    check_mini_event_button_condition(event_id, process_id, button_id) {
+        let button = game_events[event_id].process[process_id].button[button_id];
+        //如果这个按钮没有设置出现条件，默认出现
+        if (isEmptyObject(button.condition)) {
+            return true;
+        }
+        //目前只支持判定指定按钮是否按下过
+        let flag = true;
+        for (let condition_name in button.condition) {
+            let condition_status = button.condition[condition_name];
+            //防止未定义的判定
+            if (this.mini_event_button_flag[condition_name] == undefined) {
+                this.mini_event_button_flag[condition_name] = false;
+            }
+            if (this.mini_event_button_flag[condition_name] != condition_status) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
     }
     //迷你事件结束
     end_mini_event(event_id, flag) {

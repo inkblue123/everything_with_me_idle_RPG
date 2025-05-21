@@ -11,7 +11,7 @@ class Item {
         // this.type = new Array(); //物品大类型
         this.main_type = new Array(); //物品大类型
         this.secon_type = new Array(); //物品小类型
-
+        this.price = new Object();
         this.init_Item_name_desc(id);
     }
     //调用文本数据库中的物品名称和描述
@@ -46,6 +46,17 @@ class Item {
             if (typeof secon_type == 'string') {
                 this.secon_type.push(secon_type);
             }
+        }
+    }
+    //设定物品的价值
+    init_Item_price(...args) {
+        if (args.length % 2 != 0) {
+            console.log('设定物品价格时的参数数量不正常，有%d个', args.length);
+        }
+        for (let i = 0; i < args.length / 2; i++) {
+            //
+            let price_name = args[i * 2];
+            this.price[price_name] = args[i * 2 + 1];
         }
     }
 }

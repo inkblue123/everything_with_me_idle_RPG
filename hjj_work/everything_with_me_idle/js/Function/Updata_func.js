@@ -24,7 +24,7 @@ import { global } from '../GameRun/global_class.js';
 function updata_HP() {
     const HP_bar = document.getElementById('HP_bar');
     let P_attr = player.get_player_attributes();
-    let health_point = P_attr.get_health_point();
+    let health_point = P_attr.get_a_attr('health_point');
     let health_max = P_attr.get_a_attr('health_max');
 
     HP_bar.children[0].children[0].style.width = `${(health_point / health_max) * 100}%`;
@@ -34,7 +34,7 @@ function updata_HP() {
 function updata_MP() {
     const MP_bar = document.getElementById('MP_bar');
     let P_attr = player.get_player_attributes();
-    let magic_point = P_attr.get_magic_point();
+    let magic_point = P_attr.get_a_attr('magic_point');
     let magic_max = P_attr.get_a_attr('magic_max');
 
     MP_bar.children[0].children[0].style.width = `${(magic_point / magic_max) * 100}%`;
@@ -44,7 +44,7 @@ function updata_MP() {
 function updata_ENP() {
     const ENP_bar = document.getElementById('ENP_bar');
     let P_attr = player.get_player_attributes();
-    let energy_point = P_attr.get_energy_point();
+    let energy_point = P_attr.get_a_attr('energy_point');
     let energy_max = P_attr.get_a_attr('energy_max');
 
     ENP_bar.children[0].children[0].style.width = `${(energy_point / energy_max) * 100}%`;

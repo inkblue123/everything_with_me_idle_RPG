@@ -6,6 +6,7 @@ import {
     // updata_player_active_show,
     updata_player_active,
 } from '../Function/Updata_func.js';
+import { hide_div } from '../Function/Dom_function.js';
 import { show_normal_game_div } from '../Function/show_func.js';
 
 import { global } from '../GameRun/global_class.js';
@@ -27,6 +28,9 @@ function new_game_init() {
     player_init();
     //游戏界面初始化
     dom_init();
+    //启动开场剧情
+    let game_event_manage = global.get_game_event_manage();
+    game_event_manage.start_mini_event('new_game_start');
 }
 //玩家参数初始化
 function player_init() {
@@ -86,7 +90,16 @@ function dom_init() {
     let place_manage = global.get_place_manage();
     // place_manage.set_now_place('test_normal1');
     // place_manage.set_next_place('test_combat1');
-    place_manage.set_now_place('village_home');
-    place_manage.set_next_place('village_home');
+    place_manage.set_now_place('village_hospital');
+    // place_manage.set_next_place('village_home');
+
+    //新存档配合新手剧情，隐藏部分界面
+    hide_div('player_status');
+    hide_div('Combat_plan');
+    hide_div('live_plan');
+    hide_div('map');
+    hide_div('game_log');
+    hide_div('control_name_left_div');
+    hide_div('control_name_right_div');
 }
 export { LoadSaveFile };

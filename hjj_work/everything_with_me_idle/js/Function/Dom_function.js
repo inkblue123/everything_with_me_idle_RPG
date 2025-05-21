@@ -203,7 +203,37 @@ function add_click_Active_skill_worn_remove(target_div, tip_value) {
         tooltip.CloseTip(); //清空小窗口
     });
 }
+//隐藏指定div元素
+function hide_div(div_id) {
+    //
+    let target_div = document.getElementById(div_id);
+    if (target_div == undefined) {
+        console.log('隐藏%s失败，没有找到这个元素', div_id);
+    }
+    // target_div.style.display = 'none';
+    target_div.style.visibility = 'hidden';
+}
+//渐变显示指定的div元素
+function Gradient_div(div_id) {
+    let target_div = document.getElementById(div_id);
+    if (target_div == undefined) {
+        console.log('渐变显示%s失败，没有找到这个元素', div_id);
+    }
+    // target_div.style.display = '';
+    target_div.style.visibility = 'visible';
 
+    let opacity = 0;
+    target_div.style.opacity = opacity;
+
+    let interval = setInterval(function () {
+        opacity += 0.05; // 每次增加 0.05
+        if (opacity >= 1) {
+            opacity = 1;
+            clearInterval(interval); // 停止渐变
+        }
+        target_div.style.opacity = opacity;
+    }, 50); // 设置渐变的时间
+}
 export {
     crtElement,
     addElement,
@@ -217,4 +247,6 @@ export {
     add_click_Active_skill_worn,
     add_aEQP_data,
     add_click_Active_skill_worn_remove,
+    hide_div,
+    Gradient_div,
 };

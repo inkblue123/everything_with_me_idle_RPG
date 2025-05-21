@@ -10,7 +10,7 @@ function init_Place_normal(places) {
     //可联通地点的id
     places[id].add_other_normal_place('test_combat1');
 
-    id = 'village_home'; //村中房屋
+    id = 'village_home'; //村中住所
     add_normal_Place(places, id, 'village');
     places[id].add_other_normal_place('village_square');
 
