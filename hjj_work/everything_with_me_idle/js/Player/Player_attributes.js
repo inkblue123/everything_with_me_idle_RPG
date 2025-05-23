@@ -1,6 +1,7 @@
 'use strict';
 import { items } from '../Data/Item/Item.js';
-import { isEmptyObject, get_uniqueArr } from '../Function/Function.js';
+import { enums } from '../Data/Enum/Enum.js';
+import { is_Empty_Object, get_uniqueArr } from '../Function/Function.js';
 import { get_object_only_key } from '../Function/Get_func.js';
 
 export class Player_attributes {
@@ -59,7 +60,7 @@ export class Player_attributes {
         this.EQP_attr['weapon_type'] = new Array();
 
         for (let wp in worn_EQP) {
-            if (isEmptyObject(worn_EQP[wp])) continue;
+            if (is_Empty_Object(worn_EQP[wp])) continue;
             //遍历每个部位的装备
             let EQP = worn_EQP[wp];
             let id = EQP.id;
@@ -68,7 +69,7 @@ export class Player_attributes {
             for (let i in items[id].equip_attr) {
                 if (items[id].equip_attr[i] == 0) continue;
                 //将数据库中记载的属性存入玩家身上
-                if (isEmptyObject(this.EQP_attr[i])) {
+                if (is_Empty_Object(this.EQP_attr[i])) {
                     this.EQP_attr[i] = 0;
                 }
                 //副手武器的攻速不计算
@@ -88,12 +89,12 @@ export class Player_attributes {
     Summary_worn_EQP_weapon_type(worn_EQP) {
         this.EQP_attr['weapon_type'] = new Array();
 
-        if (!isEmptyObject(worn_EQP['main_hand'])) {
+        if (!is_Empty_Object(worn_EQP['main_hand'])) {
             //带了单手武器
             let item_id = worn_EQP['main_hand'].id; //主手位置的装备的id
             let item_eqt = items[item_id].equipment_type; //该装备的武器类型
             this.EQP_attr['weapon_type'] = this.EQP_attr['weapon_type'].concat(item_eqt);
-        } else if (!isEmptyObject(worn_EQP['main_hand_two'])) {
+        } else if (!is_Empty_Object(worn_EQP['main_hand_two'])) {
             //带了双手武器
             let item_id = worn_EQP['main_hand_two'].id; //双手位置的装备的id
             let item_eqt = items[item_id].equipment_type; //该装备的武器类型
@@ -106,7 +107,7 @@ export class Player_attributes {
             //解锁之后空手也可以视作施法核心
             // this.EQP_attr['weapon_type'].push('putmagic_core');
         }
-        if (!isEmptyObject(worn_EQP['deputy'])) {
+        if (!is_Empty_Object(worn_EQP['deputy'])) {
             //带了副手装备
             let item_id = worn_EQP['deputy'].id; //主手位置的装备的id
             let item_eqt = items[item_id].equipment_type; //该装备的武器类型
@@ -116,7 +117,24 @@ export class Player_attributes {
         this.EQP_attr['weapon_type'] = get_uniqueArr(this.EQP_attr['weapon_type']);
     }
     //根据id设置玩家的属性，只能设置玩家的属性，不会修改装备上、技能上的属性，
-    set_a_attr() {}
+    set_a_attr(id, value) {
+        if (id == 'health_point') {
+            this.health_point = value;
+        } else if (id == 'magic_point') {
+            this.magic_point = value;
+        } else if (id == 'energy_point') {
+            this.energy_point = value;
+        } else if (enums.combat_attack_attr.includes(id)) {
+            this.combat_attack_attr[id] = value;
+        } else if (enums.combat_defense_attr.includes(id)) {
+            this.combat_defense_attr[id] = value;
+        } else if (enums.combat_survival_attr.includes(id)) {
+            this.combat_survival_attr[id] = value;
+        } else if (enums.player_base_attr.includes(id)) {
+            this.player_base_attr[id] = value;
+        }
+        this.updata_end_attr();
+    }
     //根据id获取属性
     get_a_attr(id) {
         if (id == 'health_point') {
@@ -139,28 +157,28 @@ export class Player_attributes {
         this.end_attr = new Object();
         //初始战斗攻击属性
         for (let id in this.combat_attack_attr) {
-            if (isEmptyObject(this.end_attr[id])) {
+            if (is_Empty_Object(this.end_attr[id])) {
                 this.end_attr[id] = 0;
             }
             this.end_attr[id] += this.combat_attack_attr[id];
         }
         //初始战斗防御属性
         for (let id in this.combat_defense_attr) {
-            if (isEmptyObject(this.end_attr[id])) {
+            if (is_Empty_Object(this.end_attr[id])) {
                 this.end_attr[id] = 0;
             }
             this.end_attr[id] += this.combat_defense_attr[id];
         }
         //初始战斗生存属性
         for (let id in this.combat_survival_attr) {
-            if (isEmptyObject(this.end_attr[id])) {
+            if (is_Empty_Object(this.end_attr[id])) {
                 this.end_attr[id] = 0;
             }
             this.end_attr[id] += this.combat_survival_attr[id];
         }
         //初始角色基础属性
         for (let id in this.player_base_attr) {
-            if (isEmptyObject(this.end_attr[id])) {
+            if (is_Empty_Object(this.end_attr[id])) {
                 this.end_attr[id] = 0;
             }
             this.end_attr[id] += this.player_base_attr[id];
@@ -170,7 +188,7 @@ export class Player_attributes {
             if (id == 'weapon_type') {
                 this.end_attr[id] = this.EQP_attr[id];
             } else {
-                if (isEmptyObject(this.end_attr[id])) {
+                if (is_Empty_Object(this.end_attr[id])) {
                     this.end_attr[id] = 0;
                 }
                 this.end_attr[id] += this.EQP_attr[id];
@@ -178,7 +196,7 @@ export class Player_attributes {
         }
         //汇总技能属性
         for (let id in this.skill_attr) {
-            if (isEmptyObject(this.end_attr[id])) {
+            if (is_Empty_Object(this.end_attr[id])) {
                 this.end_attr[i] = 0;
             }
             this.end_attr[id] += this.skill_attr[id];

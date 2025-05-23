@@ -116,7 +116,7 @@ function check_Equipment(id, equip_rarity) {
     }
 }
 //判断一个对象是否为空
-function isEmptyObject(obj) {
+function is_Empty_Object(obj) {
     //未定义内容会返回真
     if (obj === undefined) return true;
     //空指针会返回真
@@ -159,7 +159,7 @@ export {
     Item_type_handle,
     BP_type_handle,
     check_Equipment,
-    isEmptyObject,
+    is_Empty_Object,
     hex2Rgba,
     get_uniqueArr,
     attr_correct_handle,

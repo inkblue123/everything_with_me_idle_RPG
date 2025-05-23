@@ -105,20 +105,28 @@ class Global {
         //玩家被动技能
         //玩家临时buff
     }
-
+    //获取游戏标记
     get_flag(flag_name) {
         return this.global_flag_manage.get_flag(flag_name);
     }
     set_flag(flag_name, flag_value) {
         return this.global_flag_manage.set_flag(flag_name, flag_value);
     }
-    // //玩家死亡，处理相关逻辑
-    // player_death() {
-    //     //移动到安全的地方
-    //     this.place_manage.set_next_place('village_home');
-    //     //清空玩家buff
-    //     //清空战斗区域的临时加成
-    // }
+    //对global对象进行存档
+    save_global_class() {
+        let global_save = new Object();
+        //获取每个子对象的存档
+        //时间类
+        global_save.Time_save = this.time_manage.save_Time_class();
+        global_save.place_save = this.place_manage.save_place_class();
+
+        return global_save;
+    }
+    //加载游戏存档
+    load_global_class(global_save) {
+        this.time_manage.load_Time_class(global_save.Time_save);
+        this.place_manage.load_place_class(global_save.place_save);
+    }
 }
 //记录全局参数和游戏状态的对象
 var global = new Global();

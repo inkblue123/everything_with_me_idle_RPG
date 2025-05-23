@@ -1,4 +1,7 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
+import { show_normal_game_div } from '../Function/show_func.js';
+import { updata_player_active, updata_equipment_show } from '../Function/Updata_func.js';
+import { global } from '../GameRun/global_class.js';
 
 import { player_status } from './Player_status.js';
 import { Combat_plan } from './Combat_plan.js';
@@ -9,6 +12,27 @@ import { Combat } from './Combat.js';
 import { Game_log } from './Game_log.js';
 
 var dom = new Object();
+
+dom.init = function () {
+    //激活非战斗时游戏界面
+    show_normal_game_div();
+
+    //初始化脑海-重要事件界面
+    let game_event_manage = global.get_game_event_manage();
+    game_event_manage.init_IE_div();
+
+    //初始化玩家主动技能展示
+    updata_player_active(); //主动技能测试，正常应该在战斗规划界面设置主动技能，设置之后调用这个接口
+
+    // 将每个装备栏中的信息初始化
+    const radios = document.querySelectorAll('input[name="EQP_switch"]');
+    for (const radio of radios) {
+        updata_equipment_show(radio.value);
+    }
+    //移动到初始位置
+    let place_manage = global.get_place_manage();
+    place_manage.set_now_place('village_home');
+};
 
 function game_dom_init() {
     // 创建出所有需要的界面

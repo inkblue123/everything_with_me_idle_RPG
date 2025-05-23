@@ -3,7 +3,7 @@ import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { Attack_effect, Defense_effect } from '../GameRun/combat_class.js';
 import { global } from '../GameRun/global_class.js';
-import { isEmptyObject } from '../Function/Function.js';
+import { is_Empty_Object } from '../Function/Function.js';
 import { get_Askill_base_attr, Attack_effect_algorithm, Defense_effect_algorithm } from '../Function/math_func.js';
 import { get_object_only_key } from '../Function/Get_func.js';
 
@@ -100,7 +100,7 @@ export class Player_active_skills_Manage {
             return false;
         }
         for (let i = 0; i < skill.need_slot_num; i++) {
-            if (!isEmptyObject(this.active_slots[slot_id + i])) {
+            if (!is_Empty_Object(this.active_slots[slot_id + i])) {
                 flag = false;
             }
         }
@@ -124,7 +124,7 @@ export class Player_active_skills_Manage {
     get_use_active_slots_num() {
         let end = 0;
         for (let i = 0; i < this.active_slot_num; i++) {
-            if (!isEmptyObject(this.active_slots[i])) {
+            if (!is_Empty_Object(this.active_slots[i])) {
                 end = i + 1;
             }
         }
@@ -134,7 +134,7 @@ export class Player_active_skills_Manage {
     get_unuse_active_slots_num() {
         let end = -1;
         for (let i = 0; i < this.active_slot_num; i++) {
-            if (isEmptyObject(this.active_slots[i])) {
+            if (is_Empty_Object(this.active_slots[i])) {
                 end = i;
                 return end;
             }
@@ -188,7 +188,7 @@ export class Player_active_skills_Manage {
         //属性变化之后，连带的参数更新
         for (let i = 0; i < this.active_slot_num; i++) {
             //如果i槽没有主动技能
-            if (isEmptyObject(this.active_slots[i])) {
+            if (is_Empty_Object(this.active_slots[i])) {
                 this.any_slot_time[i] = this.player_end_attr.attack_speed * 1000;
                 continue;
             }
@@ -228,7 +228,7 @@ export class Player_active_skills_Manage {
         this.main_Attack = new Attack_effect();
         this.deputy_Attack = new Attack_effect();
         this.deputy_Attack = new Attack_effect();
-        if (!isEmptyObject(this.player_end_attr)) {
+        if (!is_Empty_Object(this.player_end_attr)) {
             this.main_Attack.base_damage = this.player_end_attr['attack'];
             this.main_Attack.precision = this.player_end_attr['precision'];
             this.main_Attack.critical_chance = this.player_end_attr['critical_chance'];
@@ -254,7 +254,7 @@ export class Player_active_skills_Manage {
             if (old_slot == -1) {
                 //旧槽是-1，意味着当前属于一回合的第一帧，实际上没有旧槽，跳过处理
             } else {
-                if (!isEmptyObject(this.active_slots[old_slot])) {
+                if (!is_Empty_Object(this.active_slots[old_slot])) {
                     //旧槽有技能，现在应该清除可能的残留效果
                     let combat_manage = global.get_combat_manage();
                     combat_manage.reset_palyer_combat_data();
@@ -268,7 +268,7 @@ export class Player_active_skills_Manage {
                 }
             }
             let new_slot = this.now_run_slot;
-            if (!isEmptyObject(this.active_slots[new_slot])) {
+            if (!is_Empty_Object(this.active_slots[new_slot])) {
                 if (this.active_slots[new_slot].start_time == 'start') {
                     //新槽的技能是启动时触发，也就是现在
                     if (this.judge_active_condition(new_slot)) {
@@ -280,7 +280,7 @@ export class Player_active_skills_Manage {
         } else {
             //这一帧运行在某个槽中，只有持续触发类技能需要处理
             let now_slot = this.now_run_slot;
-            if (!isEmptyObject(this.active_slots[now_slot])) {
+            if (!is_Empty_Object(this.active_slots[now_slot])) {
                 if (this.active_slots[now_slot].start_time == 'continue') {
                     //当前槽的技能是持续触发，也就是现在
                     if (this.continue_skill_falg && this.judge_active_condition(now_slot)) {
@@ -298,7 +298,7 @@ export class Player_active_skills_Manage {
     judge_active_condition(run_slot) {
         let flag = true;
         let active_condition = this.active_slots[run_slot].active_condition;
-        if (isEmptyObject(active_condition)) {
+        if (is_Empty_Object(active_condition)) {
             //没有设定限制条件，默认为允许执行
             return true;
         } else {
@@ -347,7 +347,7 @@ export class Player_active_skills_Manage {
     //激活玩家的第start_slot个主动技能
     start_player_active(start_slot) {
         let start_skill = this.active_slots[start_slot];
-        if (isEmptyObject(start_skill)) {
+        if (is_Empty_Object(start_skill)) {
             //这个槽中没有技能，不运行
             return true;
         }
@@ -405,7 +405,7 @@ export class Player_active_skills_Manage {
     }
     //卸下slot_id位置的主动技能
     remove_solt_active_skill(slot_id) {
-        if (isEmptyObject(this.active_slots[slot_id])) {
+        if (is_Empty_Object(this.active_slots[slot_id])) {
             return;
         }
         let skill_id = this.active_slots[slot_id].id;

@@ -1,5 +1,5 @@
 import { texts } from '../Text/Text.js';
-import { isEmptyObject } from '../../Function/Function.js';
+import { is_Empty_Object } from '../../Function/Function.js';
 
 export class Skill {
     constructor(id) {
@@ -47,7 +47,7 @@ export class Skill {
 
         //索敌方式
         let lock_enemy_type = this.effect.lock_enemy_type;
-        if (isEmptyObject(lock_enemy_type)) {
+        if (is_Empty_Object(lock_enemy_type)) {
             desc = '缺少索敌方式，无法生成描述';
             return desc;
         }
@@ -58,7 +58,7 @@ export class Skill {
 
         //攻击次数
         let attack_num = this.effect.attack_num;
-        if (isEmptyObject(attack_num)) {
+        if (is_Empty_Object(attack_num)) {
             desc = '缺少攻击次数，无法生成描述';
             return desc;
         }
@@ -69,7 +69,7 @@ export class Skill {
         }
         //伤害类型
         let damage_type = this.effect.damage_type;
-        if (isEmptyObject(damage_type)) {
+        if (is_Empty_Object(damage_type)) {
             desc = '缺少伤害类型，无法生成描述';
             return desc;
         }

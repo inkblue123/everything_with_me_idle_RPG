@@ -1,4 +1,4 @@
-import { isEmptyObject } from '../Function/Function.js';
+import { is_Empty_Object } from '../Function/Function.js';
 import { addElement, Gradient_div } from '../Function/Dom_function.js';
 import { updata_BP_value } from '../Function/Updata_func.js';
 import { game_events } from '../Data/Game_event/Game_Event.js';
@@ -20,7 +20,7 @@ export class Game_event_manage {
     //启动一个游戏事件，激活相关接口
     start_game_event(event_id) {
         //异常处理
-        if (isEmptyObject(game_events[event_id])) {
+        if (is_Empty_Object(game_events[event_id])) {
             console.log('未定义事件%s', event_id);
             return;
         }
@@ -53,7 +53,7 @@ export class Game_event_manage {
             this.event_start_place = place_manage.get_now_place();
 
             // place_manage.set_event_start_place(now_place);
-            place_manage.set_next_place(game_events[event_id].place);
+            place_manage.set_now_place(game_events[event_id].place);
         }
     }
     //设置需要监控的行为以及他们的目标数值
@@ -111,7 +111,7 @@ export class Game_event_manage {
         //如果当前事件有专属地点，则退出这个地点，回到进入事件的位置
         if (game_events[this.now_event_id].place) {
             let place_manage = global.get_place_manage();
-            place_manage.set_next_place(this.event_start_place);
+            place_manage.set_now_place(this.event_start_place);
         }
 
         //清除数据
@@ -250,7 +250,7 @@ export class Game_event_manage {
         let click_button = now_process.button[button_id];
 
         //如果这个按钮有要做的事
-        if (!isEmptyObject(click_button.thing)) {
+        if (!is_Empty_Object(click_button.thing)) {
             this.handle_button_thing(click_button);
         }
         if (click_button.click_type == 'next_process') {
@@ -287,12 +287,21 @@ export class Game_event_manage {
             } else if (thing_type == 'move_place') {
                 //移动到新地点
                 let place_manage = global.get_place_manage();
-                let place_id = thing_obj[thing_type][0];
-                place_manage.set_now_place(place_id);
+                let place_id = thing_obj[thing_type];
+                place_manage.goto_mini_event_new_place(place_id);
+                // place_manage.set_now_place(place_id);
             } else if (thing_type == 'reset_time') {
                 //刷新游戏日期
                 let time_manage = global.get_time_manage();
                 time_manage.reset_game_date();
+            } else if (thing_type == 'set_player_attr') {
+                //设置玩家属性
+                let player_attributes = player.get_player_attributes();
+                for (let attr_obj of thing_obj[thing_type]) {
+                    let id = attr_obj.id;
+                    let value = attr_obj.value;
+                    player_attributes.set_a_attr(id, value);
+                }
             }
         }
     }
@@ -321,7 +330,7 @@ export class Game_event_manage {
     check_mini_event_button_condition(event_id, process_id, button_id) {
         let button = game_events[event_id].process[process_id].button[button_id];
         //如果这个按钮没有设置出现条件，默认出现
-        if (isEmptyObject(button.condition)) {
+        if (is_Empty_Object(button.condition)) {
             return true;
         }
         //目前只支持判定指定按钮是否按下过
@@ -353,7 +362,7 @@ export class Game_event_manage {
         //迷你事件结束，回到当前地点
         let place_manage = global.get_place_manage();
         let now_place_id = place_manage.get_now_place();
-        place_manage.set_next_place(now_place_id);
+        place_manage.set_now_place(now_place_id);
     }
     //初始化脑海-重要事件界面的信息
     init_IE_div(event_id) {

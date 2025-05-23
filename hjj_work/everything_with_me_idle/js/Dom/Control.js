@@ -1,5 +1,5 @@
 import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
-import { isEmptyObject } from '../Function/Function.js';
+import { is_Empty_Object } from '../Function/Function.js';
 import { places } from '../Data/Place/Place.js';
 import { game_events } from '../Data/Game_event/Game_Event.js';
 import { texts } from '../Data/Text/Text.js';
@@ -60,19 +60,19 @@ function show_new_place(new_place) {
     Place_desc_div.innerHTML = new_place.desc;
 
     //可以前往其他普通区域
-    if (!isEmptyObject(new_place.other_normal_place)) {
+    if (!is_Empty_Object(new_place.other_normal_place)) {
         for (let next_place_id of new_place.other_normal_place) {
             add_control_button_move(next_place_id, '前往', null);
         }
     }
     //可以前往其他战斗区域
-    if (!isEmptyObject(new_place.other_combat_place)) {
+    if (!is_Empty_Object(new_place.other_combat_place)) {
         for (let next_place_id of new_place.other_combat_place) {
             add_control_button_move(next_place_id, '前往', null);
         }
     }
     //此处有其他NPC
-    if (!isEmptyObject(new_place.other_NPC)) {
+    if (!is_Empty_Object(new_place.other_NPC)) {
         for (let next_place_id of new_place.other_NPC) {
             add_control_button_move(next_place_id, '拜访', null);
         }
@@ -120,13 +120,13 @@ function show_new_NPC(new_NPC) {
     add_control_button_move(last_normal_place_id, '回到', null);
 
     //可以进行的事件
-    if (!isEmptyObject(new_NPC.behaviors)) {
+    if (!is_Empty_Object(new_NPC.behaviors)) {
         for (let next_place_id of new_NPC.behaviors) {
             add_control_button_start_event(next_place_id, '进行', null);
         }
     }
     //有条件出现的事件
-    if (!isEmptyObject(new_NPC.condition_behaviors)) {
+    if (!is_Empty_Object(new_NPC.condition_behaviors)) {
         for (let event_id of new_NPC.condition_behaviors) {
             //对每个事件的出现条件进行判断，满足条件才在界面中添加按钮
             if (check_condition_appear_behaviors(event_id)) {
@@ -144,7 +144,7 @@ function add_control_button_move(new_place_id, front_text, after_text) {
     move_place_button.innerHTML = button_text;
     move_place_button.addEventListener('click', function () {
         let place_manage = global.get_place_manage();
-        place_manage.set_next_place(new_place_id);
+        place_manage.set_now_place(new_place_id);
     });
 }
 //向玩家控制界面添加一个按钮，按钮的效果是开启特殊事件
@@ -206,7 +206,7 @@ function make_NPC_condition_meet_chat(NPC) {
 //根据当前游戏状态，判断该事件是否满足出现条件
 function check_condition_appear_behaviors(event_id) {
     //没有条件，视作异常情况，不出现
-    if (isEmptyObject(game_events[event_id].conditions_appear)) {
+    if (is_Empty_Object(game_events[event_id].conditions_appear)) {
         console.log('事件%s设定为有条件出现的事件，但没有定义条件');
         return false;
     }

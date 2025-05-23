@@ -1,5 +1,5 @@
 'use strict';
-import { check_Equipment, isEmptyObject } from '../Function/Function.js';
+import { check_Equipment, is_Empty_Object } from '../Function/Function.js';
 import { updata_BP_value } from '../Function/Updata_func.js';
 
 import { Player_attributes } from './Player_attributes.js';
@@ -124,7 +124,7 @@ export class Player_Object {
         let keys = Object.keys(raw_worn_E);
         for (let key of keys) {
             //如果原位置已有装备，则将原装备放回背包
-            if (!isEmptyObject(raw_worn_E[key])) {
+            if (!is_Empty_Object(raw_worn_E[key])) {
                 this.Player_get_item_nolog(raw_worn_E[key]);
             }
         }
@@ -141,7 +141,7 @@ export class Player_Object {
         let keys = Object.keys(raw_worn_E);
         for (let key of keys) {
             //如果原位置已有装备，则将原装备放回背包
-            if (!isEmptyObject(raw_worn_E[key])) this.Player_get_item_nolog(raw_worn_E[key]);
+            if (!is_Empty_Object(raw_worn_E[key])) this.Player_get_item_nolog(raw_worn_E[key]);
         }
         //背包物品变动，刷新背包界面
         updata_BP_value();

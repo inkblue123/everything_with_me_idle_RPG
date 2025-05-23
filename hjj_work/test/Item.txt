@@ -1,4 +1,4 @@
-import { isEmptyObject } from '../Function/Function.js';
+import { is_Empty_Object } from '../Function/Function.js';
 import { addElement } from '../Function/Dom_function.js';
 import { updata_BP_value } from '../Function/Updata_func.js';
 import { game_events } from '../Data/Game_event/Game_Event.js';
@@ -40,7 +40,7 @@ export class Game_event_manage {
         let click_button = now_process.button[button_id];
 
         //如果这个按钮有要做的事
-        if (!isEmptyObject(click_button.thing)) {
+        if (!is_Empty_Object(click_button.thing)) {
             this.handle_button_thing(click_button);
         }
         //如果这个按钮是进入下一流程的按钮

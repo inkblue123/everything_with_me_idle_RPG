@@ -2,7 +2,7 @@ import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from '../GameRun/global_class.js';
-import { isEmptyObject } from './Function.js';
+import { is_Empty_Object } from './Function.js';
 
 //获取背包界面激活的过滤条件
 function get_BP_type() {

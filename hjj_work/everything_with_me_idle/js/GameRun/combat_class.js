@@ -1,6 +1,6 @@
 import { global } from './global_class.js';
 import { player } from '../Player/Player.js';
-import { isEmptyObject } from '../Function/Function.js';
+import { is_Empty_Object } from '../Function/Function.js';
 
 export class Attack_effect {
     constructor() {
@@ -85,7 +85,7 @@ export class Combat_manage {
     }
     //设置玩家当前帧激活的防御效果
     set_player_defense(main_defense) {
-        if (!isEmptyObject(main_defense)) this.player_Defense.main_Defense = main_defense;
+        if (!is_Empty_Object(main_defense)) this.player_Defense.main_Defense = main_defense;
         // if (main_Attack) {
         this.player_defense_flag = true;
         // }
@@ -249,7 +249,7 @@ export class Combat_manage {
     //获取当前玩家攻击的索敌目标
     get_lock_enemy() {
         let lock_enemys = new Array();
-        if (isEmptyObject(this.player_Attack.lock_enemy_type)) {
+        if (is_Empty_Object(this.player_Attack.lock_enemy_type)) {
             //这次攻击未设定索敌逻辑，选用默认设定
             this.player_Attack.lock_enemy_type = {
                 num: 1, //攻击一个敌人
@@ -274,7 +274,7 @@ export class Combat_manage {
         } else {
             //非事件中，移动到安全的地方
             let place_manage = global.get_place_manage();
-            place_manage.set_next_place('village_home');
+            place_manage.set_now_place('village_home');
         }
         //清空玩家buff
         //清空战斗区域的临时加成

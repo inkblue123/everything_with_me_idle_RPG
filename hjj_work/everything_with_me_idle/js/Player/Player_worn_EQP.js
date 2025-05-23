@@ -1,7 +1,7 @@
 'use strict';
 import { items } from '../Data/Item/Item.js';
 import { get_EQP_switch } from '../Function/Get_func.js';
-import { isEmptyObject } from '../Function/Function.js';
+import { is_Empty_Object } from '../Function/Function.js';
 
 class Player_Item {
     constructor(id) {
@@ -58,19 +58,19 @@ export class Player_worn {
             let empty_flag = false;
             //判断这件装备可穿戴的位置是否为空
             if (wp == 'main_hand') {
-                if (isEmptyObject(ac_EQP['main_hand']) && isEmptyObject(ac_EQP['main_hand_two'])) {
+                if (is_Empty_Object(ac_EQP['main_hand']) && is_Empty_Object(ac_EQP['main_hand_two'])) {
                     empty_flag = true;
                 }
             } else if (wp == 'main_hand_two') {
                 if (
-                    isEmptyObject(ac_EQP['main_hand']) &&
-                    isEmptyObject(ac_EQP['main_hand_two']) &&
-                    isEmptyObject(ac_EQP['deputy'])
+                    is_Empty_Object(ac_EQP['main_hand']) &&
+                    is_Empty_Object(ac_EQP['main_hand_two']) &&
+                    is_Empty_Object(ac_EQP['deputy'])
                 ) {
                     empty_flag = true;
                 }
             } else if (wp == 'deputy') {
-                if (isEmptyObject(ac_EQP['main_hand_two']) && isEmptyObject(ac_EQP['deputy'])) {
+                if (is_Empty_Object(ac_EQP['main_hand_two']) && is_Empty_Object(ac_EQP['deputy'])) {
                     empty_flag = true;
                 }
             } else if (!ac_EQP[wp]) {
@@ -112,25 +112,25 @@ export class Player_worn {
         }
         if (wp == 'main_hand') {
             //针对单手武器，可以额外顶下双手武器
-            if (!isEmptyObject(ac_EQP['main_hand_two'])) {
+            if (!is_Empty_Object(ac_EQP['main_hand_two'])) {
                 raw_worn_E['main_hand_two'] = JSON.parse(JSON.stringify(ac_EQP['main_hand_two']));
                 ac_EQP['main_hand_two'] = {};
             }
         }
         if (wp == 'main_hand_two') {
             //针对双手武器，需要额外卸下两个位置
-            if (!isEmptyObject(ac_EQP['main_hand'])) {
+            if (!is_Empty_Object(ac_EQP['main_hand'])) {
                 raw_worn_E['main_hand'] = JSON.parse(JSON.stringify(ac_EQP['main_hand']));
                 ac_EQP['main_hand'] = {};
             }
-            if (!isEmptyObject(ac_EQP['deputy'])) {
+            if (!is_Empty_Object(ac_EQP['deputy'])) {
                 raw_worn_E['deputy'] = JSON.parse(JSON.stringify(ac_EQP['deputy']));
                 ac_EQP['deputy'] = {};
             }
         }
         if (wp == 'deputy') {
             //针对副手
-            if (!isEmptyObject(ac_EQP['main_hand_two'])) {
+            if (!is_Empty_Object(ac_EQP['main_hand_two'])) {
                 raw_worn_E['main_hand_two'] = JSON.parse(JSON.stringify(ac_EQP['main_hand_two']));
                 ac_EQP['main_hand_two'] = {};
             }
@@ -150,19 +150,19 @@ export class Player_worn {
                 let empty_flag = false;
                 //判断这件装备可穿戴的位置是否为空
                 if (wp == 'main_hand') {
-                    if (isEmptyObject(ac_EQP['main_hand']) && isEmptyObject(ac_EQP['main_hand_two'])) {
+                    if (is_Empty_Object(ac_EQP['main_hand']) && is_Empty_Object(ac_EQP['main_hand_two'])) {
                         empty_flag = true;
                     }
                 } else if (wp == 'main_hand_two') {
                     if (
-                        isEmptyObject(ac_EQP['main_hand']) &&
-                        isEmptyObject(ac_EQP['main_hand_two']) &&
-                        isEmptyObject(ac_EQP['deputy'])
+                        is_Empty_Object(ac_EQP['main_hand']) &&
+                        is_Empty_Object(ac_EQP['main_hand_two']) &&
+                        is_Empty_Object(ac_EQP['deputy'])
                     ) {
                         empty_flag = true;
                     }
                 } else if (wp == 'deputy') {
-                    if (isEmptyObject(ac_EQP['main_hand_two']) && isEmptyObject(ac_EQP['deputy'])) {
+                    if (is_Empty_Object(ac_EQP['main_hand_two']) && is_Empty_Object(ac_EQP['deputy'])) {
                         empty_flag = true;
                     }
                 } else if (!ac_EQP[wp]) {
@@ -181,10 +181,10 @@ export class Player_worn {
     if_all_armor_attacted() {
         let EQP_switct = get_EQP_switch();
         let ac_EQP = this.worn_EQP[EQP_switct];
-        if (isEmptyObject(ac_EQP['head'])) return false;
-        if (isEmptyObject(ac_EQP['chest'])) return false;
-        if (isEmptyObject(ac_EQP['legs'])) return false;
-        if (isEmptyObject(ac_EQP['feet'])) return false;
+        if (is_Empty_Object(ac_EQP['head'])) return false;
+        if (is_Empty_Object(ac_EQP['chest'])) return false;
+        if (is_Empty_Object(ac_EQP['legs'])) return false;
+        if (is_Empty_Object(ac_EQP['feet'])) return false;
         return true;
     }
 }

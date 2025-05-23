@@ -1,5 +1,5 @@
 import { texts } from '../Text/Text.js';
-import { isEmptyObject } from '../../Function/Function.js';
+import { is_Empty_Object } from '../../Function/Function.js';
 
 export class Game_Event {
     constructor(id) {
@@ -69,7 +69,7 @@ export class Mini_event extends Game_Event {
     }
     //向迷你事件中新增一个流程
     set_new_process(process_id, control_dest_text) {
-        if (isEmptyObject(this.process[process_id])) {
+        if (is_Empty_Object(this.process[process_id])) {
             this.process[process_id] = new Object();
         }
         this.process[process_id].control_dest_text = control_dest_text;
@@ -117,6 +117,7 @@ export class Mini_event extends Game_Event {
             thing_obj[thing_type] = new Array();
         }
         if (thing_type == 'get_item') {
+            //给予玩家物品
             if (thing_value.length % 3 != 0) {
                 console.log('给予物品时没有给3的倍数的参数，需要确认输入是否正确');
                 return;
@@ -129,19 +130,33 @@ export class Mini_event extends Game_Event {
                 thing_obj[thing_type].push(aitem);
             }
         } else if (thing_type == 'get_skill') {
+            //给予玩家技能
             for (let skill_id of thing_value) {
                 thing_obj[thing_type].push(skill_id);
             }
         } else if (thing_type == 'show_div') {
+            //渐变显示指定界面
             for (let dom_id of thing_value) {
                 thing_obj[thing_type].push(dom_id);
             }
         } else if (thing_type == 'move_place') {
-            for (let place_id of thing_value) {
-                thing_obj[thing_type].push(place_id);
-            }
+            //移动到指定地点
+            thing_obj[thing_type] = thing_value[0];
         } else if (thing_type == 'reset_time') {
+            //重置游戏日期
             thing_obj[thing_type] = true;
+        } else if (thing_type == 'set_player_attr') {
+            //设置玩家属性
+            if (thing_value.length % 2 != 0) {
+                console.log('设置玩家属性时需要给予2倍数的参数，需要确认输入是否正确');
+                return;
+            }
+            for (let i = 0; i < thing_value.length; i += 2) {
+                let attr_obj = new Object();
+                attr_obj.id = thing_value[i];
+                attr_obj.value = thing_value[i + 1];
+                thing_obj[thing_type].push(attr_obj);
+            }
         }
     }
 }

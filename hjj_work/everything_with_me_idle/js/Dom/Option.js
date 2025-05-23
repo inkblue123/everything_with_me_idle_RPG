@@ -3,12 +3,13 @@ import { updata_BP_value } from '../Function/Updata_func.js';
 import { printf_play_item } from '../Function/Function.js';
 import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 import { get_UGS_BP_weight } from '../Function/Get_func.js';
+import { save_game } from '../LoadAndSave/load.js';
 import { player } from '../Player/Player.js';
 import { global } from '../GameRun/global_class.js';
 
 var Option = crtElement('div', null, 'option_page', '');
 {
-    var button1 = addElement(Option, 'button');
+    let button1 = addElement(Option, 'button');
     button1.innerHTML = '完成3天的新手教学';
     button1.onclick = function () {
         //正常流程得把文本和剧情呈现到玩家控制界面，但是这个测试按钮并不想管那么多
@@ -29,60 +30,79 @@ var Option = crtElement('div', null, 'option_page', '');
         game_event_manage.end_mini_event('new_player_teach_3', 'finish');
     };
 
-    var button2 = addElement(Option, 'button');
+    let button2 = addElement(Option, 'button');
     button2.innerHTML = '完成当前重要事件';
     button2.onclick = function () {
         let game_event_manage = global.get_game_event_manage();
         game_event_manage.test_finish_now_event();
     };
 
-    var button3 = addElement(Option, 'button');
-    button3.innerHTML = '加10生命';
+    let button3 = addElement(Option, 'button');
+    button3.innerHTML = '暂停游戏';
     button3.onclick = function () {
-        let P_attr = player.get_player_attributes();
-        let health_point = P_attr.get_a_attr('health_point');
-        let health_max = P_attr.get_a_attr('health_max');
-
-        if (health_point + 10 >= health_max) {
-            P_attr.health_point = health_max;
-        } else {
-            P_attr.health_point += 10;
-        }
-        P_attr.updata_end_attr();
+        let time_manage = global.get_time_manage();
+        time_manage.set_game_speed(0);
     };
 
-    var button4 = addElement(Option, 'button');
-    button4.innerHTML = '减10生命';
+    let button4 = addElement(Option, 'button');
+    button4.innerHTML = '恢复游戏';
     button4.onclick = function () {
-        let P_attr = player.get_player_attributes();
-        let health_point = P_attr.get_a_attr('health_point');
-        let health_max = P_attr.get_a_attr('health_max');
-        if (health_point - 10 <= 0) {
-            P_attr.health_point = 0;
-        } else {
-            P_attr.health_point -= 10;
-        }
-        P_attr.updata_end_attr();
-        // updata_HP();
+        let time_manage = global.get_time_manage();
+        time_manage.set_game_speed(1);
+    };
+    let button5 = addElement(Option, 'button');
+    button5.innerHTML = '存档';
+    button5.onclick = function () {
+        save_game();
     };
 
-    var button5 = addElement(Option, 'button');
-    button5.innerHTML = '给予一个橡木原木';
-    button5.onclick = function () {
-        // printf_play_item();
-        player.Player_get_item('Oak_logs', 1);
-        // printf_play_item();
-        printf_play_item();
-        get_UGS_BP_weight();
-    };
+    // var button3 = addElement(Option, 'button');
+    // button3.innerHTML = '加10生命';
+    // button3.onclick = function () {
+    //     let P_attr = player.get_player_attributes();
+    //     let health_point = P_attr.get_a_attr('health_point');
+    //     let health_max = P_attr.get_a_attr('health_max');
 
-    var button5 = addElement(Option, 'button');
-    button5.innerHTML = '给予玩家一个未定义物品';
-    button5.onclick = function () {
-        printf_play_item();
-        player.Player_get_item(10, 1);
-        printf_play_item();
-    };
+    //     if (health_point + 10 >= health_max) {
+    //         P_attr.health_point = health_max;
+    //     } else {
+    //         P_attr.health_point += 10;
+    //     }
+    //     P_attr.updata_end_attr();
+    // };
+
+    // var button4 = addElement(Option, 'button');
+    // button4.innerHTML = '减10生命';
+    // button4.onclick = function () {
+    //     let P_attr = player.get_player_attributes();
+    //     let health_point = P_attr.get_a_attr('health_point');
+    //     let health_max = P_attr.get_a_attr('health_max');
+    //     if (health_point - 10 <= 0) {
+    //         P_attr.health_point = 0;
+    //     } else {
+    //         P_attr.health_point -= 10;
+    //     }
+    //     P_attr.updata_end_attr();
+    //     // updata_HP();
+    // };
+
+    // var button5 = addElement(Option, 'button');
+    // button5.innerHTML = '给予一个橡木原木';
+    // button5.onclick = function () {
+    //     // printf_play_item();
+    //     player.Player_get_item('Oak_logs', 1);
+    //     // printf_play_item();
+    //     printf_play_item();
+    //     get_UGS_BP_weight();
+    // };
+
+    // var button5 = addElement(Option, 'button');
+    // button5.innerHTML = '给予玩家一个未定义物品';
+    // button5.onclick = function () {
+    //     printf_play_item();
+    //     player.Player_get_item(10, 1);
+    //     printf_play_item();
+    // };
 }
 
 export { Option };

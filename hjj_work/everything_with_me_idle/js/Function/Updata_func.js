@@ -18,7 +18,7 @@ import {
     delete_player_active_div,
     delete_active_show_div,
 } from './delete_func.js';
-import { Item_type_handle, BP_type_handle, isEmptyObject } from './Function.js';
+import { Item_type_handle, BP_type_handle, is_Empty_Object } from './Function.js';
 import { global } from '../GameRun/global_class.js';
 //更新血条上的数值
 function updata_HP() {
@@ -109,7 +109,7 @@ function updata_equipment_show(EQP_column) {
     let player_EQP_column = player_worn_EQP.get_worn_EQP(EQP_column);
     for (let wearing_position in player_EQP_column) {
         //如果位置上没有装备信息，不处理
-        if (isEmptyObject(player_EQP_column[wearing_position])) continue;
+        if (is_Empty_Object(player_EQP_column[wearing_position])) continue;
 
         if (enums.wearing_position.includes(wearing_position)) {
             add_aEQP_data(player_EQP_column[wearing_position], wearing_position, 1);
@@ -233,7 +233,7 @@ function updata_player_active_show() {
     let active_slots = P_Askill.get_active_slots();
     for (let i = 0; i < num; i++) {
         //
-        if (!isEmptyObject(active_slots[i])) {
+        if (!is_Empty_Object(active_slots[i])) {
             let skill_id = active_slots[i].id;
             let slot_num = active_slots[i].slot_num;
             //战斗界面，玩家主动技能展示框
@@ -274,93 +274,6 @@ function updata_player_active_time_bar() {
         }
     }
 }
-//更新战斗界面中的所有敌人
-function updata_enemy_show() {
-    let enemy_manage = global.get_enemy_manage();
-    let combat_place_enemys = enemy_manage.get_combat_place_enemys();
-    for (let place_x in combat_place_enemys) {
-        for (let place_y = 0; place_y < 9; place_y++) {
-            //获取战斗界面中的敌人框
-            let enemy_field = document.getElementById(place_x);
-            let enemy_slot = enemy_field.children[1].children[place_y];
-            let enemy_HP_bar = enemy_slot.querySelector('.enemy_HP_bar');
-            let enemy_attr_bar = enemy_slot.querySelector('.enemy_attr_bar');
-            let enemy_head = enemy_slot.querySelector('.enemy_head');
-            //获取敌人信息
-            let field = combat_place_enemys[place_x];
-            let enemy = field[place_y];
-            if (enemy.statu) {
-                //该敌人活着，更新相关信息
-                enemy_HP_bar.style.display = '';
-                enemy_HP_bar.children[0].children[0].style.width = enemy.get_HP_ratio();
-                enemy_attr_bar.style.display = '';
-                enemy_attr_bar.children[0].children[0].style.width = enemy.get_attack_ratio();
-                enemy_head.innerHTML = enemys[enemy.id].name;
-            } else {
-                //该敌人死了，清空相关信息
-                enemy_HP_bar.style.display = 'none';
-                enemy_attr_bar.style.display = 'none';
-                enemy_head.innerHTML = '';
-            }
-        }
-    }
-}
-//移动到id地点，并且更新相关界面
-function updata_game_dom() {
-    let place_manage = global.get_place_manage();
-    if (place_manage.is_need_change_place()) {
-        //需要前往新地点，更新相关内容
-        let next_place_type = place_manage.get_next_place_type();
-        if (next_place_type == 'normal' || next_place_type == 'NPC') {
-            updata_to_normal_place();
-        } else if (next_place_type == 'combat') {
-            updata_to_combat_place();
-        }
-        //  else if (next_place_type == 'NPC') {
-        // }
-        //在全局配置中更新地点
-        place_manage.goto_next_place();
-        // 获取玩家控制界面
-        let control = document.getElementById('control');
-        //展示新地点的内容
-        control.show_now_place();
-    }
-}
-//移动到新的普通地点，更新相关参数
-function updata_to_normal_place() {
-    let place_manage = global.get_place_manage();
-    let now_place_type = place_manage.get_now_place_type();
-    if (now_place_type == 'combat') {
-        //从战斗地点进入普通地点，执行转场
-        show_normal_game_div();
-        //退出战斗状态
-        let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('GS_combat_statu', false);
-    }
-}
-//移动到新的战斗地点，更新相关参数
-function updata_to_combat_place() {
-    // 前往新的战斗区域，要清除旧的战斗相关的信息
-    //清除旧敌人
-    let enemy_manage = global.get_enemy_manage();
-    enemy_manage.delete_all_enemy(); //清除战斗区域的怪物
-    enemy_manage.reset_enemy_data(); //重置刷怪参数
-    updata_enemy_show();
-    //玩家主动技能重置
-    let P_Askill = player.get_player_ASkill_Manage();
-    P_Askill.reset_round();
-
-    let place_manage = global.get_place_manage();
-    let now_place_type = place_manage.get_now_place_type();
-    if (now_place_type != 'combat') {
-        // if (now_place_type == 'normal' || now_place_type == 'NPC') {
-        //从非战斗地点进入战斗地点，执行转场
-        show_combat_game_div();
-        //进入战斗状态
-        let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('GS_combat_statu', true);
-    }
-}
 
 //玩家装备信息发生变动，更新相关界面
 function updata_player_EQP() {
@@ -393,10 +306,9 @@ export {
     updata_equipment_show,
     updata_attribute_show,
     updata_player_EQP,
-    updata_enemy_show,
+    // updata_enemy_show,
     updata_player_active_slots_num,
     updata_player_active_show,
     updata_player_active,
     updata_player_active_time_bar,
-    updata_game_dom,
 };

@@ -1,4 +1,4 @@
-import { isEmptyObject } from '../Function/Function.js';
+import { is_Empty_Object } from '../Function/Function.js';
 import { addElement } from '../Function/Dom_function.js';
 import { game_events } from '../Data/Game_event/Game_Event.js';
 import { enums } from '../Data/Enum/Enum.js';
@@ -252,7 +252,7 @@ export class Global_flag_manage {
             return;
         }
         let flag_value;
-        if (!isEmptyObject(this.short_game_status[flag_name])) {
+        if (!is_Empty_Object(this.short_game_status[flag_name])) {
             flag_value = this.short_game_status[flag_name].value;
             //原来设计，短期游戏状态只会保存1秒，然后希望只读一次用掉就不用了
             //这样可以实现在玩家达成某个特殊状态的时候，游戏界面可以监测到，给出反应

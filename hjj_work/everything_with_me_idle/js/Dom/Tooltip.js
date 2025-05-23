@@ -1,6 +1,6 @@
 import { crtElement, addElement, empty_dom } from '../Function/Dom_function.js';
 import { get_object_only_key } from '../Function/Get_func.js';
-import { isEmptyObject, attr_correct_handle } from '../Function/Function.js';
+import { is_Empty_Object, attr_correct_handle } from '../Function/Function.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
@@ -283,7 +283,7 @@ function init_active_skill_tip(show_slot_num) {
     // let active_skill = P_Askill.active_slots[show_slot_num];
     let id = P_Askill.active_slots[show_slot_num].id; //要展示的技能的id
     let slot_num = P_Askill.active_slots[show_slot_num].slot_num; //触发本次展示的，是要展示技能的第几个槽
-    if (isEmptyObject(P_skills[id])) {
+    if (is_Empty_Object(P_skills[id])) {
         //技能库没有相关内容，简单展示信息
         let name = addElement(Tooltip, 'div', null, 'lable_down');
         name.innerHTML = '未定义技能';
@@ -335,7 +335,7 @@ function show_active_skill_condition(slot_value_div, active_skill) {
     let slot_num = active_skill.slot_num;
 
     let condition_name_div = addElement(slot_value_div, 'div', null, 'lable_down');
-    if (isEmptyObject(active_skill.active_condition)) {
+    if (is_Empty_Object(active_skill.active_condition)) {
         //没有设定限制条件，默认为允许执行
         condition_name_div.innerHTML = '限制条件：无';
     } else {
@@ -350,7 +350,7 @@ function show_active_skill_condition(slot_value_div, active_skill) {
                 //武器类型限制
                 C_desc_div.innerHTML = '装备了';
                 let AC_WT = active_skill.active_condition.weapon_type;
-                if (isEmptyObject(AC_WT)) {
+                if (is_Empty_Object(AC_WT)) {
                     C_desc_div.innerHTML += '未设定';
                     console.log(`没设定${id}技能的武器类型限制条件`);
                 } else {
@@ -417,7 +417,7 @@ function init_show_active_skill_tip(skill_id) {
     // let active_skill = P_Askill.active_slots[show_slot_num];
     // let id = P_Askill.active_slots[show_slot_num].id; //要展示的技能的id
     // let slot_num = P_Askill.active_slots[show_slot_num].slot_num; //触发本次展示的，是要展示技能的第几个槽
-    if (isEmptyObject(P_skills[skill_id])) {
+    if (is_Empty_Object(P_skills[skill_id])) {
         //技能库没有相关内容，简单展示信息
         let name = addElement(Tooltip, 'div', null, 'lable_down');
         name.innerHTML = '未定义技能';

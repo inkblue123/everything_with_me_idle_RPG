@@ -1,10 +1,12 @@
+import { is_Empty_Object } from '../Function/Function.js';
+
 //帧率和时间库
 export class Time_manage {
     constructor() {
         //真实时间，取自Date.now()
         this.FPS;
         this.FPS_ms; //帧率对应的每次运行间隔时间，毫秒
-        this.now_time; //当前时间
+        this.now_time; //当前真实时间
         this.start_time; //一帧开始时间
         this.last_start_time; //上一帧开始时间
         this.end_time; //一帧结束时间
@@ -36,7 +38,6 @@ export class Time_manage {
     set_game_speed(game_speed) {
         this.game_speed = game_speed;
     }
-
     //一帧开始，更新相关时间
     updata_FPS_start() {
         //更新真实时间
@@ -135,5 +136,19 @@ export class Time_manage {
     //获取游戏日期
     get_game_date() {
         return this.game_date;
+    }
+    //获取时间类部分的游戏存档
+    save_Time_class() {
+        let Time_save = new Object();
+        Time_save.game_date = this.game_date; //当前游戏日期
+        return Time_save;
+    }
+    //加载时间类的游戏存档
+    load_Time_class(Time_save) {
+        if (is_Empty_Object(Time_save)) {
+            return;
+        }
+        this.game_date = Time_save.game_date; //当前游戏日期
+        this.show_game_date();
     }
 }

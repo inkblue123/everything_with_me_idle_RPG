@@ -74,6 +74,7 @@ function init_mini_event(game_events) {
     game_events[id].set_new_process('process3', 'text16');
     game_events[id].add_process_button('process3', 'b9', 'text0');
     game_events[id].add_process_button_click('process3', 'b9', 'next_process', 'process4');
+    game_events[id].add_process_button_thing('process3', 'b9', 'set_player_attr', 'health_point', 100);
     game_events[id].set_new_process('process4', 'text17');
     game_events[id].add_process_button('process4', 'b10', 'text18');
     game_events[id].add_process_button_click('process4', 'b10', 'next_process', 'process5');

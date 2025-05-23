@@ -367,12 +367,17 @@ export class Enemy_manage {
     }
     //清空所有敌人
     delete_all_enemy() {
+        //清除目前的敌人参数
         for (let place_x in this.combat_place_enemys) {
             let field = this.combat_place_enemys[place_x];
             for (let place_y = 0; place_y < 9; place_y++) {
                 field[place_y] = new place_enemy(0);
             }
         }
+        //重置刷怪参数
+        this.reset_enemy_data();
+        //更新战斗界面中的所有敌人，把界面上的敌人清空
+        this.updata_enemy_show();
     }
     //游戏运行一帧，计算敌人的主动技能部分
     run_enemy_active_skill() {
@@ -384,6 +389,38 @@ export class Enemy_manage {
                 if (field[place_y].statu) {
                     //更新活着的敌人的主动技能
                     field[place_y].run_active_skill(this.now_time);
+                }
+            }
+        }
+    }
+
+    //更新战斗界面中的所有敌人
+    updata_enemy_show() {
+        // let enemy_manage = global.get_enemy_manage();
+        let combat_place_enemys = this.get_combat_place_enemys();
+        for (let place_x in combat_place_enemys) {
+            for (let place_y = 0; place_y < 9; place_y++) {
+                //获取战斗界面中的敌人框
+                let enemy_field = document.getElementById(place_x);
+                let enemy_slot = enemy_field.children[1].children[place_y];
+                let enemy_HP_bar = enemy_slot.querySelector('.enemy_HP_bar');
+                let enemy_attr_bar = enemy_slot.querySelector('.enemy_attr_bar');
+                let enemy_head = enemy_slot.querySelector('.enemy_head');
+                //获取敌人信息
+                let field = combat_place_enemys[place_x];
+                let enemy = field[place_y];
+                if (enemy.statu) {
+                    //该敌人活着，更新相关信息
+                    enemy_HP_bar.style.display = '';
+                    enemy_HP_bar.children[0].children[0].style.width = enemy.get_HP_ratio();
+                    enemy_attr_bar.style.display = '';
+                    enemy_attr_bar.children[0].children[0].style.width = enemy.get_attack_ratio();
+                    enemy_head.innerHTML = enemys[enemy.id].name;
+                } else {
+                    //该敌人死了，清空相关信息
+                    enemy_HP_bar.style.display = 'none';
+                    enemy_attr_bar.style.display = 'none';
+                    enemy_head.innerHTML = '';
                 }
             }
         }

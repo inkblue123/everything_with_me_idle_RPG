@@ -1,8 +1,5 @@
 import { player } from '../Player/Player.js';
 import { global } from './global_class.js';
-import { places } from '../Data/Place/Place.js';
-import { texts } from '../Data/Text/Text.js';
-import { addElement } from '../Function/Dom_function.js';
 import {} from '../Function/Get_func.js';
 import {
     updata_HP,
@@ -10,18 +7,15 @@ import {
     updata_ENP,
     updata_attribute_show,
     updata_player_name,
-    updata_enemy_show,
+    // updata_enemy_show,
     updata_player_active_time_bar,
-    updata_game_dom,
 } from '../Function/Updata_func.js';
-import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 
 function state_game() {
     let Time_manage = global.get_time_manage();
     Time_manage.updata_FPS_start();
 
     //更新需要变动的游戏界面
-    updata_game_dom();
     //更新战斗内容
     if (global.get_combat_statu()) {
         updata_combat();
@@ -50,10 +44,6 @@ function updata_game_data() {
     if (global_flag_manage.get_game_status('GS_combat_statu')) {
         updata_enemy_show();
     }
-    // if (global_flag_manage.get_game_status('GS_game_event')) {
-    //     let game_event_manage = global.get_game_event_manage();
-    //     game_event_manage.updata_game_event();
-    // }
     global_flag_manage.updata_short_game_status();
     global_flag_manage.updata_new_game_log_status();
 }
