@@ -4,6 +4,7 @@ import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { E_skills } from '../Data/Skill/Skill.js';
 import { get_random, get_random_enemy_distance, Attack_effect_algorithm } from '../Function/math_func.js';
+import { is_Empty_Object } from '../Function/Function.js';
 
 //场地内的敌人对象
 class place_enemy {
@@ -27,11 +28,10 @@ class place_enemy {
         this.now_active_id; //当前要执行的主动技能id
         this.now_active_stage; //当前执行主动技能的第几个阶段
         this.now_skill_attack_speed; //当前执行的主动技能当前阶段的时长
-        this.enemy_Attack_effect = new Attack_effect();
     }
     //初始化敌人
     init() {
-        if (enemys[this.id]) {
+        if (!is_Empty_Object(enemys[this.id])) {
             this.combat_attack_attr = JSON.parse(JSON.stringify(enemys[this.id].attack_attr));
             this.combat_defense_attr = JSON.parse(JSON.stringify(enemys[this.id].defense_attr));
             this.combat_survival_attr = JSON.parse(JSON.stringify(enemys[this.id].survival_attr));
@@ -49,6 +49,23 @@ class place_enemy {
             return false;
         }
     }
+    //使用存档文件中的拷贝初始化
+    save_init(save_enemy) {
+        this.statu = true;
+        this.combat_attack_attr = save_enemy.combat_attack_attr;
+        this.combat_defense_attr = save_enemy.combat_defense_attr;
+        this.combat_survival_attr = save_enemy.combat_survival_attr;
+        this.health_point = save_enemy.health_point;
+        this.attack_point = save_enemy.attack_point;
+        this.distance = save_enemy.distance;
+        this.now_skill_attack_speed = save_enemy.now_skill_attack_speed;
+        this.now_active_id = save_enemy.now_active_id;
+        this.now_active_stage = 0;
+
+        let save_now_time = global.get_now_time();
+        this.last_attack_time = save_enemy.last_attack_time + save_now_time - save_enemy.now_time;
+        this.now_time = save_now_time;
+    }
     //获取当前血条比例
     get_HP_ratio() {
         return `${(this.health_point / this.combat_survival_attr['health_max']) * 100}%`;
@@ -60,7 +77,7 @@ class place_enemy {
     //获取当前要执行的主动技能的攻击速度
     get_active_skill_attack_speed() {
         let skill_attack_speed;
-        if (!E_skills[this.now_active_id]) {
+        if (is_Empty_Object(E_skills[this.now_active_id])) {
             //未定义的敌人技能，改成普通攻击
             this.now_active_id = 'normal_attack';
             console.log(`敌人技能库中未定义${this.now_active_id}技能`);
@@ -77,11 +94,10 @@ class place_enemy {
     }
     //随机获取下一个要执行的主动技能
     set_next_active() {
-        if (!enemys[this.id]) {
+        if (is_Empty_Object(enemys[this.id])) {
             //敌人数据库中不存在该敌人，重置成普通敌人
             console.log(`${this.id}敌人未知，重置成普通敌人`);
             this.id = 'Training_Dummy';
-            // return false;
         }
         let skill_num = enemys[this.id].active_skill.length;
         this.now_active_id = enemys[this.id].active_skill[get_random(0, skill_num - 1)];
@@ -122,21 +138,21 @@ class place_enemy {
         let stage = this.now_active_stage;
         let E_SK = E_skills[id];
 
+        let enemy_Attack_effect = new Attack_effect();
         //伤害类型
-        this.enemy_Attack_effect.damage_type = E_SK.effect[stage].damage_type;
+        enemy_Attack_effect.damage_type = E_SK.effect[stage].damage_type;
         //攻击次数
         if (E_SK.effect[stage].attack_num.type == 'add') {
-            this.enemy_Attack_effect.attack_num += E_SK.effect[stage].attack_num.num;
+            enemy_Attack_effect.attack_num += E_SK.effect[stage].attack_num.num;
         } else if (E_SK.effect[stage].attack_num.type == 'fixed') {
-            this.enemy_Attack_effect.attack_num = E_SK.effect[stage].attack_num.num;
+            enemy_Attack_effect.attack_num = E_SK.effect[stage].attack_num.num;
         }
 
         //计算主动技能需要的敌人属性
         let askill_base_attr = this.combat_attack_attr['attack'];
         //计算主动技能应该得到的效果
         let algorithm = E_SK.algorithm[stage];
-        Attack_effect_algorithm(algorithm, askill_base_attr, this.enemy_Attack_effect);
-        // Askill_algorithm(askill_base_attr, this.enemy_Attack_effect);
+        Attack_effect_algorithm(algorithm, askill_base_attr, enemy_Attack_effect);
 
         //根据主动技能类型，产生这次效果
         if (E_SK.active_type[stage] == 'attack') {
@@ -146,13 +162,9 @@ class place_enemy {
             E_Attack.id = this.id;
             E_Attack.place_x = this.place_x;
             E_Attack.place_y = this.place_y;
-            E_Attack.main_Attack = this.enemy_Attack_effect;
+            E_Attack.main_Attack = enemy_Attack_effect;
             combat_manage.set_enemy_next_attack(E_Attack);
-            this.reset_enemy_Attack_effect();
         }
-    }
-    reset_enemy_Attack_effect() {
-        this.enemy_Attack_effect = new Attack_effect();
     }
     //敌人一回合结束，结算相关内容
     reset_round() {
@@ -196,7 +208,9 @@ export class Enemy_manage {
         for (let key in this.combat_place_enemys) {
             let field = this.combat_place_enemys[key];
             for (let i = 0; i < 9; i++) {
-                let enemy = new place_enemy(0);
+                let enemy = new Object();
+                // let enemy = new place_enemy(0);
+
                 field.push(enemy);
             }
         }
@@ -216,7 +230,8 @@ export class Enemy_manage {
         for (let key in this.combat_place_enemys) {
             let field = this.combat_place_enemys[key];
             for (let i = 0; i < 9; i++) {
-                if (field[i].statu) {
+                if (this.judge_enemy_live(field[i])) {
+                    // if (field[i].statu) {
                     if (!enemy_id) {
                         //如果没指定敌人id，获取全部敌人的数量
                         enemy_num++;
@@ -286,8 +301,9 @@ export class Enemy_manage {
         }
 
         let raw_enemy = this.combat_place_enemys[place_x][place_y];
-        if (raw_enemy.statu == true) {
-            //位置已被占据，此次刷怪中止
+        if (this.judge_enemy_live(raw_enemy)) {
+            // if (!is_Empty_Object(raw_enemy) && raw_enemy.statu == true) {
+            //如果这个位置有一个活着的敌人，此次刷怪中止
             return false;
         }
 
@@ -337,6 +353,15 @@ export class Enemy_manage {
         }
         return true;
     }
+    //判断一个位置的敌人是否存活
+    judge_enemy_live(enemy) {
+        if (enemy == undefined) return false;
+        if (is_Empty_Object(enemy)) return false;
+        if (enemy.statu == true) {
+            return true;
+        }
+        return false;
+    }
     //在指定位置刷出一个敌人
     add_enemy(place_x, place_y, enemy_id) {
         if (place_x != 'little_distance' && place_x != 'middle_distance' && place_x != 'remote_distance') {
@@ -357,7 +382,8 @@ export class Enemy_manage {
         for (let key in this.combat_place_enemys) {
             let field = this.combat_place_enemys[key];
             for (let i = 0; i < 9; i++) {
-                if (field[i].statu) {
+                if (this.judge_enemy_live(field[i])) {
+                    // if (field[i].statu) {
                     enemys.push(field[i]);
                 }
             }
@@ -371,7 +397,8 @@ export class Enemy_manage {
         for (let place_x in this.combat_place_enemys) {
             let field = this.combat_place_enemys[place_x];
             for (let place_y = 0; place_y < 9; place_y++) {
-                field[place_y] = new place_enemy(0);
+                field[place_y] = new Object();
+                // field[place_y] = new place_enemy(0);
             }
         }
         //重置刷怪参数
@@ -386,7 +413,8 @@ export class Enemy_manage {
         for (let place_x in this.combat_place_enemys) {
             let field = this.combat_place_enemys[place_x];
             for (let place_y = 0; place_y < 9; place_y++) {
-                if (field[place_y].statu) {
+                // if (field[place_y].statu) {
+                if (this.judge_enemy_live(field[place_y])) {
                     //更新活着的敌人的主动技能
                     field[place_y].run_active_skill(this.now_time);
                 }
@@ -409,7 +437,8 @@ export class Enemy_manage {
                 //获取敌人信息
                 let field = combat_place_enemys[place_x];
                 let enemy = field[place_y];
-                if (enemy.statu) {
+                if (this.judge_enemy_live(enemy)) {
+                    // if (enemy.statu) {
                     //该敌人活着，更新相关信息
                     enemy_HP_bar.style.display = '';
                     enemy_HP_bar.children[0].children[0].style.width = enemy.get_HP_ratio();
@@ -424,5 +453,30 @@ export class Enemy_manage {
                 }
             }
         }
+    }
+    //获取敌人类部分的游戏存档
+    save_enemy_class() {
+        let enemy_save = new Object();
+        enemy_save.combat_place_enemys = this.combat_place_enemys; //当前地点内的敌人
+        return enemy_save;
+    }
+    //加载敌人类的游戏存档
+    load_enemy_class(enemy_save) {
+        if (is_Empty_Object(enemy_save)) {
+            return;
+        }
+        for (let key in this.combat_place_enemys) {
+            let field = this.combat_place_enemys[key];
+            let save_field = enemy_save.combat_place_enemys[key];
+            for (let i = 0; i < 9; i++) {
+                if (this.judge_enemy_live(save_field[i])) {
+                    let enemy_id = save_field[i].id;
+                    field[i] = new place_enemy(enemy_id);
+                    field[i].save_init(save_field[i]);
+                }
+            }
+        }
+        // this.combat_place_enemys = enemy_save.combat_place_enemys;
+        this.reset_enemy_data(); //重置刷怪时间
     }
 }

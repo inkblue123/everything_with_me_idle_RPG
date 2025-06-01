@@ -1,7 +1,9 @@
 import { is_Empty_Object } from '../Function/Function.js';
+import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 
 import { places } from '../Data/Place/Place.js';
 import { global } from './global_class.js';
+import { player } from '../Player/Player.js';
 // import { updata_to_normal_place, updata_to_combat_place } from '../Function/Updata_func.js';
 //记录地点相关内容的对象
 export class Place_manage {
@@ -14,9 +16,9 @@ export class Place_manage {
     //移动到新地点，更新相关参数
     set_now_place(next_place) {
         //新地点就是当前地点，不需要移动
-        if (next_place == this.now_place) {
-            return;
-        }
+        // if (next_place == this.now_place) {
+        //     return;
+        // }
 
         //移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
         let next_place_type = places[next_place].type;
@@ -44,9 +46,9 @@ export class Place_manage {
     //迷你事件中移动玩家位置，由于控制界面主要用来呈现迷你事件的按钮，所以仅更新参数，不更新控制界面
     goto_mini_event_new_place(next_place) {
         //新地点就是当前地点，不需要移动
-        if (next_place == this.now_place) {
-            return;
-        }
+        // if (next_place == this.now_place) {
+        //     return;
+        // }
 
         //移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
         let next_place_type = places[next_place].type;
@@ -85,22 +87,22 @@ export class Place_manage {
         return this.last_normal_place;
     }
 
-    //获取时间类部分的游戏存档
+    //获取地点类部分的游戏存档
     save_place_class() {
         let place_save = new Object();
         place_save.now_place = this.now_place; //当前地点
-        // place_save.last_place = this.last_place; //上次地点
-        // place_save.last_normal_place = this.last_normal_place; //上一个安全的地点
+        place_save.last_normal_place = this.last_normal_place; //上次安全地点
+
         return place_save;
     }
-    //加载时间类的游戏存档
+    //加载地点类的游戏存档
     load_place_class(place_save) {
         if (is_Empty_Object(place_save)) {
             return;
         }
-        // this.now_place = place_save.now_place; //当前地点
-        // this.last_place = place_save.last_place; //上次地点
-        // this.last_normal_place = place_save.last_normal_place; //上一个安全的地点
+        //上次安全地点，放在上面替换掉当前地点，在之后进入存档的地点时就会正常填入上次安全地点
+        this.now_place = place_save.last_normal_place;
+        //如果地点有进入门槛，读档的时候就不能再收门槛了，可能这个接口要换成无条件进入
         this.set_now_place(place_save.now_place);
     }
 }

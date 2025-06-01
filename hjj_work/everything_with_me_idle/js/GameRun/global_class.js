@@ -16,8 +16,8 @@ class Global {
         this.random_manage; //随机数管理类
         this.combat_manage; //战斗管理类
         this.exp_manage; //技能经验管理类
-        this.game_event_manage; //全局标记管理类
-        this.global_flag_manage; //全局标记管理类
+        this.game_event_manage; //游戏事件管理类
+        this.global_flag_manage; //游戏状态管理类
     }
     init() {
         //获取配置
@@ -98,12 +98,28 @@ class Global {
     set_conbat_player_attack(player_Attack_effect) {
         this.combat_manage.set_player_next_attack(player_Attack_effect);
     }
-    //游戏运行一帧，计算其他全局内容
+    //游戏运行一帧，计算全局内容
     run_game_FPS() {
-        //敌人主动技能
-        this.enemy_manage.run_enemy_active_skill();
-        //玩家被动技能
-        //玩家临时buff
+        if (this.get_combat_statu()) {
+            //当前处于战斗状态，这一帧需要计算战斗的情况
+            //敌人主动技能
+            this.enemy_manage.run_enemy_active_skill();
+            //进行战斗
+            this.combat_manage.run_combat();
+
+            //刷出新怪
+            this.add_new_enemy();
+            //战斗界面敌人ui更新
+            this.enemy_manage.updata_enemy_show();
+
+            //战斗经验结算
+            this.exp_manage.set_leveling_behavior();
+            this.exp_manage.player_get_exp();
+        }
+
+        //更新游戏信息
+        this.global_flag_manage.updata_short_game_status();
+        this.global_flag_manage.updata_new_game_log_status();
     }
     //获取游戏标记
     get_flag(flag_name) {
@@ -118,14 +134,31 @@ class Global {
         //获取每个子对象的存档
         //时间类
         global_save.Time_save = this.time_manage.save_Time_class();
+        //地点类
         global_save.place_save = this.place_manage.save_place_class();
+        //游戏状态类
+        global_save.global_flag_save = this.global_flag_manage.save_global_flag_class();
+        //敌人类
+        global_save.enemy_save = this.enemy_manage.save_enemy_class();
+
+        //游戏事件管理类
+        global_save.game_event_save = this.game_event_manage.save_Game_event_class();
+        //还没有开发需要用到重要随机数的内容，随机数类目前基本没用
+        // this.random_manage; //随机数管理类
+        //目前战斗管理类只是负责记录参数进行运算的平台，并没有需要保存的信息
+        // this.combat_manage; //战斗管理类
+        //经验管理类和战斗管理类相似，目前只是记一下数据，然后在同一帧里马上计算，所以也不需要处理
+        // this.exp_manage; //技能经验管理类
 
         return global_save;
     }
     //加载游戏存档
     load_global_class(global_save) {
         this.time_manage.load_Time_class(global_save.Time_save);
+        this.global_flag_manage.load_global_flag_class(global_save.global_flag_save);
+        this.game_event_manage.load_Game_event_class(global_save.game_event_save);
         this.place_manage.load_place_class(global_save.place_save);
+        this.enemy_manage.load_enemy_class(global_save.enemy_save);
     }
 }
 //记录全局参数和游戏状态的对象

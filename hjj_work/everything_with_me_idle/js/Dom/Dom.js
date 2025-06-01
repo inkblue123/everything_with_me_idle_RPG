@@ -6,7 +6,7 @@ import { global } from '../GameRun/global_class.js';
 import { player_status } from './Player_status.js';
 import { Combat_plan } from './Combat_plan.js';
 import { Option } from './Option.js';
-import { Tooltip } from './Tooltip.js';
+import { Tooltip } from './Tooltip/Tooltip.js';
 import { Control } from './Control.js';
 import { Combat } from './Combat.js';
 import { Game_log } from './Game_log.js';

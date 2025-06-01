@@ -1,4 +1,4 @@
-import { load_game } from './LoadAndSave/load.js';
+import { init_game } from './LoadAndSave/load.js';
 import { state_game } from './GameRun/run_manage.js';
 import { game_data_init } from './Data/Data.js';
 import { game_dom_init } from './Dom/Dom.js';
@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
     dom.init();
 
     //开始存档加载，解读存档数据中获取信息，初始化玩家数据、配置数据等等
-    load_game();
+    init_game();
 
     //启动第四个类，游戏运行类，
     //负责按帧计算游戏内的数据，每帧更新一次游戏各个界面

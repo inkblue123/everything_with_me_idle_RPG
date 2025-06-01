@@ -125,21 +125,21 @@ export class Global_flag_manage {
     }
     init() {
         //读取数据库中的事件
-        for (let event_id in game_events) {
-            //
-            if (game_events[event_id].type == 'page') {
-                this.important_nodes.page[event_id] = false;
-            }
-            if (game_events[event_id].type == 'challenge') {
-                this.important_nodes.challenge[event_id] = false;
-            }
-            if (game_events[event_id].type == 'achievement') {
-                this.important_nodes.achievement[event_id] = false;
-            }
-            if (game_events[event_id].type == 'mini_event') {
-                this.important_nodes.mini_event[event_id] = false;
-            }
-        }
+        // for (let event_id in game_events) {
+        //     //
+        //     if (game_events[event_id].type == 'page') {
+        //         this.important_nodes.page[event_id] = false;
+        //     }
+        //     if (game_events[event_id].type == 'challenge') {
+        //         this.important_nodes.challenge[event_id] = false;
+        //     }
+        //     if (game_events[event_id].type == 'achievement') {
+        //         this.important_nodes.achievement[event_id] = false;
+        //     }
+        //     if (game_events[event_id].type == 'mini_event') {
+        //         this.important_nodes.mini_event[event_id] = false;
+        //     }
+        // }
         //初始化游戏状态参数
         for (let id of enums['game_status']) {
             this.game_status[id] = false;
@@ -150,6 +150,25 @@ export class Global_flag_manage {
         this.game_log_status.item_log = new CircularQueue(10);
         this.game_log_status.other_log = new CircularQueue(10);
         this.game_log_status.new_log = new CircularQueue(10);
+    }
+    //获取游戏标记类的游戏存档
+    save_global_flag_class() {
+        let global_flag_save = new Object();
+        global_flag_save.game_status = this.game_status; //游戏状态标记
+        global_flag_save.important_nodes = this.important_nodes; //游戏状态标记
+        return global_flag_save;
+    }
+    //加载游戏标记类的游戏存档
+    load_global_flag_class(global_flag_save) {
+        if (is_Empty_Object(global_flag_save)) {
+            return;
+        }
+
+        this.game_status = global_flag_save.game_status;
+        this.important_nodes = global_flag_save.important_nodes;
+        //清除原本日志
+        let RA_value_div = document.getElementById('RA_value_div');
+        RA_value_div.replaceChildren();
     }
     get_flag(flag_name) {
         let flag_type = this.get_flag_type(flag_name);
@@ -162,6 +181,10 @@ export class Global_flag_manage {
             let flag_obj = this.get_flag_obj(flag_type);
             flag_value = flag_obj[flag_name];
         }
+        if (flag_value == undefined) {
+            flag_value = false;
+        }
+
         return flag_value;
     }
     get_flag_type(id) {
@@ -301,7 +324,7 @@ export class Global_flag_manage {
         let time_manage = global.get_time_manage();
         let game_date = time_manage.get_game_date();
         let all_day = game_date.year * 360 + game_date.month * 30 + game_date.day;
-        // all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
+        all_day -= 1; //初始日期2025.4.1是周二，在这里重置成周一
         // all_day += 1; //初始日期2025.4.1是周二，在这里重置成周三
         return (all_day % 5) + 1;
     }

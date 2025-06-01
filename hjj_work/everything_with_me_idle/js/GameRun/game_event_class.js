@@ -12,11 +12,12 @@ export class Game_event_manage {
     constructor() {}
     init() {
         this.now_event_id = null; //当前进行的事件id
-        this.event_start_place; //当前进行的事件的启动地点
+        this.event_start_place = null; //当前进行的事件的启动地点
         this.monitor_data = new Object(); //需要监控的行为的监控数值
         this.monitor_target = new Object(); //需要监控的行为以及目标数值
         this.mini_event_button_flag = new Object(); //迷你事件的按键情况记录
     }
+
     //启动一个游戏事件，激活相关接口
     start_game_event(event_id) {
         //异常处理
@@ -45,14 +46,13 @@ export class Game_event_manage {
         //启动事件游戏参数监测
         this.set_monitor_target(game_events[event_id].finish_condition);
         //将监测情况展示到脑海-重要事件界面中
-        this.init_IE_div(event_id);
+        this.init_IE_div();
 
         //如果有事件起始地点，则移动过去
         if (game_events[event_id].place) {
             let place_manage = global.get_place_manage();
             this.event_start_place = place_manage.get_now_place();
 
-            // place_manage.set_event_start_place(now_place);
             place_manage.set_now_place(game_events[event_id].place);
         }
     }
@@ -81,6 +81,10 @@ export class Game_event_manage {
     }
     //结束当前游戏事件
     end_game_event(flag) {
+        let global_flag_manage = global.get_global_flag_manage();
+        //关闭事件状态
+        global_flag_manage.set_game_status('GS_game_event', false);
+
         if (flag == 'finish') {
             //当前事件正常完成
             let finish_reward = game_events[this.now_event_id].finish_reward;
@@ -104,7 +108,6 @@ export class Game_event_manage {
         //     //当前事件是玩家中断退出
         // }
         //事件退出原因设置
-        let global_flag_manage = global.get_global_flag_manage();
         let SGS_flag_name = 'SGS_' + this.now_event_id;
         global_flag_manage.set_short_game_status(SGS_flag_name, flag);
 
@@ -116,9 +119,7 @@ export class Game_event_manage {
 
         //清除数据
         this.reset_monitor_data();
-        //关闭事件状态
-        // let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('GS_game_event', false);
+
         //更新脑海-重要事件界面
         this.init_IE_div();
     }
@@ -365,8 +366,9 @@ export class Game_event_manage {
         place_manage.set_now_place(now_place_id);
     }
     //初始化脑海-重要事件界面的信息
-    init_IE_div(event_id) {
-        if (this.now_event_id == null) {
+    init_IE_div() {
+        let event_id = this.now_event_id;
+        if (event_id == null) {
             this.reset_IE_div();
         } else if (game_events[event_id].type == 'challenge') {
             let IE_value_div = document.getElementById('IE_value_div');
@@ -387,6 +389,10 @@ export class Game_event_manage {
     }
     //更新脑海-重要事件界面的信息
     updata_IE_div() {
+        //当前没有事件，不需要更新
+        if (this.now_event_id == null) {
+            return;
+        }
         let IE_value_div = document.getElementById('IE_value_div');
         let IE_monitor_data_div = IE_value_div.children[1];
         for (let i = 0; i < IE_monitor_data_div.children.length; i++) {
@@ -420,5 +426,33 @@ export class Game_event_manage {
         }
         this.end_game_event('finish');
         // this.monitor_data = this.monitor_target;
+    }
+    //获取游戏事件类部分的游戏存档
+    save_Game_event_class() {
+        let game_event_save = new Object();
+
+        game_event_save.now_event_id = this.now_event_id; //当前事件
+        game_event_save.event_start_place = this.event_start_place; //当前进行的事件的启动地点
+        game_event_save.monitor_data = this.monitor_data; //需要监控的行为的监控数值
+
+        return game_event_save;
+    }
+    //加载游戏事件类的游戏存档
+    load_Game_event_class(game_event_save) {
+        if (is_Empty_Object(game_event_save)) {
+            return;
+        }
+        this.now_event_id = game_event_save.now_event_id; //当前事件
+        if (this.now_event_id == null) {
+            //存档中没有正在进行的事件
+        } else {
+            //继承存档中正在进行的事件进度
+            this.event_start_place = game_event_save.event_start_place; //当前进行的事件的启动地点
+            this.monitor_data = game_event_save.monitor_data; //需要监控的行为的监控数值
+            this.set_monitor_target(game_events[this.now_event_id].finish_condition); //需要监控的行为以及目标数值
+        }
+        //加载右下角的重要事件界面
+        this.init_IE_div();
+        this.updata_IE_div();
     }
 }

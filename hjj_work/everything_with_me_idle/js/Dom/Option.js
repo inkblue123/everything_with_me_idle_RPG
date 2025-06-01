@@ -3,7 +3,7 @@ import { updata_BP_value } from '../Function/Updata_func.js';
 import { printf_play_item } from '../Function/Function.js';
 import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 import { get_UGS_BP_weight } from '../Function/Get_func.js';
-import { save_game } from '../LoadAndSave/load.js';
+import { save_game, delete_save, load_save } from '../LoadAndSave/load.js';
 import { player } from '../Player/Player.js';
 import { global } from '../GameRun/global_class.js';
 
@@ -54,6 +54,16 @@ var Option = crtElement('div', null, 'option_page', '');
     button5.innerHTML = '存档';
     button5.onclick = function () {
         save_game();
+    };
+    let button6 = addElement(Option, 'button');
+    button6.innerHTML = '清空存档';
+    button6.onclick = function () {
+        delete_save();
+    };
+    let button7 = addElement(Option, 'button');
+    button7.innerHTML = '导入存档';
+    button7.onclick = function () {
+        load_save();
     };
 
     // var button3 = addElement(Option, 'button');

@@ -1,4 +1,4 @@
-import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
+import { crtElement, addElement } from '../Function/Dom_function.js';
 import { is_Empty_Object } from '../Function/Function.js';
 
 var Combat = crtElement('div', 'combat', null, '');
