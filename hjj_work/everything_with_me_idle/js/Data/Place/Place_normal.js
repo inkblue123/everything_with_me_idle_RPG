@@ -18,8 +18,8 @@ function init_Place_normal(places) {
     add_normal_Place(places, id, 'village');
     places[id].add_other_normal_place('village_home', 'village_barracks', 'village_hospital');
     places[id].condition_connected_place = {
-        // village_market: ['finish_page_1'], //完成第一章才允许进入集市
-        // village_outside_mountain: ['finish_page_1'], //完成第一章才允许进入村外后山
+        // village_market: ['finish_main_quest_1'], //完成第一章才允许进入集市
+        // village_outside_mountain: ['finish_main_quest_1'], //完成第一章才允许进入村外后山
     };
 
     id = 'village_market'; //村庄集市

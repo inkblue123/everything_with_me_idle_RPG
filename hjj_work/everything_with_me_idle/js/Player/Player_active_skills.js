@@ -1,11 +1,12 @@
 'use strict';
-import { P_skills, B_skills } from '../Data/Skill/Skill.js';
-import { enums } from '../Data/Enum/Enum.js';
+import { get_Askill_base_attr, Attack_effect_algorithm, Defense_effect_algorithm } from '../Function/math_func.js';
+import { is_Empty_Object } from '../Function/Function.js';
+import { updata_player_active } from '../Function/Updata_func.js';
+import { get_object_only_key } from '../Function/Get_func.js';
 import { Attack_effect, Defense_effect } from '../GameRun/combat_class.js';
 import { global } from '../GameRun/global_class.js';
-import { is_Empty_Object } from '../Function/Function.js';
-import { get_Askill_base_attr, Attack_effect_algorithm, Defense_effect_algorithm } from '../Function/math_func.js';
-import { get_object_only_key } from '../Function/Get_func.js';
+import { enums } from '../Data/Enum/Enum.js';
+import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 
 const MAX_slot_num = 9;
 const MIN_slot_num = 3;
@@ -47,7 +48,7 @@ export class Player_active_skills_Manage {
         this.now_run_slot = 0; //当前帧运行到了哪个槽
         this.new_slot_flag = true; //当前帧有没有运行到一个新槽
         this.now_run_slot_time = 0; //当前运行到的槽运行了多久时间
-        this.continue_skill_falg = true; //当前槽的技能如果是持续激活技能，是否满足激活条件
+        this.continue_skill_flag = true; //当前槽的技能如果是持续激活技能，是否满足激活条件
         this.any_slot_time = new Array(); //每个槽的技能需要运行的时间
 
         this.player_end_attr = new Object(); //玩家最终属性拷贝，方便调用
@@ -69,6 +70,40 @@ export class Player_active_skills_Manage {
         }
         this.now_time = global.get_game_now_time();
         this.reset_round();
+    }
+    //获取玩家主动技能部分的游戏存档
+    save_Player_ASkills_manage() {
+        let Player_ASkills_manage_save = new Object();
+        Player_ASkills_manage_save.active_slot_num = this.active_slot_num; //主动技能槽数量
+        Player_ASkills_manage_save.active_slots = new Array(); //主动技能槽内容
+        for (let i = 0; i < this.active_slot_num; i++) {
+            let slot_skill = new Object();
+            if (!is_Empty_Object(this.active_slots[i])) {
+                slot_skill.id = this.active_slots[i].id;
+                slot_skill.slot_num = this.active_slots[i].slot_num;
+            }
+            Player_ASkills_manage_save.active_slots.push(slot_skill);
+        }
+        return Player_ASkills_manage_save;
+    }
+    //加载玩家主动技能部分的游戏存档
+    load_Player_ASkills_manage(Player_ASkills_manage_save) {
+        if (is_Empty_Object(Player_ASkills_manage_save)) {
+            return;
+        }
+        //普通参数
+        this.active_slot_num = Player_ASkills_manage_save.active_slot_num;
+        //每个主动技能槽里的技能，
+        for (let i = 0; i < this.active_slot_num; i++) {
+            if (is_Empty_Object(Player_ASkills_manage_save.active_slots[i])) {
+                continue;
+            }
+            let id = Player_ASkills_manage_save.active_slots[i].id;
+            this.active_slots[i] = new Player_active_skill(id);
+            this.active_slots[i].slot_num = Player_ASkills_manage_save.active_slots[i].slot_num;
+            this.active_slots[i].init_active_skill_data();
+        }
+        updata_player_active();
     }
     //新增一个槽位
     add_slot() {
@@ -173,7 +208,7 @@ export class Player_active_skills_Manage {
         }
         if (last_slot != now_run_slot) {
             this.new_slot_flag = true;
-            this.continue_skill_falg = true;
+            this.continue_skill_flag = true;
         }
         this.now_run_slot = now_run_slot; //当前运行到了哪个槽
         this.now_run_slot_time = now_run_slot_time; //当前运行到的槽运行了多久时间
@@ -219,7 +254,7 @@ export class Player_active_skills_Manage {
         this.now_round_time = 0;
         this.now_run_slot = 0;
         this.new_slot_flag = true;
-        this.continue_skill_falg = true;
+        this.continue_skill_flag = true;
         //重置玩家技能效果
         this.reset_active_skill_effect();
     }
@@ -283,12 +318,12 @@ export class Player_active_skills_Manage {
             if (!is_Empty_Object(this.active_slots[now_slot])) {
                 if (this.active_slots[now_slot].start_time == 'continue') {
                     //当前槽的技能是持续触发，也就是现在
-                    if (this.continue_skill_falg && this.judge_active_condition(now_slot)) {
+                    if (this.continue_skill_flag && this.judge_active_condition(now_slot)) {
                         //目前运行的技能满足运行条件
                         this.start_player_active(now_slot);
                     } else {
                         //对持续运行类技能来说，如果中途不满足条件了，那么接下来的持续时间里也不再恢复
-                        this.continue_skill_falg = false;
+                        this.continue_skill_flag = false;
                     }
                 }
             }

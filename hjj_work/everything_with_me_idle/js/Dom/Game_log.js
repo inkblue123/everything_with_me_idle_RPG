@@ -52,6 +52,9 @@ var Game_log = crtElement('div', 'game_log', null, '');
             //重要事件 important_event IE
             var IE_value_scroll_box = addElement(MD_div, 'div', 'IE_value_scroll_box', 'overflow_y_div', 'none');
             var IE_value_div = addElement(IE_value_scroll_box, 'div', 'IE_value_div', 'classification_div');
+            var main_quest_div = addElement(IE_value_div, 'div', 'main_quest_div', null);
+            var all_side_quest_div = addElement(IE_value_div, 'div', 'all_side_quest_div', null);
+            var challenge_div = addElement(IE_value_div, 'div', 'challenge_div', null);
         }
     }
     // 图鉴窗口 library IB

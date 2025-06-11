@@ -3,9 +3,9 @@ import { Place_manage } from './Place_class.js';
 import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
 import { Combat_manage } from './combat_class.js';
-import { Exp_manage } from './exp_class.js';
-import { Game_event_manage } from './game_event_class.js';
-import { Global_flag_manage } from './global_flag_class.js';
+import { Exp_manage } from './exp_manage.js';
+import { Game_event_manage } from './game_event/game_event_manage.js';
+import { Global_flag_manage } from './global_flag/global_flag_manage.js';
 //记录全局参数和游戏状态的对象
 class Global {
     constructor() {
@@ -35,8 +35,10 @@ class Global {
         this.random_manage = new Random_manage();
         this.combat_manage = new Combat_manage();
         this.exp_manage = new Exp_manage();
+
         this.game_event_manage = new Game_event_manage();
-        this.game_event_manage.init();
+        // this.game_event_manage.init();
+
         this.global_flag_manage = new Global_flag_manage();
         this.global_flag_manage.init();
     }
@@ -70,6 +72,9 @@ class Global {
     get_global_flag_manage() {
         return this.global_flag_manage;
     }
+    get_global_flag_game_status() {
+        return this.global_flag_manage.GS_status;
+    }
     //对外提供一些常用功能的接口
     updata_time_manage() {
         return this.time_manage.updata_time_manage();
@@ -84,12 +89,7 @@ class Global {
         return this.time_manage.get_game_now_time();
     }
     get_combat_statu() {
-        return this.global_flag_manage.get_game_status('GS_combat_statu');
-        // let now_place = this.place_manage.get_now_place();
-        // if (places[now_place].type == 'combat') {
-        //     return true;
-        // }
-        // return false;
+        return this.global_flag_manage.get_flag('GS_combat_statu');
     }
     add_new_enemy() {
         let now_place = this.place_manage.get_now_place();
@@ -118,8 +118,7 @@ class Global {
         }
 
         //更新游戏信息
-        this.global_flag_manage.updata_short_game_status();
-        this.global_flag_manage.updata_new_game_log_status();
+        this.global_flag_manage.updata_flag();
     }
     //获取游戏标记
     get_flag(flag_name) {

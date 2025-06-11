@@ -1,6 +1,5 @@
 import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
 import { show_dropdown_table, change_Combat_plan_div, change_ASP_ARP_AEP } from '../Function/show_func.js';
-import { updata_BP_value } from '../Function/Updata_func.js';
 import { player } from '../Player/Player.js';
 
 var Combat_plan = crtElement('div', 'Combat_plan', null, '');
@@ -179,19 +178,22 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
     BP_EQP_button.onclick = function () {
         //点击就激活武器装备分类下的“全部”过滤条件
         BP_EQP_all_radio_div.children[0].checked = true;
-        updata_BP_value();
+        let P_backpack = player.get_player_backpack();
+        P_backpack.updata_BP_value();
         show_dropdown_table('BP_classification_div', 'BP_EQP_droptable');
     };
     BP_CSB_button.onclick = function () {
         //点击就激活消耗品分类下的“全部”过滤条件
         BP_CSB_all_radio_div.children[0].checked = true;
-        updata_BP_value();
+        let P_backpack = player.get_player_backpack();
+        P_backpack.updata_BP_value();
         show_dropdown_table('BP_classification_div', 'BP_CSB_droptable');
     };
     BP_MTR_button.onclick = function () {
         //点击就激活材料分类下的“全部”过滤条件
         BP_MTR_all_radio_div.children[0].checked = true;
-        updata_BP_value();
+        let P_backpack = player.get_player_backpack();
+        P_backpack.updata_BP_value();
         show_dropdown_table('BP_classification_div', 'BP_MTR_droptable');
     };
 
@@ -207,7 +209,8 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
                 //针对背包界面的“全部”按钮，额外新增关闭其他下拉框的功能
                 show_dropdown_table('BP_classification_div');
             }
-            updata_BP_value();
+            let P_backpack = player.get_player_backpack();
+            P_backpack.updata_BP_value();
         });
     });
     // //选择战斗规划界面的具体功能
@@ -228,16 +231,16 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
                 //关闭其他下拉框
                 show_dropdown_table('CBP_classification_div');
             }
-            let All_Skills = player.get_player_All_Skills();
-            All_Skills.updata_ASP_value();
+            let P_All_Skills = player.get_player_All_Skills();
+            P_All_Skills.updata_ASP_value();
         });
     });
     //主动技能过滤
     radios = CBP_div.querySelectorAll('input[type="radio"][name="ASP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
-            let All_Skills = player.get_player_All_Skills();
-            All_Skills.updata_ASP_value();
+            let P_All_Skills = player.get_player_All_Skills();
+            P_All_Skills.updata_ASP_value();
         });
     });
 }

@@ -1,10 +1,10 @@
 import { add_text_object } from './Text_class.js';
 
 //游戏章节的文本
-function page_text(texts) {
-    let id = 'page_1';
+function main_quest_text(texts) {
+    let id = 'main_quest_1';
     add_text_object(texts, id);
-    texts[id].event_name = '第一章';
+    texts[id].event_name = '证明自己是正常人';
 }
 //挑战的文本
 function Challenge_text(texts) {
@@ -77,7 +77,7 @@ function mini_event_text(texts) {
 }
 //事件完成条件的文本
 function event_finish_condition_text(texts) {
-    let id = 'melee_kill';
+    let id = 'PKL_melee_kill';
     add_text_object(texts, id);
     texts[id].condition_name = '近战击杀';
     id = 'ATD_all_armor';
@@ -89,8 +89,8 @@ function event_finish_condition_text(texts) {
 }
 //初始化文本数据库中与游戏事件相关的文本
 function init_Text_game_event(texts) {
-    //章节的文本
-    page_text(texts);
+    //主线任务的文本
+    main_quest_text(texts);
     //挑战的文本
     Challenge_text(texts);
     //迷你事件的文本

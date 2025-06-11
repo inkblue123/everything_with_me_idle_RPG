@@ -11,9 +11,10 @@ function init_monitor_data(enums) {
     // add_Enum_Array(enums, id);
     // enums[id] = ['ATD_all_armor'];
 
-    id = 'Player_kill_enemy_status'; //玩家击杀敌人相关参数
-    add_Enum_Array(enums, id);
-    enums[id] = ['melee_kill'];
+    //玩家击杀行为由PKL_开头，不再定义
+    // id = 'Player_kill_enemy_status'; //玩家击杀敌人相关参数
+    // add_Enum_Array(enums, id);
+    // enums[id] = ['PKL_melee_kill'];
 }
 //初始化枚举库中与游戏状态参数相关的内容
 function init_game_status(enums) {
@@ -40,14 +41,11 @@ function init_short_game_status(enums) {
 function init_important_nodes(enums) {
     let id = 'important_nodes';
     add_Enum_Object(enums, id);
-    add_Enum_Array(enums[id], 'page');
+    add_Enum_Array(enums[id], 'main_quest');
     add_Enum_Array(enums[id], 'challenge');
     add_Enum_Array(enums[id], 'achievement');
     add_Enum_Array(enums[id], 'mini_event');
     //每种重要节点具体有哪些事件的枚举在Data.js中初始化
-    // enums[id].page = ['page_1'];
-    // enums[id].challenge = ['new_player_combat_test'];
-    // enums[id].mini_event = ['new_player_teach_1', 'new_player_teach_2'];
 }
 //初始化枚举库中与临用游戏状态参数相关的内容
 function init_use_game_status(enums) {

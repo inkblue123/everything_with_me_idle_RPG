@@ -1,5 +1,5 @@
 import { is_Empty_Object } from '../Function/Function.js';
-import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
+// import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 
 import { places } from '../Data/Place/Place.js';
 import { global } from './global_class.js';
@@ -76,6 +76,9 @@ export class Place_manage {
     get_now_place() {
         return this.now_place;
     }
+    get_last_place() {
+        return this.last_place;
+    }
     get_now_place_type() {
         if (this.now_place == undefined) {
             return undefined;
@@ -124,9 +127,12 @@ function updata_to_normal_place() {
     if (now_place_type == 'combat') {
         //从战斗地点进入普通地点，执行转场
         show_normal_game_div();
+
+        // 清除旧的战斗相关的信息
+        let enemy_manage = global.get_enemy_manage();
+        enemy_manage.delete_all_enemy(); //清除战斗区域的怪物
         //退出战斗状态
-        let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('GS_combat_statu', false);
+        global.set_flag('GS_combat_statu', false);
     }
 }
 
@@ -146,7 +152,23 @@ function updata_to_combat_place() {
         //从非战斗地点进入战斗地点，执行转场
         show_combat_game_div();
         //进入战斗状态
-        let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_status('GS_combat_statu', true);
+        global.set_flag('GS_combat_statu', true);
     }
+}
+
+//展示战斗时的游戏界面
+function show_combat_game_div() {
+    const game_up_combat = document.getElementById('game_up_combat');
+    const game_up_nomal = document.getElementById('game_up_nomal');
+
+    game_up_combat.style.display = '';
+    game_up_nomal.style.display = 'none';
+}
+//展示非战斗时的游戏界面
+function show_normal_game_div() {
+    const game_up_combat = document.getElementById('game_up_combat');
+    const game_up_nomal = document.getElementById('game_up_nomal');
+
+    game_up_combat.style.display = 'none';
+    game_up_nomal.style.display = '';
 }

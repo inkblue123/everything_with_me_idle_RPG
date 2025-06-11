@@ -3,75 +3,6 @@ import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 
-//判断物品类型中是否在指定过滤条件内
-function Item_type_handle(type_switch, id) {
-    let item_type = new Array();
-    item_type = item_type.concat(items[id].main_type);
-    item_type = item_type.concat(items[id].secon_type);
-    for (let item_T of item_type) {
-        if (type_switch.includes(item_T)) return true;
-    }
-    return false;
-}
-//将物品类型转义成能适应的全部类型，方便判断物品类型
-function BP_type_handle(BP_type) {
-    var BP_item_type = [];
-    if (BP_type === undefined) {
-        return BP_item_type;
-    }
-    switch (BP_type) {
-        case 'all':
-            BP_item_type = ['equipment', 'consumable', 'material'];
-            break;
-        case 'EQP_all': //武器装备，全部
-            BP_item_type = ['equipment'];
-            break;
-        case 'EQP_W': //武器装备，武器
-            BP_item_type.push('weapon');
-            break;
-        case 'EQP_A': //武器装备，防具
-            BP_item_type.push('armor');
-            break;
-        case 'EQP_D': //武器装备，副手
-            BP_item_type.push('deputy');
-            break;
-        case 'EQP_O': //武器装备，饰品
-            BP_item_type.push('ornament');
-            break;
-        case 'CSB_all': //可使用物品，全部
-            BP_item_type.push('Consumable');
-            break;
-        case 'CSB_F': //可使用物品，可食用物品
-            BP_item_type.push('food_CSB');
-            break;
-        case 'CSB_A': //可使用物品，弹药
-            BP_item_type.push('ammo_CSB');
-            break;
-        case 'CSB_L': //可使用物品，生活消耗品
-            BP_item_type.push('life_CSB');
-            break;
-        case 'MTR_all': //材料，全部
-            BP_item_type.push('material');
-            break;
-        case 'MTR_R': //材料，自然材料
-            BP_item_type.push('raw_MTR');
-            break;
-        case 'MTR_P': //材料，人工材料
-            BP_item_type.push('process_MTR');
-            break;
-        case 'MTR_F': //材料，成品
-            BP_item_type.push('finish_MTR');
-            break;
-        case 'MTR_O': //材料，其他物品
-            BP_item_type.push('other_MTR');
-            break;
-
-        default:
-            break;
-    }
-
-    return BP_item_type;
-}
 //将属性补正数值转义成简写字母
 function attr_correct_handle(attr_correct) {
     //
@@ -137,16 +68,6 @@ function hex2Rgba(bgColor, alpha = 1) {
     ];
     return 'rgba(' + rgba.toString() + ')';
 }
-//测试
-function printf_play_item() {
-    //测试
-    let arr = Object.keys(player.backpack_items); //将拥有的物品的key转换成一个数组
-    console.log('玩家此时拥有%d种物品', arr.length);
-    for (let play_item_id of arr) {
-        console.log('玩家拥有%d号物品%d个', play_item_id, player.backpack_items[play_item_id].num);
-    }
-    console.log('\n');
-}
 //对Array数组去重
 function get_uniqueArr(array) {
     // 使用 Set 去重
@@ -154,13 +75,4 @@ function get_uniqueArr(array) {
     return uniqueArr;
 }
 
-export {
-    printf_play_item, //
-    Item_type_handle,
-    BP_type_handle,
-    check_Equipment,
-    is_Empty_Object,
-    hex2Rgba,
-    get_uniqueArr,
-    attr_correct_handle,
-};
+export { check_Equipment, is_Empty_Object, hex2Rgba, get_uniqueArr, attr_correct_handle };

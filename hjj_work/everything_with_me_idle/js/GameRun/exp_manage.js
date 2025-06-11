@@ -70,20 +70,20 @@ export class Exp_manage {
     //结算玩家应该获得的技能经验
     player_get_exp() {
         //主动技能获得经验
-        let All_Skills = player.get_player_All_Skills();
+        let P_All_Skills = player.get_player_All_Skills();
         for (let id in this.Active_skill_exp) {
-            All_Skills.get_skill_exp(id, this.Active_skill_exp[id]);
+            P_All_Skills.get_skill_exp(id, this.Active_skill_exp[id]);
         }
         //被动技能获得经验
-        for (let id in All_Skills) {
+        for (let id in P_All_Skills) {
             //主动技能跳过
             if (P_skills[id].type == 'Active') continue;
             //满级和不能获得经验的技能跳过
-            if (!All_Skills[id].levelup_flag || All_Skills[id].levelmax_flag) continue;
+            if (!P_All_Skills[id].levelup_flag || P_All_Skills[id].levelmax_flag) continue;
             //遍历找到可以获得经验的技能
             if (this.judge_leveling_behavior(id)) {
                 if (P_skills[id].exp_source == 'attack_num') {
-                    All_Skills.get_skill_exp(id, this.leveling_behavior['attack_num']);
+                    P_All_Skills.get_skill_exp(id, this.leveling_behavior['attack_num']);
                 }
             }
         }

@@ -107,28 +107,29 @@ export class P_NPC extends Place {
         }
     }
     //添加在这个npc面前满足条件才可以做的行动
-    add_condition_behavior(status_type, status_id, value, event_id) {
-        let i = this.condition_behaviors.length;
-        this.condition_behaviors[i] = new Object();
-        this.condition_behaviors[i].status_type = status_type;
-        this.condition_behaviors[i].status_id = status_id;
-        this.condition_behaviors[i].value = value;
-        this.condition_behaviors[i].event_id = event_id;
+    add_condition_behavior(...value) {
+        for (let event_id of value) {
+            this.condition_behaviors.push(event_id);
+        }
     }
     //初始化见面时满足条件才说的话
-    add_condition_meet_chat(status_type, status_id, value) {
-        let i = this.condition_meet_chat.length;
-        this.condition_meet_chat[i] = new Object();
-        this.condition_meet_chat[i].status_type = status_type;
-        this.condition_meet_chat[i].status_id = status_id;
-        this.condition_meet_chat[i].value = value;
-        let text_id = status_id + '_' + value;
-        if (texts[this.id][text_id] === undefined) {
-            console.log('texts[%s][%s]未定义', this.id, text_id);
-            this.condition_meet_chat[i].text = 'texts[%s][%s]未定义';
-        } else {
-            this.condition_meet_chat[i].text = texts[this.id][text_id];
+    add_condition_meet_chat(...value) {
+        if (value.length < 3 || value.length % 2 != 1) {
+            console.log('参数数量错误，至少输入3个参数，且应该是奇数个参数');
+            return;
         }
+        let meet_chat_obj = new Object();
+        meet_chat_obj.status = new Array();
+        let text_id = value[0]; //输入参数中第一个参数是对话文本
+        meet_chat_obj.text = texts[this.id][text_id];
+        for (let i = 1; i < value.length; i += 2) {
+            //输入参数后面每两个参数，一个是条件id，另一个是条件的值
+            let status_obj = new Object();
+            status_obj.status_id = value[i];
+            status_obj.value = value[i + 1];
+            meet_chat_obj.status.push(status_obj);
+        }
+        this.condition_meet_chat.push(meet_chat_obj);
     }
 }
 //商店地点

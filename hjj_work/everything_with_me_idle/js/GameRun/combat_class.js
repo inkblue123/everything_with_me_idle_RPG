@@ -161,7 +161,7 @@ export class Combat_manage {
                     p_damage = enemys[i].health_point;
                 }
                 enemys[i].health_point -= p_damage;
-                global_flag_manage.set_player_attack_game_log(main_Attack, p_damage, enemys[i].id);
+                global_flag_manage.set_game_log('player_attack', main_Attack, p_damage, enemys[i].id);
                 if (enemys[i].health_point <= 0) {
                     //击杀了一个敌人，记录相关数据
                     enemys[i].statu = false;
@@ -236,7 +236,8 @@ export class Combat_manage {
             P_attr.health_point -= e_damage;
 
             //添加一条敌人攻击的游戏日志
-            global_flag_manage.set_enemy_attack_game_log(
+            global_flag_manage.set_game_log(
+                'enemy_attack',
                 E_Attack_effect.id,
                 e_damage,
                 E_Attack_effect.main_Attack.damage_type
@@ -266,11 +267,10 @@ export class Combat_manage {
     }
     //玩家死亡，处理相关逻辑
     player_death() {
-        let global_flag_manage = global.get_global_flag_manage();
-        if (global_flag_manage.get_game_status('GS_game_event')) {
+        if (global.get_flag('GS_game_event')) {
             //如果玩家处于事件中，死亡意味着事件失败，只退出事件
             let game_event_manage = global.get_game_event_manage();
-            game_event_manage.end_game_event(false);
+            game_event_manage.end_challenge('death');
         } else {
             //非事件中，移动到安全的地方
             let place_manage = global.get_place_manage();

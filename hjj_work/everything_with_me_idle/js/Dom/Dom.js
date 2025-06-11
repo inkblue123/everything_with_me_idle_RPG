@@ -1,7 +1,7 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
-import { show_normal_game_div } from '../Function/show_func.js';
-import { updata_player_active, updata_equipment_show } from '../Function/Updata_func.js';
+import { updata_player_active } from '../Function/Updata_func.js';
 import { global } from '../GameRun/global_class.js';
+import { player } from '../Player/Player.js';
 
 import { player_status } from './Player_status.js';
 import { Combat_plan } from './Combat_plan.js';
@@ -15,7 +15,7 @@ var dom = new Object();
 
 dom.init = function () {
     //激活非战斗时游戏界面
-    show_normal_game_div();
+    // show_normal_game_div();
 
     //初始化脑海-重要事件界面
     let game_event_manage = global.get_game_event_manage();
@@ -25,9 +25,10 @@ dom.init = function () {
     updata_player_active(); //主动技能测试，正常应该在战斗规划界面设置主动技能，设置之后调用这个接口
 
     // 将每个装备栏中的信息初始化
+    let P_worn = player.get_player_worn();
     const radios = document.querySelectorAll('input[name="EQP_switch"]');
     for (const radio of radios) {
-        updata_equipment_show(radio.value);
+        P_worn.updata_equipment_show(radio.value);
     }
     //移动到初始位置
     let place_manage = global.get_place_manage();
@@ -74,7 +75,7 @@ function game_dom_init() {
         //战斗时位于游戏上半部分的容器
         dom.game_up_combat = crtElement('div', 'game_up_combat', 'page_columns_1', 'none');
         //平时位于游戏上半部分的容器
-        dom.game_up_nomal = crtElement('div', 'game_up_nomal', 'page_columns_11', 'none');
+        dom.game_up_nomal = crtElement('div', 'game_up_nomal', 'page_columns_11', '');
         //平时位于游戏上半部分的容器
         dom.game_down_nomal = crtElement('div', null, 'page_columns_11', '');
     }

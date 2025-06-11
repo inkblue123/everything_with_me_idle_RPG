@@ -1,7 +1,8 @@
 import { crtElement, addElement, addElement_radio, add_click_Equipment_worn_remove } from '../Function/Dom_function.js';
-import { change_PA, show_active_EQP } from '../Function/show_func.js';
+import { change_PA } from '../Function/show_func.js';
 import { updata_player_name, updata_player_EQP } from '../Function/Updata_func.js';
 import { change_Player_status_div, show_dropdown_table } from '../Function/show_func.js';
+import { player } from '../Player/Player.js';
 
 var player_status = crtElement('div', 'player_status', null, '', '#000000');
 
@@ -223,7 +224,8 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
             //显示当前激活的装备栏界面
-            show_active_EQP();
+            let P_worn = player.get_player_worn();
+            P_worn.show_active_EQP();
             //身上穿着的装备更新了，更新相关内容
             updata_player_EQP();
         });

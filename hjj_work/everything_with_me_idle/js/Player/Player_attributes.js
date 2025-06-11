@@ -16,8 +16,10 @@ export class Player_attributes {
         this.combat_defense_attr = new Object();
         //战斗生存属性
         this.combat_survival_attr = new Object();
-        //角色基础属性汇总
+        //角色基础属性点
         this.player_base_attr = new Object();
+        //玩家所有基础属性汇总，实质上是上面4个类的总和
+        this.player_attr = new Object();
         //当前激活的装备栏上所有装备的属性汇总
         this.EQP_attr = new Object();
         //当前拥有的可用技能的所有属性汇总
@@ -51,7 +53,58 @@ export class Player_attributes {
         this.player_base_attr['agile'] = 10; //敏捷
         this.player_base_attr['intelligence'] = 10; //智力
         this.player_base_attr['technique'] = 10; //技巧
+
+        this.Summary_Player_attr();
         this.updata_end_attr();
+    }
+    //获取玩家属性部分的游戏存档
+    save_Player_attributes() {
+        let Player_attr_save = new Object();
+        Player_attr_save.name = this.name; //角色名称
+        Player_attr_save.health_point = this.health_point; //当前血量
+        Player_attr_save.magic_point = this.magic_point; //当前魔力
+        Player_attr_save.energy_point = this.energy_point; //当前精力
+        return Player_attr_save;
+    }
+    //加载玩家属性部分的游戏存档
+    load_Player_attributes(Player_attr_save) {
+        if (is_Empty_Object(Player_attr_save)) {
+            return;
+        }
+        this.name = Player_attr_save.name; //角色名称
+        this.health_point = Player_attr_save.health_point; //当前血量
+        this.magic_point = Player_attr_save.magic_point; //当前魔力
+        this.energy_point = Player_attr_save.energy_point; //当前精力
+    }
+    Summary_Player_attr() {
+        //初始战斗攻击属性
+        for (let id in this.combat_attack_attr) {
+            if (is_Empty_Object(this.player_attr[id])) {
+                this.player_attr[id] = 0;
+            }
+            this.player_attr[id] += this.combat_attack_attr[id];
+        }
+        //初始战斗防御属性
+        for (let id in this.combat_defense_attr) {
+            if (is_Empty_Object(this.player_attr[id])) {
+                this.player_attr[id] = 0;
+            }
+            this.player_attr[id] += this.combat_defense_attr[id];
+        }
+        //初始战斗生存属性
+        for (let id in this.combat_survival_attr) {
+            if (is_Empty_Object(this.player_attr[id])) {
+                this.player_attr[id] = 0;
+            }
+            this.player_attr[id] += this.combat_survival_attr[id];
+        }
+        //初始角色基础属性
+        for (let id in this.player_base_attr) {
+            if (is_Empty_Object(this.player_attr[id])) {
+                this.player_attr[id] = 0;
+            }
+            this.player_attr[id] += this.player_base_attr[id];
+        }
     }
     //汇总穿戴的装备上的属性加成
     Summary_worn_EQP_attr(worn_EQP) {
@@ -155,33 +208,12 @@ export class Player_attributes {
     //更新最终属性
     updata_end_attr() {
         this.end_attr = new Object();
-        //初始战斗攻击属性
-        for (let id in this.combat_attack_attr) {
+        //汇总玩家基本属性
+        for (let id in this.player_attr) {
             if (is_Empty_Object(this.end_attr[id])) {
                 this.end_attr[id] = 0;
             }
-            this.end_attr[id] += this.combat_attack_attr[id];
-        }
-        //初始战斗防御属性
-        for (let id in this.combat_defense_attr) {
-            if (is_Empty_Object(this.end_attr[id])) {
-                this.end_attr[id] = 0;
-            }
-            this.end_attr[id] += this.combat_defense_attr[id];
-        }
-        //初始战斗生存属性
-        for (let id in this.combat_survival_attr) {
-            if (is_Empty_Object(this.end_attr[id])) {
-                this.end_attr[id] = 0;
-            }
-            this.end_attr[id] += this.combat_survival_attr[id];
-        }
-        //初始角色基础属性
-        for (let id in this.player_base_attr) {
-            if (is_Empty_Object(this.end_attr[id])) {
-                this.end_attr[id] = 0;
-            }
-            this.end_attr[id] += this.player_base_attr[id];
+            this.end_attr[id] += this.player_attr[id];
         }
         //汇总装备属性
         for (let id in this.EQP_attr) {
@@ -197,7 +229,7 @@ export class Player_attributes {
         //汇总技能属性
         for (let id in this.skill_attr) {
             if (is_Empty_Object(this.end_attr[id])) {
-                this.end_attr[i] = 0;
+                this.end_attr[id] = 0;
             }
             this.end_attr[id] += this.skill_attr[id];
         }

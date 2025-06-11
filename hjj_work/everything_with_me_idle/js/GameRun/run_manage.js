@@ -45,8 +45,7 @@ function updata_game_data() {
     exp_manage.player_get_exp();
     // 更新游戏状态
     let global_flag_manage = global.get_global_flag_manage();
-    global_flag_manage.updata_short_game_status();
-    global_flag_manage.updata_new_game_log_status();
+    global_flag_manage.updata_flag();
 }
 //更新这一帧的新的游戏画面
 function updata_game_div() {
@@ -64,7 +63,7 @@ function updata_game_div() {
     //精力条显示更新
     updata_ENP();
     //玩家名称显示更新
-    updata_player_name();
+    // updata_player_name();
     //玩家属性显示更新
     updata_attribute_show();
 }

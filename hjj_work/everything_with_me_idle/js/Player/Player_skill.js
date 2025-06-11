@@ -1,10 +1,10 @@
 'use strict';
-import { items } from '../Data/Item/Item.js';
-import { addElement } from '../Function/Dom_function.js';
-import { P_skills, B_skills } from '../Data/Skill/Skill.js';
-import { global } from '../GameRun/global_class.js';
+import { is_Empty_Object } from '../Function/Function.js';
 import { skill_levelup_exp_algorithm } from '../Function/math_func.js';
-import { add_click_Active_skill_worn, add_show_Tooltip } from '../Function/Dom_function.js';
+import { addElement, add_click_Active_skill_worn, add_show_Tooltip } from '../Function/Dom_function.js';
+import { global } from '../GameRun/global_class.js';
+import { items } from '../Data/Item/Item.js';
+import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 
 //玩家拥有的技能
 class Player_skill {
@@ -50,14 +50,14 @@ class Player_A_skill extends Player_skill {
         this.active_slots[i].algorithm = B_skills[B_id].algorithm; //使用哪个算法进行计算
         this.active_slots[i].start_time = B_skills[B_id].start_time; //结束时计算
         this.active_slots[i].effect = B_skills[B_id].effect; //技能效果
-        this.active_slots[i].desc = B_skills[B_id].desc; //技能描述
+        // this.active_slots[i].desc = B_skills[B_id].desc; //技能描述
     }
 }
 //玩家拥有的被动技能
 class Player_P_skill extends Player_skill {
     constructor(id) {
         super(id);
-        this.level = 1; //被动技能初始0级，不可用
+        this.level = 0; //被动技能初始0级，不可用
     }
 }
 
@@ -65,6 +65,37 @@ export class Player_skills {
     constructor() {}
     init() {
         this.player_get_initial_skil();
+    }
+    //获取玩家背包部分的游戏存档
+    save_Player_skills() {
+        let Player_skills_save = new Object();
+        //只保存部分重要信息，其他信息可以初始化时自动填充
+        for (let id in this) {
+            Player_skills_save[id] = new Object();
+            Player_skills_save[id].exp = this[id].exp;
+            Player_skills_save[id].level = this[id].level;
+            Player_skills_save[id].next_level_need_exp = this[id].next_level_need_exp;
+            Player_skills_save[id].levelup_flag = this[id].levelup_flag;
+            Player_skills_save[id].levelmax_flag = this[id].levelmax_flag;
+        }
+        return Player_skills_save;
+    }
+    //加载玩家背包部分的游戏存档
+    load_Player_skills(Player_skills_save) {
+        if (is_Empty_Object(Player_skills_save)) {
+            return;
+        }
+        for (let id in Player_skills_save) {
+            if (P_skills[id].type == 'Passive') this[id] = new Player_P_skill(id);
+            if (P_skills[id].type == 'Active') this[id] = new Player_A_skill(id);
+
+            this[id].exp = Player_skills_save[id].exp;
+            this[id].level = Player_skills_save[id].level;
+            this[id].next_level_need_exp = Player_skills_save[id].next_level_need_exp;
+            this[id].levelup_flag = Player_skills_save[id].levelup_flag;
+            this[id].levelmax_flag = Player_skills_save[id].levelmax_flag;
+        }
+        this.updata_ASP_value();
     }
     //玩家获得基础技能
     player_get_initial_skil() {
@@ -105,7 +136,7 @@ export class Player_skills {
                 this[id] = new Player_A_skill(id);
                 //记录日志
                 let global_flag_manage = global.get_global_flag_manage();
-                global_flag_manage.set_unluck_active_skill_game_log(id);
+                global_flag_manage.set_game_log('unluck_active_skill', id);
             }
             //解锁了新主动技能，更新需要展示这个技能的界面
             this.updata_ASP_value();

@@ -1,5 +1,5 @@
-import { get_EQP_switch } from './Get_func.js';
-import { updata_attribute_show, updata_player_EQP } from './Updata_func.js';
+import { player } from '../Player/Player.js';
+
 //点击“属性展示”按钮之后，显示出或者隐藏属性展示界面
 function change_PA() {
     const attribute_show = document.getElementById('attribute_show');
@@ -10,28 +10,14 @@ function change_PA() {
         attribute_show.style.display = 'none';
         equipment_show.style.display = '';
         //切换到当前激活的装备栏
-        show_active_EQP();
+        let P_worn = player.get_player_worn();
+        P_worn.show_active_EQP();
     } else {
         attribute_show.style.display = '';
         equipment_show.style.display = 'none';
     }
 }
-//显示当前激活的装备栏
-function show_active_EQP() {
-    const attribute_show = document.getElementById('attribute_show');
-    const equipment_show = document.getElementById('equipment_show');
-    //如果当前显示了属性界面，则切换成装备栏
-    if (attribute_show.style.display == '') {
-        attribute_show.style.display = 'none';
-        equipment_show.style.display = '';
-    }
-    //切换到当前激活的的装备栏上
-    for (let EQP_column of equipment_show.children) {
-        EQP_column.style.display = 'none';
-    }
-    let EQP_value = get_EQP_switch();
-    document.getElementById(EQP_value).style.display = '';
-}
+
 //切换角色状态界面中的角色属性、角色技能界面的按钮
 function change_Player_status_div(button_id) {
     const PAB_div = document.getElementById('PAB_div');
@@ -144,32 +130,12 @@ function show_dropdown_table(classification_div, table_id) {
     }
 }
 
-//展示战斗时的游戏界面
-function show_combat_game_div() {
-    const game_up_combat = document.getElementById('game_up_combat');
-    const game_up_nomal = document.getElementById('game_up_nomal');
-
-    game_up_combat.style.display = '';
-    game_up_nomal.style.display = 'none';
-}
-//展示非战斗时的游戏界面
-function show_normal_game_div() {
-    const game_up_combat = document.getElementById('game_up_combat');
-    const game_up_nomal = document.getElementById('game_up_nomal');
-
-    game_up_combat.style.display = 'none';
-    game_up_nomal.style.display = '';
-}
-
 export {
     change_PA,
-    show_active_EQP,
     change_Player_status_div,
     change_Combat_plan_div,
     change_Game_log_div,
     change_ASP_ARP_AEP,
     change_RA_IE,
     show_dropdown_table,
-    show_combat_game_div,
-    show_normal_game_div, //
 };

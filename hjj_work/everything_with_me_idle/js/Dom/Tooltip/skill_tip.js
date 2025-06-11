@@ -3,7 +3,7 @@ import { is_Empty_Object, attr_correct_handle } from '../../Function/Function.js
 
 import { texts } from '../../Data/Text/Text.js';
 import { enums } from '../../Data/Enum/Enum.js';
-import { P_skills } from '../../Data/Skill/Skill.js';
+import { P_skills, B_skills } from '../../Data/Skill/Skill.js';
 import { player } from '../../Player/Player.js';
 
 import { Tooltip } from './Tooltip.js';
@@ -44,7 +44,8 @@ function init_active_skill_tip(show_slot_num) {
         let i_slot_num = show_slot_num - slot_num + i; //从要展示的技能的第一个槽开始
         let active_skill = P_Askill.active_slots[i_slot_num]; //获取对应槽中的主动技能信息
         let desc = addElement(slot_value_div, 'div', null, 'lable_down');
-        desc.innerHTML = active_skill.desc; //这个槽的技能描述
+        desc.innerHTML = B_skills[active_skill.id].desc; //这个槽的技能描述
+        // desc.innerHTML = active_skill.desc; //这个槽的技能描述
         //追加展示技能类型-伤害类型信息
         //不同类型的技能似乎展示效果不好，有待优化
         show_active_skill_type(slot_value_div, active_skill);
@@ -61,7 +62,7 @@ function init_active_skill_tip(show_slot_num) {
 }
 //传入玩家拥有的一个主动技能，展示它的详情信息
 function init_show_active_skill_tip(skill_id) {
-    let All_Skills = player.get_player_All_Skills();
+    let P_All_Skills = player.get_player_All_Skills();
     if (is_Empty_Object(P_skills[skill_id])) {
         //技能库没有相关内容，简单展示信息
         let name = addElement(Tooltip, 'div', null, 'lable_down');
@@ -78,9 +79,11 @@ function init_show_active_skill_tip(skill_id) {
     for (let i = 0; i < P_skills[skill_id].need_slot_num; i++) {
         let slot_value_div = addElement(slot_div, 'div', null, 'slot_value_div');
 
-        let active_skill = All_Skills[skill_id].active_slots[i]; //获取对应槽中的主动技能信息
+        let active_skill = P_All_Skills[skill_id].active_slots[i]; //获取对应槽中的主动技能信息
         let desc = addElement(slot_value_div, 'div', null, 'lable_down');
-        desc.innerHTML = active_skill.desc; //这个槽的技能描述
+        desc.innerHTML = B_skills[active_skill.id].desc; //这个槽的技能描述
+
+        // desc.innerHTML = active_skill.desc; //这个槽的技能描述
         //追加展示技能类型-伤害类型信息
         //不同类型的技能似乎展示效果不好，有待优化
         show_active_skill_type(slot_value_div, active_skill);

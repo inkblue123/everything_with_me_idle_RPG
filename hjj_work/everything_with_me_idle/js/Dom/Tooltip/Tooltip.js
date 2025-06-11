@@ -32,6 +32,10 @@ Tooltip.InitTip = function (type, value) {
 };
 //移动小窗口
 Tooltip.MoveTip = function (event) {
+    //存档和读档时的弹窗借用了提示小窗口，但是不需要移动
+    if (this.type == 'load_save' || this.type == 'save_game') {
+        return;
+    }
     const mouseX = event.pageX; // 鼠标横坐标
     const mouseY = event.pageY; // 鼠标纵坐标
 
@@ -73,9 +77,13 @@ Tooltip.MoveTip = function (event) {
 };
 //清空并隐藏小窗口
 Tooltip.CloseTip = function () {
-    
-    this.style.display = 'none'; // 隐藏小窗口
-    this.style.width = TOOLTIP_WIDTH + 'px'; // 恢复宽度
+    // 隐藏小窗口
+    this.style.display = 'none';
+    // 恢复宽度
+    this.style.width = TOOLTIP_WIDTH + 'px';
+    this.style.height = 'auto';
+    // 恢复背景颜色
+    this.style.background = 'linear-gradient(90deg, #ffffff, #ebebeb)';
 
     empty_dom(this); //清空内容
 };

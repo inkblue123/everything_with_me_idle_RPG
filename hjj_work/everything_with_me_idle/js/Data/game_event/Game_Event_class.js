@@ -4,11 +4,24 @@ import { is_Empty_Object } from '../../Function/Function.js';
 export class Game_Event {
     constructor(id) {
         this.id = id; //唯一id
-        this.name; //地点名称
-        this.type; //地点类型
+        this.name; //事件名称
+        this.type; //事件类型
+        this.conditions_appear = new Array(); //事件出现条件
         this.init_event_name_desc(id);
     }
-
+    //设置该事件的出现条件
+    set_conditions_appear(...args) {
+        if (args.length % 2 != 0) {
+            console.log('输入的条件个数不是偶数，需要确认输入的条件是否正确');
+            return;
+        }
+        for (let i = 0; i < args.length; i += 2) {
+            let appear_obj = new Object();
+            appear_obj.status_id = args[i];
+            appear_obj.value = args[i + 1];
+            this.conditions_appear.push(appear_obj);
+        }
+    }
     //调用文本数据库中的地点名称和描述
     init_event_name_desc(id) {
         if (texts[id] === undefined) {
@@ -29,10 +42,10 @@ export class Game_Event {
         }
     }
 }
-export class Page extends Game_Event {
+export class Main_quest extends Game_Event {
     constructor(id) {
         super(id);
-        this.type = 'page';
+        this.type = 'main_quest';
     }
 }
 export class Achievement extends Game_Event {
@@ -51,22 +64,9 @@ export class Mini_event extends Game_Event {
     constructor(id) {
         super(id);
         this.type = 'mini_event';
-        this.conditions_appear = new Array();
-        this.process = new Object();
+        this.process = new Object(); //迷你事件的流程
     }
-    set_conditions_appear(...args) {
-        if (args.length % 2 != 0) {
-            console.log('输入的条件个数不是偶数，需要确认输入的条件是否正确');
-            return;
-        }
-        let j = this.conditions_appear.length;
-        for (let i = 0; i < args.length; i += 2) {
-            this.conditions_appear[j] = new Object();
-            this.conditions_appear[j].status_id = args[i];
-            this.conditions_appear[j].value = args[i + 1];
-            j++;
-        }
-    }
+
     //向迷你事件中新增一个流程
     set_new_process(process_id, control_dest_text) {
         if (is_Empty_Object(this.process[process_id])) {
@@ -76,7 +76,7 @@ export class Mini_event extends Game_Event {
         this.process[process_id].button = new Object();
     }
     //向迷你事件的一个流程里添加一个按钮
-    add_process_button(process_id, button_id, button_text, next_process) {
+    add_process_button(process_id, button_id, button_text) {
         let button_obj = new Object();
         button_obj.id = button_id; //按钮的id
         button_obj.text = button_text; //按钮上的文本
@@ -168,9 +168,9 @@ function add_Game_Event_object(game_events, newid) {
         console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
-function add_Page_obj(game_events, newid) {
+function add_Main_quest_obj(game_events, newid) {
     if (game_events[newid] === undefined) {
-        game_events[newid] = new Page(newid);
+        game_events[newid] = new Main_quest(newid);
     } else {
         console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
@@ -197,4 +197,4 @@ function add_Mini_event_obj(game_events, newid) {
     }
 }
 
-export { add_Game_Event_object, add_Page_obj, add_Achievement_obj, add_Challenge_obj, add_Mini_event_obj };
+export { add_Game_Event_object, add_Main_quest_obj, add_Achievement_obj, add_Challenge_obj, add_Mini_event_obj };

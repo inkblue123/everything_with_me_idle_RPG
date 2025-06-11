@@ -28,9 +28,6 @@
 #RA_value_div {
     background-color: #ffffff;
 }
-/* 游戏日志界面-脑海-重要事件内容的div */
-/* #IE_value_div {
-} */
 /* 游戏日志界面-脑海-流水账中一条具体日志的div */
 .RA_log_div {
     /* color: rgb(145, 145, 145); */
@@ -55,6 +52,26 @@
     background-color: rgb(148, 148, 148);
 }
 
+/* 游戏日志界面-脑海-重要事件内容的div */
+#IE_value_div {
+    display: flex;
+    flex-direction: column; /* 垂直排列 */
+}
+/* 游戏日志界面-脑海-重要事件-主线任务的div */
+#main_quest_div {
+    width: 100%;
+    height: auto;
+}
+/* 游戏日志界面-脑海-重要事件-支线任务的div */
+#all_side_quest_div {
+    width: 100%;
+    height: auto;
+}
+/* 一个支线任务的div */
+.a_side_quest_div {
+    width: 100%;
+    height: auto;
+}
 /* 脑海-重要事件，当前事件的名称的div */
 .IE_name_div {
     font-size: 25px;

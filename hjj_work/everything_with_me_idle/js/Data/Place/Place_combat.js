@@ -69,7 +69,9 @@ function init_Place_combat(places) {
     {
         let id = 'new_player_combat_test'; //新手战斗训练场所
         add_combat_Place(places, id, 'village');
-        // places[id].add_other_normal_place('village_barracks');
+        places[id].exit_place = 'last_place'; //可以退出当前地点，退出到
+        places[id].relation_quest = 'new_player_combat_test'; //当前地点关联的任务
+        // places[id].add_other_normal_place('last_place');
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'fixed'; //刷怪方式-固定位置
         //刷怪方式的约束条件
