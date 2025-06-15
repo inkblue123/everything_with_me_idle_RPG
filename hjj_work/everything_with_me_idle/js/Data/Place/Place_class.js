@@ -13,13 +13,8 @@ export class Place {
         this.other_combat_place = new Array(); //可以联通的其他战斗地点
         this.other_NPC = new Array(); //位于此处的NPC
         this.init_Place_name_desc(place_id);
-        if (area_id === undefined) {
-            console.log('Place[%s]定义时没有设定所属区域', place_id);
-        } else {
-            this.set_area(area_id);
-        }
+        this.set_area(area_id);
     }
-
     //调用文本数据库中的地点名称和描述
     init_Place_name_desc(place_id) {
         //地点名称
@@ -60,16 +55,20 @@ export class Place {
     }
     //设置这个地点的所属区域
     set_area(area_id) {
+        if (area_id === undefined) {
+            console.log('Place[%s]定义时没有设定所属区域', this.id);
+            return;
+        }
         this.area_id = area_id; //地点所在的区域
         //区域名称
         if (texts[area_id] === undefined) {
             //尚未定义
             this.area_name = '未命名区域';
         } else {
-            if (texts[area_id].area_name) {
-                this.area_name = texts[area_id].area_name;
-            } else {
+            if (texts[area_id].area_name == undefined) {
                 this.area_name = '未命名区域';
+            } else {
+                this.area_name = texts[area_id].area_name;
             }
         }
     }

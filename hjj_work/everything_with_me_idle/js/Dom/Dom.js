@@ -1,6 +1,6 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 import { updata_player_active } from '../Function/Updata_func.js';
-import { global } from '../GameRun/global_class.js';
+import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 
 import { player_status } from './Player_status.js';

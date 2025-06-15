@@ -3,7 +3,7 @@ import { addElement } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { texts } from '../../Data/Text/Text.js';
-import { global } from '../global_class.js';
+import { global } from '../global_manage.js';
 import { player } from '../../Player/Player.js';
 
 import { Main_quest_manage } from './main_quest.js';

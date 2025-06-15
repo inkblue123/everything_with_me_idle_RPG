@@ -4,7 +4,7 @@ import { is_Empty_Object } from '../Function/Function.js';
 import { updata_player_active } from '../Function/Updata_func.js';
 import { get_object_only_key } from '../Function/Get_func.js';
 import { Attack_effect, Defense_effect } from '../GameRun/combat_class.js';
-import { global } from '../GameRun/global_class.js';
+import { global } from '../GameRun/global_manage.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 

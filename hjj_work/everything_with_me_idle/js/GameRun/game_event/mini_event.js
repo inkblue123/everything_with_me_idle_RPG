@@ -1,7 +1,7 @@
 import { is_Empty_Object } from '../../Function/Function.js';
 import { Gradient_div } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
-import { global } from '../global_class.js';
+import { global } from '../global_manage.js';
 import { player } from '../../Player/Player.js'; //启动迷你事件
 //迷你事件对象
 export class Mini_event {
@@ -99,19 +99,19 @@ export class Mini_event {
                 //移动到新地点
                 let place_manage = global.get_place_manage();
                 let place_id = thing_obj[thing_type];
-                place_manage.goto_mini_event_new_place(place_id);
-                // place_manage.set_now_place(place_id);
+                //在迷你时间中移动到新地点时设置额外参数，防止新地点的按钮覆盖迷你事件的流程按钮
+                place_manage.set_now_place(place_id, 'mini_event');
             } else if (thing_type == 'reset_time') {
                 //刷新游戏日期
                 let time_manage = global.get_time_manage();
                 time_manage.reset_game_date();
             } else if (thing_type == 'set_player_attr') {
                 //设置玩家属性
-                let player_attributes = player.get_player_attributes();
+                let P_attr = player.get_player_attributes();
                 for (let attr_obj of thing_obj[thing_type]) {
                     let id = attr_obj.id;
                     let value = attr_obj.value;
-                    player_attributes.set_a_attr(id, value);
+                    P_attr.set_data_attr(id, value);
                 }
             }
         }

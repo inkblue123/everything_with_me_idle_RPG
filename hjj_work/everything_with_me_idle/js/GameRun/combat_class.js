@@ -1,4 +1,4 @@
-import { global } from './global_class.js';
+import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
 import { is_Empty_Object } from '../Function/Function.js';
 
@@ -184,8 +184,9 @@ export class Combat_manage {
         for (let i = 0; i < this.enemy_Attacks.length; i++) {
             this.player_attacted(this.enemy_Attacks[i]);
             //玩家生命归零，进入死亡逻辑
-            if (P_attr.health_point <= 0) {
-                P_attr.health_point = 0;
+            let health_point = P_attr.get_data_attr('health_point');
+            if (health_point <= 0) {
+                P_attr.set_data_attr('health_point', 0);
                 this.player_death();
                 break;
             }
@@ -225,15 +226,18 @@ export class Combat_manage {
                 //没有启动防御技能，不改变伤害，继续结算
             }
             //结算玩家防御数值
-            if (P_attr.end_attr.defense * 0.1 > e_damage) {
+            let defense = P_attr.get_data_attr('defense');
+            if (defense * 0.1 > e_damage) {
                 e_damage = 0;
             } else {
-                e_damage = e_damage - P_attr.end_attr.defense * 0.1;
+                e_damage = e_damage - defense * 0.1;
                 e_damage = Math.floor(e_damage);
             }
 
             //计算完毕，攻击打到玩家身上
-            P_attr.health_point -= e_damage;
+            let health_point = P_attr.get_data_attr('health_point');
+            health_point -= e_damage;
+            P_attr.set_data_attr('health_point', health_point);
 
             //添加一条敌人攻击的游戏日志
             global_flag_manage.set_game_log(

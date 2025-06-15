@@ -2,7 +2,7 @@
 import { is_Empty_Object } from '../Function/Function.js';
 import { skill_levelup_exp_algorithm } from '../Function/math_func.js';
 import { addElement, add_click_Active_skill_worn, add_show_Tooltip } from '../Function/Dom_function.js';
-import { global } from '../GameRun/global_class.js';
+import { global } from '../GameRun/global_manage.js';
 import { items } from '../Data/Item/Item.js';
 import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 

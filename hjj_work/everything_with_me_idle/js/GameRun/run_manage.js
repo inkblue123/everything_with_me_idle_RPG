@@ -1,14 +1,6 @@
 import { player } from '../Player/Player.js';
-import { global } from './global_class.js';
-import {} from '../Function/Get_func.js';
-import {
-    updata_HP,
-    updata_MP,
-    updata_ENP,
-    updata_attribute_show,
-    updata_player_name,
-    updata_player_active_time_bar,
-} from '../Function/Updata_func.js';
+import { global } from './global_manage.js';
+import { updata_attribute_show, updata_player_active_time_bar } from '../Function/Updata_func.js';
 
 function state_game() {
     let Time_manage = global.get_time_manage();
@@ -39,6 +31,7 @@ function updata_game_data() {
         //刷出新怪
         global.add_new_enemy();
     }
+
     //经验结算
     let exp_manage = global.get_exp_manage();
     exp_manage.set_leveling_behavior();
@@ -56,12 +49,13 @@ function updata_game_div() {
         let enemy_manage = global.get_enemy_manage();
         enemy_manage.updata_enemy_show();
     }
+    let P_attr = player.get_player_attributes();
     //血条显示更新
-    updata_HP();
+    P_attr.updata_HP_bar_div();
     //魔力条显示更新
-    updata_MP();
+    P_attr.updata_MP_bar_div();
     //精力条显示更新
-    updata_ENP();
+    P_attr.updata_ENP_bar_div();
     //玩家名称显示更新
     // updata_player_name();
     //玩家属性显示更新

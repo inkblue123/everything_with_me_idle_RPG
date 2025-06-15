@@ -58,12 +58,12 @@ function add_Enemy_object(enemys, newid) {
         console.log(`创建enemys[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
-function add_normal_Place(enemys, newid) {
-    if (enemys[newid] === undefined) {
-        // enemys[newid] = new P_normal(newid);
-    } else {
-        console.log(`创建enemys[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
-    }
-}
+// function add_normal_Place(enemys, newid) {
+//     if (enemys[newid] === undefined) {
+//         // enemys[newid] = new P_normal(newid);
+//     } else {
+//         console.log(`创建enemys[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+//     }
+// }
 
-export { add_Enemy_object, add_normal_Place };
+export { add_Enemy_object };

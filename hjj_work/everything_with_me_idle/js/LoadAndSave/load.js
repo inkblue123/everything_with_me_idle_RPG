@@ -1,5 +1,5 @@
 import { hide_div, Gradient_div } from '../Function/Dom_function.js';
-import { global } from '../GameRun/global_class.js';
+import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 
 //新游戏读档加载
@@ -16,7 +16,7 @@ function init_game() {
         console.log('%s', save_str);
         let save_obj = JSON.parse(save_str);
         //用存档对象里的内容加载游戏
-        global.load_global_class(save_obj.global_save);
+        global.load_global_manage(save_obj.global_save);
         player.load_player_class(save_obj.player_save);
     } else {
         //没有存档文件，进行新游戏初始化
@@ -27,7 +27,7 @@ function init_game() {
 function save_game() {
     let save_obj = new Object();
     //保存需要的游戏参数
-    save_obj.global_save = global.save_global_class();
+    save_obj.global_save = global.save_global_manage();
     save_obj.player_save = player.save_player_class();
 
     //将存档对象转换成字符串
@@ -70,7 +70,7 @@ function load_save(save_str) {
     //如果完成了开场剧情，则正常读档
 
     //用存档对象里的内容加载游戏
-    global.load_global_class(save_obj.global_save);
+    global.load_global_manage(save_obj.global_save);
     player.load_player_class(save_obj.player_save);
 }
 
@@ -85,8 +85,8 @@ function new_game_init() {
     hide_div('control_name_left_div');
     hide_div('control_name_right_div');
     //开场剧情需要，设置初始属性
-    let player_attributes = player.get_player_attributes();
-    player_attributes.set_a_attr('health_point', 20);
+    let P_attr = player.get_player_attributes();
+    P_attr.set_data_attr('health_point', 20);
     //开场剧情在村庄诊所
     let place_manage = global.get_place_manage();
     place_manage.set_now_place('village_hospital');
@@ -106,8 +106,8 @@ function finish_new_game_init() {
     Gradient_div('control_name_left_div');
     Gradient_div('control_name_right_div');
     //血量设置
-    let player_attributes = player.get_player_attributes();
-    player_attributes.set_a_attr('health_point', 100);
+    let P_attr = player.get_player_attributes();
+    P_attr.set_data_attr('health_point', 100);
     //当前地点
     let place_manage = global.get_place_manage();
     place_manage.set_now_place('village_hospital');

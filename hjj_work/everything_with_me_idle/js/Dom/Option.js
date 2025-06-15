@@ -1,7 +1,7 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 import { save_game, delete_save, load_save, load_save_show_tip } from '../LoadAndSave/load.js';
 import { player } from '../Player/Player.js';
-import { global } from '../GameRun/global_class.js';
+import { global } from '../GameRun/global_manage.js';
 
 var Option = crtElement('div', null, 'option_page', '');
 {
@@ -60,8 +60,13 @@ var Option = crtElement('div', null, 'option_page', '');
     let button7 = addElement(Option, 'button');
     button7.innerHTML = '导入存档';
     button7.onclick = function () {
-        // load_save();
         load_save_show_tip();
+    };
+    let button8 = addElement(Option, 'button');
+    button8.innerHTML = '进入测试战斗地点';
+    button8.onclick = function () {
+        let place_manage = global.get_place_manage();
+        place_manage.set_now_place('test_combat1');
     };
 }
 

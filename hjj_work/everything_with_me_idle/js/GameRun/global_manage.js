@@ -7,7 +7,7 @@ import { Exp_manage } from './exp_manage.js';
 import { Game_event_manage } from './game_event/game_event_manage.js';
 import { Global_flag_manage } from './global_flag/global_flag_manage.js';
 //记录全局参数和游戏状态的对象
-class Global {
+class Global_manage {
     constructor() {
         this.config; //全局设置
         this.time_manage; //帧率和时间类
@@ -128,7 +128,7 @@ class Global {
         return this.global_flag_manage.set_flag(flag_name, flag_value);
     }
     //对global对象进行存档
-    save_global_class() {
+    save_global_manage() {
         let global_save = new Object();
         //获取每个子对象的存档
         //时间类
@@ -152,7 +152,7 @@ class Global {
         return global_save;
     }
     //加载游戏存档
-    load_global_class(global_save) {
+    load_global_manage(global_save) {
         this.time_manage.load_Time_class(global_save.Time_save);
         this.global_flag_manage.load_global_flag_class(global_save.global_flag_save);
         this.game_event_manage.load_Game_event_class(global_save.game_event_save);
@@ -161,6 +161,6 @@ class Global {
     }
 }
 //记录全局参数和游戏状态的对象
-var global = new Global();
+var global = new Global_manage();
 
 export { global };

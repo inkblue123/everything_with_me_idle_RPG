@@ -4,7 +4,7 @@ import { addElement } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { texts } from '../../Data/Text/Text.js';
-import { global } from '../global_class.js';
+import { global } from '../global_manage.js';
 
 import { Game_status } from './game_status.js';
 import { get_use_game_status } from './use_game_status.js';

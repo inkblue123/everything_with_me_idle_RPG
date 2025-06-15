@@ -1,22 +1,7 @@
-import { add_text_object } from './Text_class.js';
+import { add_text_object } from '../Text_class.js';
+import { init_passive_skill } from './player_passive_skill.js';
+import { init_active_skill } from './player_active_skill.js';
 
-//攻击型技能的文本
-function init_attack_skill(texts) {
-    let id = 'normal_attack_Melee';
-    add_text_object(texts, id);
-    texts[id].skill_name = '普通攻击-近战';
-    texts[id].mini_skill_name = '普攻-近';
-    id = 'energy_storage_attack';
-    add_text_object(texts, id);
-    texts[id].skill_name = '蓄力攻击';
-    // texts[id].mini_skill_name = ;
-}
-//防御型技能的文本
-function init_defense_skill(texts) {
-    let id = 'shield_defense';
-    add_text_object(texts, id);
-    texts[id].skill_name = '盾牌防御';
-}
 //技能描述
 function init_skill_desc(texts) {
     //
@@ -65,10 +50,11 @@ function init_skill_condition_desc(texts) {
 }
 //初始化文本数据库中与技能相关的文本
 function init_Text_skill(texts) {
-    //攻击型技能的文本
-    init_attack_skill(texts);
-    //防御型技能的文本
-    init_defense_skill(texts);
+    //玩家主动技能的文本
+    init_active_skill(texts);
+
+    //玩家被动技能的文本
+    init_passive_skill(texts);
 
     //技能描述的文本
     init_skill_desc(texts);

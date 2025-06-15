@@ -1,11 +1,11 @@
 'use strict';
 import { check_Equipment, is_Empty_Object } from '../Function/Function.js';
-import { Player_attributes } from './Player_attributes.js';
+import { Player_attributes } from './attributes/Player_attributes.js';
 import { Player_backpack } from './Player_backpack.js';
 import { Player_worn } from './Player_worn.js';
 import { Player_active_skills_Manage } from './Player_active_skills.js';
 import { Player_skills } from './Player_skill.js';
-import { global } from '../GameRun/global_class.js';
+import { global } from '../GameRun/global_manage.js';
 
 export class Player_Object {
     constructor() {
@@ -147,27 +147,26 @@ export class Player_Object {
     updata_attr(active_reset_flag) {
         //获取当前穿戴的装备
         let player_worn = this.player_worn.get_worn_EQP();
-        //更新装备的属性加成
+        //更新装备的属性
         this.player_attributes.Summary_worn_EQP_attr(player_worn);
-        //更新玩家穿戴的装备类型
-        this.player_attributes.Summary_worn_EQP_weapon_type(player_worn);
 
         //获取当前拥有的技能
         //更新技能的加成
 
         //更新最终属性
         this.player_attributes.updata_end_attr();
-        //将最终属性更新到其他会用的地方
-        let end_attr = this.player_attributes.get_end_attr();
-        this.player_ASkills_manage.updata_player_data(end_attr, active_reset_flag);
+        //将最终数值属性更新到其他会用的地方
+        let end_data_attr = this.player_attributes.get_end_data_attr();
+        this.player_ASkills_manage.updata_player_data(end_data_attr, active_reset_flag);
     }
     //游戏运行一帧，计算玩家相关内容
     run_game_FPS() {
-        //玩家主动技能
-        this.player_ASkills_manage.run_player_active_skill();
         //玩家被动技能
 
-        //玩家临时buff
+        //玩家buff
+
+        //玩家主动技能
+        this.player_ASkills_manage.run_player_active_skill();
     }
 
     //对玩家对象进行存档

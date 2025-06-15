@@ -1,4 +1,4 @@
-import { global } from '../global_class.js';
+import { global } from '../global_manage.js';
 import { player } from '../../Player/Player.js';
 //获取临用游戏状态
 function get_use_game_status(flag_name) {

@@ -1,7 +1,7 @@
 import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
-import { global } from '../GameRun/global_class.js';
+import { global } from '../GameRun/global_manage.js';
 import { is_Empty_Object } from './Function.js';
 
 //根据玩家背包物品获得负重

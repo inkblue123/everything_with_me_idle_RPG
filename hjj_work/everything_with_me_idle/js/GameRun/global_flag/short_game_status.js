@@ -1,6 +1,6 @@
 import { is_Empty_Object } from '../../Function/Function.js';
 
-import { global } from '../global_class.js';
+import { global } from '../global_manage.js';
 
 //短期游戏状态标记
 class ShortGameStatus {

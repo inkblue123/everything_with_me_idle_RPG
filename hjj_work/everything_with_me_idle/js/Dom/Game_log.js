@@ -1,6 +1,6 @@
 import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
 import { show_dropdown_table, change_Game_log_div, change_RA_IE } from '../Function/show_func.js';
-import { global } from '../GameRun/global_class.js';
+import { global } from '../GameRun/global_manage.js';
 
 var Game_log = crtElement('div', 'game_log', null, '');
 

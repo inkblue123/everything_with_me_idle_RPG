@@ -2,7 +2,7 @@ import { init_game } from './LoadAndSave/load.js';
 import { state_game } from './GameRun/run_manage.js';
 import { game_data_init } from './Data/Data.js';
 import { game_dom_init } from './Dom/Dom.js';
-import { global } from './GameRun/global_class.js';
+import { global } from './GameRun/global_manage.js';
 import { player } from './Player/Player.js';
 import { dom } from './Dom/Dom.js';
 

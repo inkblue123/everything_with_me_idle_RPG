@@ -131,7 +131,6 @@ function show_active_skill_condition(slot_value_div, active_skill) {
                     C_desc_div.innerHTML += '未设定';
                     console.log(`没设定${id}技能的武器类型限制条件`);
                 } else {
-                    // for (let w_type of AC_WT) {
                     for (let i in AC_WT) {
                         let w_type = AC_WT[i];
                         if (enums['equipment_type'].includes(w_type)) {

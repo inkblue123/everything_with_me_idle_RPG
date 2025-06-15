@@ -1,10 +1,8 @@
 import { is_Empty_Object } from '../Function/Function.js';
-// import { show_combat_game_div, show_normal_game_div } from '../Function/show_func.js';
 
 import { places } from '../Data/Place/Place.js';
-import { global } from './global_class.js';
+import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
-// import { updata_to_normal_place, updata_to_combat_place } from '../Function/Updata_func.js';
 //记录地点相关内容的对象
 export class Place_manage {
     constructor() {
@@ -14,51 +12,31 @@ export class Place_manage {
     }
     init() {}
     //移动到新地点，更新相关参数
-    set_now_place(next_place) {
-        //新地点就是当前地点，不需要移动
-        // if (next_place == this.now_place) {
-        //     return;
-        // }
-
-        //移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
-        let next_place_type = places[next_place].type;
-        if (next_place_type == 'normal' || next_place_type == 'NPC') {
-            updata_to_normal_place();
-        } else if (next_place_type == 'combat') {
-            updata_to_combat_place();
+    set_now_place(next_place, goto_flag) {
+        if (this.now_place == next_place) {
         }
+        //移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
+        change_Combat_Normal_game_div(next_place);
+
+        //进入新地点会获得一些效果，在进入时获得
+        // goto_new_place_get(next_place);
+        //如果旧地点有效果，离开时应该失去
 
         //更新新旧地点参数
-        if (this.now_place && places[this.now_place]) {
-            if (places[this.now_place].type == 'normal') {
-                this.last_normal_place = this.now_place;
-            }
-        }
-        this.last_place = this.now_place;
-        this.now_place = next_place;
-
+        this.updata_new_place_data(next_place);
         //根据新地点参数，更新相关界面信息
         updata_control_place_name(next_place);
-        let control = document.getElementById('control');
+
+        if (goto_flag == 'mini_event') {
+            //迷你事件中移动玩家位置，由于控制界面主要用来呈现迷你事件的按钮，所以仅更新参数，不更新控制界面
+            return;
+        }
         //展示新地点的内容
+        let control = document.getElementById('control');
         control.show_now_place();
     }
-    //迷你事件中移动玩家位置，由于控制界面主要用来呈现迷你事件的按钮，所以仅更新参数，不更新控制界面
-    goto_mini_event_new_place(next_place) {
-        //新地点就是当前地点，不需要移动
-        // if (next_place == this.now_place) {
-        //     return;
-        // }
-
-        //移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
-        let next_place_type = places[next_place].type;
-        if (next_place_type == 'normal' || next_place_type == 'NPC') {
-            updata_to_normal_place();
-        } else if (next_place_type == 'combat') {
-            updata_to_combat_place();
-        }
-
-        //更新新旧地点参数
+    //更新新旧地点参数
+    updata_new_place_data(next_place) {
         if (this.now_place && places[this.now_place]) {
             if (places[this.now_place].type == 'normal') {
                 this.last_normal_place = this.now_place;
@@ -66,12 +44,6 @@ export class Place_manage {
         }
         this.last_place = this.now_place;
         this.now_place = next_place;
-
-        //根据新地点参数，更新相关界面信息
-        updata_control_place_name(next_place);
-        //展示新地点的内容
-        // let control = document.getElementById('control');
-        // control.show_now_place();
     }
     get_now_place() {
         return this.now_place;
@@ -89,7 +61,6 @@ export class Place_manage {
     get_last_normal_place() {
         return this.last_normal_place;
     }
-
     //获取地点类部分的游戏存档
     save_place_class() {
         let place_save = new Object();
@@ -119,7 +90,15 @@ function updata_control_place_name(now_place_id) {
     area_name_div.innerHTML = area_name;
     place_name_div.innerHTML = place_ch;
 }
-
+//移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
+function change_Combat_Normal_game_div(next_place) {
+    let next_place_type = places[next_place].type;
+    if (next_place_type == 'normal' || next_place_type == 'NPC') {
+        updata_to_normal_place();
+    } else if (next_place_type == 'combat') {
+        updata_to_combat_place();
+    }
+}
 //移动到新的普通地点，更新相关参数
 function updata_to_normal_place() {
     let place_manage = global.get_place_manage();
@@ -135,7 +114,6 @@ function updata_to_normal_place() {
         global.set_flag('GS_combat_statu', false);
     }
 }
-
 //移动到新的战斗地点，更新相关参数
 function updata_to_combat_place() {
     // 前往新的战斗区域，要清除旧的战斗相关的信息
@@ -155,7 +133,6 @@ function updata_to_combat_place() {
         global.set_flag('GS_combat_statu', true);
     }
 }
-
 //展示战斗时的游戏界面
 function show_combat_game_div() {
     const game_up_combat = document.getElementById('game_up_combat');
@@ -171,4 +148,20 @@ function show_normal_game_div() {
 
     game_up_combat.style.display = 'none';
     game_up_nomal.style.display = '';
+}
+//进入新地点会获得一些效果，在进入时获得
+function goto_new_place_get(next_place) {
+    let place_manage = global.get_place_manage();
+    let now_place = place_manage.get_now_place();
+    if (now_place == next_place) {
+        //移动到新地点实际上是原地踏步，不用重复获得效果
+        return;
+    }
+    //新地点有buff
+    if (!is_Empty_Object(places[next_place].buff)) {
+        // let buff_obj = new Object();
+        // buff_obj.id = places[next_place].buff;
+        let P_attr = player.get_player_attributes();
+        P_attr.set_buff_attr(places[next_place].buff);
+    }
 }

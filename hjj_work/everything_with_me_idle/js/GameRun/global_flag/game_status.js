@@ -1,7 +1,7 @@
 import { is_Empty_Object } from '../../Function/Function.js';
 
 import { enums } from '../../Data/Enum/Enum.js';
-import { global } from '../global_class.js';
+import { global } from '../global_manage.js';
 
 export class Game_status {
     //读取游戏状态标记

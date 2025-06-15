@@ -32,7 +32,6 @@ var P_skills = new Object();
 init_Plyaer_Passive_skill(P_skills);
 //初始化技能数据库中与玩家主动技能相关的内容
 init_Player_Active_skill(P_skills);
-// init_P_Active_skill(P_skills);
 
 //敌人所有技能
 var E_skills = new Object();

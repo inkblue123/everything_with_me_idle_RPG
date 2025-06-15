@@ -1,4 +1,4 @@
-import { global } from './global_class.js';
+import { global } from './global_manage.js';
 import { Attack_effect, E_Attack_effect } from './combat_class.js';
 import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';

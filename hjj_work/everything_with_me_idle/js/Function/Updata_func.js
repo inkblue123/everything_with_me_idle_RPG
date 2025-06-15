@@ -1,58 +1,27 @@
 import { player } from '../Player/Player.js';
-import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
-import { enemys } from '../Data/Enemy/Enemy.js';
 import { add_show_Tooltip, add_click_Active_skill_worn_remove } from './Dom_function.js';
 import { delete_player_active_div, delete_active_show_div } from './delete_func.js';
 import { is_Empty_Object } from './Function.js';
-import { global } from '../GameRun/global_class.js';
-//更新血条上的数值
-function updata_HP() {
-    const HP_bar = document.getElementById('HP_bar');
-    let P_attr = player.get_player_attributes();
-    let health_point = P_attr.get_a_attr('health_point');
-    let health_max = P_attr.get_a_attr('health_max');
 
-    HP_bar.children[0].children[0].style.width = `${(health_point / health_max) * 100}%`;
-    HP_bar.children[1].innerText = `${Math.floor(health_point)}/${Math.ceil(health_max)} 生命`;
-}
-//更新魔力条上的数值
-function updata_MP() {
-    const MP_bar = document.getElementById('MP_bar');
-    let P_attr = player.get_player_attributes();
-    let magic_point = P_attr.get_a_attr('magic_point');
-    let magic_max = P_attr.get_a_attr('magic_max');
-
-    MP_bar.children[0].children[0].style.width = `${(magic_point / magic_max) * 100}%`;
-    MP_bar.children[1].innerText = `${Math.floor(magic_point)}/${Math.ceil(magic_max)} 魔力`;
-}
-//更新精力条上的数值
-function updata_ENP() {
-    const ENP_bar = document.getElementById('ENP_bar');
-    let P_attr = player.get_player_attributes();
-    let energy_point = P_attr.get_a_attr('energy_point');
-    let energy_max = P_attr.get_a_attr('energy_max');
-
-    ENP_bar.children[0].children[0].style.width = `${(energy_point / energy_max) * 100}%`;
-    ENP_bar.children[1].innerText = `${Math.floor(energy_point)}/${Math.ceil(energy_max)} 精力`;
-}
 //更新角色名
 function updata_player_name() {
-    const name_input = document.getElementById('Player_name');
-    let P_attr = player.get_player_attributes();
+    const Player_name_div = document.getElementById('Player_name');
 
     //获取更新后的玩家名称
-    if (name_input.value.toString().trim().length > 0) {
-        P_attr.name = name_input.value;
-    } else {
-        P_attr.name = '玩家';
+    let input_name = Player_name_div.value;
+    if (input_name.toString().trim().length == 0) {
+        input_name = '玩家';
     }
     //修改左上玩家状态界面
-    name_input.value = P_attr.name;
+    Player_name_div.value = input_name;
+    //修改玩家属性
+    let P_attr = player.get_player_attributes();
+    P_attr.set_data_attr('name', input_name);
     //修改战斗界面玩家名称显示
     let MCP_player_head = document.getElementById('MCP_player_head');
-    MCP_player_head.innerHTML = P_attr.name;
+    MCP_player_head.innerHTML = input_name;
 }
 
 //更新玩家属性展示表格中的数值
@@ -66,20 +35,20 @@ function updata_attribute_show() {
     //战斗属性中，前5个是攻击属性
     let i = 0;
     for (let id of enums.combat_attack_attr) {
-        let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
+        let ch = texts[id].attr_name + '\n' + P_attr.get_data_attr(id);
         combat_attr_show.children[i].innerText = ch;
         i++;
     }
     //然后是4个是防御属性
     for (let id of enums.combat_defense_attr) {
-        let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
+        let ch = texts[id].attr_name + '\n' + P_attr.get_data_attr(id);
         combat_attr_show.children[i].innerText = ch;
         i++;
     }
     //7个玩家基础属性
     i = 0;
     for (let id of enums.player_base_attr) {
-        let ch = texts[id].attr_name + '\n' + P_attr.get_a_attr(id);
+        let ch = texts[id].attr_name + '\n' + P_attr.get_data_attr(id);
         player_base_attr.children[i].innerText = ch;
         i++;
     }
@@ -160,7 +129,6 @@ function updata_player_active_show() {
     //将玩家设置的主动技能在界面上展示出来
     let player_active_div = document.getElementById('player_active_div'); //战斗界面，玩家主动技能展示框
     let active_show_div = document.getElementById('active_show_div'); //战斗规划界面，主动技能规划展示框
-    let active_time_bar_div = document.getElementById('active_time_bar_div');
     let P_Askill = player.get_player_ASkill_Manage();
     let num = P_Askill.get_slot_num();
     let active_slots = P_Askill.get_active_slots();
@@ -168,7 +136,6 @@ function updata_player_active_show() {
         //
         if (!is_Empty_Object(active_slots[i])) {
             let skill_id = active_slots[i].id;
-            let slot_num = active_slots[i].slot_num;
             //战斗界面，玩家主动技能展示框
             if (texts[skill_id].skill_name.length >= 10) {
                 player_active_div.children[i].children[0].innerHTML = texts[skill_id].mini_skill_name;
@@ -232,9 +199,6 @@ function updata_player_active() {
 }
 
 export {
-    updata_HP,
-    updata_MP,
-    updata_ENP,
     updata_player_name,
     updata_attribute_show,
     updata_player_EQP,

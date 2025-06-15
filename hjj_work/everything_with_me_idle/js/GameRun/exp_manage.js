@@ -1,4 +1,4 @@
-import { global } from './global_class.js';
+import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
 import { is_Empty_Object } from '../Function/Function.js';
 import { P_skills } from '../Data/Skill/Skill.js';
@@ -58,9 +58,10 @@ export class Exp_manage {
             this.leveling_behavior.behavior = 'NULL';
         }
         //手持武器详细类型
-        let player_attr = player.get_player_attributes();
-        this.leveling_behavior.weapon_type = player_attr.get_a_attr('weapon_type');
+        let P_attr = player.get_player_attributes();
+        this.leveling_behavior.weapon_type = P_attr.get_data_attr('weapon_type');
     }
+    //重置练级行为
     reset_leveling_behavior() {
         this.leveling_behavior = new Leveling_Behavior(); //一帧里的练级数据
         this.Active_skill_exp = new Object(); //玩家主动技能获得的经验
@@ -69,8 +70,8 @@ export class Exp_manage {
 
     //结算玩家应该获得的技能经验
     player_get_exp() {
-        //主动技能获得经验
         let P_All_Skills = player.get_player_All_Skills();
+        //主动技能获得经验
         for (let id in this.Active_skill_exp) {
             P_All_Skills.get_skill_exp(id, this.Active_skill_exp[id]);
         }
