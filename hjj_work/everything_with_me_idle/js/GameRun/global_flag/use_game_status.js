@@ -17,6 +17,12 @@ function get_use_game_status(flag_name) {
         case 'UGS_BP_weight': //当前玩家背包物品的负重
             flag_value = get_UGS_BP_weight();
             break;
+        case 'UGS_get_up_time_flag': //当前游戏时间是否到了起床的时间点
+            flag_value = get_UGS_get_up_time_flag();
+            break;
+        case 'UGS_game_speed': //当前游戏运行速度
+            flag_value = get_UGS_game_speed();
+            break;
 
         default:
             console.log('未定义%s临用游戏状态标记的获取函数', flag_name);
@@ -62,6 +68,26 @@ function get_UGS_BP_weight() {
     }
     console.log('玩家当前背包负重%d', BP_weight);
     return BP_weight;
+}
+//临用游戏状态-当前游戏时间是否到了起床的时间点
+function get_UGS_get_up_time_flag() {
+    let time_manage = global.get_time_manage();
+    let game_date = time_manage.get_game_date();
+
+    //时间在6：55-7：05之间都算数
+    if (game_date.hours == 7 && game_date.minutes <= 5) {
+        return true;
+    }
+    if (game_date.hours == 6 && game_date.minutes >= 55) {
+        return true;
+    }
+
+    return false;
+}
+//临用游戏状态-当前游戏运行速度
+function get_UGS_game_speed() {
+    let time_manage = global.get_time_manage();
+    return time_manage.get_game_speed();
 }
 
 export { get_use_game_status };

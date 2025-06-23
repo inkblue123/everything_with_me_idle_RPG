@@ -159,12 +159,15 @@ export class Player_Object {
         let end_data_attr = this.player_attributes.get_end_data_attr();
         this.player_ASkills_manage.updata_player_data(end_data_attr, active_reset_flag);
     }
-    //游戏运行一帧，计算玩家相关内容
-    run_game_FPS() {
+    //游戏运行一帧，计算玩家常态数值变化内容
+    run_player_normal() {
         //玩家被动技能
 
         //玩家buff
-
+        this.player_attributes.run_player_buff();
+    }
+    //游戏运行一帧，计算玩家的战斗相关内容
+    run_player_combat() {
         //玩家主动技能
         this.player_ASkills_manage.run_player_active_skill();
     }

@@ -4,6 +4,7 @@ import { places } from '../Data/Place/Place.js';
 import { game_events } from '../Data/Game_event/Game_Event.js';
 import { texts } from '../Data/Text/Text.js';
 import { global } from '../GameRun/global_manage.js';
+import { player } from '../Player/Player.js';
 
 var Control = crtElement('div', 'control', null, '');
 
@@ -43,10 +44,11 @@ Control.show_now_place = function () {
     let place_manage = global.get_place_manage();
     let now_place_id = place_manage.get_now_place();
 
-    if (places[now_place_id].type == 'normal' || places[now_place_id].type == 'combat') {
-        show_new_place(places[now_place_id]);
-    } else if (places[now_place_id].type == 'NPC') {
+    if (places[now_place_id].type == 'NPC') {
         show_new_NPC(places[now_place_id]);
+    } else {
+        // if (places[now_place_id].type == 'normal' || places[now_place_id].type == 'combat') {
+        show_new_place(places[now_place_id]);
     }
     if (global.get_flag('GS_game_event')) {
         add_control_button_end_event('退出', null);
@@ -80,28 +82,42 @@ Control.show_mini_event_process = function (event_id, process_id, click_button_i
             game_event_manage.updata_mini_event(event_id, process_id, button_id);
         });
     }
+
+    //这个流程中会获得buff
+    if (!is_Empty_Object(process.buff)) {
+        for (let buff_id of process.buff) {
+            let P_attr = player.get_player_attributes();
+            P_attr.set_buff_attr(buff_id);
+        }
+    }
 };
 //展示新地点的内容
 function show_new_place(new_place) {
     //展示新地点的描述
     Place_desc_div.innerHTML = new_place.desc;
 
-    //可以前往其他普通区域
-    if (!is_Empty_Object(new_place.other_normal_place)) {
-        for (let next_place_id of new_place.other_normal_place) {
+    //可以前往普通区域
+    if (!is_Empty_Object(new_place.connect_normal_place)) {
+        for (let next_place_id of new_place.connect_normal_place) {
             add_control_button_move(next_place_id, '前往', null);
         }
     }
-    //可以前往其他战斗区域
-    if (!is_Empty_Object(new_place.other_combat_place)) {
-        for (let next_place_id of new_place.other_combat_place) {
+    //可以前往战斗区域
+    if (!is_Empty_Object(new_place.connect_combat_place)) {
+        for (let next_place_id of new_place.connect_combat_place) {
             add_control_button_move(next_place_id, '前往', null);
         }
     }
-    //此处有其他NPC
-    if (!is_Empty_Object(new_place.other_NPC)) {
-        for (let next_place_id of new_place.other_NPC) {
+    //此处有NPC
+    if (!is_Empty_Object(new_place.place_NPC)) {
+        for (let next_place_id of new_place.place_NPC) {
             add_control_button_move(next_place_id, '拜访', null);
+        }
+    }
+    //可以前往其他区域
+    if (!is_Empty_Object(new_place.connect_other_place)) {
+        for (let next_place_id of new_place.connect_other_place) {
+            add_control_button_move(next_place_id, '前往', null);
         }
     }
     // if (new_place.exit_place != undefined) {
@@ -209,24 +225,7 @@ function make_NPC_condition_meet_chat(NPC) {
             chat_flag = true;
             break;
         }
-
-        // let id = NPC.condition_meet_chat[i].status_id; //需要判断的游戏状态
-        // let value = NPC.condition_meet_chat[i].value; //游戏状态的目标数值
-        //     text += NPC.condition_meet_chat[i].text;
-        //     chat_flag = true;
-        //     break;
-        // }
     }
-    // for (let i = 0; i < NPC.condition_meet_chat.length; i++) {
-    //     let id = NPC.condition_meet_chat[i].status_id; //需要判断的游戏状态
-    //     let value = NPC.condition_meet_chat[i].value; //游戏状态的目标数值
-    //     let status = global_flag_manage.get_flag(id); //当前这个游戏状态的内容
-    //     if (status == value) {
-    //         text += NPC.condition_meet_chat[i].text;
-    //         chat_flag = true;
-    //         break;
-    //     }
-    // }
     //需要满足游戏状态的对话都不满足，使用默认对话
     if (!chat_flag) {
         text += NPC.default_meet_chat;

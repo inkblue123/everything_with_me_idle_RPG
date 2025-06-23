@@ -19,9 +19,16 @@ function state_game() {
 
 //更新一帧内的数据变化
 function updata_game_data() {
+    //玩家数值更新
+    player.run_player_normal();
+    //判断这一帧是否有事件会触发
+    let place_manage = global.get_place_manage();
+    place_manage.updata_now_place_condition_event();
+
+    //战斗数值更新
     if (global.get_combat_statu()) {
         //玩家攻击
-        player.run_game_FPS();
+        player.run_player_combat();
         //敌人攻击
         let enemy_manage = global.get_enemy_manage();
         enemy_manage.run_enemy_active_skill();

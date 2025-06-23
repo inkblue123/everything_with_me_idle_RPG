@@ -10,6 +10,7 @@ export class Mini_event {
         this.mini_event_button_flag = new Object(); //迷你事件的按键情况记录
     }
     init() {}
+
     start_mini_event(event_id) {
         //判断该事件是否满足启动条件
         let ret = this.check_mini_event_start(event_id);
@@ -43,7 +44,9 @@ export class Mini_event {
         if (flag == 'finish') {
             //事件完成
             global_flag_manage.set_flag(event_id, flag);
-            global_flag_manage.set_game_log('finish_event', event_id);
+            if (game_events[event_id].game_log_flag == true || game_events[event_id].game_log_flag == undefined) {
+                global_flag_manage.set_game_log('finish_event', event_id);
+            }
         }
         //迷你事件退出原因设置短期游戏参数
         let SGS_flag_name = 'SGS_' + event_id;

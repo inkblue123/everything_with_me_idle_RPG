@@ -233,11 +233,13 @@ export class Combat_manage {
                 e_damage = e_damage - defense * 0.1;
                 e_damage = Math.floor(e_damage);
             }
+            e_damage = e_damage * -1;
 
             //计算完毕，攻击打到玩家身上
-            let health_point = P_attr.get_data_attr('health_point');
-            health_point -= e_damage;
-            P_attr.set_data_attr('health_point', health_point);
+            // let health_point = P_attr.get_data_attr('health_point');
+            // health_point -= e_damage;
+            // P_attr.set_data_attr('health_point', health_point);
+            P_attr.change_data_attr('health_point', e_damage);
 
             //添加一条敌人攻击的游戏日志
             global_flag_manage.set_game_log(

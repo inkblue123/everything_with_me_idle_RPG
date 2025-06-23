@@ -9,7 +9,7 @@ export class Skill {
         this.levelup_flag; //是否可以升级标记
 
         this.type; //类型
-        this.leveling_behavior = new Array(); //练级行为
+        this.leveling_behavior = new Object(); //练级行为
         this.init_Skill_name(id);
     }
 
@@ -98,6 +98,10 @@ export class Skill {
         if (base_exp) this.base_exp = base_exp; //第一级需要的经验
         if (max_level) this.max_level = max_level; // 最大等级上限
         if (algorithm) this.levelup_algorithm = algorithm; // 经验需求量算法
+    }
+    //添加什么情况下会获得经验
+    add_leveling_behavior(type, value) {
+        this.leveling_behavior[type] = value;
     }
 }
 //玩家被动技能

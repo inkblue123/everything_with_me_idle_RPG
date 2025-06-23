@@ -193,6 +193,31 @@ export class Data_attr_manage {
         }
         this.updata_end_attr();
     }
+    //根据id改变玩家属性，只允许改变血量蓝量精力的当前值
+    change_data_attr(id, value) {
+        if (id == 'health_point') {
+            this.health_point += value;
+            if (this.health_point < 0) {
+                this.health_point = 0;
+            } else if (this.health_point > this.end_data_attr['health_max']) {
+                this.health_point = this.end_data_attr['health_max'];
+            }
+        } else if (id == 'magic_point') {
+            this.magic_point += value;
+            if (this.magic_point < 0) {
+                this.magic_point = 0;
+            } else if (this.magic_point > this.end_data_attr['magic_max']) {
+                this.magic_point = this.end_data_attr['magic_max'];
+            }
+        } else if (id == 'energy_point') {
+            this.energy_point += value;
+            if (this.energy_point < 0) {
+                this.energy_point = 0;
+            } else if (this.energy_point > this.end_data_attr['energy_max']) {
+                this.energy_point = this.end_data_attr['energy_max'];
+            }
+        }
+    }
     //根据id获取属性
     get_data_attr(id) {
         if (id == 'health_point') {

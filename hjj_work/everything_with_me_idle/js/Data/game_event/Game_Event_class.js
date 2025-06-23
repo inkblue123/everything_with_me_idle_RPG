@@ -159,6 +159,16 @@ export class Mini_event extends Game_Event {
             }
         }
     }
+    //向迷你事件的一个流程里添加一个buff,进入这个流程时获得
+    add_process_buff(process_id, ...buff_value) {
+        if (is_Empty_Object(this.process[process_id])) {
+            this.process[process_id] = new Object();
+        }
+        this.process[process_id].buff = new Array();
+        for (let buff_id of buff_value) {
+            this.process[process_id].buff.push(buff_id);
+        }
+    }
 }
 
 function add_Game_Event_object(game_events, newid) {

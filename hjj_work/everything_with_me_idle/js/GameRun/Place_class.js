@@ -1,4 +1,5 @@
 import { is_Empty_Object } from '../Function/Function.js';
+import { buffs } from '../Data/Buff/Buff.js';
 
 import { places } from '../Data/Place/Place.js';
 import { global } from './global_manage.js';
@@ -13,14 +14,15 @@ export class Place_manage {
     init() {}
     //移动到新地点，更新相关参数
     set_now_place(next_place, goto_flag) {
-        if (this.now_place == next_place) {
-        }
         //移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
         change_Combat_Normal_game_div(next_place);
 
-        //进入新地点会获得一些效果，在进入时获得
-        // goto_new_place_get(next_place);
-        //如果旧地点有效果，离开时应该失去
+        if (this.now_place != next_place) {
+            //进入新地点会获得一些效果，在进入时获得
+            goto_new_place_get(next_place);
+            //如果旧地点有效果，离开时应该失去
+            leave_old_place_delete(this.now_place);
+        }
 
         //更新新旧地点参数
         this.updata_new_place_data(next_place);
@@ -44,6 +46,28 @@ export class Place_manage {
         }
         this.last_place = this.now_place;
         this.now_place = next_place;
+    }
+    //更新当前地点的条件事件，满足条件时触发
+    updata_now_place_condition_event() {
+        if (is_Empty_Object(places[this.now_place].condition_event)) {
+            //当前地点没有条件事件，不用更新
+            return;
+        }
+        let global_flag_manage = global.get_global_flag_manage();
+        for (let obj of places[this.now_place].condition_event) {
+            let flag = true;
+            for (let status_obj of obj.status) {
+                let status = global_flag_manage.get_flag(status_obj.status_id); //当前需要判断的游戏状态的内容
+                if (status != status_obj.value) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                let game_event_manage = global.get_game_event_manage();
+                game_event_manage.start_game_event(obj.event_id);
+            }
+        }
     }
     get_now_place() {
         return this.now_place;
@@ -151,17 +175,32 @@ function show_normal_game_div() {
 }
 //进入新地点会获得一些效果，在进入时获得
 function goto_new_place_get(next_place) {
-    let place_manage = global.get_place_manage();
-    let now_place = place_manage.get_now_place();
-    if (now_place == next_place) {
-        //移动到新地点实际上是原地踏步，不用重复获得效果
-        return;
-    }
     //新地点有buff
     if (!is_Empty_Object(places[next_place].buff)) {
-        // let buff_obj = new Object();
-        // buff_obj.id = places[next_place].buff;
         let P_attr = player.get_player_attributes();
-        P_attr.set_buff_attr(places[next_place].buff);
+        for (let id of places[next_place].buff) {
+            if (is_Empty_Object(buffs[id])) {
+                console.log('%s地点有未知buff：%s', next_place, id);
+            } else {
+                P_attr.set_buff_attr(id);
+            }
+        }
+    }
+}
+//如果旧地点有效果，离开时应该失去
+function leave_old_place_delete(old_place) {
+    if (old_place == undefined) {
+        return;
+    }
+    if (!is_Empty_Object(places[old_place].buff)) {
+        //旧地点有buff
+        let P_attr = player.get_player_attributes();
+        for (let id of places[old_place].buff) {
+            if (is_Empty_Object(buffs[id])) {
+                console.log('%s地点有未知buff：%s', old_place, id);
+            } else {
+                P_attr.delete_buff_attr(id);
+            }
+        }
     }
 }

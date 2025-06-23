@@ -98,28 +98,6 @@ class Global_manage {
     set_conbat_player_attack(player_Attack_effect) {
         this.combat_manage.set_player_next_attack(player_Attack_effect);
     }
-    //游戏运行一帧，计算全局内容
-    run_game_FPS() {
-        if (this.get_combat_statu()) {
-            //当前处于战斗状态，这一帧需要计算战斗的情况
-            //敌人主动技能
-            this.enemy_manage.run_enemy_active_skill();
-            //进行战斗
-            this.combat_manage.run_combat();
-
-            //刷出新怪
-            this.add_new_enemy();
-            //战斗界面敌人ui更新
-            this.enemy_manage.updata_enemy_show();
-
-            //战斗经验结算
-            this.exp_manage.set_leveling_behavior();
-            this.exp_manage.player_get_exp();
-        }
-
-        //更新游戏信息
-        this.global_flag_manage.updata_flag();
-    }
     //获取游戏标记
     get_flag(flag_name) {
         return this.global_flag_manage.get_flag(flag_name);

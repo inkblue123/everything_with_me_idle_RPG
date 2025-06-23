@@ -54,6 +54,8 @@ function is_Empty_Object(obj) {
     if (obj === null) return true;
     //没有任何内容的对象会返回真
     if (JSON.stringify(obj) === '{}') return true;
+    //没有任何内容的数组会返回真
+    if (JSON.stringify(obj) === '[]') return true;
 
     return false;
 }

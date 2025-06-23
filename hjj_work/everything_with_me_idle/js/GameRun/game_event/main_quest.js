@@ -86,7 +86,6 @@ export class Main_quest_manage {
                 let game_event_manage = global.get_game_event_manage();
                 for (let event_id of finish_reward['start_event']) {
                     game_event_manage.start_game_event(event_id);
-                    // game_event_manage.set_game_log('finish_event', flag_name);
                 }
             }
         }

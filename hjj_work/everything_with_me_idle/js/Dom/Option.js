@@ -68,6 +68,12 @@ var Option = crtElement('div', null, 'option_page', '');
         let place_manage = global.get_place_manage();
         place_manage.set_now_place('test_combat1');
     };
+    button8 = addElement(Option, 'button');
+    button8.innerHTML = '血量设0';
+    button8.onclick = function () {
+        let P_attr = player.get_player_attributes();
+        P_attr.set_data_attr('health_point', 0);
+    };
 }
 
 export { Option };

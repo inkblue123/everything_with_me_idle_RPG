@@ -91,6 +91,18 @@ function init_mini_event(game_events) {
     game_events[id].add_process_button_click('process7', 'b13', 'next_process', 'end');
     game_events[id].add_process_button_thing('process7', 'b13', 'reset_time');
     game_events[id].add_process_button_thing('process7', 'b13', 'show_div', 'control_name_right_div');
+
+    id = 'get_up'; //起床
+    add_Mini_event_obj(game_events, id);
+    //该迷你事件出现的条件
+    // game_events[id].set_conditions_appear('UGS_village_barracks_week', 3);
+    //该迷你事件的所有流程
+    game_events[id].set_new_process('first', 'text1');
+    game_events[id].add_process_buff('first', 'get_up_buff');
+    game_events[id].add_process_button('first', 'b1', 'text2');
+    game_events[id].add_process_button_click('first', 'b1', 'next_process', 'end');
+    game_events[id].add_process_button_thing('first', 'b1', 'move_place', 'village_home');
+    game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
 }
 
 export { init_mini_event };

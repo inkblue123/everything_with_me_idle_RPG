@@ -20,6 +20,7 @@ export class Player_attributes {
     save_Player_attributes() {
         let Player_attr_save = new Object();
         Player_attr_save.data_attr_save = this.data_attr.save_Data_attr();
+        Player_attr_save.buff_attr_save = this.buff_attr.save_Buff_attr();
         return Player_attr_save;
     }
     //加载玩家属性部分的游戏存档
@@ -28,6 +29,7 @@ export class Player_attributes {
             return;
         }
         this.data_attr.load_Data_attr(Player_attr_save.data_attr_save);
+        this.buff_attr.load_Buff_attr(Player_attr_save.buff_attr_save);
     }
     //汇总穿戴的装备上的属性加成
     Summary_worn_EQP_attr(worn_EQP) {
@@ -41,8 +43,15 @@ export class Player_attributes {
         return this.data_attr.set_data_attr(id, value);
     }
     //根据id让玩家获得一个buff
-    set_buff_attr(value) {
-        return this.buff_attr.set_buff_attr(value);
+    set_buff_attr(id) {
+        return this.buff_attr.set_buff_attr(id);
+    }
+    //根据id让玩家失去一个buff
+    delete_buff_attr(id) {
+        return this.buff_attr.delete_buff_attr(id);
+    }
+    change_data_attr(id, value) {
+        return this.data_attr.change_data_attr(id, value);
     }
     //根据id获取数值属性
     get_data_attr(id) {
@@ -55,6 +64,10 @@ export class Player_attributes {
     //获取最终属性
     get_end_buff_attr() {
         return this.buff_attr.get_end_buff_attr();
+    }
+
+    run_player_buff() {
+        this.buff_attr.run_player_buff();
     }
     //更新最终属性
     updata_end_attr() {

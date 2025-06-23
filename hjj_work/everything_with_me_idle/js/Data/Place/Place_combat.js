@@ -6,7 +6,7 @@ function init_Place_combat(places) {
         let id = 'test_combat1'; //测试战斗地点
         add_combat_Place(places, id, 'test');
         //可联通地点的id
-        places[id].add_other_normal_place('test_normal1');
+        places[id].add_connect_normal_place('test_normal1');
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'fixed'; //刷怪方式-固定位置
         //刷怪方式的约束条件
@@ -28,7 +28,7 @@ function init_Place_combat(places) {
     {
         let id = 'VB_melee_train'; //村庄兵营-近战训练场地
         add_combat_Place(places, id, 'village');
-        places[id].add_other_normal_place('village_barracks');
+        places[id].add_connect_normal_place('village_barracks');
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'fixed'; //刷怪方式-固定位置
         //刷怪方式的约束条件
@@ -51,7 +51,7 @@ function init_Place_combat(places) {
     {
         let id = 'VB_range_train'; //村庄兵营-远程训练场地
         add_combat_Place(places, id, 'village');
-        places[id].add_other_normal_place('village_barracks');
+        places[id].add_connect_normal_place('village_barracks');
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'random'; //刷怪方式随机位置
         // places[id].enemy = ['Training_Dummy']; //能刷什么敌人
@@ -71,7 +71,7 @@ function init_Place_combat(places) {
         add_combat_Place(places, id, 'village');
         places[id].exit_place = 'last_place'; //可以退出当前地点，退出到
         places[id].relation_quest = 'new_player_combat_test'; //当前地点关联的任务
-        // places[id].add_other_normal_place('last_place');
+        // places[id].add_connect_normal_place('last_place');
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'fixed'; //刷怪方式-固定位置
         //刷怪方式的约束条件

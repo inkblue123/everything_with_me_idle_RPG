@@ -74,6 +74,12 @@ function mini_event_text(texts) {
     texts[id].text23 =
         '        兵营教练：（小声）村里的守卫得到了命令，如果你不能完成训练，就不允许去村里其他地方，如果你强行要闯，他们就以你不守规矩为理由把你赶出村外。你曾经在兵营时就展现出了战斗的天赋，这样的才华不要一时糊涂被歹人算计了<br>        兵营教练：（大声）没什么事就不要出门了，为明天的训练做准备吧';
     texts[id].text24 = '…………知道了（休息到第二天）';
+
+    id = 'get_up';
+    add_text_object(texts, id);
+    texts[id].event_name = '该起床了';
+    texts[id].text1 = '时候不早，该起床了';
+    texts[id].text2 = '起床，前往村庄住所';
 }
 //事件完成条件的文本
 function event_finish_condition_text(texts) {

@@ -9,11 +9,13 @@ export class Place {
         this.type; //地点类型
         this.area_id; //地点所在的区域
         this.area_name; //区域名称
-        this.other_normal_place = new Array(); //可以联通的其他普通地点
-        this.other_combat_place = new Array(); //可以联通的其他战斗地点
-        this.other_NPC = new Array(); //位于此处的NPC
+        this.connect_normal_place = new Array(); //可以联通的普通地点
+        this.connect_combat_place = new Array(); //可以联通的战斗地点
+        this.connect_other_place = new Array(); //可以联通的其他地点
+        this.place_NPC = new Array(); //位于此处的NPC
+        this.condition_event = new Array();
         this.init_Place_name_desc(place_id);
-        this.set_area(area_id);
+        this.set_area(area_id); //设置这个地点的所属区域
     }
     //调用文本数据库中的地点名称和描述
     init_Place_name_desc(place_id) {
@@ -36,21 +38,27 @@ export class Place {
         }
     }
     //添加这个地点可以联通的其他普通地点
-    add_other_normal_place(...args) {
+    add_connect_normal_place(...args) {
         for (let id of args) {
-            this.other_normal_place.push(id);
+            this.connect_normal_place.push(id);
         }
     }
     //添加这个地点可以联通的其他战斗地点
-    add_other_combat_place(...args) {
+    add_connect_combat_place(...args) {
         for (let id of args) {
-            this.other_combat_place.push(id);
+            this.connect_combat_place.push(id);
         }
     }
     //添加这个地点存在的NPC
-    add_other_NPC(...args) {
+    add_place_NPC(...args) {
         for (let id of args) {
-            this.other_NPC.push(id);
+            this.place_NPC.push(id);
+        }
+    }
+    //添加这个地点可以联通的其他地点
+    add_connect_other_place(...args) {
+        for (let id of args) {
+            this.connect_other_place.push(id);
         }
     }
     //设置这个地点的所属区域
@@ -71,6 +79,24 @@ export class Place {
                 this.area_name = texts[area_id].area_name;
             }
         }
+    }
+    //添加在这个地点有条件触发的事件
+    add_condition_event(...value) {
+        if (value.length < 3 || value.length % 2 != 1) {
+            console.log('参数数量错误，至少输入3个参数，且应该是奇数个参数');
+            return;
+        }
+        let condition_event_obj = new Object();
+        condition_event_obj.status = new Array();
+        condition_event_obj.event_id = value[0]; //输入参数中第一个参数是事件id
+        for (let i = 1; i < value.length; i += 2) {
+            //输入参数后面每两个参数，一个是条件id，另一个是条件的值
+            let status_obj = new Object();
+            status_obj.status_id = value[i];
+            status_obj.value = value[i + 1];
+            condition_event_obj.status.push(status_obj);
+        }
+        this.condition_event.push(condition_event_obj);
     }
 }
 //普通地点
@@ -99,13 +125,13 @@ export class P_NPC extends Place {
         this.condition_meet_chat = new Array(); //条件见面对话
         this.default_meet_chat = texts[place_id].default_meet_chat; //默认见面对话
     }
-    //添加在这个npc面前可以做的行动
+    //添加在这个npc面前可以做的行动，在玩家控制界面添加一个按钮
     add_behavior(...args) {
         for (let id of args) {
             this.behaviors.push(id);
         }
     }
-    //添加在这个npc面前满足条件才可以做的行动
+    //添加在这个npc面前满足条件才可以做的行动，满足条件时才在控制界面添加按钮
     add_condition_behavior(...value) {
         for (let event_id of value) {
             this.condition_behaviors.push(event_id);

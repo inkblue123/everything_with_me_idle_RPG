@@ -84,6 +84,10 @@ export class Time_manage {
     get_game_now_time() {
         return this.game_now_time;
     }
+    //获取当前游戏时间
+    get_game_speed() {
+        return this.game_speed;
+    }
     //设置游戏日期到初始值
     reset_game_date() {
         this.game_date.year = 2025;
@@ -149,6 +153,7 @@ export class Time_manage {
             return;
         }
         this.game_date = Time_save.game_date; //当前游戏日期
+        this.game_date.start_time = this.now_time; //当前游戏日期
         this.show_game_date();
     }
 }
