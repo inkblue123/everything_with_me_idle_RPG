@@ -37,10 +37,16 @@ export class Player_Object {
         this.player_ASkills_manage = new Player_active_skills_Manage();
         this.player_ASkills_manage.init();
         //更新玩家属性
-        this.updata_attr();
+        this.updata_end_attr();
     }
     get_player_attributes() {
         return this.player_attributes;
+    }
+    get_player_attributes_buff_attr() {
+        return this.player_attributes.buff_attr;
+    }
+    get_player_attributes_data_attr() {
+        return this.player_attributes.data_attr;
     }
     get_player_backpack() {
         return this.player_backpack;
@@ -53,6 +59,12 @@ export class Player_Object {
     }
     get_player_All_Skills() {
         return this.player_skills;
+    }
+    get_player_All_passive_skills() {
+        return this.player_skills.passive_skills;
+    }
+    get_player_All_active_skills() {
+        return this.player_skills.active_skills;
     }
     //给玩家背包添加物品，js版函数重载
     Player_get_item(...args) {
@@ -143,21 +155,24 @@ export class Player_Object {
         //背包物品变动，刷新背包界面
         this.player_backpack.updata_BP_value();
     }
+    //更新玩家当前的最终属性
+    updata_end_attr() {
+        //更新最终属性
+        let P_data_attr = this.get_player_attributes_data_attr();
+        P_data_attr.updata_end_attr();
+        //将最终数值属性更新到其他会用的地方
+        let end_data_attr = this.player_attributes.get_end_data_attr();
+        this.player_ASkills_manage.updata_player_data(end_data_attr);
+    }
     //根据玩家当前的加成更新属性
-    updata_attr(active_reset_flag) {
+    updata_EQP_attr() {
         //获取当前穿戴的装备
         let player_worn = this.player_worn.get_worn_EQP();
         //更新装备的属性
-        this.player_attributes.Summary_worn_EQP_attr(player_worn);
-
-        //获取当前拥有的技能
-        //更新技能的加成
-
-        //更新最终属性
-        this.player_attributes.updata_end_attr();
-        //将最终数值属性更新到其他会用的地方
+        this.player_attributes.updata_EQP_attr(player_worn);
+        //将更新后的最终数值属性更新到其他会用的地方
         let end_data_attr = this.player_attributes.get_end_data_attr();
-        this.player_ASkills_manage.updata_player_data(end_data_attr, active_reset_flag);
+        this.player_ASkills_manage.updata_player_data(end_data_attr);
     }
     //游戏运行一帧，计算玩家常态数值变化内容
     run_player_normal() {
@@ -196,7 +211,7 @@ export class Player_Object {
         this.player_worn.load_Player_worn(player_save.Player_worn_save);
         this.player_skills.load_Player_skills(player_save.Player_skills_save);
         this.player_ASkills_manage.load_Player_ASkills_manage(player_save.Player_ASkills_manage_save);
-        this.updata_attr();
+        this.updata_end_attr();
     }
 }
 

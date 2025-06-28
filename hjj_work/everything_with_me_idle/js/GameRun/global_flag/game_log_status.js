@@ -77,6 +77,26 @@ export class Game_log_status {
         this.other_log = new CircularQueue(10);
         this.new_log = new CircularQueue(10);
     }
+    set_game_log(type, value) {
+        if (type == 'player_attack') {
+            this.set_player_attack_game_log(value);
+        }
+        if (type == 'finish_event') {
+            this.set_finish_event_game_log(value);
+        }
+        if (type == 'unluck_skill') {
+            this.set_unluck_skill_game_log(value);
+        }
+        if (type == 'get_item') {
+            this.set_get_item_game_log(value);
+        }
+        if (type == 'enemy_attack') {
+            this.set_enemy_attack_game_log(value);
+        }
+        if (type == 'skill_levelup') {
+            this.set_skill_levelup(value);
+        }
+    }
     //添加一条玩家攻击的游戏日志
     set_player_attack_game_log(value) {
         //例句：我使用普通攻击对敌人造成了1近战伤害
@@ -132,19 +152,32 @@ export class Game_log_status {
         this.all_log.enLog(log_obj);
         this.new_log.enLog(log_obj);
     }
-    //玩家解锁了新的主动技能的日志
-    set_unluck_active_skill_game_log(value) {
+    //玩家解锁了新的技能的日志
+    set_unluck_skill_game_log(value) {
         //例句：学会了施展“普通攻击-近战”
         //需要用到的参数是技能id
         let log_obj = new Object();
         log_obj.type = 'RA_other';
-        log_obj.log_type = 'unluck_active_skill';
+        log_obj.log_type = 'unluck_skill';
         log_obj.id = value;
         this.other_log.enLog(log_obj);
         this.all_log.enLog(log_obj);
         this.new_log.enLog(log_obj);
     }
-
+    //玩家有技能升级了
+    set_skill_levelup(value) {
+        //例句：“普通攻击-近战”提高了1级，目前2级
+        //需要用到的参数是技能id，提升的等级，目前等级
+        let log_obj = new Object();
+        log_obj.type = 'RA_other';
+        log_obj.log_type = 'skill_levelup';
+        log_obj.id = value[0];
+        log_obj.up_level = value[1];
+        log_obj.now_level = value[2];
+        this.other_log.enLog(log_obj);
+        this.all_log.enLog(log_obj);
+        this.new_log.enLog(log_obj);
+    }
     //根据当前启动的脑海流水账过滤条件，将对应队列里的日志打印出来
     show_game_log_status(RA_type) {
         //清除原本日志
@@ -170,8 +203,10 @@ export class Game_log_status {
                 this.make_player_attack_game_log(new_log_div, a_new_log);
             } else if (a_new_log.log_type == 'finish_event') {
                 this.make_finish_event_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'unluck_active_skill') {
-                this.make_unluck_active_skill_game_log(new_log_div, a_new_log);
+            } else if (a_new_log.log_type == 'unluck_skill') {
+                this.make_unluck_skill_game_log(new_log_div, a_new_log);
+            } else if (a_new_log.log_type == 'skill_levelup') {
+                this.make_skill_levelup_game_log(new_log_div, a_new_log);
             }
         }
         //去除过多的信息
@@ -221,8 +256,10 @@ export class Game_log_status {
                     this.make_player_attack_game_log(new_log_div, a_new_log);
                 } else if (a_new_log.log_type == 'finish_event') {
                     this.make_finish_event_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'unluck_active_skill') {
-                    this.make_unluck_active_skill_game_log(new_log_div, a_new_log);
+                } else if (a_new_log.log_type == 'unluck_skill') {
+                    this.make_unluck_skill_game_log(new_log_div, a_new_log);
+                } else if (a_new_log.log_type == 'skill_levelup') {
+                    this.make_skill_levelup_game_log(new_log_div, a_new_log);
                 }
             }
         }
@@ -296,7 +333,7 @@ export class Game_log_status {
             part2.innerHTML = item_name;
         }
     }
-    //生成一条玩家攻击的游戏日志
+    //生成一条玩家完成了某个事件的游戏日志
     make_finish_event_game_log(new_log_div, log_obj) {
         let event_id = log_obj.event_id;
         //例句：完成了“周一新手教学”事件
@@ -305,12 +342,29 @@ export class Game_log_status {
         let part1 = addElement(new_log_div, 'div', null, 'RA_log_div');
         part1.innerHTML = ch;
     }
-    //生成一条玩家攻击的游戏日志
-    make_unluck_active_skill_game_log(new_log_div, log_obj) {
+    //生成一条玩家解锁了新的技能的日志
+    make_unluck_skill_game_log(new_log_div, log_obj) {
+        // 例句：学会了新的（主动/被动）技能“普通攻击-近战”
         let id = log_obj.id;
-        //例句：学会了施展“普通攻击-近战”
+        let type_ch;
+        if (P_skills[id].type == 'Passive') {
+            type_ch = '被动';
+        } else if (P_skills[id].type == 'Active') {
+            type_ch = '主动';
+        }
         let skill_name = P_skills[id].name;
-        let ch = '学会了施展"' + skill_name + '"';
+        let ch = '学会了新的' + type_ch + '技能"' + skill_name + '"';
+        let part1 = addElement(new_log_div, 'div', null, 'RA_log_div');
+        part1.innerHTML = ch;
+    }
+    //生成一条玩家有技能升级了的日志
+    make_skill_levelup_game_log(new_log_div, log_obj) {
+        let id = log_obj.id;
+        let up_level = log_obj.up_level;
+        let now_level = log_obj.now_level;
+        //例句：“普通攻击-近战”提高了1级，目前2级
+        let skill_name = P_skills[id].name;
+        let ch = '"' + skill_name + '"提高了' + up_level + '级，目前' + now_level + '级';
         let part1 = addElement(new_log_div, 'div', null, 'RA_log_div');
         part1.innerHTML = ch;
     }

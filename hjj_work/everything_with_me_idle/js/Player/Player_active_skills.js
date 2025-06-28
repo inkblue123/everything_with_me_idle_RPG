@@ -1,8 +1,12 @@
 'use strict';
-import { get_Askill_base_attr, Attack_effect_algorithm, Defense_effect_algorithm } from '../Function/math_func.js';
-import { is_Empty_Object } from '../Function/Function.js';
+import {
+    get_Askill_base_attr,
+    Attack_effect_algorithm,
+    Defense_effect_algorithm,
+    format_numbers,
+} from '../Function/math_func.js';
+import { is_Empty_Object, is_overlap } from '../Function/Function.js';
 import { updata_player_active } from '../Function/Updata_func.js';
-import { get_object_only_key } from '../Function/Get_func.js';
 import { Attack_effect, Defense_effect } from '../GameRun/combat_class.js';
 import { global } from '../GameRun/global_manage.js';
 import { enums } from '../Data/Enum/Enum.js';
@@ -218,7 +222,7 @@ export class Player_active_skills_Manage {
         this.new_slot_flag = false;
     }
     //更新角色属性
-    updata_player_data(player_end_attr, reset_flag) {
+    updata_player_data(player_end_attr) {
         this.player_end_attr = player_end_attr;
         //属性变化之后，连带的参数更新
         for (let i = 0; i < this.active_slot_num; i++) {
@@ -243,10 +247,10 @@ export class Player_active_skills_Manage {
             //没有影响因素，槽的运行时间就等于攻速
             this.any_slot_time[i] = this.player_end_attr.attack_speed * 1000;
         }
-        //是否需要重置当前回合
-        if (reset_flag) {
-            this.reset_round();
-        }
+        // //是否需要重置当前回合
+        // if (reset_flag) {
+        //     this.reset_round();
+        // }
     }
     //重置当前回合，重置相关参数
     reset_round() {
@@ -342,38 +346,6 @@ export class Player_active_skills_Manage {
                 if (!this.judge_active_condition_key(condition_key, active_condition[condition_key])) {
                     return false;
                 }
-                // if (condition_key == 'weapon_type') {
-                //     //限制条件是装备了特定类型的装备
-                //     //遍历每种玩家穿着的装备，找到一样的就算成功
-                //     let weapon_type_flag = false;
-                //     for (let w_type of active_condition.weapon_type) {
-                //         if (this.player_end_attr['weapon_type'].includes(w_type)) {
-                //             weapon_type_flag = true;
-                //             break;
-                //         }
-                //     }
-                //     if (weapon_type_flag == false) {
-                //         //玩家穿着的装备不满足技能需求
-                //         flag = false;
-                //         break;
-                //     }
-                // } else if (condition_key == 'damage_type') {
-                //     //限制条件是玩家当前手持的武器属于什么伤害类型的武器
-                //     //遍历每种玩家武器，转换成伤害类型，找到一样的就算成功
-                //     let damage_type_flag = false;
-                //     let damage_type = active_condition.damage_type;
-                //     for (let pw of this.player_end_attr['weapon_type']) {
-                //         let p_damage_type = enums.weapon_damage_type[pw];
-                //         if (damage_type == p_damage_type) {
-                //             damage_type_flag = true;
-                //             break;
-                //         }
-                //     }
-                //     if (damage_type_flag == false) {
-                //         flag = false;
-                //         break;
-                //     }
-                // }
             }
         }
 
@@ -389,27 +361,8 @@ export class Player_active_skills_Manage {
         let id = start_skill.id;
         //根据主动技能类型，产生这次效果
         if (start_skill.active_type == 'attack') {
-            //记录使用了哪个技能
-            this.main_Attack.id = id;
-            //处理攻击类技能特有的内容
-            let effect = start_skill.effect;
-            //伤害类型
-            this.main_Attack.damage_type = effect.damage_type;
-            //攻击次数
-            if (effect.attack_num.type == 'add') {
-                this.main_Attack.attack_num += effect.attack_num.num;
-            } else if (effect.attack_num.type == 'fixed') {
-                this.main_Attack.attack_num = effect.attack_num.num;
-            }
-            //计算主动技能需要的玩家属性
-            let askill_base_attr = get_Askill_base_attr(start_skill.attr_correct, this.player_end_attr);
-            //计算攻击效果
-            let algorithm = start_skill.algorithm;
-            Attack_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);
-            //计算玩家装备的额外效果
-            //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
-            let combat_manage = global.get_combat_manage();
-            combat_manage.set_player_next_attack(this.main_Attack);
+            //攻击类型主动技能
+            this.start_player_attack_type_skill(start_skill);
         } else if (start_skill.active_type == 'defense') {
             //防御类技能
             this.main_defense.id = id;
@@ -421,6 +374,41 @@ export class Player_active_skills_Manage {
             combat_manage.set_player_defense(this.main_defense);
         }
         this.reset_active_skill_effect();
+    }
+    start_player_attack_type_skill(start_skill) {
+        //记录使用了哪个技能
+        this.main_Attack.id = start_skill.id;
+        //处理攻击类技能特有的内容
+        let effect = start_skill.effect;
+        //伤害类型
+        this.main_Attack.damage_type = effect.damage_type;
+        //攻击次数
+        if (effect.attack_num.type == 'add') {
+            this.main_Attack.attack_num += effect.attack_num.num;
+        } else if (effect.attack_num.type == 'fixed') {
+            this.main_Attack.attack_num = effect.attack_num.num;
+        }
+        //计算主动技能需要的玩家属性
+        let askill_base_attr = get_Askill_base_attr(start_skill.attr_correct, this.player_end_attr);
+        //计算攻击效果
+        let algorithm = start_skill.algorithm;
+        Attack_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);
+        //玩家属性里如果有伤害增幅的属性，现在就结算
+        if (!is_Empty_Object(this.player_end_attr['sword_damage'])) {
+            //剑造成的伤害增加
+
+            if (this.player_end_attr['weapon_type'].includes('sword')) {
+                //玩家手里用剑的时候，增加攻击的伤害
+                this.main_Attack.base_damage = this.main_Attack.base_damage * this.player_end_attr['sword_damage'];
+            }
+        }
+        //计算玩家装备的额外效果
+
+        //格式化数值
+        this.main_Attack.base_damage = format_numbers(this.main_Attack.base_damage);
+        //攻击类技能，现在已经计算完毕，输出到战斗管理类中，准备执行该次攻击
+        let combat_manage = global.get_combat_manage();
+        combat_manage.set_player_next_attack(this.main_Attack);
     }
     //游戏运行一帧，计算主动技能部分内容
     run_player_active_skill() {
@@ -453,11 +441,9 @@ export class Player_active_skills_Manage {
     judge_active_condition_key(condition_key, condition_value) {
         if (condition_key == 'weapon_type') {
             //限制条件是装备了特定类型的装备
-            //遍历每种玩家穿着的装备，找到一样的就算成功
-            for (let w_type of condition_value) {
-                if (this.player_end_attr['weapon_type'].includes(w_type)) {
-                    return true;
-                }
+            //判断玩家装备类型和限制条件是否有重叠，有重叠就算成功
+            if (is_overlap(this.player_end_attr['weapon_type'], condition_value)) {
+                return true;
             }
         } else if (condition_key == 'damage_type') {
             //限制条件是玩家当前手持的武器属于什么伤害类型的武器

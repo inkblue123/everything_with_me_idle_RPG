@@ -6,10 +6,17 @@ function init_Plyaer_Passive_skill(P_skills) {
     let id = 'normal_sword';
     add_P_Passive_skill(P_skills, id);
     P_skills[id].initial_flag = true; //这是玩家一开始就应该有的初始技能
-    P_skills[id].set_skill_levelup_data(10, 10, 1);
+    P_skills[id].set_skill_levelup_data(3, 10, 1);
+    // P_skills[id].set_skill_levelup_data(10, 10, 1);
     P_skills[id].add_leveling_behavior('behavior', 'combat'); //战斗时
     P_skills[id].add_leveling_behavior('weapon_type', 'sword'); //武器类型为剑时
     P_skills[id].exp_source = 'attack_num'; //根据攻击次数获得经验
+    P_skills[id].rewards = [
+        {
+            attr: 'sword_damage', //增加用剑造成的伤害
+            algorithm: 1,
+        }, //常态等级加成
+    ];
 
     //普通棍法
     id = 'normal_sticks';

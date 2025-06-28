@@ -1,8 +1,11 @@
 'use strict';
-import { items } from '../../Data/Item/Item.js';
-import { enums } from '../../Data/Enum/Enum.js';
 import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
 import { get_object_only_key } from '../../Function/Get_func.js';
+import { player } from '../Player.js';
+
+import { items } from '../../Data/Item/Item.js';
+import { enums } from '../../Data/Enum/Enum.js';
+import { P_skills } from '../../Data/Skill/Skill.js';
 
 export class Data_attr_manage {
     constructor() {
@@ -18,14 +21,20 @@ export class Data_attr_manage {
         this.combat_survival_attr = new Object();
         //角色基础属性点
         this.player_base_attr = new Object();
+
         //玩家所有基础属性汇总，实质上是上面4个类的总和
         this.player_attr = new Object();
         //当前激活的装备栏上所有装备的属性汇总
         this.EQP_attr = new Object();
-        //当前拥有的可用技能的所有属性汇总
-        this.skill_attr = new Object();
+        //当前拥有的可用被动技能的所有属性汇总
+        this.passive_skill_attr = new Object();
+        //当前使用的主动技能的所有属性汇总
+        this.active_skill_attr = new Object();
         //当前地点提供的属性汇总
         this.place_attr = new Object();
+
+        //上一次属性汇总的缓存
+        this.prevObjects = new Object();
 
         //所有加成计算完毕之后的最终属性
         this.end_data_attr = new Object();
@@ -57,8 +66,12 @@ export class Data_attr_manage {
         this.player_base_attr['intelligence'] = 10; //智力
         this.player_base_attr['technique'] = 10; //技巧
 
-        this.Summary_Player_attr();
-        this.updata_end_attr();
+        this.prevObjects['player_attr'] = JSON.parse(JSON.stringify(this.player_attr));
+        this.prevObjects['EQP_attr'] = JSON.parse(JSON.stringify(this.EQP_attr));
+        this.prevObjects['passive_skill_attr'] = JSON.parse(JSON.stringify(this.passive_skill_attr));
+        this.prevObjects['active_skill_attr'] = JSON.parse(JSON.stringify(this.active_skill_attr));
+        this.prevObjects['place_attr'] = JSON.parse(JSON.stringify(this.place_attr));
+        this.updata_Player_attr();
     }
     //获取玩家属性部分的游戏存档
     save_Data_attr() {
@@ -79,7 +92,40 @@ export class Data_attr_manage {
         this.magic_point = data_attr_save.magic_point; //当前魔力
         this.energy_point = data_attr_save.energy_point; //当前精力
     }
+    //玩家属性变化，更新到最终属性里
+    updata_Player_attr() {
+        //获得新的玩家属性汇总
+        this.Summary_Player_attr();
+        //将最终属性中的玩家属性部分更新
+        this.partial_update_end_attr('player_attr');
+    }
+    //玩家装备变化，更新到最终属性里
+    updata_EQP_attr() {
+        let P_worn = player.get_player_worn();
+        let worn_EQP = P_worn.get_worn_EQP();
+        //获得新的玩家装备属性汇总
+        this.Summary_worn_EQP_attr(worn_EQP);
+        this.Summary_worn_EQP_weapon_type(worn_EQP);
+        //将最终属性中的玩家属性部分更新
+        this.partial_update_end_attr('EQP_attr');
+    }
+    //玩家被动技能变化，更新到最终属性里
+    updata_passive_skill_attr() {
+        //获得新的玩家属性汇总
+        this.Summary_passive_skill_attr();
+        //将最终属性中的玩家属性部分更新
+        this.partial_update_end_attr('passive_skill_attr');
+    }
+    //玩家主动技能变化，更新到最终属性里
+    updata_active_skill_attr() {
+        //获得新的玩家属性汇总
+        this.Summary_active_skill_attr();
+        //将最终属性中的玩家属性部分更新
+        this.partial_update_end_attr('active_skill_attr');
+    }
+    //更新汇总玩家的最基础的属性
     Summary_Player_attr() {
+        this.player_attr = new Object();
         //初始战斗攻击属性
         for (let id in this.combat_attack_attr) {
             if (is_Empty_Object(this.player_attr[id])) {
@@ -172,6 +218,36 @@ export class Data_attr_manage {
         //去重
         this.EQP_attr['weapon_type'] = get_uniqueArr(this.EQP_attr['weapon_type']);
     }
+    //汇总玩家身上所有可用被动技能提供的属性
+    Summary_passive_skill_attr() {
+        this.passive_skill_attr = new Object();
+        //遍历所有被动技能，获得加成
+        let P_All_P_Skills = player.get_player_All_passive_skills();
+        for (let id in P_All_P_Skills) {
+            let skill_obj = P_All_P_Skills[id];
+            if (skill_obj.level < 1) {
+                //初始被动技能0级时不可用，没有属性
+                continue;
+            }
+            //可用的被动技能有两部分属性加成，一部分是常态等级加成，一部分是关键等级节点提供的加成
+            //常态等级加成
+            if (!is_Empty_Object(skill_obj.rewards)) {
+                for (let reward_obj of skill_obj.rewards) {
+                    let attr = reward_obj.attr;
+                    if (is_Empty_Object(this.passive_skill_attr[attr])) {
+                        this.passive_skill_attr[attr] = 0;
+                    }
+                    this.passive_skill_attr[attr] += reward_obj.data;
+                }
+            }
+            //关键节点加成
+        }
+    }
+    //汇总玩家身上所有可用主动技能提供的属性
+    Summary_active_skill_attr() {
+        //有些主动技能装备上之后也有加成，也要汇总
+        this.active_skill_attr = new Object();
+    }
     //根据id设置玩家的属性，只能设置玩家的属性，不会修改装备上、技能上的属性，
     set_data_attr(id, value) {
         if (id == 'health_point') {
@@ -191,7 +267,8 @@ export class Data_attr_manage {
         } else if (enums.player_base_attr.includes(id)) {
             this.player_base_attr[id] = value;
         }
-        this.updata_end_attr();
+        // 玩家属性变化，更新到最终属性里
+        this.updata_Player_attr();
     }
     //根据id改变玩家属性，只允许改变血量蓝量精力的当前值
     change_data_attr(id, value) {
@@ -238,31 +315,44 @@ export class Data_attr_manage {
     }
     //更新最终属性
     updata_end_attr() {
-        this.end_data_attr = new Object();
-        //汇总玩家基本属性
-        for (let id in this.player_attr) {
-            if (is_Empty_Object(this.end_data_attr[id])) {
-                this.end_data_attr[id] = 0;
-            }
-            this.end_data_attr[id] += this.player_attr[id];
-        }
-        //汇总装备属性
-        for (let id in this.EQP_attr) {
-            if (id == 'weapon_type') {
-                this.end_data_attr[id] = this.EQP_attr[id];
-            } else {
-                if (is_Empty_Object(this.end_data_attr[id])) {
-                    this.end_data_attr[id] = 0;
+        //把每个属性部分都更新一遍
+        this.updata_Player_attr(); //玩家基础属性
+        this.updata_EQP_attr(); //玩家装备属性
+        this.updata_passive_skill_attr(); //玩家被动技能属性
+        this.updata_active_skill_attr(); //玩家主动技能属性
+    }
+    //增量更新最终属性，只修改变更了的指定部分属性
+    partial_update_end_attr(index) {
+        let old_obj = this.prevObjects[index];
+        let new_obj = this[index];
+        //撤销旧属性
+        for (const [key, value] of Object.entries(old_obj)) {
+            if (key == 'weapon_type') {
+                const setB = new Set(value);
+                this.end_data_attr[key] = this.end_data_attr[key].filter((item) => !setB.has(item));
+                if (this.end_data_attr[key].length === 0) {
+                    delete this.end_data_attr[key]; // 清理值为0的键
                 }
-                this.end_data_attr[id] += this.EQP_attr[id];
+            } else {
+                this.end_data_attr[key] -= value;
+                if (this.end_data_attr[key] === 0) {
+                    delete this.end_data_attr[key]; // 清理值为0的键
+                }
             }
         }
-        //汇总技能属性
-        for (let id in this.skill_attr) {
-            if (is_Empty_Object(this.end_data_attr[id])) {
-                this.end_data_attr[id] = 0;
+        //累加新属性
+
+        for (const [key, value] of Object.entries(new_obj)) {
+            if (key == 'weapon_type') {
+                if (is_Empty_Object(this.end_data_attr[key])) {
+                    this.end_data_attr[key] = new Array();
+                }
+                this.end_data_attr[key] = this.end_data_attr[key].concat(value);
+            } else {
+                this.end_data_attr[key] = (this.end_data_attr[key] || 0) + value;
             }
-            this.end_data_attr[id] += this.skill_attr[id];
         }
+        //更新缓存
+        this.prevObjects[index] = JSON.parse(JSON.stringify(new_obj));
     }
 }

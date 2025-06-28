@@ -153,21 +153,7 @@ export class Global_flag_manage {
     }
     //记录一条游戏日志
     set_game_log(type, ...value) {
-        if (type == 'player_attack') {
-            this.GL_status.set_player_attack_game_log(value);
-        }
-        if (type == 'finish_event') {
-            this.GL_status.set_finish_event_game_log(value);
-        }
-        if (type == 'unluck_active_skill') {
-            this.GL_status.set_unluck_active_skill_game_log(value);
-        }
-        if (type == 'get_item') {
-            this.GL_status.set_get_item_game_log(value);
-        }
-        if (type == 'enemy_attack') {
-            this.GL_status.set_enemy_attack_game_log(value);
-        }
+        this.GL_status.set_game_log(type, value);
     }
     //调用接口，根据脑海中的流水账过滤条件，将对应的游戏日志打印出来
     show_game_log_status(RA_type) {

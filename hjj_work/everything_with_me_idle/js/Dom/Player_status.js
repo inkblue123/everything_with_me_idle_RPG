@@ -194,23 +194,33 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
     };
     PSK_B_button.onclick = function () {
         PSK_B_all_radio_div.children[0].checked = true;
-        show_dropdown_table('PSK_classification_div', 'SK_B_droptable');
+        let P_All_Skills = player.get_player_All_Skills();
+        P_All_Skills.updata_PSK_value();
+        show_dropdown_table('PSK_classification_div', 'PSK_B_droptable');
     };
     PSK_C_button.onclick = function () {
         PSK_C_all_radio_div.children[0].checked = true;
-        show_dropdown_table('PSK_classification_div', 'SK_C_droptable');
+        let P_All_Skills = player.get_player_All_Skills();
+        P_All_Skills.updata_PSK_value();
+        show_dropdown_table('PSK_classification_div', 'PSK_C_droptable');
     };
     PSK_L_button.onclick = function () {
         PSK_L_all_radio_div.children[0].checked = true;
-        show_dropdown_table('PSK_classification_div', 'SK_L_droptable');
+        let P_All_Skills = player.get_player_All_Skills();
+        P_All_Skills.updata_PSK_value();
+        show_dropdown_table('PSK_classification_div', 'PSK_L_droptable');
     };
     PSK_A_button.onclick = function () {
         PSK_A_all_radio_div.children[0].checked = true;
-        show_dropdown_table('PSK_classification_div', 'SK_A_droptable');
+        let P_All_Skills = player.get_player_All_Skills();
+        P_All_Skills.updata_PSK_value();
+        show_dropdown_table('PSK_classification_div', 'PSK_A_droptable');
     };
     PSK_S_button.onclick = function () {
         PSK_S_all_radio_div.children[0].checked = true;
-        show_dropdown_table('PSK_classification_div', 'SK_S_droptable');
+        let P_All_Skills = player.get_player_All_Skills();
+        P_All_Skills.updata_PSK_value();
+        show_dropdown_table('PSK_classification_div', 'PSK_S_droptable');
     };
 
     //角色名文本框，实时修改角色名称
@@ -232,14 +242,15 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
     });
 
     //技能展示过滤
-    radios = player_status.querySelectorAll('input[type="radio"][name="SK_switch"]');
+    radios = player_status.querySelectorAll('input[type="radio"][name="PSK_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
             if (this.id == 'PSK_all') {
                 //针对技能展示界面最大的“全部”按钮，额外新增关闭其他下拉框的功能
                 show_dropdown_table('PSK_classification_div');
             }
-            // updata_PSK_value();
+            let P_All_Skills = player.get_player_All_Skills();
+            P_All_Skills.updata_PSK_value();
         });
     });
 }

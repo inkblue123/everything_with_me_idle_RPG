@@ -1,7 +1,7 @@
+import { is_Empty_Object, is_overlap } from '../Function/Function.js';
+import { P_skills } from '../Data/Skill/Skill.js';
 import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
-import { is_Empty_Object } from '../Function/Function.js';
-import { P_skills } from '../Data/Skill/Skill.js';
 
 export class Attack_effect {
     constructor() {
@@ -39,6 +39,14 @@ export class Exp_manage {
     }
     //记录指定主动技能应该获得的经验
     set_Active_skill_exp(id, damage) {
+        if (is_Empty_Object(P_skills[id])) {
+            console.log('%s主动技能未定义，不能获得经验');
+            return;
+        }
+        //这个主动技能不能通过累计经验升级
+        if (P_skills[id].exp_levelup_flag == false) {
+            return;
+        }
         if (is_Empty_Object(this.Active_skill_exp[id])) {
             this.Active_skill_exp[id] = 0;
         }
@@ -75,48 +83,49 @@ export class Exp_manage {
         for (let id in this.Active_skill_exp) {
             P_All_Skills.get_skill_exp(id, this.Active_skill_exp[id]);
         }
+
+        let P_All_P_Skills = player.get_player_All_passive_skills();
         //被动技能获得经验
-        for (let id in P_All_Skills) {
-            //主动技能跳过
-            if (P_skills[id].type == 'Active') continue;
+        for (let id in P_All_P_Skills) {
             //满级和不能获得经验的技能跳过
-            if (!P_All_Skills[id].levelup_flag || P_All_Skills[id].levelmax_flag) continue;
-            //遍历找到可以获得经验的技能
-            if (this.judge_leveling_behavior(id)) {
-                if (P_skills[id].exp_source == 'attack_num') {
-                    P_All_Skills.get_skill_exp(id, this.leveling_behavior['attack_num']);
-                }
+            if (!P_All_P_Skills[id].exp_levelup_flag || P_All_P_Skills[id].levelmax_flag) {
+                continue;
             }
+            //升级行为和当前玩家所进行的行为不符合的跳过
+            if (!this.judge_leveling_behavior(id)) {
+                continue;
+            }
+            //遍历找到可以获得经验的技能
+
+            let exp_source = P_skills[id].exp_source; //这个技能加经验的依据
+            let exp = this.leveling_behavior[exp_source]; //这个技能要加的经验值
+            if (exp == undefined || exp == 0) {
+                continue;
+            }
+            P_All_Skills.get_skill_exp(id, this.leveling_behavior[exp_source]);
         }
+
         this.reset_leveling_behavior();
     }
     //判断当前行为能否为指定技能提供经验
     judge_leveling_behavior(skill_id) {
         let skill_LB = P_skills[skill_id].leveling_behavior;
         let P_LB = this.leveling_behavior;
-        //行为判断
-        let i = 'behavior';
-        if (skill_LB[i]) {
-            if (P_LB[i] != skill_LB[i]) {
-                return false;
-            }
-        }
-        //武器类型判断
-        i = 'weapon_type';
-        if (skill_LB[i]) {
-            let weapon_type_flag = false;
-            for (let pw of skill_LB[i]) {
-                if (P_LB[i].includes(pw)) {
-                    //武器类型判定成功
-                    weapon_type_flag = true;
-                    break;
+        for (let type in skill_LB) {
+            if (type == 'behavior') {
+                //行为判断
+                if (P_LB[type] != skill_LB[type]) {
+                    return false;
                 }
             }
-            if (weapon_type_flag == false) {
-                return false;
+            if (type == 'weapon_type') {
+                //武器类型判断
+                //玩家手持的武器类型和技能升级要求的类型是否有重叠
+                if (!is_overlap(P_LB[type], skill_LB[type])) {
+                    return false;
+                }
             }
         }
-
         return true;
     }
 }

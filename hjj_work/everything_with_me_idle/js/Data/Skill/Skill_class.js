@@ -6,7 +6,7 @@ export class Skill {
         this.id = id; //唯一id
         this.name = '未定义技能'; // 技能名称
         this.desc = new Array(); // 技能描述
-        this.levelup_flag; //是否可以升级标记
+        this.exp_levelup_flag; //是否可以用经验升级标记
 
         this.type; //类型
         this.leveling_behavior = new Object(); //练级行为
@@ -22,6 +22,53 @@ export class Skill {
             this.name = texts[id].skill_name;
         }
     }
+
+    //手动输入参数，为每个槽中的技能生成描述
+    set_skill_desc() {}
+
+    //设置通过经验升级的技能的相关参数
+    set_skill_levelup_data(base_exp, max_level, algorithm) {
+        this.exp_levelup_flag = true; //这个技能可以通过累计经验升级
+        if (base_exp) this.base_exp = base_exp; //第一级需要的经验
+        if (max_level) this.max_level = max_level; // 最大等级上限
+        if (algorithm) this.levelup_algorithm = algorithm; // 经验需求量算法
+    }
+    //添加什么情况下会获得经验
+    add_leveling_behavior(type, ...value) {
+        if (type == 'behavior') {
+            //有些行为可以直接赋值，
+            this.leveling_behavior[type] = value[0];
+        }
+        if (type == 'weapon_type') {
+            //有些行为添加的是一个范围，要转义成具体的值
+            this.leveling_behavior[type] = value;
+        }
+    }
+}
+//玩家被动技能
+export class P_Passive_skill extends Skill {
+    constructor(id) {
+        super(id);
+        this.type = 'Passive';
+        this.initial_flag; //是否属于玩家初始技能
+        this.rewards; //常态等级加成
+        this.milepost; // 关键等级节点
+    }
+}
+//玩家主动技能
+export class P_Active_skill extends Skill {
+    constructor(id) {
+        super(id);
+        this.type = 'Active';
+        //主动技能
+        this.need_slot_num; //需要几个技能槽
+        this.active_condition = new Object(); //激活这个技能需要满足的条件
+        this.active_type; //这个技能的类型，比如攻击/辅助
+        this.attr_correct = new Object(); //这个技能的属性补正
+        this.algorithm; //这个技能的属性计算算法
+        this.start_time; //这个技能的激活时间点，比如开始时/结束时/持续激活
+        this.effect = new Object(); //这个技能激活之后具体产生的效果
+    }
     //自动调用技能参数，生成技能描述
     init_skill_desc() {
         //
@@ -36,8 +83,6 @@ export class Skill {
         }
         this.desc = desc;
     }
-    //手动输入参数，为每个槽中的技能生成描述
-    set_skill_desc() {}
     //创造攻击型技能的描述
     create_attack_skill_desc() {
         //对{距离}的{索敌方式}个敌人造成{攻击次数}次{伤害类型}伤害
@@ -79,11 +124,11 @@ export class Skill {
     //创造防御型技能的描述
     create_defense_skill_desc() {
         //受到敌人攻击时减少{减伤类型}的伤害
-        let desc = '收到敌人攻击时减少';
+        let desc = '受到敌人攻击时减少';
 
         //减伤类型
         let defense_type = this.effect.defense_type;
-        if (defense_type == 'damage_reduction_number') {
+        if (defense_type == 'damage_reduction') {
             //固定数值伤害减免
             desc = desc + '固定数值的伤害';
         } else if (defense_type == 'damage_reduction_ratio') {
@@ -91,42 +136,6 @@ export class Skill {
             desc = desc + '一定比例的伤害';
         }
         return desc;
-    }
-
-    //设置通过经验升级的技能的相关参数
-    set_skill_levelup_data(base_exp, max_level, algorithm) {
-        if (base_exp) this.base_exp = base_exp; //第一级需要的经验
-        if (max_level) this.max_level = max_level; // 最大等级上限
-        if (algorithm) this.levelup_algorithm = algorithm; // 经验需求量算法
-    }
-    //添加什么情况下会获得经验
-    add_leveling_behavior(type, value) {
-        this.leveling_behavior[type] = value;
-    }
-}
-//玩家被动技能
-export class P_Passive_skill extends Skill {
-    constructor(id) {
-        super(id);
-        this.type = 'Passive';
-        this.initial_flag; //是否属于玩家初始技能
-        this.rewards; //常态等级加成
-        this.milepost; // 关键等级节点
-    }
-}
-//玩家主动技能
-export class P_Active_skill extends Skill {
-    constructor(id) {
-        super(id);
-        this.type = 'Active';
-        //主动技能
-        this.need_slot_num; //需要几个技能槽
-        this.active_condition = new Object(); //激活这个技能需要满足的条件
-        this.active_type; //这个技能的类型，比如攻击/辅助
-        this.attr_correct = new Object(); //这个技能的属性补正
-        this.algorithm; //这个技能的属性计算算法
-        this.start_time; //这个技能的激活时间点，比如开始时/结束时/持续激活
-        this.effect = new Object(); //这个技能激活之后具体产生的效果
     }
 }
 //敌人主动技能

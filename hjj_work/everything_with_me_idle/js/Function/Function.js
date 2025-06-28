@@ -76,5 +76,17 @@ function get_uniqueArr(array) {
     let uniqueArr = [...new Set(array)];
     return uniqueArr;
 }
+//判断两个数组是否有重叠
+function is_overlap(arr1, arr2) {
+    const set = new Set(arr2);
+    return arr1.some((item) => set.has(item));
+}
 
-export { check_Equipment, is_Empty_Object, hex2Rgba, get_uniqueArr, attr_correct_handle };
+export {
+    check_Equipment,
+    is_Empty_Object, //
+    hex2Rgba,
+    get_uniqueArr,
+    attr_correct_handle,
+    is_overlap,
+};

@@ -247,3 +247,20 @@
 #PSK_div {
     background-color: #ffd700;
 }
+/* 容纳具体技能内容的div */
+#PSK_value_div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* 自动换行 */
+    /* align-items: flex-start; */
+    align-content: flex-start;
+}
+/* 玩家技能界面-右侧布局中具体的一个技能 */
+.PSK_value {
+    /* 每行两个元素 */
+    width: 50%;
+    background-color: #ffffff;
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}

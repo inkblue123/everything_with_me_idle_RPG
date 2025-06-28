@@ -24,7 +24,7 @@ Tooltip.InitTip = function (type, value) {
     if (type == 'item') {
         //初始化物品介绍内容
         init_item_tip(value);
-    } else if (type == 'active_skill' || type == 'show_active_skill') {
+    } else if (type == 'active_skill' || type == 'show_active_skill' || type == 'show_passive_skill') {
         init_skill_tip(type, value);
     } else if (type == 'load_save' || type == 'save_game') {
         init_game_save_tip(type, value);

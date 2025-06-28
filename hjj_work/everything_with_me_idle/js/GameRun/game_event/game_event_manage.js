@@ -49,11 +49,6 @@ export class Game_event_manage {
         for (let id in monitor_target) {
             const firstIndex = id.indexOf('_');
             let monitor_type = id.substring(0, firstIndex);
-            // if (id.startsWith('PKL_')) {
-            //     monitor_type = 'PKL';
-            // } else if (id.startsWith('ATD_')) {
-            //     monitor_type = 'ATD';
-            // }
 
             if (is_Empty_Object(this.monitor_target_summ[monitor_type])) {
                 this.monitor_target_summ[monitor_type] = new Object();

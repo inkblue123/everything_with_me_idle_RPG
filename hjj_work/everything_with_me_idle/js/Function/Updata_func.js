@@ -177,8 +177,8 @@ function updata_player_active_time_bar() {
 
 //玩家装备信息发生变动，更新相关界面
 function updata_player_EQP() {
-    //更新玩家属性
-    player.updata_attr(true);
+    //更新玩家装备属性
+    player.updata_EQP_attr(true);
     //更新装备栏
     let P_worn = player.get_player_worn();
     P_worn.updata_equipment_show();
@@ -192,8 +192,11 @@ function updata_player_active() {
     delete_active_show_div();
     //更新主动技能相关布局的展示情况
     updata_player_active_slots_num();
-    //更新玩家属性
-    player.updata_attr(true);
+    //更新玩家主动技能提供的属性
+
+    //重置玩家这回合的攻击
+    let P_Askill = player.get_player_ASkill_Manage();
+    P_Askill.reset_round();
     //在主动技能相关布局中填入技能信息
     updata_player_active_show();
 }

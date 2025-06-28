@@ -14,7 +14,6 @@ export class Player_attributes {
     //初始化玩家属性
     init() {
         this.data_attr.init();
-        this.updata_end_attr();
     }
     //获取玩家属性部分的游戏存档
     save_Player_attributes() {
@@ -31,24 +30,9 @@ export class Player_attributes {
         this.data_attr.load_Data_attr(Player_attr_save.data_attr_save);
         this.buff_attr.load_Buff_attr(Player_attr_save.buff_attr_save);
     }
-    //汇总穿戴的装备上的属性加成
-    Summary_worn_EQP_attr(worn_EQP) {
-        //装备上的属性
-        this.data_attr.Summary_worn_EQP_attr(worn_EQP);
-        //手持武器的武器类型
-        this.data_attr.Summary_worn_EQP_weapon_type(worn_EQP);
-    }
     //根据id设置玩家的属性，只能设置玩家的属性，不会修改装备上、技能上的属性，
     set_data_attr(id, value) {
         return this.data_attr.set_data_attr(id, value);
-    }
-    //根据id让玩家获得一个buff
-    set_buff_attr(id) {
-        return this.buff_attr.set_buff_attr(id);
-    }
-    //根据id让玩家失去一个buff
-    delete_buff_attr(id) {
-        return this.buff_attr.delete_buff_attr(id);
     }
     change_data_attr(id, value) {
         return this.data_attr.change_data_attr(id, value);
@@ -61,17 +45,37 @@ export class Player_attributes {
     get_end_data_attr() {
         return this.data_attr.get_end_data_attr();
     }
-    //获取最终属性
-    get_end_buff_attr() {
-        return this.buff_attr.get_end_buff_attr();
+    //更新穿戴的装备上的属性加成
+    updata_EQP_attr() {
+        this.data_attr.updata_EQP_attr();
     }
-
-    run_player_buff() {
-        this.buff_attr.run_player_buff();
+    //更新被动技能上的属性加成
+    updata_passive_skill_attr() {
+        this.data_attr.updata_passive_skill_attr();
+    }
+    //更新装备了的主动技能上的属性加成
+    updata_active_skill_attr() {
+        this.data_attr.updata_active_skill_attr();
     }
     //更新最终属性
     updata_end_attr() {
         this.data_attr.updata_end_attr();
+    }
+
+    //根据id让玩家获得一个buff
+    set_buff_attr(id) {
+        return this.buff_attr.set_buff_attr(id);
+    }
+    //获取最终buff
+    get_end_buff_attr() {
+        return this.buff_attr.get_end_buff_attr();
+    }
+    run_player_buff() {
+        this.buff_attr.run_player_buff();
+    }
+    //根据id让玩家失去一个buff
+    delete_buff_attr(id) {
+        return this.buff_attr.delete_buff_attr(id);
     }
     //更新血条上的数值
     updata_HP_bar_div() {

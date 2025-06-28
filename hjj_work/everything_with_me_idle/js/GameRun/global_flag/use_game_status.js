@@ -23,6 +23,9 @@ function get_use_game_status(flag_name) {
         case 'UGS_game_speed': //当前游戏运行速度
             flag_value = get_UGS_game_speed();
             break;
+        case 'UGS_PSK_type': //左上角的玩家属性界面中的玩家所有技能界面的过滤条件
+            flag_value = get_UGS_PSK_type();
+            break;
 
         default:
             console.log('未定义%s临用游戏状态标记的获取函数', flag_name);
@@ -88,6 +91,17 @@ function get_UGS_get_up_time_flag() {
 function get_UGS_game_speed() {
     let time_manage = global.get_time_manage();
     return time_manage.get_game_speed();
+}
+
+//临用游戏状态-左上角的玩家属性界面中的玩家所有技能界面的过滤条件
+function get_UGS_PSK_type() {
+    const radios = document.querySelectorAll('input[name="PSK_switch"]');
+    for (const radio of radios) {
+        if (radio.checked) {
+            // 找到一个选中的按钮后可以结束循环
+            return radio.value;
+        }
+    }
 }
 
 export { get_use_game_status };

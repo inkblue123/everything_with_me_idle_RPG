@@ -1,9 +1,9 @@
+import { get_random, get_random_enemy_distance, Attack_effect_algorithm } from '../Function/math_func.js';
 import { global } from './global_manage.js';
 import { Attack_effect, E_Attack_effect } from './combat_class.js';
 import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { E_skills } from '../Data/Skill/Skill.js';
-import { get_random, get_random_enemy_distance, Attack_effect_algorithm } from '../Function/math_func.js';
 import { is_Empty_Object } from '../Function/Function.js';
 
 //场地内的敌人对象
