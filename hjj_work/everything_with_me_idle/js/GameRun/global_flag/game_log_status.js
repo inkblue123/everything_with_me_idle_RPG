@@ -279,7 +279,7 @@ export class Game_log_status {
     //生成一条敌人攻击的游戏日志
     make_enemy_attack_game_log(new_log_div, log_obj) {
         let enemy_id = log_obj.enemy_id;
-        let damage = log_obj.damage;
+        let damage = log_obj.damage * -1;
         let damage_type = log_obj.damage_type;
         //例句：敌人对我攻击，我受到了1近战伤害
         let enemy_name = texts[enemy_id].enemy_name;

@@ -2,15 +2,18 @@
 import { is_Empty_Object } from '../Function/Function.js';
 import { skill_levelup_exp_algorithm, skill_rewards_algorithm } from '../Function/math_func.js';
 import { addElement, add_click_Active_skill_worn, add_show_Tooltip } from '../Function/Dom_function.js';
+import { P_skills, B_skills } from '../Data/Skill/Skill.js';
+import { enums } from '../Data/Enum/Enum.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
-import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 
 //玩家拥有的技能
 class Player_skill {
     constructor(id) {
         this.id = id; //唯一id
         this.type = P_skills[id].type; //主动或被动类型
+        this.name = P_skills[id].name; //技能名
+        this.desc = P_skills[id].desc; //技能描述
         this.exp = 0; //当前技能经验
         this.level = 0; //当前等级
         this.next_level_need_exp = 0; //升到下一级需要的经验
@@ -138,6 +141,8 @@ export class Player_skills {
             } else {
                 skill_obj.levelmax_flag = false;
             }
+            //技能的常态等级加成
+            skill_obj.update_skill_rewards();
 
             this.active_skills[id] = skill_obj;
         }
@@ -157,6 +162,8 @@ export class Player_skills {
             } else {
                 skill_obj.levelmax_flag = false;
             }
+            //技能的常态等级加成
+            skill_obj.update_skill_rewards();
 
             this.passive_skills[id] = skill_obj;
         }
@@ -390,7 +397,8 @@ export class Player_skills {
         let arr = ASP_type_handle(ASP_type);
         //展示这些技能
         for (let skill_id of arr) {
-            add_ASP_skill(skill_id);
+            let skill_obj = this.get_skill_obj(skill_id);
+            add_ASP_skill(skill_obj);
         }
     }
     //更新左上角的玩家属性界面中的玩家所有技能界面的内容
@@ -403,7 +411,8 @@ export class Player_skills {
         let arr = PSK_type_handle(PSK_type);
         //展示这些技能
         for (let skill_id of arr) {
-            add_PSK_skill(skill_id);
+            let skill_obj = this.get_skill_obj(skill_id);
+            add_PSK_skill(skill_obj);
         }
     }
 }
@@ -477,14 +486,14 @@ function ASP_type_handle(type_switch) {
     return arr;
 }
 // 向战斗规划界面的主动技能规划界面添加一个主动技能
-function add_ASP_skill(skill_id) {
+function add_ASP_skill(skill_obj) {
     let active_value_div = document.getElementById('active_value_div');
     let askill = addElement(active_value_div, 'div', null, 'active_value');
-    askill.innerHTML = P_skills[skill_id].name;
+    askill.innerHTML = skill_obj.name;
     //鼠标点击之后可以设置到玩家身上
-    add_click_Active_skill_worn(askill, skill_id);
+    add_click_Active_skill_worn(askill, skill_obj.id);
     //添加鼠标移动之后展示该技能详情
-    add_show_Tooltip(askill, 'show_active_skill', skill_id);
+    add_show_Tooltip(askill, 'show_active_skill', skill_obj);
 }
 //清空左下角的战斗规划界面中战斗规划的主动技能规划部分的内容
 function delete_ASP_div() {
@@ -518,33 +527,108 @@ function PSK_type_handle(type_switch) {
                 arr.push(skill_id);
                 break;
             case 'B_all': //全部根基技能
+                if (enums.basic_passive.includes(P_skills[skill_id].passive_type)) {
+                    arr.push(skill_id);
+                }
                 break;
             case 'C_all': //全部战斗技能
+                if (enums.combat_passive.includes(P_skills[skill_id].passive_type)) {
+                    arr.push(skill_id);
+                }
                 break;
             case 'C_W': //战斗技能中的武器技能
-                break;
-            case 'C_S': //战斗技能中的战斗姿态技能
+                if (P_skills[skill_id].passive_type == 'weapon_mastery') {
+                    arr.push(skill_id);
+                }
                 break;
             case 'C_Env': //战斗技能中的环境适应技能
+                if (P_skills[skill_id].passive_type == 'environment_adaptation') {
+                    arr.push(skill_id);
+                }
                 break;
             case 'C_Ene': //战斗技能中的对敌精通技能
+                if (P_skills[skill_id].passive_type == 'enemy_mastery') {
+                    arr.push(skill_id);
+                }
                 break;
             case 'L_all': //全部生活技能
+                if (enums.life_passive.includes(P_skills[skill_id].passive_type)) {
+                    arr.push(skill_id);
+                }
                 break;
             case 'L_Raw': //生活技能中的原料获取技能
+                if (P_skills[skill_id].passive_type == 'material_acquisition') {
+                    arr.push(skill_id);
+                }
                 break;
             case 'L_P': //生活技能中的原料加工技能
+                if (P_skills[skill_id].passive_type == 'material_processing') {
+                    arr.push(skill_id);
+                }
                 break;
             case 'L_F': //生活技能中的成品使用技能
+                if (P_skills[skill_id].passive_type == 'product_usage') {
+                    arr.push(skill_id);
+                }
                 break;
             case 'L_Rec': //生活技能中的回收利用技能
+                if (P_skills[skill_id].passive_type == 'recycling') {
+                    arr.push(skill_id);
+                }
                 break;
             case 'A_all': //全部主动技能
                 if (P_skills[skill_id].type == 'Active') {
                     arr.push(skill_id);
                 }
                 break;
+            case 'A_A': //可以攻击的主动技能
+                if (is_Empty_Object(P_skills[skill_id].need_slot_id)) {
+                    break;
+                }
+                for (let slot_id of P_skills[skill_id].need_slot_id) {
+                    if (B_skills[slot_id].active_type == 'attack') {
+                        arr.push(skill_id);
+                        break;
+                    }
+                }
+                break;
+            case 'A_D': //可以防御的主动技能
+                if (is_Empty_Object(P_skills[skill_id].need_slot_id)) {
+                    break;
+                }
+                for (let slot_id of P_skills[skill_id].need_slot_id) {
+                    if (B_skills[slot_id].active_type == 'defense') {
+                        arr.push(skill_id);
+                        break;
+                    }
+                }
+                break;
+            case 'A_R': //可以恢复的主动技能
+                if (is_Empty_Object(P_skills[skill_id].need_slot_id)) {
+                    break;
+                }
+                for (let slot_id of P_skills[skill_id].need_slot_id) {
+                    if (B_skills[slot_id].active_type == 'recovery') {
+                        arr.push(skill_id);
+                        break;
+                    }
+                }
+                break;
+            case 'A_F': //可以辅助的主动技能
+                if (is_Empty_Object(P_skills[skill_id].need_slot_id)) {
+                    break;
+                }
+                for (let slot_id of P_skills[skill_id].need_slot_id) {
+                    if (B_skills[slot_id].active_type == 'auxiliary') {
+                        arr.push(skill_id);
+                        break;
+                    }
+                }
+                break;
             case 'S_all': //全部特殊功法
+                if (enums.super_passive.includes(P_skills[skill_id].passive_type)) {
+                    arr.push(skill_id);
+                }
                 break;
 
             default:
@@ -555,16 +639,16 @@ function PSK_type_handle(type_switch) {
     return arr;
 }
 // 向左上角的玩家属性界面中的玩家技能界面添加一个技能
-function add_PSK_skill(skill_id) {
+function add_PSK_skill(skill_obj) {
     let active_value_div = document.getElementById('PSK_value_div');
     let skill_div = addElement(active_value_div, 'div', null, 'PSK_value');
-    skill_div.innerHTML = P_skills[skill_id].name;
+    skill_div.innerHTML = skill_obj.name;
     //鼠标点击之后可以设置到玩家身上
     // add_click_Active_skill_worn(skill_div, skill_id);
     //添加鼠标移动之后展示该技能详情
-    if (P_skills[skill_id].type == 'Passive') {
-        add_show_Tooltip(skill_div, 'show_passive_skill', skill_id);
-    } else if (P_skills[skill_id].type == 'Active') {
-        add_show_Tooltip(skill_div, 'show_active_skill', skill_id);
+    if (skill_obj.type == 'Passive') {
+        add_show_Tooltip(skill_div, 'show_passive_skill', skill_obj);
+    } else if (skill_obj.type == 'Active') {
+        add_show_Tooltip(skill_div, 'show_active_skill', skill_obj);
     }
 }

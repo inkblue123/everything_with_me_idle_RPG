@@ -119,7 +119,9 @@ export class Challenge_manage {
             place_manage.set_now_place(this.event_start_place);
         }
         //清除数据
-        this.reset_monitor_data();
+        this.reset_monitor_data(); //挑战管理类中的行为监控
+        let global_event_manage = global.get_game_event_manage();
+        global_event_manage.delete_monitor_target_summ(event_id); //游戏事件管理类中的行为监控
 
         //清除挑战界面信息
         this.reset_challenge_IE_div();

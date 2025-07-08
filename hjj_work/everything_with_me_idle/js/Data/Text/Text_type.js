@@ -130,43 +130,66 @@ function Equipment_wearing_position(texts) {
 }
 //属性名称描述
 function attr_type(texts) {
-    add_text_object(texts, 'attack');
-    texts['attack'].attr_name = '攻击力';
-    add_text_object(texts, 'precision');
-    texts['precision'].attr_name = '精准';
-    add_text_object(texts, 'critical_chance');
-    texts['critical_chance'].attr_name = '暴击率';
-    add_text_object(texts, 'critical_damage');
-    texts['critical_damage'].attr_name = '暴击伤害';
-    texts['critical_damage'].min_attr_name = '暴伤';
-    add_text_object(texts, 'attack_speed');
-    texts['attack_speed'].attr_name = '攻击速度';
-    texts['attack_speed'].min_attr_name = '攻速';
-    add_text_object(texts, 'defense');
-    texts['defense'].attr_name = '防御';
+    let id = 'attack';
+    add_text_object(texts, id);
+    texts[id].attr_name = '攻击力';
+    id = 'precision';
+    add_text_object(texts, id);
+    texts[id].attr_name = '精准';
+    id = 'critical_chance';
+    add_text_object(texts, id);
+    texts[id].attr_name = '暴击率';
+    id = 'critical_damage';
+    add_text_object(texts, id);
+    texts[id].attr_name = '暴击伤害';
+    texts[id].min_attr_name = '暴伤';
+    id = 'attack_speed';
+    add_text_object(texts, id);
+    texts[id].attr_name = '攻击速度';
+    texts[id].min_attr_name = '攻速';
 
-    add_text_object(texts, 'evade');
-    texts['evade'].attr_name = '闪避';
-    add_text_object(texts, 'resistance_point');
-    texts['resistance_point'].attr_name = '抵抗力';
-    add_text_object(texts, 'move_speed');
-    texts['move_speed'].attr_name = '移动速度';
-    texts['move_speed'].min_attr_name = '移速';
+    id = 'defense';
+    add_text_object(texts, id);
+    texts[id].attr_name = '防御';
+    id = 'evade';
+    add_text_object(texts, id);
+    texts[id].attr_name = '闪避';
+    id = 'resistance_point';
+    add_text_object(texts, id);
+    texts[id].attr_name = '抵抗力';
+    id = 'move_speed';
+    add_text_object(texts, id);
+    texts[id].attr_name = '移动速度';
+    texts[id].min_attr_name = '移速';
 
-    add_text_object(texts, 'physique');
-    texts['physique'].attr_name = '体格';
-    add_text_object(texts, 'Meridians');
-    texts['Meridians'].attr_name = '经脉';
-    add_text_object(texts, 'soul');
-    texts['soul'].attr_name = '魂魄';
-    add_text_object(texts, 'power');
-    texts['power'].attr_name = '力量';
-    add_text_object(texts, 'agile');
-    texts['agile'].attr_name = '敏捷';
-    add_text_object(texts, 'intelligence');
-    texts['intelligence'].attr_name = '智力';
-    add_text_object(texts, 'technique');
-    texts['technique'].attr_name = '技巧';
+    id = 'physique';
+    add_text_object(texts, id);
+    texts[id].attr_name = '体格';
+    id = 'Meridians';
+    add_text_object(texts, id);
+    texts[id].attr_name = '经脉';
+    id = 'soul';
+    add_text_object(texts, id);
+    texts[id].attr_name = '魂魄';
+    id = 'power';
+    add_text_object(texts, id);
+    texts[id].attr_name = '力量';
+    id = 'agile';
+    add_text_object(texts, id);
+    texts[id].attr_name = '敏捷';
+    id = 'intelligence';
+    add_text_object(texts, id);
+    texts[id].attr_name = '智力';
+    id = 'technique';
+    add_text_object(texts, id);
+    texts[id].attr_name = '技巧';
+
+    id = 'sword_damage';
+    add_text_object(texts, id);
+    texts[id].attr_name = '剑伤害加成';
+    id = 'sword_sticks';
+    add_text_object(texts, id);
+    texts[id].attr_name = '棍棒伤害加成';
 }
 //材料的类型名称
 function material_type(texts) {
@@ -208,6 +231,47 @@ function active_type(texts) {
     add_text_object(texts, 'auxiliary');
     texts['auxiliary'].active_type_name = '辅助型';
 }
+//被动技能类型
+function passive_type(texts) {
+    // 根基技能 basic
+    let id = 'basic_passive';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '根基技能';
+    //战斗技能 combat
+    id = 'combat_passive';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '战斗技能';
+    id = 'weapon_mastery';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '武器精通';
+    id = 'environment_adaptation';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '环境适应';
+    id = 'enemy_mastery';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '对敌精通';
+
+    //生活技能 life
+    id = 'life_passive';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '生活技能';
+    id = 'material_acquisition';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '原料获取';
+    id = 'material_processing';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '原料加工';
+    id = 'product_usage';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '成品使用';
+    id = 'recycling';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '回收利用';
+    //特殊功法 super
+    id = 'super_passive';
+    add_text_object(texts, id);
+    texts[id].passive_type_name = '特殊功法';
+}
 //初始化文本数据库中与类型相关的文本
 function init_Text_type(texts) {
     //武器装备类型描述
@@ -222,5 +286,7 @@ function init_Text_type(texts) {
     material_type(texts);
     //主动技能类型描述
     active_type(texts);
+    //被动技能类型描述
+    passive_type(texts);
 }
 export { init_Text_type };

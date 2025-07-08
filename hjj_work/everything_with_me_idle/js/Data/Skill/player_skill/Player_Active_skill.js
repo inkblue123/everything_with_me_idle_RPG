@@ -7,6 +7,7 @@ function init_Player_Active_skill(P_skills) {
     let id = 'normal_attack_Melee';
     add_P_Active_skill(P_skills, id);
     P_skills[id].need_slot_num = 1; //需要几个技能槽
+
     //每个槽中使用的基础技能
     P_skills[id].need_slot_id = ['normal_attack_Melee'];
     P_skills[id].exp_levelup_flag = false;

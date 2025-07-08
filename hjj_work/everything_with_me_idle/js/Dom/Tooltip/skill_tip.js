@@ -4,8 +4,8 @@ import { is_Empty_Object, attr_correct_handle } from '../../Function/Function.js
 import { texts } from '../../Data/Text/Text.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { P_skills, B_skills } from '../../Data/Skill/Skill.js';
-import { player } from '../../Player/Player.js';
 
+import { player } from '../../Player/Player.js';
 import { Tooltip } from './Tooltip.js';
 
 const TOOLTIP_WIDTH = 320;
@@ -48,7 +48,6 @@ function init_active_skill_tip(show_slot_num) {
         let active_skill = P_Askill.active_slots[i_slot_num]; //获取对应槽中的主动技能信息
         let desc = addElement(slot_value_div, 'div', null, 'lable_down');
         desc.innerHTML = B_skills[active_skill.id].desc; //这个槽的技能描述
-        // desc.innerHTML = active_skill.desc; //这个槽的技能描述
         //追加展示技能类型-伤害类型信息
         //不同类型的技能似乎展示效果不好，有待优化
         show_active_skill_type(slot_value_div, active_skill);
@@ -64,7 +63,8 @@ function init_active_skill_tip(show_slot_num) {
     }
 }
 //传入玩家拥有的一个主动技能，展示它的详情信息
-function init_show_active_skill_tip(skill_id) {
+function init_show_active_skill_tip(skill_obj) {
+    let skill_id = skill_obj.id;
     //技能库没有相关内容，简单展示信息
     if (is_Empty_Object(P_skills[skill_id])) {
         let name = addElement(Tooltip, 'div', null, 'lable_down');
@@ -74,20 +74,22 @@ function init_show_active_skill_tip(skill_id) {
         return false;
     }
 
-    let P_All_A_Skills = player.get_player_All_active_skills();
     //创造主动技能展示的布局
     Tooltip.style.width = `${P_skills[skill_id].need_slot_num * TOOLTIP_WIDTH}px`;
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
     name_lable.innerHTML = P_skills[skill_id].name; //技能名
+
+    //追加展示技能等级相关
+    show_skill_level(Tooltip, skill_obj);
+
     let slot_div = addElement(Tooltip, 'div', null, 'slot_div');
     for (let i = 0; i < P_skills[skill_id].need_slot_num; i++) {
         let slot_value_div = addElement(slot_div, 'div', null, 'slot_value_div');
 
-        let active_skill = P_All_A_Skills[skill_id].active_slots[i]; //获取对应槽中的主动技能信息
+        let active_skill = skill_obj.active_slots[i]; //获取对应槽中的主动技能信息
         let desc = addElement(slot_value_div, 'div', null, 'lable_down');
         desc.innerHTML = B_skills[active_skill.id].desc; //这个槽的技能描述
 
-        // desc.innerHTML = active_skill.desc; //这个槽的技能描述
         //追加展示技能类型-伤害类型信息
         //不同类型的技能似乎展示效果不好，有待优化
         show_active_skill_type(slot_value_div, active_skill);
@@ -98,7 +100,7 @@ function init_show_active_skill_tip(skill_id) {
     }
 }
 
-//展示技能的类型
+//展示主动技能其中一个槽的类型
 function show_active_skill_type(slot_value_div, active_skill) {
     let id = active_skill.id;
     let slot_num = active_skill.slot_num;
@@ -110,7 +112,7 @@ function show_active_skill_type(slot_value_div, active_skill) {
 
     return true;
 }
-//展示技能的限制条件
+//展示主动技能其中一个槽的限制条件
 function show_active_skill_condition(slot_value_div, active_skill) {
     let id = active_skill.id;
     let slot_num = active_skill.slot_num;
@@ -170,7 +172,7 @@ function show_active_skill_condition(slot_value_div, active_skill) {
     }
     return true;
 }
-//追加展示技能的属性补正
+//展示主动技能其中一个槽的属性补正
 function show_active_skill_attr_correct(slot_value_div, active_skill) {
     let id = active_skill.id;
     let slot_num = active_skill.slot_num;
@@ -193,32 +195,119 @@ function show_active_skill_attr_correct(slot_value_div, active_skill) {
 }
 
 //传入玩家拥有的一个被动技能对象，展示它的详细信息
-function init_show_passive_skill_tip(skill_id) {
-    //技能库没有相关内容，简单展示信息
-    if (is_Empty_Object(P_skills[skill_id])) {
-        let name = addElement(Tooltip, 'div', null, 'lable_down');
-        name.innerHTML = '未定义技能';
-        let desc = addElement(Tooltip, 'div', null, 'lable_down');
-        desc.innerHTML = '技能id为 : ' + skill_id;
-        return false;
+function init_show_passive_skill_tip(skill_obj) {
+    Tooltip.style.width = `${TOOLTIP_WIDTH}px`;
+    //名称
+    let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
+    name_lable.innerHTML = skill_obj.name; //技能名
+    //描述
+    let desc_lable = addElement(Tooltip, 'div', null, 'lable_down');
+    desc_lable.innerHTML = skill_obj.desc; //技能描述
+    //被动技能类型和等级
+    show_passive_skill_type(Tooltip, skill_obj);
+    //追加展示技能等级相关
+    show_skill_level(Tooltip, skill_obj);
+    //追加展示被动技能的常态等级加成
+    show_passive_skill_rewards(Tooltip, skill_obj.rewards);
+    //追加展示被动技能的关键等级节点加成
+}
+//追加展示被动技能的类型和等级
+function show_passive_skill_type(div, skill_obj) {
+    //类型
+    let div_3 = addElement(div, 'div', null, 'page_columns_11');
+    let type_div = addElement(div_3, 'div', null, 'lable_down');
+    let passive_type = P_skills[skill_obj.id].passive_type;
+    if (passive_type == 'super_passive') {
+        type_div.innerHTML = texts[passive_type].passive_type_name;
+    } else {
+        let master_type;
+        if (enums.basic_passive.includes(passive_type)) {
+            master_type = 'basic_passive';
+        } else if (enums.combat_passive.includes(passive_type)) {
+            master_type = 'combat_passive';
+        } else if (enums.life_passive.includes(passive_type)) {
+            master_type = 'life_passive';
+            // } else if (enums.super_passive.includes(passive_type)) {
+            //     master_type = 'super_passive';
+        }
+        let ch = texts[master_type].passive_type_name + '：' + texts[passive_type].passive_type_name;
+        type_div.innerHTML = ch;
+    }
+}
+//追加展示技能的等级和经验相关内容
+function show_skill_level(div, skill_obj) {
+    if (skill_obj.exp_levelup_flag == false && P_skills[skill_obj.id].max_level == 1) {
+        //不能升级的技能，等级都是1，也不用展示什么内容，特殊处理
+        let level_div = addElement(div, 'div', null, 'lable_down');
+        level_div.innerHTML = '等级：MAX';
+        return;
+    }
+    //等级
+    let level_div = addElement(div, 'div', null, 'page_columns_12');
+    //等级数值
+    let num_div = addElement(level_div, 'div', null, 'lable_down');
+    let now_level = skill_obj.level;
+    let max_level = P_skills[skill_obj.id].max_level;
+    num_div.innerHTML = '等级：' + now_level + '/' + max_level;
+
+    //经验或升级情况
+    let exp_div = addElement(level_div, 'div', null, 'lable_end');
+    if (skill_obj.exp_levelup_flag) {
+        //该技能可以通过累计经验升级，所以要展示目前经验情况
+        var exp_bar = addElement(exp_div, 'div', 'exp_bar', 'progress_bar', '');
+        var exp_frame = addElement(exp_bar, 'div', 'exp_frame', 'progress_bar_frame'); //进度条的外框
+        var exp_current = addElement(exp_frame, 'div', 'exp_current', 'progress_bar_current'); //进度条中央，长度随当前进度数值变化的色块
+        var exp_number = addElement(exp_bar, 'div', 'exp_number', 'progress_bar_number'); //进度条上显示的数字，表示当前进度具体数值
+        if (skill_obj.levelmax_flag) {
+            //技能满级了
+            exp_bar.children[0].children[0].style.width = `100%`;
+            exp_bar.children[1].innerText = `exp：MAX`;
+        } else {
+            let exp_radio = (skill_obj.exp / skill_obj.next_level_need_exp) * 100;
+            exp_bar.children[0].children[0].style.width = `${exp_radio}%`;
+            exp_bar.children[1].innerText = `exp：${Math.floor(skill_obj.exp)}/${Math.ceil(
+                skill_obj.next_level_need_exp
+            )}`;
+        }
+    } else {
+        //该技能升级不靠经验，目前依靠的是达成某些事情
+        //比如获得12345号技能书，多读一种就多升一级
+        //比如完成5个特定挑战，每完成一个就升一级
+        //这种技能就没有经验的概念，应该要展示升级相关事件的完成进度
+    }
+}
+//追加展示被动技能的常态等级加成
+function show_passive_skill_rewards(div, rewards) {
+    //这个技能没有常态等级加成
+    if (is_Empty_Object(rewards)) {
+        return true;
     }
 
-    Tooltip.style.width = `${TOOLTIP_WIDTH}px`;
-    let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
-    name_lable.innerHTML = P_skills[skill_id].name; //技能名
+    let rewards_div;
+    if (rewards.length == 1) {
+        //如果常态等级的加成只有一条属性，就直接居中显示
+        rewards_div = addElement(div, 'div', null, 'lable_down');
+        let attr = rewards[0].attr;
+        let attr_name = texts[attr].attr_name;
+        let ch = attr_name + '：' + rewards[0].data;
+        rewards_div.innerHTML = ch;
+    } else {
+        //如果有多条属性，就每行两个依次往下排列
+        rewards_div = addElement(div, 'div', null, 'page_columns_11');
+        for (let reward_obj of rewards) {
+            let attr_div = addElement(rewards_div, 'div', null, 'table_2_value');
 
-    // let i_slot_num = show_slot_num - slot_num + i; //从要展示的技能的第一个槽开始
-    // let active_skill = P_Askill.active_slots[i_slot_num]; //获取对应槽中的主动技能信息
-    // let desc = addElement(slot_value_div, 'div', null, 'lable_down');
-    // desc.innerHTML = B_skills[active_skill.id].desc; //这个槽的技能描述
-    // // desc.innerHTML = active_skill.desc; //这个槽的技能描述
-    // //追加展示技能类型-伤害类型信息
-    // //不同类型的技能似乎展示效果不好，有待优化
-    // show_active_skill_type(slot_value_div, active_skill);
-    // //追加展示技能的限制条件
-    // show_active_skill_condition(slot_value_div, active_skill);
-    // //追加展示技能的属性补正
-    // show_active_skill_attr_correct(slot_value_div, active_skill);
+            let attr = reward_obj.attr;
+            let attr_name = addElement(attr_div, 'div', null, 'TLV_left');
+            // if (texts[attr].attr_name.length > 4) {
+            // attr_name.innerHTML = texts[attr].min_attr_name + '：'; //完整名称太长,选用简称
+            // } else {
+            attr_name.innerHTML = texts[attr].attr_name + '：';
+            // }
+            let attr_value = addElement(attr_div, 'div', null, 'TLV_right');
+            attr_value.innerHTML = reward_obj.data;
+        }
+    }
 }
 
 export { init_skill_tip };

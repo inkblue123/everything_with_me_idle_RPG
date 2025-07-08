@@ -266,7 +266,7 @@ html {
 }
 /* 进度条组件：进度条中央，长度随当前血量变化的色块 */
 .progress_bar_current {
-    height: 15px;
+    height: 100%;
 }
 /* 进度条组件：显示的数字 */
 .progress_bar_number {

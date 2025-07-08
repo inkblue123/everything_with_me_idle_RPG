@@ -55,6 +55,8 @@ function load_save_show_tip() {
 }
 //导入存档功能-加载具体存档文件
 function load_save(save_str) {
+    //导入的存档会直接保存
+    window.localStorage.setItem('v0.1', save_str);
     //base64解密
     console.log('%s', save_str);
     save_str = b64_to_utf8(save_str);

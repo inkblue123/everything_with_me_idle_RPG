@@ -6,15 +6,17 @@ export class Skill {
         this.id = id; //唯一id
         this.name = '未定义技能'; // 技能名称
         this.desc = new Array(); // 技能描述
-        this.exp_levelup_flag; //是否可以用经验升级标记
+        this.exp_levelup_flag = false; //是否可以用经验升级标记
+        this.max_level = 1; //最大等级
 
         this.type; //类型
         this.leveling_behavior = new Object(); //练级行为
-        this.init_Skill_name(id);
+        this.init_skill_name(id);
+        this.init_skill_desc(id);
     }
 
     //调用文本数据库中的技能名称
-    init_Skill_name(id) {
+    init_skill_name(id) {
         if (texts[id] == undefined || texts[id].skill_name == undefined) {
             //尚未定义
             this.name = '未命名技能';
@@ -23,8 +25,15 @@ export class Skill {
         }
     }
 
-    //手动输入参数，为每个槽中的技能生成描述
-    set_skill_desc() {}
+    //调用文本数据库中的技能描述
+    init_skill_desc(id) {
+        if (texts[id] == undefined || texts[id].skill_desc == undefined) {
+            //尚未定义
+            this.desc = '未定义技能描述';
+        } else {
+            this.desc = texts[id].skill_desc;
+        }
+    }
 
     //设置通过经验升级的技能的相关参数
     set_skill_levelup_data(base_exp, max_level, algorithm) {
@@ -50,6 +59,7 @@ export class P_Passive_skill extends Skill {
     constructor(id) {
         super(id);
         this.type = 'Passive';
+        this.passive_type; //这个被动技能的类型，比如加成战斗的，加成生活的，武器精通类、使用道具类等等
         this.initial_flag; //是否属于玩家初始技能
         this.rewards; //常态等级加成
         this.milepost; // 关键等级节点
@@ -63,14 +73,15 @@ export class P_Active_skill extends Skill {
         //主动技能
         this.need_slot_num; //需要几个技能槽
         this.active_condition = new Object(); //激活这个技能需要满足的条件
-        this.active_type; //这个技能的类型，比如攻击/辅助
+        //由于玩家主动技能实际上是由多个基础技能拼接起来的，使用类型时用的是基础技能的类型，这里的类型实际上并没有用
+        this.active_type; //这个技能的类型，比如攻击/辅助，
         this.attr_correct = new Object(); //这个技能的属性补正
         this.algorithm; //这个技能的属性计算算法
         this.start_time; //这个技能的激活时间点，比如开始时/结束时/持续激活
         this.effect = new Object(); //这个技能激活之后具体产生的效果
     }
     //自动调用技能参数，生成技能描述
-    init_skill_desc() {
+    set_skill_desc() {
         //
         let desc;
         if (this.active_type == 'attack') {

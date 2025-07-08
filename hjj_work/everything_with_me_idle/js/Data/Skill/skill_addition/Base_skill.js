@@ -20,7 +20,8 @@ function init_base_Active_skill(B_skills) {
             distance: 'min', //选择最近的
         },
     };
-    B_skills[id].init_skill_desc();
+    B_skills[id].set_skill_desc();
+
     //蓄力
     id = 'energy_storage';
     add_P_Active_skill(B_skills, id);
@@ -33,7 +34,8 @@ function init_base_Active_skill(B_skills) {
     B_skills[id].effect = {
         auxiliary_type: 'add_main_Attack', //什么类型的辅助，比如新增buff、加成下一次攻击、等等
     };
-    B_skills[id].init_skill_desc();
+    B_skills[id].set_skill_desc();
+
     //盾牌防御
     id = 'shield_defense';
     add_P_Active_skill(B_skills, id);
@@ -48,7 +50,7 @@ function init_base_Active_skill(B_skills) {
         defense_num: 1, //防御1次
         DR_math_type: 'num', //固定数值减免
     };
-    B_skills[id].init_skill_desc();
+    B_skills[id].set_skill_desc();
 }
 
 export { init_base_Active_skill };

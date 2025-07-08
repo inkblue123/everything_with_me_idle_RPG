@@ -140,9 +140,7 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
             var PSK_C_all_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_C_all_radio_div, `PSK_C_all`, 'PSK_switch', `C_all`, `全部`);
             var PSK_C_W_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_C_W_radio_div, `PSK_C_W`, 'PSK_switch', `C_W`, `武器技能`);
-            var PSK_C_S_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_C_S_radio_div, `PSK_C_S`, 'PSK_switch', `C_S`, `战斗姿态技能`);
+            addElement_radio(PSK_C_W_radio_div, `PSK_C_W`, 'PSK_switch', `C_W`, `武器精通技能`);
             var PSK_C_Env_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_C_Env_radio_div, `PSK_C_Env`, 'PSK_switch', `C_Env`, `环境适应技能`);
             var PSK_C_Ene_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
@@ -169,6 +167,15 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
             var PSK_A_droptable = addElement(PSK_classification_div, 'div', 'PSK_A_droptable', 'dropdown_table');
             var PSK_A_all_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
             addElement_radio(PSK_A_all_radio_div, `PSK_A_all`, 'PSK_switch', `A_all`, `全部`);
+            var PSK_A_A_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_A_A_radio_div, `PSK_A_A`, 'PSK_switch', `A_A`, `可攻击的技能`);
+            var PSK_A_D_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_A_D_radio_div, `PSK_A_D`, 'PSK_switch', `A_D`, `可防御的技能`);
+            var PSK_A_R_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_A_R_radio_div, `PSK_A_R`, 'PSK_switch', `A_R`, `可恢复的技能`);
+            var PSK_A_F_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_A_F_radio_div, `PSK_A_F`, 'PSK_switch', `A_F`, `可辅助的技能`);
+
             // 特殊功法 super S
             var PSK_S_button = addElement(PSK_classification_div, 'button', 'PSK_S_button', 'dropdown_button_1');
             PSK_S_button.innerHTML = `特殊功法`;

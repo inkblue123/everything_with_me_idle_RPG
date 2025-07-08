@@ -71,6 +71,7 @@ export class Main_quest_manage {
     }
     //完成当前主线任务
     end_main_quest() {
+        let event_id = this.main_quest_id;
         //获得主线任务奖励
         let finish_reward = game_events[this.main_quest_id].finish_reward;
         for (let key in finish_reward) {
@@ -84,13 +85,15 @@ export class Main_quest_manage {
             } else if (key == 'start_event') {
                 //启动下一个主线
                 let game_event_manage = global.get_game_event_manage();
-                for (let event_id of finish_reward['start_event']) {
-                    game_event_manage.start_game_event(event_id);
+                for (let id of finish_reward['start_event']) {
+                    game_event_manage.start_game_event(id);
                 }
             }
         }
         //清除数据
-        this.reset_monitor_data();
+        this.reset_monitor_data(); //主线任务类中的行为监控
+        let global_event_manage = global.get_game_event_manage();
+        global_event_manage.delete_monitor_target_summ(event_id); //游戏事件管理类中的行为监控
         //将新的主线情况展示到脑海-重要事件界面中
         this.init_main_quest_IE_div();
     }

@@ -94,7 +94,7 @@ function init_Place_combat(places) {
         places[id].max_enemy_num = 5; //总敌人最大数量
         places[id].add_enemy_time = 3; //刷怪间隔
         places[id].unlimited_add_flag = true; //是否无限刷怪
-        places[id].buff = ['111']; //战斗场地内的固定buff
+        // places[id].buff = ['111']; //战斗场地内的固定buff
     }
 }
 export { init_Place_combat };
