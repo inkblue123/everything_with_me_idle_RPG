@@ -1,5 +1,5 @@
 import { addElement } from '../../Function/Dom_function.js';
-import { get_object_only_key } from '../../Function/Get_func.js';
+import { get_object_only_key } from '../../Function/Function.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { items } from '../../Data/Item/Item.js';
 import { texts } from '../../Data/Text/Text.js';

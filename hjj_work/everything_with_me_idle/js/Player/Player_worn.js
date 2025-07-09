@@ -1,7 +1,6 @@
 'use strict';
 import { addElement, add_show_Tooltip, add_click_Equipment_worn_remove } from '../Function/Dom_function.js';
-import { is_Empty_Object, hex2Rgba } from '../Function/Function.js';
-import { get_object_only_key } from '../Function/Get_func.js';
+import { is_Empty_Object, hex2Rgba, get_object_only_key } from '../Function/Function.js';
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';

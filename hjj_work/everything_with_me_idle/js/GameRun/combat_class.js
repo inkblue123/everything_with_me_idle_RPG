@@ -168,6 +168,8 @@ export class Combat_manage {
 
                     let global_flag_manage = global.get_global_flag_manage();
                     global_flag_manage.record_kill_enemy_num(main_Attack);
+                    let enemy_manage = global.get_enemy_manage();
+                    enemy_manage.add_kill_enemy_num(1);
                     continue;
                 }
             }
@@ -273,6 +275,11 @@ export class Combat_manage {
     }
     //玩家死亡，处理相关逻辑
     player_death() {
+        //原计划里玩家死亡是读档的，但是相关逻辑还没开发，就先临时这样了
+        //回10点血
+        let P_attr = player.get_player_attributes();
+        P_attr.change_data_attr('health_point', 10);
+
         if (global.get_flag('GS_game_event')) {
             //如果玩家处于事件中，死亡意味着事件失败，只退出事件
             let game_event_manage = global.get_game_event_manage();

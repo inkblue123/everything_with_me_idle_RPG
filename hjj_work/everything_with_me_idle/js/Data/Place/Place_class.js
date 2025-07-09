@@ -11,6 +11,7 @@ export class Place {
         this.area_name; //区域名称
         this.connect_normal_place = new Array(); //可以联通的普通地点
         this.connect_combat_place = new Array(); //可以联通的战斗地点
+        this.connect_store_place = new Array(); //可以联通的商店
         this.connect_other_place = new Array(); //可以联通的其他地点
         this.place_NPC = new Array(); //位于此处的NPC
         this.condition_event = new Array();
@@ -53,6 +54,12 @@ export class Place {
     add_place_NPC(...args) {
         for (let id of args) {
             this.place_NPC.push(id);
+        }
+    }
+    //添加这个地点可以联通的商店
+    add_connect_store_place(...args) {
+        for (let id of args) {
+            this.connect_store_place.push(id);
         }
     }
     //添加这个地点可以联通的其他地点
@@ -111,8 +118,55 @@ export class P_combat extends Place {
     constructor(place_id, area_id) {
         super(place_id, area_id);
         this.type = 'combat';
+        this.combat_type;
         this.enemy = new Array();
-        this.max_enemy_num = 0;
+        this.max_live_enemy_num = 0; //同场最多敌人数量
+        this.add_enemy_time = 0; //定时刷怪时间间隔
+    }
+    //设置战斗地点类型
+    set_combat_type(combat_type, ...value) {
+        this.combat_type = combat_type;
+        if (combat_type == 'infinite_enemy') {
+            //无限刷怪区域
+            return;
+        } else {
+            this.max_enemy_cumulative = value[0];
+            if (combat_type == 'limited_enemy_normal') {
+                //有限刷怪区域-普通
+                return;
+            } else if (combat_type == 'limited_enemy_road') {
+                //有限刷怪区域-通道
+                this.cumulative_time = value[1]; //积累一个怪所需的时间
+                this.next_accessible_area = value[2]; //通道对面的地点id，清理完所有怪之后移动到这里
+                return;
+            } else if (combat_type == 'limited_enemy_trap') {
+                //有限刷怪区域-埋伏/陷阱
+                this.thing_cumulative = value[1]; //做什么事会积累怪
+                this.thing_cumulative_num = value[2]; //做某事之后积累多少个怪
+                return;
+            }
+        }
+    }
+
+    //设置刷怪的相关参数
+    set_add_enemy_data(
+        max_live_enemy_num,
+        add_enemy_time,
+        little_enemy_num,
+        little_enemy_time,
+        add_enemy_distance,
+        add_enemy_skill_point
+    ) {
+        this.max_live_enemy_num = max_live_enemy_num; //同场最多敌人数量
+        //刷怪规则1，定时刷怪
+        this.add_enemy_time = add_enemy_time; //定时刷怪时间间隔
+        //刷怪规则2，同场少怪时刷怪
+        this.little_enemy_num = little_enemy_num; //少怪时刷怪的敌人数量限制
+        this.little_enemy_time = little_enemy_time; //少怪时刷怪的时间间隔
+        //刷怪规则3，玩家移动距离刷怪
+        this.add_enemy_distance = add_enemy_distance; //玩家前进多少距离刷新一个怪
+        //刷怪规则4，玩家技能影响刷怪
+        this.add_enemy_skill_point = add_enemy_skill_point; //影响刷怪力
     }
 }
 //npc地点

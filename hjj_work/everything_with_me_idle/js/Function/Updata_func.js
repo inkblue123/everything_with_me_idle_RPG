@@ -1,8 +1,12 @@
 import { player } from '../Player/Player.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
-import { add_show_Tooltip, add_click_Active_skill_worn_remove } from './Dom_function.js';
-import { delete_player_active_div, delete_active_show_div } from './delete_func.js';
+import {
+    add_show_Tooltip,
+    add_click_Active_skill_worn_remove,
+    delete_player_active_div,
+    delete_active_show_div,
+} from './Dom_function.js';
 import { is_Empty_Object } from './Function.js';
 
 //更新角色名

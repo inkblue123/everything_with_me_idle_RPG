@@ -1,6 +1,6 @@
 import { init_Text_type } from './Text_type.js';
 import { init_Text_item } from './Text_item.js';
-import { init_Text_place } from './Text_place.js';
+import { init_Text_place } from './Text_place/Text_place.js';
 import { init_Text_enemy } from './Text_enemy.js';
 import { init_Text_skill } from './Text_skill/Text_skill.js';
 import { init_Text_game_event } from './Text_game_event.js';

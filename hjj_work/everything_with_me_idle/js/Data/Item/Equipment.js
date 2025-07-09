@@ -44,6 +44,15 @@ function init_Item_Equipment(items) {
         //攻击，精准，暴击率，暴击伤害，攻击速度
         // items[id].init_Equipment_attack_attr(5, 5, 5, 20, 2);//手动设置攻击属性
 
+        id = 'test_sword'; //木剑
+        add_Item_object(items, id, item_type); //id，物品主要分类
+        items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
+        items[id].init_Equipment('sword'); //物品小分类，是否特制
+        // items[id].set_attr_level('L1', 'attack'); //调用L1级的攻击属性预设
+        items[id].init_Item_price('coin', 60); //物品价值
+        //攻击，精准，暴击率，暴击伤害，攻击速度
+        items[id].init_Equipment_attack_attr(100, 5, 5, 20, -2); //手动设置攻击属性
+
         id = 'wood_battle_axe'; //木制战斧
         add_Item_object(items, id, item_type);
         items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类

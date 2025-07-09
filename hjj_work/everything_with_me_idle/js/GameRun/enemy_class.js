@@ -197,9 +197,16 @@ class place_enemy {
 //记录敌人相关内容的对象
 export class Enemy_manage {
     constructor() {
+        this.now_time;
         this.now_place;
+        this.now_round_time; //当前回合运行了多久
         this.last_add_enemy_time; //上次刷怪时间
+        this.last_little_add_enemy_time; //上次触发同场少怪时刷怪的时间
+        this.now_place_add_enemy_num; //当前地点已经刷怪的总数量
+        this.now_place_enemy_cumulative; //当前地点积累的怪物数量
+        this.kill_enemy_num; //当前地点被玩家杀死的敌人数
         this.combat_place_enemys = new Object();
+        this.last_combat_place_data = new Object(); //曾经到过的战斗地点的参数
     }
     init() {
         this.combat_place_enemys['little_distance'] = new Array();
@@ -215,17 +222,34 @@ export class Enemy_manage {
             }
         }
         this.last_add_enemy_time = 0; //上次刷怪时间
+        this.last_little_add_enemy_time = 0; //上次触发同场少怪时刷怪的时间
+        this.now_place_enemy_cumulative = 0; //当前地点积累的怪物数量
+        this.kill_enemy_num = 0; //当前地点积累的怪物数量
     }
     //重置刷怪参数
     reset_enemy_data() {
         this.last_add_enemy_time = global.get_game_now_time();
+        this.last_little_add_enemy_time = 0; //上次触发同场少怪时刷怪的时间
+        this.now_place_add_enemy_num = 0;
+        this.kill_enemy_num = 0;
     }
+    //移动到了新的战斗地点，初始化相关参数
+    set_new_place(next_place) {
+        this.now_place = next_place;
+        this.reset_enemy_data();
+        if (places[next_place].combat_type != 'infinite_enemy') {
+            //有限刷怪区域需要计算敌人积累的数量
+            this.now_place_enemy_cumulative = this.get_place_enemy_cumulative_num(next_place);
+        }
+    }
+    //设置当前地点积累的怪物总数
+    set_now_place_enemy_cumulative(last_time, last_enemy_num) {}
     //获取当前地点的怪物对象
     get_combat_place_enemys() {
         return this.combat_place_enemys;
     }
     //获取当前战斗场地内，某个id的敌人的数量
-    get_combat_place_enemynum(enemy_id) {
+    get_combat_place_enemy_num(enemy_id) {
         let enemy_num = 0;
         for (let key in this.combat_place_enemys) {
             let field = this.combat_place_enemys[key];
@@ -244,44 +268,50 @@ export class Enemy_manage {
         }
         return enemy_num;
     }
+
     //执行一次刷怪操作
-    add_new_enemy(now_place) {
-        this.now_place = now_place;
+    add_new_enemy() {
         //判断当前是否可以刷怪
-        if (this.judge_add_new_enemy(now_place)) {
+        if (this.judge_add_new_enemy()) {
             //可以刷怪，尝试进行刷怪
             if (this.try_add_new_enemy()) {
                 //刷怪成功，更新参数
-                this.last_add_enemy_time = global.get_game_now_time();
+                this.now_place_add_enemy_num++;
             }
         }
     }
     //判断当前帧是否可以刷怪
     judge_add_new_enemy() {
-        //根据地点信息，选择判断的依据
-        let time_judge = false; //刷怪间隔
-        let live_enemy_num_judge = false; //同场敌人数量
-        let all_enemy_num_judge = false; //已击杀敌人数量
-
         //同场敌人数量判断
-        if (this.get_combat_place_enemynum() < places[this.now_place].max_enemy_num) {
-            //敌人数量不足，可以刷怪
-            live_enemy_num_judge = true;
-        }
-        //上次刷怪时间间隔判断
-        let now_time = global.get_game_now_time();
-        if (now_time - this.last_add_enemy_time >= places[this.now_place].add_enemy_time * 1000) {
-            time_judge = true;
-        }
-        if (places[this.now_place].unlimited_add_flag) {
-            //当前区域总刷怪数量判断
-            all_enemy_num_judge = true;
-        }
-        if (time_judge && live_enemy_num_judge && all_enemy_num_judge) {
-            return true;
-        } else {
+        let now_enemy_num = this.get_combat_place_enemy_num();
+        if (now_enemy_num >= places[this.now_place].max_live_enemy_num) {
+            //同场敌人已经达到上限，不能刷怪
             return false;
         }
+        //当前区域总刷怪数量判断
+        if (places[this.now_place].combat_type != 'infinite_enemy') {
+            if (this.now_place_add_enemy_num >= this.now_place_enemy_cumulative) {
+                //当前地点的怪刷完了，不能刷怪
+                return false;
+            }
+        }
+
+        //刷怪规则1：定时刷怪
+        let now_time = global.get_game_now_time();
+        if (now_time - this.last_add_enemy_time >= places[this.now_place].add_enemy_time * 1000) {
+            this.last_add_enemy_time = now_time;
+            return true;
+        }
+        //刷怪规则2：同场敌人少时刷怪
+        if (now_enemy_num <= places[this.now_place].little_enemy_num) {
+            if (now_time - this.last_little_add_enemy_time >= places[this.now_place].little_enemy_time * 1000) {
+                this.last_little_add_enemy_time = now_time;
+                return true;
+            }
+        }
+
+        //没有满足任何规则，不能刷怪
+        return false;
     }
     //尝试刷一个新的敌人
     try_add_new_enemy() {
@@ -289,7 +319,7 @@ export class Enemy_manage {
         let place_x, place_y;
         if (places[this.now_place].add_enemy_type == 'fixed') {
             //地点限定，刷怪位置固定
-            place_x = places[this.now_place].type_limit.field;
+            place_x = places[this.now_place].add_enemy_field_limit.field;
             place_y = get_random(0, 8);
         } else if (places[this.now_place].add_enemy_type == 'random') {
             //地点不约束，随机刷新
@@ -344,7 +374,7 @@ export class Enemy_manage {
             if (key == 'chance') {
                 continue;
             } else if (key == 'now_place_max_num') {
-                let now_place_num = this.get_combat_place_enemynum(enemy_id);
+                let now_place_num = this.get_combat_place_enemy_num(enemy_id);
                 let now_place_max_num = places[this.now_place].enemy[enemy_id][key];
                 if (now_place_num >= now_place_max_num) {
                     return false;
@@ -391,16 +421,17 @@ export class Enemy_manage {
         enemys.sort((a, b) => a.distance - b.distance);
         return enemys.slice(0, n);
     }
-    //清空所有敌人
+    //离开了当前战斗区域，清空所有敌人
     delete_all_enemy() {
         //清除目前的敌人参数
         for (let place_x in this.combat_place_enemys) {
             let field = this.combat_place_enemys[place_x];
             for (let place_y = 0; place_y < 9; place_y++) {
                 field[place_y] = new Object();
-                // field[place_y] = new place_enemy(0);
             }
         }
+        //记录离开时的怪物数据
+        this.set_leave_enemy_data();
         //重置刷怪参数
         this.reset_enemy_data();
         //更新战斗界面中的所有敌人，把界面上的敌人清空
@@ -413,7 +444,6 @@ export class Enemy_manage {
         for (let place_x in this.combat_place_enemys) {
             let field = this.combat_place_enemys[place_x];
             for (let place_y = 0; place_y < 9; place_y++) {
-                // if (field[place_y].statu) {
                 if (this.judge_enemy_live(field[place_y])) {
                     //更新活着的敌人的主动技能
                     field[place_y].run_active_skill(this.now_time);
@@ -421,10 +451,8 @@ export class Enemy_manage {
             }
         }
     }
-
     //更新战斗界面中的所有敌人
     updata_enemy_show() {
-        // let enemy_manage = global.get_enemy_manage();
         let combat_place_enemys = this.get_combat_place_enemys();
         for (let place_x in combat_place_enemys) {
             for (let place_y = 0; place_y < 9; place_y++) {
@@ -438,7 +466,6 @@ export class Enemy_manage {
                 let field = combat_place_enemys[place_x];
                 let enemy = field[place_y];
                 if (this.judge_enemy_live(enemy)) {
-                    // if (enemy.statu) {
                     //该敌人活着，更新相关信息
                     enemy_HP_bar.style.display = '';
                     enemy_HP_bar.children[0].children[0].style.width = enemy.get_HP_ratio();
@@ -452,6 +479,13 @@ export class Enemy_manage {
                     enemy_head.innerHTML = '';
                 }
             }
+        }
+        //有限刷怪区域，需要更新剩余敌人的数量
+        if (places[this.now_place].combat_type != 'infinite_enemy') {
+            let remain_enemy_div = document.getElementById('remain_enemy_div');
+            let remain_enemy_num = this.now_place_enemy_cumulative - this.kill_enemy_num;
+            let ch = '敌人数量剩余' + remain_enemy_num + '个';
+            remain_enemy_div.innerHTML = ch;
         }
     }
     //获取敌人类部分的游戏存档
@@ -476,7 +510,126 @@ export class Enemy_manage {
                 }
             }
         }
-        // this.combat_place_enemys = enemy_save.combat_place_enemys;
-        this.reset_enemy_data(); //重置刷怪时间
+        this.reset_enemy_data(); //重置刷怪参数
+    }
+    //判断指定有限刷怪区域是否可以前进（是否有足够多的怪进入战斗）
+    judge_infinite_enemy_place_goto(next_place) {
+        if (places[next_place].type != 'combat') {
+            //要去的地方是非战斗区域，虽然不知道为什么会调到这里，但是按这个函数的逻辑，是可以前进的
+            console.log('针对有限刷怪区域的函数遇到了非战斗区域的输入，可能需要查看调用逻辑是否正常');
+            return true;
+        }
+        //无限刷怪区域，一定有怪可以打，所以可以前进
+        if (places[next_place].combat_type == 'infinite_enemy') {
+            return true;
+        }
+        //有限刷怪区域-普通，一定有怪可以打，所以可以前进
+        if (places[next_place].combat_type == 'limited_enemy_normal') {
+            return true;
+        }
+        //有限刷怪区域-通道，只有当积累的敌人多于最大数量的20%时才会产生战斗
+        if (places[next_place].combat_type == 'limited_enemy_road') {
+            if (is_Empty_Object(this.last_combat_place_data[next_place])) {
+                //没有关于这个地点的记录，说明是很久没来的通道，默认堆满怪
+                return true;
+            } else {
+                //有记录，检查现在堆积了多少怪
+                let last_out_enemy_num = this.last_combat_place_data[next_place].last_out_enemy_num; //上次离开时剩余的怪
+                if (last_out_enemy_num != 0) {
+                    //上次怪就没清完，这次进入必定产生战斗
+                    return true;
+                }
+                let last_out_time = this.last_combat_place_data[next_place].last_out_time; //上次离开的时间
+                let last_time = (this.now_time - last_out_time) / 1000; //上次离开到现在进入的时间
+                let cumulative_enemy_num = Math.floor(last_time / places[next_place].cumulative_time); //上次离开到现在这段时间内积累的怪
+                let all_cumulative_num = last_out_enemy_num + cumulative_enemy_num; //目前总共积累了多少怪
+                if (all_cumulative_num >= places[next_place].max_enemy_cumulative * 0.2) {
+                    //堆积的怪超过了最大数量的20%，应该战斗
+                    return true;
+                } else {
+                    //堆积的怪数量不够，不会战斗
+                    return false;
+                }
+            }
+        }
+        //有限刷怪区域-陷阱，只有当积累的敌人多于最大数量的10%时才会产生战斗
+        if (places[next_place].combat_type == 'limited_enemy_trap') {
+            return true;
+        }
+    }
+    //记录离开时的怪物数据
+    set_leave_enemy_data() {
+        if (
+            places[this.now_place].combat_type != 'limited_enemy_road' &&
+            places[this.now_place].combat_type != 'limited_enemy_trap'
+        ) {
+            //只有通道和陷阱类型的战斗区域需要记录数据
+            return true;
+        }
+
+        let data_obj = new Object();
+        //这个地点还剩余的怪的数量等于目前积累的数减去已经杀死的敌人数
+        data_obj.last_out_enemy_num = this.now_place_enemy_cumulative - this.kill_enemy_num;
+        data_obj.last_out_time = this.now_time;
+        this.last_combat_place_data[this.now_place] = data_obj;
+    }
+    //获取当前战斗场地内，敌人堆积了多少
+    get_place_enemy_cumulative_num(now_place) {
+        // if (is_Empty_Object(places[now_place])) {
+        //     console.log('未定义地点');
+        //     return false;
+        // }
+        // if (places[now_place].type != 'combat') {
+        //     console.log('非战斗区域不会刷怪，错误的调用');
+        //     return false;
+        // }
+        // if (places[next_place].combat_type == 'infinite_enemy') {
+        //     console.log('无限刷怪区域不需要计算敌人堆积数量，错误的调用');
+        //     return false;
+        // }
+        //有限刷怪区域-普通，堆积的怪总是最大数量
+        if (places[now_place].combat_type == 'limited_enemy_normal') {
+            return places[now_place].max_enemy_cumulative;
+        }
+        //有限刷怪区域-通道，
+        if (places[now_place].combat_type == 'limited_enemy_road') {
+            if (is_Empty_Object(this.last_combat_place_data[now_place])) {
+                //没有关于这个地点的记录，说明是很久没来的通道，默认堆满怪
+                return places[now_place].max_enemy_cumulative;
+            } else {
+                //有记录，检查现在堆积了多少怪
+                let last_out_enemy_num = this.last_combat_place_data[now_place].last_out_enemy_num; //上次离开时剩余的怪
+                let last_out_time = this.last_combat_place_data[now_place].last_out_time; //上次离开的时间
+                let last_time = (this.now_time - last_out_time) / 1000; //上次离开到现在进入的时间
+                let cumulative_enemy_num = Math.floor(last_time / places[now_place].cumulative_time); //上次离开到现在这段时间内积累的怪
+                let all_cumulative_num = last_out_enemy_num + cumulative_enemy_num; //目前总共积累了多少怪
+                if (all_cumulative_num > places[now_place].max_enemy_cumulative) {
+                    all_cumulative_num = places[now_place].max_enemy_cumulative;
+                }
+                return all_cumulative_num;
+            }
+        }
+        //有限刷怪区域-陷阱
+        if (places[now_place].combat_type == 'limited_enemy_trap') {
+            return places[now_place].max_enemy_cumulative;
+        }
+    }
+    //击杀了敌人，记录数据
+    add_kill_enemy_num(num) {
+        if (places[this.now_place].combat_type == 'infinite_enemy') {
+            //无限刷怪区域不需要杀敌计数
+            return;
+        }
+
+        this.kill_enemy_num += num;
+        if (this.kill_enemy_num < this.now_place_enemy_cumulative) {
+            return;
+        }
+        //当前有限刷怪区域的敌人死完了，要执行相应的事情
+        if (places[this.now_place].combat_type == 'limited_enemy_road') {
+            let next_place = places[this.now_place].next_accessible_area;
+            let place_manage = global.get_place_manage();
+            place_manage.set_now_place(next_place);
+        }
     }
 }

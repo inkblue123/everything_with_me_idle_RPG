@@ -1,6 +1,5 @@
 'use strict';
-import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
-import { get_object_only_key } from '../../Function/Get_func.js';
+import { is_Empty_Object, get_uniqueArr, get_object_only_key } from '../../Function/Function.js';
 import { player } from '../Player.js';
 
 import { items } from '../../Data/Item/Item.js';

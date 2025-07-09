@@ -63,7 +63,7 @@ export class Player_active_skills_Manage {
         this.main_defense = new Defense_effect(); //玩家主动技能防御效果
     }
     //初始化主动技能槽
-    init(slot_num = 3) {
+    init(slot_num = 9) {
         if (slot_num < MIN_slot_num || slot_num > MAX_slot_num) {
             //错误的槽数量，强制重置成3
             slot_num = 3;
@@ -388,8 +388,11 @@ export class Player_active_skills_Manage {
         } else if (effect.attack_num.type == 'fixed') {
             this.main_Attack.attack_num = effect.attack_num.num;
         }
-        //计算主动技能需要的玩家属性
+        //基础数值等于攻击力+属性补正
+        //计算属性补正
         let askill_base_attr = get_Askill_base_attr(start_skill.attr_correct, this.player_end_attr);
+        askill_base_attr = askill_base_attr + this.player_end_attr['attack'];
+
         //计算攻击效果
         let algorithm = start_skill.algorithm;
         Attack_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);

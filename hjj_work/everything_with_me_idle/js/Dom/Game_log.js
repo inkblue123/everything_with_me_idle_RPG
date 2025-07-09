@@ -197,6 +197,8 @@ var Game_log = crtElement('div', 'game_log', null, '');
                 show_dropdown_table('MD_classification_div', 'RA_droptable');
                 //激活“最新消息”分类
                 RA_new_radio_div.children[0].checked = true;
+                let global_flag_manage = global.get_global_flag_manage();
+                global_flag_manage.show_game_log_status('RA_new');
             } else {
                 show_dropdown_table('MD_classification_div');
             }

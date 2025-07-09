@@ -16,4 +16,5 @@ function init_Enemy_normal(enemys) {
     enemys[id].init_survival_attr(2, 0, 1); //生存属性初始化
     enemys[id].active_skill = ['normal_attack']; //敌人技能初始化
 }
+
 export { init_Enemy_normal };

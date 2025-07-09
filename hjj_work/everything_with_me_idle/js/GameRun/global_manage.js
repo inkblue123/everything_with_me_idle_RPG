@@ -92,8 +92,9 @@ class Global_manage {
         return this.global_flag_manage.get_flag('GS_combat_statu');
     }
     add_new_enemy() {
-        let now_place = this.place_manage.get_now_place();
-        return this.enemy_manage.add_new_enemy(now_place);
+        // let now_place = this.place_manage.get_now_place();
+        return this.enemy_manage.add_new_enemy();
+        // return this.enemy_manage.add_new_enemy(now_place);
     }
     set_conbat_player_attack(player_Attack_effect) {
         this.combat_manage.set_player_next_attack(player_Attack_effect);

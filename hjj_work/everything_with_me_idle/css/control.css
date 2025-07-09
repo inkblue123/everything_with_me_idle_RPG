@@ -46,11 +46,13 @@
 /* 用来描述角色所处位置的容器 */
 #Place_desc_div {
     display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
     box-sizing: border-box;
     /* text-align: center;  */
     justify-content: center;
     align-items: center;
-    min-height: 50px;
+    min-height: 80px;
     margin: 0px 5px;
     white-space: pre-wrap; /* 保留空格和换行 */
     /* background-color: rgb(19, 250, 54); */
@@ -73,4 +75,14 @@
     /* background-color: rgb(250, 19, 19); */
     border-top: 1px solid #797691; /* 内框 */
     border-bottom: 1px solid #797691; /* 内框 */
+}
+/* 展示有限刷怪区域敌人剩余数量的div */
+#remain_enemy_div {
+    box-sizing: border-box;
+    /* min-height: 30px; */
+    width: 100%;
+    text-align: center;
+    /* background-color: rgb(250, 19, 19); */
+    /* border-top: 1px solid #797691;  */
+    /* border-bottom: 1px solid #797691; */
 }

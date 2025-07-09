@@ -217,9 +217,12 @@ export class Game_log_status {
         //         RA_value_div.removeChild(firstChild); // 删除第一个子节点
         //     }
         // }
-        let first_br = RA_value_div.childNodes[0].childNodes[0];
-        if (first_br.className == 'RA_log_div_br') {
-            RA_value_div.childNodes[0].removeChild(first_br);
+        //去掉首个信息的上边界，让日志更好看些
+        if (RA_value_div.childNodes.length != 0) {
+            let first_br = RA_value_div.childNodes[0].childNodes[0];
+            if (first_br.className == 'RA_log_div_br') {
+                RA_value_div.childNodes[0].removeChild(first_br);
+            }
         }
     }
     //更新游戏日志信息，将这一帧新的日志打印到脑海界面里

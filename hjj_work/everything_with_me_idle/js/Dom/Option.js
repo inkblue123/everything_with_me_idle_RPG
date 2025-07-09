@@ -24,6 +24,7 @@ var Option = crtElement('div', null, 'option_page', '');
         player.Player_get_item('wood_shield', 1, 'ordinary');
         P_All_Skills.player_unlock_skill('shield_defense');
         game_event_manage.end_mini_event('new_player_teach_3', 'finish');
+        player.Player_get_item('test_sword', 1, 'ordinary'); //测试用武器
     };
 
     let button2 = addElement(Option, 'button');

@@ -5,7 +5,7 @@ import { game_events } from './Game_event/Game_Event.js';
 function game_data_init() {
     Enum_init();
 }
-
+//
 function Enum_init() {
     for (let id in game_events) {
         //把4种重要节点放到枚举类中，用于判断某事件属于哪种重要事件

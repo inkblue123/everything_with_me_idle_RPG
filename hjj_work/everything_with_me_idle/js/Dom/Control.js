@@ -46,8 +46,12 @@ Control.show_now_place = function () {
 
     if (places[now_place_id].type == 'NPC') {
         show_new_NPC(places[now_place_id]);
+    } else if (places[now_place_id].type == 'store') {
+        show_new_store(places[now_place_id]);
+    } else if (places[now_place_id].type == 'combat') {
+        show_new_combat(places[now_place_id]);
     } else {
-        // if (places[now_place_id].type == 'normal' || places[now_place_id].type == 'combat') {
+        // if (places[now_place_id].type == 'normal' ) {
         show_new_place(places[now_place_id]);
     }
     if (global.get_flag('GS_game_event')) {
@@ -91,6 +95,7 @@ Control.show_mini_event_process = function (event_id, process_id, click_button_i
         }
     }
 };
+
 //展示新地点的内容
 function show_new_place(new_place) {
     //展示新地点的描述
@@ -100,6 +105,24 @@ function show_new_place(new_place) {
     if (!is_Empty_Object(new_place.connect_normal_place)) {
         for (let next_place_id of new_place.connect_normal_place) {
             add_control_button_move(next_place_id, '前往', null);
+        }
+    }
+    //有条件出现的普通区域
+    if (!is_Empty_Object(new_place.condition_connect_normal_place)) {
+        let global_flag_manage = global.get_global_flag_manage();
+        for (let next_place_id in new_place.condition_connect_normal_place) {
+            let condition = new_place.condition_connect_normal_place[next_place_id];
+            let flag = true;
+            for (let id in condition) {
+                let status = global_flag_manage.get_flag(id); //当前需要判断的游戏状态的内容
+                if (status != condition[id]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                add_control_button_move(next_place_id, '前往', null);
+            }
         }
     }
     //可以前往战斗区域
@@ -114,21 +137,21 @@ function show_new_place(new_place) {
             add_control_button_move(next_place_id, '拜访', null);
         }
     }
+    //可以前往商店
+    if (!is_Empty_Object(new_place.connect_store_place)) {
+        for (let next_place_id of new_place.connect_store_place) {
+            add_control_button_move(next_place_id, '前往', null);
+        }
+    }
     //可以前往其他区域
     if (!is_Empty_Object(new_place.connect_other_place)) {
         for (let next_place_id of new_place.connect_other_place) {
             add_control_button_move(next_place_id, '前往', null);
         }
     }
-    // if (new_place.exit_place != undefined) {
-    //     let place_manage = global.get_place_manage();
-    //     let exit_place_id;
-    //     if (new_place.exit_place == 'last_place') {
-    //         exit_place_id = place_manage.get_last_place();
-    //     }
-    //     add_control_button_move(exit_place_id, '退出', null);
-    // }
 }
+//根据当前游戏状态，地点的描述
+function make_new_place_dexc(new_place) {}
 //移动到指定NPC面前，读取地点库信息，将可以进行的行动展示到控制界面中
 function show_new_NPC(new_NPC) {
     //展示新地点的描述
@@ -151,6 +174,58 @@ function show_new_NPC(new_NPC) {
             //对每个事件的出现条件进行判断，满足条件才在界面中添加按钮
             if (check_condition_appear_behaviors(event_id)) {
                 add_control_button_start_event(event_id, '进行', null);
+            }
+        }
+    }
+}
+//移动到了商店，展示相关内容
+function show_new_store(new_store) {
+    //展示新地点的描述
+    Place_desc_div.innerHTML = new_store.desc;
+
+    //可以回到上一个普通区域
+    let place_manage = global.get_place_manage();
+    let last_normal_place_id = place_manage.get_last_normal_place();
+    add_control_button_move(last_normal_place_id, '回到', null);
+}
+//移动到了战斗区域，展示相关内容
+function show_new_combat(new_combat) {
+    //展示新地点的描述
+    if (new_combat.combat_type != 'infinite_enemy') {
+        //有限刷怪区域，需要明确展示剩余敌人数量
+        let desc_div = addElement(Place_desc_div, 'div', null, null);
+        desc_div.innerHTML = new_combat.desc;
+        let remain_enemy_div = addElement(Place_desc_div, 'div', 'remain_enemy_div', null);
+        let enemy_manage = global.get_enemy_manage();
+        let now_place_enemy_cumulative = enemy_manage.get_place_enemy_cumulative_num(new_combat.id);
+        let ch = '敌人数量剩余' + now_place_enemy_cumulative + '个';
+        remain_enemy_div.innerHTML = ch;
+    } else {
+        //无限刷怪区域直接展示描述
+        Place_desc_div.innerHTML = new_combat.desc;
+    }
+
+    //可以前往普通区域
+    if (!is_Empty_Object(new_combat.connect_normal_place)) {
+        for (let next_place_id of new_combat.connect_normal_place) {
+            add_control_button_move(next_place_id, '前往', null);
+        }
+    }
+    //有条件出现的普通区域
+    if (!is_Empty_Object(new_combat.condition_connect_normal_place)) {
+        let global_flag_manage = global.get_global_flag_manage();
+        for (let next_place_id in new_combat.condition_connect_normal_place) {
+            let condition = new_combat.condition_connect_normal_place[next_place_id];
+            let flag = true;
+            for (let id in condition) {
+                let status = global_flag_manage.get_flag(id); //当前需要判断的游戏状态的内容
+                if (status != condition[id]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                add_control_button_move(next_place_id, '前往', null);
             }
         }
     }

@@ -81,6 +81,14 @@ function is_overlap(arr1, arr2) {
     const set = new Set(arr2);
     return arr1.some((item) => set.has(item));
 }
+//获取一个对象中唯一的key
+function get_object_only_key(obj) {
+    let keys = Object.keys(obj); //将拥有的物品的key转换成一个数组
+    if (keys.length != 1) {
+        return false;
+    }
+    return keys[0];
+}
 
 export {
     check_Equipment,
@@ -89,4 +97,5 @@ export {
     get_uniqueArr,
     attr_correct_handle,
     is_overlap,
+    get_object_only_key,
 };
