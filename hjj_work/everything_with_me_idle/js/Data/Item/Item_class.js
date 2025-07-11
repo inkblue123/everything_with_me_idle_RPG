@@ -49,6 +49,7 @@ class Item {
         }
     }
     //设定物品的价值
+    //没有开发到这部分，还没用
     init_Item_price(...args) {
         if (args.length % 2 != 0) {
             console.log('设定物品价格时的参数数量不正常，有%d个', args.length);
@@ -242,9 +243,10 @@ let Material_class = (extendsClass) =>
         material_type = new Array(); //这个消耗品的具体类型
 
         //为这个物品填写材料特有的属性
-        init_Material(e_type) {
-            this.material_type.push(e_type);
-        }
+        //没有开发到这部分，还没用
+        // init_Material(e_type) {
+        //     this.material_type.push(e_type);
+        // }
     };
 
 class Equipment extends Equipment_class(Item) {}

@@ -38,12 +38,7 @@ function init_village_combat_place(places) {
             field: 'little_distance', //只允许刷在近距离
             // distance: 50, //只允许刷在指定距离
         };
-        places[id].enemy = {
-            //能刷什么敌人,key是敌人id，value是针对这个敌人的刷怪限制
-            Training_Dummy: {
-                chance: 50, //刷新概率
-            },
-        };
+        places[id].set_enemy_data('Training_Dummy', 50);
     }
 
     {
@@ -54,12 +49,7 @@ function init_village_combat_place(places) {
         places[id].set_add_enemy_data(5, 3);
         //战斗地点-刷怪相关内容
         places[id].add_enemy_type = 'random'; //刷怪方式随机位置
-        places[id].enemy = {
-            //能刷什么敌人,key是敌人id，value是针对这个敌人的刷怪限制
-            Training_Dummy: {
-                chance: 50, //刷新概率
-            },
-        };
+        places[id].set_enemy_data('Training_Dummy', 50);
     }
 
     {
@@ -74,17 +64,8 @@ function init_village_combat_place(places) {
             field: 'little_distance', //只允许刷在近距离
             // distance: 50, //只允许刷在指定距离
         };
-        places[id].enemy = {
-            //能刷什么敌人,key是敌人id，value是针对这个敌人的刷怪限制
-            Training_Dummy: {
-                chance: 50, //刷新概率
-                now_place_max_num: 4, //最大同场数量
-            },
-            Attack_Dummy: {
-                chance: 50, //刷新概率
-                now_place_max_num: 2, //最大同场数量
-            },
-        };
+        places[id].set_enemy_data('Training_Dummy', 50, 4);
+        places[id].set_enemy_data('Attack_Dummy', 50, 2);
     }
 }
 //位于村外后山区域的战斗地点
@@ -101,14 +82,35 @@ function init_village_backhill_combat_place(places) {
     places[id].add_enemy_field_limit = {
         field: 'little_distance', //只允许刷在近距离
     };
-    places[id].enemy = {
-        //能刷什么敌人,key是敌人id，value是针对这个敌人的刷怪限制
-        Attack_Dummy: {
-            chance: 50, //刷新概率
-        },
+    places[id].set_enemy_data('blocking_shrubs', 40); //拦路灌木
+    places[id].set_enemy_data('small_snake', 10); //小蛇
+    places[id].set_enemy_data('small_slime', 10); //小史莱姆
+    places[id].set_enemy_data('giant_teeth_rat', 10); //巨齿鼠
+    places[id].set_enemy_data('rotten_wood_monster', 5); //朽木精怪
+    places[id].set_enemy_data('mosquitoes', 5); //蚊群
+    places[id].set_enemy_data('wild_boar', 2); //野猪
+
+    id = 'forest_core_road'; //通往内层森林的道路
+    add_combat_Place(places, id, 'village_backhill');
+    //可联通地点的id
+    places[id].add_connect_normal_place('forest_edge');
+    places[id].set_combat_type('limited_enemy_road', 15, 120, 'forest_core');
+    places[id].set_add_enemy_data(3, 5, 2, 3);
+    //战斗地点-刷怪相关内容
+    places[id].add_enemy_type = 'fixed'; //刷怪方式-固定位置
+    //刷怪方式的约束条件
+    places[id].add_enemy_field_limit = {
+        field: 'little_distance', //只允许刷在近距离
     };
+    places[id].set_enemy_data('blocking_shrubs', 40); //拦路灌木
+    // places[id].set_enemy_data('small_snake', 10); //小蛇
+    // places[id].set_enemy_data('small_slime', 10); //小史莱姆
+    // places[id].set_enemy_data('giant_teeth_rat', 10); //巨齿鼠
+    // places[id].set_enemy_data('rotten_wood_monster', 5); //朽木精怪
+    // places[id].set_enemy_data('mosquitoes', 5); //蚊群
+    // places[id].set_enemy_data('wild_boar', 2); //野猪
 }
-//位于村外后山区域的战斗地点
+//位于村外后山洞穴区域的战斗地点
 function init_backhill_cave_combat_place(places) {
     // let id = 'test_combat1'; //测试战斗地点
     // add_combat_Place(places, id, 'test');

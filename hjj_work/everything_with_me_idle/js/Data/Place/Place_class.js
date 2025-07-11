@@ -1,5 +1,6 @@
 import { texts } from '../Text/Text.js';
 import { items } from '../Item/Item.js';
+import { is_Empty_Object } from '../../Function/Function.js';
 
 export class Place {
     constructor(place_id, area_id) {
@@ -119,7 +120,7 @@ export class P_combat extends Place {
         super(place_id, area_id);
         this.type = 'combat';
         this.combat_type;
-        this.enemy = new Array();
+        this.enemy = new Object();
         this.max_live_enemy_num = 0; //同场最多敌人数量
         this.add_enemy_time = 0; //定时刷怪时间间隔
     }
@@ -167,6 +168,19 @@ export class P_combat extends Place {
         this.add_enemy_distance = add_enemy_distance; //玩家前进多少距离刷新一个怪
         //刷怪规则4，玩家技能影响刷怪
         this.add_enemy_skill_point = add_enemy_skill_point; //影响刷怪力
+    }
+    //设置当前地点的敌人情况
+    set_enemy_data(id, chance, now_place_max_num) {
+        if (is_Empty_Object(this.enemy[id])) {
+            let obj = new Object();
+            //刷怪概率权重
+            if (chance) obj.chance = chance;
+            //同场最大数量
+            if (now_place_max_num) obj.now_place_max_num = now_place_max_num;
+            this.enemy[id] = obj;
+        } else {
+            console.log('已设定了同id敌人，不能重复设置');
+        }
     }
 }
 //npc地点

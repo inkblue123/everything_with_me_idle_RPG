@@ -97,10 +97,26 @@ function backhill_cave_normal_place(texts) {
     add_text_object(texts, id);
     texts[id].place_name = '洞穴入口';
     texts[id].place_desc = '村庄后山洞穴的入口，洞穴里可见度很低，如果有野兽可不好打';
+    id = 'karst_cave';
+    add_text_object(texts, id);
+    texts[id].place_name = '溶洞';
+    texts[id].place_desc = '一个开阔、安静、通风的巨大地下溶洞，是一个相对安全的场所';
     id = 'alp_cave_inlet';
     add_text_object(texts, id);
     texts[id].place_name = '高山洞穴入口';
     texts[id].place_desc = '村庄后山洞穴的高山处入口，这里环境更恶劣，洞穴里一定更危险';
+}
+
+//位于原始森林区域的普通地点
+function virgin_forest_normal_place(texts) {
+    let id = 'hunting_lodge';
+    add_text_object(texts, id);
+    texts[id].place_name = '森林深处猎人小屋';
+    texts[id].place_desc = '位于森林深处的隐秘小屋，可以在此歇息';
+    id = 'campsite_clearing';
+    add_text_object(texts, id);
+    texts[id].place_name = '可露营空地';
+    texts[id].place_desc = '森林深处也不是全都充满危险，至少这里看起来稍微安静些，适合歇息';
 }
 
 export { normal_place };

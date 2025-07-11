@@ -6,6 +6,7 @@ import { enemys } from '../Data/Enemy/Enemy.js';
 import { E_skills } from '../Data/Skill/Skill.js';
 import { is_Empty_Object } from '../Function/Function.js';
 
+var ch;
 //场地内的敌人对象
 class place_enemy {
     constructor(id) {
@@ -45,7 +46,7 @@ class place_enemy {
             this.now_skill_attack_speed = this.get_active_skill_attack_speed();
             return true;
         } else {
-            //敌人数据库中不存在该敌人
+            console.log('敌人数据库中不存在该敌人，%s', this.id);
             return false;
         }
     }
@@ -66,6 +67,7 @@ class place_enemy {
         this.last_attack_time = save_enemy.last_attack_time + save_now_time - save_enemy.now_time;
         this.now_time = save_now_time;
     }
+
     //获取当前血条比例
     get_HP_ratio() {
         return `${(this.health_point / this.combat_survival_attr['health_max']) * 100}%`;
@@ -149,6 +151,7 @@ class place_enemy {
         }
 
         //计算主动技能需要的敌人属性
+        //敌人没有属性补正，直接使用攻击力当作基础数值
         let askill_base_attr = this.combat_attack_attr['attack'];
         //计算主动技能应该得到的效果
         let algorithm = E_SK.algorithm[stage];
@@ -468,10 +471,10 @@ export class Enemy_manage {
                 if (this.judge_enemy_live(enemy)) {
                     //该敌人活着，更新相关信息
                     enemy_HP_bar.style.display = '';
-                    enemy_HP_bar.children[0].children[0].style.width = enemy.get_HP_ratio();
+                    enemy_HP_bar.children[0].children[0].style.width = enemy.get_HP_ratio(); //血条
                     enemy_attr_bar.style.display = '';
-                    enemy_attr_bar.children[0].children[0].style.width = enemy.get_attack_ratio();
-                    enemy_head.innerHTML = enemys[enemy.id].name;
+                    enemy_attr_bar.children[0].children[0].style.width = enemy.get_attack_ratio(); //攻击进度条
+                    enemy_head.innerHTML = enemys[enemy.id].name; //名称
                 } else {
                     //该敌人死了，清空相关信息
                     enemy_HP_bar.style.display = 'none';
