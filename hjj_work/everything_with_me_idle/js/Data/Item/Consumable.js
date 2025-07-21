@@ -25,7 +25,7 @@ const consumable_type = Object.freeze({
     // 食品，主要从烹饪技能中获取
     // 药材，炼丹技能专属材料类型，因为可以吃所以归到消耗品
     // 丹药，主要从炼丹中获取
-    //弹药
+    //弹药 ammo_CSB
     Arrow: 'arrow', //箭矢
     Bolt: 'bolt', //弩箭
     Spray_gun_bullet: 'spray_gun_bullet', //喷枪弹药
@@ -37,16 +37,71 @@ const consumable_type = Object.freeze({
     // 梦境
 });
 
-//初始化文本数据库中与类型相关的文本
+//初始化物品数据库中与消耗品相关的文本
 function init_Item_Consumable(items) {
+    //可食用物品
+    init_Item_food_CSB(items);
     //弹药
-    {
-        let id = 'wood_arrow'; //木制箭矢
-        add_Item_object(items, id, 'consumable');
-        items[id].init_Item_other(100, ['ammo_CSB']); //堆叠数量，物品大分类
-        items[id].init_Consumable('arrow'); //物品小分类，是否特制
-        items[id].init_Item_price('coin', 3); //物品价值
-    }
+    init_Item_ammo_CSB(items);
 }
+//可食用物品
+function init_Item_food_CSB(items) {
+    let id = 'grilled_fish'; //烤鱼串
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'big_grilled_fish'; //大烤鱼串
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'fish_jerky'; //鱼肉干
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'fish_meat_floss'; //鱼肉松
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
 
+    id = 'roasted_crab'; //烤螃蟹
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'cooked_mussel'; //熟蚌肉
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+
+    id = 'cooked_animal_meat'; //熟兽肉
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'animal_jerky'; //兽肉干
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'animal_meat_floss'; //兽肉松
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+
+    id = 'red_berry'; //红浆果
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'yellow_berry'; //黄浆果
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'black_berry'; //黑浆果
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'berry_dried_fruit'; //浆果果干
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+    id = 'berry_jam'; //浆果果酱
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+
+    id = 'termite_mushroom_soup'; //鸡枞汤
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(20, ['food_CSB']); //堆叠数量，物品大分类
+}
+//弹药
+function init_Item_ammo_CSB(items) {
+    let id = 'wood_arrow'; //木制箭矢
+    add_Item_object(items, id, 'consumable');
+    items[id].init_Item_other(100, ['ammo_CSB']); //堆叠数量，物品大分类
+    // items[id].init_Consumable('arrow'); //物品小分类，是否特制
+    // items[id].init_Item_price('coin', 3); //物品价值
+}
 export { init_Item_Consumable };

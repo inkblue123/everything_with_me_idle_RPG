@@ -2,6 +2,7 @@ import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { texts } from '../Data/Text/Text.js';
 import { P_skills } from '../Data/Skill/Skill.js';
+import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 import { updata_player_EQP, updata_player_active } from './Updata_func.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
@@ -77,8 +78,13 @@ function add_click_Equipment_worn(target_div, tip_value) {
         P_worn.show_active_EQP();
         //将要穿戴的物品放到目前激活的装备栏的指定位置
         player.worn_Equipment(tip_value.id, tip_value.num, rarity);
-        //装备信息发生变动，更新相关界面
-        updata_player_EQP();
+        //装备信息发生变动，更新相关界面和数据
+        updata_player_EQP(); //玩家属性变化
+        if (global.get_flag('GS_combat_statu')) {
+            //如果在战斗中，玩家的主动技能回合应该重置
+            let P_Askill = player.get_player_ASkill_Manage();
+            P_Askill.reset_round();
+        }
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口
@@ -91,6 +97,11 @@ function add_click_Equipment_worn_remove(target_div, wp) {
         player.remove_worn_Equipment(wp);
         //装备信息发生变动，更新相关界面
         updata_player_EQP();
+        if (global.get_flag('GS_combat_statu')) {
+            //如果在战斗中，玩家的主动技能回合应该重置
+            let P_Askill = player.get_player_ASkill_Manage();
+            P_Askill.reset_round();
+        }
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口

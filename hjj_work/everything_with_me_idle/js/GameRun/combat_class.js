@@ -1,6 +1,9 @@
 import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
+import { enemys } from '../Data/Enemy/Enemy.js';
+import { items } from '../Data/Item/Item.js';
 import { is_Empty_Object } from '../Function/Function.js';
+import { get_random } from '../Function/math_func.js';
 
 export class Attack_effect {
     constructor() {
@@ -166,10 +169,7 @@ export class Combat_manage {
                     //击杀了一个敌人，记录相关数据
                     enemys[i].statu = false;
 
-                    let global_flag_manage = global.get_global_flag_manage();
-                    global_flag_manage.record_kill_enemy_num(main_Attack);
-                    let enemy_manage = global.get_enemy_manage();
-                    enemy_manage.add_kill_enemy_num(1);
+                    this.enemy_death(enemys[i], main_Attack);
                     continue;
                 }
             }
@@ -255,24 +255,6 @@ export class Combat_manage {
         }
     }
 
-    //获取当前玩家攻击的索敌目标
-    get_lock_enemy() {
-        let lock_enemys = new Array();
-        if (is_Empty_Object(this.player_Attack.lock_enemy_type)) {
-            //这次攻击未设定索敌逻辑，选用默认设定
-            this.player_Attack.lock_enemy_type = {
-                num: 1, //攻击一个敌人
-                distance: 'min', //选择最近的
-                type: 'normal', //普通直接攻击
-            };
-        }
-        //距离优先
-        if (this.player_Attack.lock_enemy_type.distance == 'min') {
-            let enemy_manage = global.get_enemy_manage();
-            lock_enemys = enemy_manage.get_min_distance_enemy(this.player_Attack.lock_enemy_type.num);
-            return lock_enemys;
-        }
-    }
     //玩家死亡，处理相关逻辑
     player_death() {
         //原计划里玩家死亡是读档的，但是相关逻辑还没开发，就先临时这样了
@@ -291,6 +273,114 @@ export class Combat_manage {
         }
         //清空玩家buff
         //清空战斗区域的临时加成
+    }
+    //一个敌人死亡，处理相关逻辑
+    enemy_death(enemy, main_Attack) {
+        //玩家使用main_Attack击败了敌人，进行事件、经验相关的结算
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.record_kill_enemy_num(main_Attack);
+        //地点可能是有限刷怪区域，记录敌人死亡的数据
+        let enemy_manage = global.get_enemy_manage();
+        enemy_manage.add_kill_enemy_num(1);
+        //敌人掉落物品
+        let items_obj = this.get_enemy_death_item(enemy.id);
+        for (let key in items_obj) {
+            let id = items_obj[key].id;
+            let num = items_obj[key].num;
+            let rarity = items_obj[key].rarity;
+            player.Player_get_item(id, num, rarity);
+        }
+    }
+    //获取当前玩家攻击的索敌目标
+    get_lock_enemy() {
+        let lock_enemys = new Array();
+        if (is_Empty_Object(this.player_Attack.lock_enemy_type)) {
+            //这次攻击未设定索敌逻辑，选用默认设定
+            this.player_Attack.lock_enemy_type = {
+                num: 1, //攻击一个敌人
+                distance: 'min', //选择最近的
+                type: 'normal', //普通直接攻击
+            };
+        }
+        //距离优先
+        if (this.player_Attack.lock_enemy_type.distance == 'min') {
+            let enemy_manage = global.get_enemy_manage();
+            lock_enemys = enemy_manage.get_min_distance_enemy(this.player_Attack.lock_enemy_type.num);
+            return lock_enemys;
+        }
+    }
+    //获取敌人死亡时掉落的物品
+    get_enemy_death_item(enemy_id) {
+        if (is_Empty_Object(enemys[enemy_id].item_array)) {
+            //敌人没有掉落品，直接结束
+            return;
+        }
+        let drop_item_arry = new Array();
+        //获取敌人有几个掉落列表，对每个掉落列表进行一次判定
+        let n = enemys[enemy_id].item_array.length;
+        for (let i = 0; i < n; i++) {
+            //根据掉落概率，判断这个列表里的物品要掉几次
+            let enemy_item_obj = enemys[enemy_id].item_array[i];
+            let chance = enemy_item_obj.item_chance; //掉率
+            let drop_times = parseInt(chance / 100);
+            chance = chance % 100;
+            let random = get_random(0, 99);
+            if (random < chance) {
+                drop_times += 1;
+            }
+            for (let j = 0; j < drop_times; j++) {
+                //根据权重，获取掉落哪一个物品
+                random = this.get_random_chance_drop(enemy_item_obj);
+
+                let data_obj = enemy_item_obj.item[random];
+                let item_id = data_obj.id; //这次掉落的物品的id
+
+                let item_obj = new Object();
+                item_obj.id = item_id;
+                item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
+                if (items[item_id].main_type.includes('equipment')) {
+                    //如果掉落的是装备，还需要记录稀有度
+                    item_obj.rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
+                }
+                //将掉落的信息存起来
+                drop_item_arry.push(item_obj);
+            }
+        }
+        //对掉落物去重
+        let uniqueArr = new Object();
+        for (let item_obj of drop_item_arry) {
+            let id = item_obj.id;
+            let key = id;
+            if (items[id].main_type.includes('equipment')) {
+                key = id + rarity;
+            }
+
+            if (is_Empty_Object(uniqueArr[key])) {
+                uniqueArr[key] = item_obj;
+            } else {
+                uniqueArr[key].num += item_obj.num;
+            }
+        }
+        return uniqueArr;
+    }
+    //根据能掉落的的所有物品概率权重，随机得到一个物品的序号
+    get_random_chance_drop(enemy_item_obj) {
+        let drop_items = enemy_item_obj.item;
+        let all_chance = 0;
+        for (let id in drop_items) {
+            all_chance += drop_items[id].chance;
+        }
+        let chance = get_random(0, all_chance);
+        let num = 0;
+        for (let id in drop_items) {
+            if (chance > drop_items[id].chance) {
+                chance -= drop_items[id].chance;
+                num++;
+            } else {
+                break;
+            }
+        }
+        return num;
     }
 }
 

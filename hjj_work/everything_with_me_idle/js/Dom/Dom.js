@@ -10,6 +10,7 @@ import { Tooltip } from './Tooltip/Tooltip.js';
 import { Control } from './Control.js';
 import { Combat } from './Combat.js';
 import { Game_log } from './Game_log.js';
+import { Live_plan } from './Live_plan.js';
 
 var dom = new Object();
 
@@ -46,6 +47,8 @@ function game_dom_init() {
         dom.control = Control;
         //右下游戏日志界面
         dom.game_log = Game_log;
+        //非战斗时中上，生活规划界面
+        dom.live_plan = Live_plan;
 
         //战斗界面
         dom.combat = Combat;
@@ -54,8 +57,8 @@ function game_dom_init() {
         //游离于游戏布局之上，跟随鼠标的小窗口
         dom.tooltip = Tooltip;
 
-        dom.live_plan = crtElement('div', 'live_plan', 'section', '', '#ffff00');
-        dom.live_plan.textContent = '生活规划界面';
+        // dom.live_plan = crtElement('div', 'live_plan', 'section', '', '#ffff00');
+        // dom.live_plan.textContent = '生活规划界面';
 
         dom.map = crtElement('div', 'map', 'section', '', '#33fff9');
         dom.map.textContent = '地图界面';

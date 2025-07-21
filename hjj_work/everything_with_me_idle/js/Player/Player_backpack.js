@@ -124,6 +124,8 @@ export class Player_backpack {
                     addBP_equipment(this[play_item_id]);
                 } else if (items[play_item_id].main_type.includes('material')) {
                     addBP_item(this[play_item_id]);
+                } else if (items[play_item_id].main_type.includes('consumable')) {
+                    addBP_item(this[play_item_id]);
                 }
             } else {
                 // 玩家拥有的物品不属于当前启动的过滤规则，不显示

@@ -165,15 +165,16 @@ export class Global_flag_manage {
         let game_event_manage = global.get_game_event_manage();
         let monitor_target_summ = game_event_manage.get_monitor_target_summ();
         let PKL_flag;
-        let PKL_monitor_target_summ = new Object();
-
+        // let PKL_monitor_target_summ = new Object();
+        //查找当前监控的行为里，有没有击杀敌人相关的行为
         for (let monitor_id in monitor_target_summ) {
             if (monitor_id.startsWith('PKL_')) {
                 PKL_flag = true;
-                PKL_monitor_target_summ[monitor_id] = monitor_target_summ[monitor_id];
+                // PKL_monitor_target_summ[monitor_id] = monitor_target_summ[monitor_id];
             }
         }
-        game_event_manage.record_kill_enemy_num(main_Attack);
+        //有击杀敌人的行为，更新相关事件
+        if (PKL_flag) game_event_manage.record_kill_enemy_num(main_Attack);
     }
     //玩家行为-受击次数记录
     record_attacted_num() {

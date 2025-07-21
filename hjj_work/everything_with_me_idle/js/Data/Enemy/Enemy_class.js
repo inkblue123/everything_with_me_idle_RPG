@@ -1,4 +1,5 @@
 import { texts } from '../Text/Text.js';
+import { is_Empty_Object } from '../../Function/Function.js';
 
 export class Enemy {
     constructor(id) {
@@ -9,6 +10,7 @@ export class Enemy {
         this.attack_attr = new Object(); //攻击属性
         this.defense_attr = new Object(); //防御属性
         this.survival_attr = new Object(); //生存属性
+        this.item_array = new Array(); //击败后掉落物品列表
 
         this.init_Enemy_name_desc(id);
     }
@@ -49,6 +51,26 @@ export class Enemy {
         this.survival_attr['health_max'] = health_max; //最大血量上限
         this.survival_attr['magic_max'] = magic_max; //最大魔力上限
         this.survival_attr['energy_max'] = energy_max; //最大精力上限
+    }
+    create_item_array(chance) {
+        let obj = new Object();
+        obj.item = new Array();
+        obj.item_chance = chance;
+        this.item_array.push(obj);
+    }
+    //给这个敌人添加一个可掉落物品
+    add_item(item_array_id, item_id, chance, max_num, min_num, equip_rarity) {
+        let item_obj = new Object();
+        item_obj.id = item_id;
+        item_obj.chance = chance;
+        item_obj.max_num = max_num;
+        item_obj.min_num = min_num;
+        if (equip_rarity) item_obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
+        if (is_Empty_Object(this.item_array[item_array_id])) {
+            console.log('未定义%d掉落列表', item_array_id);
+            return;
+        }
+        this.item_array[item_array_id].item.push(item_obj);
     }
 }
 function add_Enemy_object(enemys, newid) {

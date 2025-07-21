@@ -56,8 +56,8 @@ function init_village_normal_place(places) {
 function init_village_backhill_normal_place(places) {
     let id = 'VBH_rest_location'; //村外歇脚处
     add_normal_Place(places, id, 'village_backhill');
-    places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge');
-    // places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge_road');
+    // places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge');
+    places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge_road');
 
     id = 'logged_forest'; //已开荒的林区
     add_normal_Place(places, id, 'village_backhill');

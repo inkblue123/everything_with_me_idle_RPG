@@ -24,15 +24,9 @@ const Item_type = Object.freeze({
 var items = new Object();
 //用物品的名称做唯一id，小驼峰命名
 // 材料
-{
-    init_Item_Material(items);
-}
+init_Item_Material(items);
 //武器装备
-{
-    init_Item_Equipment(items);
-}
+init_Item_Equipment(items);
 //消耗品
-{
-    init_Item_Consumable(items);
-}
+init_Item_Consumable(items);
 export { items };

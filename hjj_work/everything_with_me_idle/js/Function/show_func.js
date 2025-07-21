@@ -91,6 +91,32 @@ function change_RA_IE(button_id) {
         IE_value_scroll_box.style.display = '';
     }
 }
+//按下生活规划中，搜索采集、合成制造按钮之后，切换到对应的子界面
+function change_Live_plan_div(button_id) {
+    const EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
+    const SM_div = document.getElementById('SM_div'); //合成制造窗口 Synthetic_manufacturing SM
+    if (button_id == 'EC_switch_button') {
+        EC_div.style.display = '';
+        SM_div.style.display = 'none';
+    }
+    if (button_id == 'SM_switch_button') {
+        EC_div.style.display = 'none';
+        SM_div.style.display = '';
+    }
+}
+//按下生活规划中，搜索采集部分是某一个具体技能之后，切换到对应界面
+function change_Explore_collection_div(button_id) {
+    let div_obj = ['LBJ', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+
+    for (let key of div_obj) {
+        let div_id = key + '_value_div';
+        let div = document.getElementById(div_id);
+        div.style.display = 'none';
+        if (button_id == key + '_button') {
+            div.style.display = '';
+        }
+    }
+}
 //点击了隐藏下拉框的按钮之后，展示当前按钮相关的下拉框，隐藏其他下拉框
 function show_dropdown_table(classification_div, table_id) {
     const dropdownTable = document.getElementById(table_id);
@@ -138,4 +164,6 @@ export {
     change_ASP_ARP_AEP,
     change_RA_IE,
     show_dropdown_table,
+    change_Live_plan_div,
+    change_Explore_collection_div,
 };
