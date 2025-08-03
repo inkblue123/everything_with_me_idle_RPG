@@ -81,7 +81,7 @@ function new_game_init() {
     //开场剧情需要，隐藏部分界面
     hide_div('player_status');
     hide_div('Combat_plan');
-    hide_div('live_plan');
+    hide_div('Live_plan');
     hide_div('map');
     hide_div('game_log');
     hide_div('control_name_left_div');
@@ -102,7 +102,7 @@ function finish_new_game_init() {
     //恢复开场剧情隐藏的界面
     Gradient_div('player_status');
     Gradient_div('Combat_plan');
-    Gradient_div('live_plan');
+    Gradient_div('Live_plan');
     Gradient_div('map');
     Gradient_div('game_log');
     Gradient_div('control_name_left_div');

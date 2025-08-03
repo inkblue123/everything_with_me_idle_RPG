@@ -162,7 +162,9 @@ export class Player_Object {
         P_data_attr.updata_end_attr();
         //将最终数值属性更新到其他会用的地方
         let end_data_attr = this.player_attributes.get_end_data_attr();
-        this.player_ASkills_manage.updata_player_data(end_data_attr);
+        this.player_ASkills_manage.updata_player_data(end_data_attr); //战斗方面属性更新
+        let live_plan_manage = global.get_live_plan_manage();
+        live_plan_manage.updata_player_data(end_data_attr); //生活技能属性更新
     }
     //根据玩家当前的加成更新属性
     updata_EQP_attr() {
@@ -172,7 +174,9 @@ export class Player_Object {
         this.player_attributes.updata_EQP_attr(player_worn);
         //将更新后的最终数值属性更新到其他会用的地方
         let end_data_attr = this.player_attributes.get_end_data_attr();
-        this.player_ASkills_manage.updata_player_data(end_data_attr);
+        this.player_ASkills_manage.updata_player_data(end_data_attr); //战斗方面属性更新
+        let live_plan_manage = global.get_live_plan_manage();
+        live_plan_manage.updata_player_data(end_data_attr); //生活技能属性更新
     }
     //游戏运行一帧，计算玩家常态数值变化内容
     run_player_normal() {

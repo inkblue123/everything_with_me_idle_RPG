@@ -80,10 +80,15 @@ function add_click_Equipment_worn(target_div, tip_value) {
         player.worn_Equipment(tip_value.id, tip_value.num, rarity);
         //装备信息发生变动，更新相关界面和数据
         updata_player_EQP(); //玩家属性变化
-        if (global.get_flag('GS_combat_statu')) {
+        let now_GS = global.get_flag('GS_game_statu');
+        if (now_GS == 'combat') {
             //如果在战斗中，玩家的主动技能回合应该重置
             let P_Askill = player.get_player_ASkill_Manage();
             P_Askill.reset_round();
+        } else if (enums['live_plan_GS'].includes(now_GS)) {
+            //如果在生活技能中，当前回合也应该重置
+            let live_plan_manage = global.get_live_plan_manage();
+            live_plan_manage.reset_round();
         }
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
@@ -97,10 +102,15 @@ function add_click_Equipment_worn_remove(target_div, wp) {
         player.remove_worn_Equipment(wp);
         //装备信息发生变动，更新相关界面
         updata_player_EQP();
-        if (global.get_flag('GS_combat_statu')) {
+        let now_GS = global.get_flag('GS_game_statu');
+        if (now_GS == 'combat') {
             //如果在战斗中，玩家的主动技能回合应该重置
             let P_Askill = player.get_player_ASkill_Manage();
             P_Askill.reset_round();
+        } else if (enums['live_plan_GS'].includes(now_GS)) {
+            //如果在生活技能中，当前回合也应该重置
+            let live_plan_manage = global.get_live_plan_manage();
+            live_plan_manage.reset_round();
         }
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');

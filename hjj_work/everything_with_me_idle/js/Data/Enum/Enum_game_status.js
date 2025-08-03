@@ -20,11 +20,17 @@ function init_monitor_data(enums) {
 function init_game_status(enums) {
     //游戏状态由GS_开头，并且游戏开始时需要初始化，所以要在这里定义
     let id = 'game_status';
+    add_Enum_Object(enums, id);
+    enums[id] = {
+        GS_game_statu: 'NULL', //当前游戏状态，比如战斗中、伐木中、钓鱼中等等
+        GS_challenge_flag: false, //是否处于挑战中
+        GS_logging_way: 'LGI_F_way', //伐木技能选择的伐木策略
+    };
+    //生活技能枚举
+    //这里枚举的技能是会写入GS_game_statu游戏状态的，运行时遇到对应的状态就处理相应的逻辑
+    id = 'live_plan_GS';
     add_Enum_Array(enums, id);
-    enums[id] = [
-        'GS_combat_statu', //是否处于战斗中
-        'GS_game_event', //是否处于事件中
-    ];
+    enums[id] = ['logging', 'fishing', 'mining', 'foraging', 'diving', 'archaeology', 'exploration', 'engrave'];
 }
 //初始化枚举库中与短期游戏状态参数相关的内容
 function init_short_game_status(enums) {

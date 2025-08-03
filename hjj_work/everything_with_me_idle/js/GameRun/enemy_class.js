@@ -573,6 +573,9 @@ export class Enemy_manage {
         let data_obj = new Object();
         //这个地点还剩余的怪的数量等于目前积累的数减去已经杀死的敌人数
         data_obj.last_out_enemy_num = this.now_place_enemy_cumulative - this.kill_enemy_num;
+        if (data_obj.last_out_enemy_num < 0) {
+            data_obj.last_out_enemy_num = 0;
+        }
         data_obj.last_out_time = this.now_time;
         this.last_combat_place_data[this.now_place] = data_obj;
     }

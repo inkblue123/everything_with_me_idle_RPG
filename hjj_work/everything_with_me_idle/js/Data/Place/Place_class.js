@@ -16,6 +16,7 @@ export class Place {
         this.connect_other_place = new Array(); //可以联通的其他地点
         this.place_NPC = new Array(); //位于此处的NPC
         this.condition_event = new Array();
+        this.live_plan_flag = new Array(); //这个地点可以执行的生活技能标记
         this.init_Place_name_desc(place_id);
         this.set_area(area_id); //设置这个地点的所属区域
     }
@@ -113,6 +114,32 @@ export class P_normal extends Place {
         super(place_id, area_id);
         this.type = 'normal';
     }
+    //设置这个地点可以执行的生活技能
+    set_live_plan_flag(flag) {
+        //伐木、钓鱼、挖矿、采集、潜水、考古、探索
+        //这些是探索采集类的生活技能，通过这个函数设置
+        for (let i = 0; i < 7; i++) {
+            this.live_plan_flag[i] = flag % 2;
+            flag = parseInt(flag / 2);
+        }
+    }
+    //设置这个地点的伐木相关参数
+    set_logging_data(reborn_time) {
+        this.LGI_reborn_time = reborn_time;
+    }
+    //设置这个地点伐木时可能出现的树
+    set_logging_tree(id, chance, infinite_flag, max_cumulative_num, cumulative_time) {
+        if (is_Empty_Object(this.LGI_trees)) {
+            this.LGI_trees = new Object();
+        }
+        let obj = new Object();
+        obj.id = id; //树的id
+        obj.chance = chance; //树的刷新权重
+        obj.infinite_flag = infinite_flag; //树是否可以无限刷新
+        obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
+        obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
+        this.LGI_trees[id] = obj;
+    }
 }
 //战斗地点
 export class P_combat extends Place {
@@ -137,7 +164,7 @@ export class P_combat extends Place {
                 return;
             } else if (combat_type == 'limited_enemy_road') {
                 //有限刷怪区域-通道
-                this.cumulative_time = value[1]; //积累一个怪所需的时间
+                this.cumulative_time = value[1]; //积累一个怪所需的时间，单位为现实时间的秒，游戏内的分钟
                 this.next_accessible_area = value[2]; //通道对面的地点id，清理完所有怪之后移动到这里
                 return;
             } else if (combat_type == 'limited_enemy_trap') {
@@ -148,7 +175,6 @@ export class P_combat extends Place {
             }
         }
     }
-
     //设置刷怪的相关参数
     set_add_enemy_data(
         max_live_enemy_num,

@@ -63,7 +63,7 @@ export class Player_active_skills_Manage {
         this.main_defense = new Defense_effect(); //玩家主动技能防御效果
     }
     //初始化主动技能槽
-    init(slot_num = 9) {
+    init(slot_num = 3) {
         if (slot_num < MIN_slot_num || slot_num > MAX_slot_num) {
             //错误的槽数量，强制重置成3
             slot_num = 3;

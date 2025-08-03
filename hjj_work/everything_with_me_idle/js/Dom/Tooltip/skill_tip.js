@@ -216,28 +216,28 @@ function show_passive_skill_type(div, skill_obj) {
     //类型
     let div_3 = addElement(div, 'div', null, 'page_columns_11');
     let type_div = addElement(div_3, 'div', null, 'lable_down');
-    let passive_type = P_skills[skill_obj.id].passive_type;
-    if (passive_type == 'super_passive') {
-        type_div.innerHTML = texts[passive_type].passive_type_name;
+    let switch_type = P_skills[skill_obj.id].switch_type;
+    if (switch_type == 'super_passive') {
+        type_div.innerHTML = texts[switch_type].passive_type_name;
     } else {
         let master_type;
-        if (enums.basic_passive.includes(passive_type)) {
+        if (enums.basic_passive.includes(switch_type)) {
             master_type = 'basic_passive';
-        } else if (enums.combat_passive.includes(passive_type)) {
+        } else if (enums.combat_passive.includes(switch_type)) {
             master_type = 'combat_passive';
-        } else if (enums.life_passive.includes(passive_type)) {
+        } else if (enums.life_passive.includes(switch_type)) {
             master_type = 'life_passive';
-            // } else if (enums.super_passive.includes(passive_type)) {
+            // } else if (enums.super_passive.includes(switch_type)) {
             //     master_type = 'super_passive';
         }
-        let ch = texts[master_type].passive_type_name + '：' + texts[passive_type].passive_type_name;
+        let ch = texts[master_type].passive_type_name + '：' + texts[switch_type].passive_type_name;
         type_div.innerHTML = ch;
     }
 }
 //追加展示技能的等级和经验相关内容
 function show_skill_level(div, skill_obj) {
-    if (skill_obj.exp_levelup_flag == false && P_skills[skill_obj.id].max_level == 1) {
-        //不能升级的技能，等级都是1，也不用展示什么内容，特殊处理
+    if (skill_obj.levelup_type == 'unlevelup') {
+        //不能升级的技能，也不用展示什么内容，特殊处理
         let level_div = addElement(div, 'div', null, 'lable_down');
         level_div.innerHTML = '等级：MAX';
         return;
@@ -247,13 +247,18 @@ function show_skill_level(div, skill_obj) {
     //等级数值
     let num_div = addElement(level_div, 'div', null, 'lable_down');
     let now_level = skill_obj.level;
-    let max_level = P_skills[skill_obj.id].max_level;
+
+    let max_level;
+    for (let obj of P_skills[skill_obj.id].levelup_data) {
+        max_level = obj.max_level;
+    }
+    P_skills[skill_obj.id].max_level;
     num_div.innerHTML = '等级：' + now_level + '/' + max_level;
 
     //经验或升级情况
     let exp_div = addElement(level_div, 'div', null, 'lable_end');
-    if (skill_obj.exp_levelup_flag) {
-        //该技能可以通过累计经验升级，所以要展示目前经验情况
+    if (skill_obj.levelup_type == 'exp_up') {
+        //该技能的升级类型是累计经验升级，不断升级直到最高等级，展示目前经验情况
         var exp_bar = addElement(exp_div, 'div', 'exp_bar', 'progress_bar', '');
         var exp_frame = addElement(exp_bar, 'div', 'exp_frame', 'progress_bar_frame'); //进度条的外框
         var exp_current = addElement(exp_frame, 'div', 'exp_current', 'progress_bar_current'); //进度条中央，长度随当前进度数值变化的色块

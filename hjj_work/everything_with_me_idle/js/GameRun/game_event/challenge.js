@@ -40,12 +40,12 @@ export class Challenge_manage {
     }
     //启动挑战事件
     start_challenge(event_id) {
-        if (global.get_flag('GS_game_event')) {
+        if (global.get_flag('GS_challenge_flag')) {
             //已经处于挑战中，不能同时开启多个挑战
             return 0;
         }
         //进入事件状态
-        global.set_flag('GS_game_event', true);
+        global.set_flag('GS_challenge_flag', true);
         this.challenge_id = event_id;
 
         //初始化需要监控的行为以及他们的目标数值
@@ -84,7 +84,7 @@ export class Challenge_manage {
             return;
         }
         //关闭事件状态
-        global.set_flag('GS_game_event', false);
+        global.set_flag('GS_challenge_flag', false);
 
         let event_id = this.challenge_id;
         let global_flag_manage = global.get_global_flag_manage();

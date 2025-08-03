@@ -58,6 +58,7 @@ function init_Item_raw_MTR(items) {
     items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
     // items[id].init_Material('for_logging'); //材料小分类
     // items[id].init_Item_price('coin', 1); //物品价值
+
     id = 'Willow_logs'; //柳树原木
     add_Item_object(items, id, 'material');
     items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
@@ -68,13 +69,53 @@ function init_Item_raw_MTR(items) {
     items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
     // items[id].init_Material('for_logging'); //材料小分类
     // items[id].init_Item_price('coin', 2); //物品价值
-    id = 'decayed_wood'; //朽木
+    id = 'birch_logs'; //桦树原木
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'birch_woodchip'; //桦树木屑
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'pine_logs'; //松树原木
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'pine_woodchip'; //松树木屑
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'fir_logs'; //杉树原木
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'fir_woodchip'; //杉树木屑
     add_Item_object(items, id, 'material');
     items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
 
+    id = 'decayed_wood'; //朽木
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'symbiotic_root'; //竹蛇共生根
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'violet_bamboo_blade'; //紫斑竹刃
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
     id = 'viresilver_stem'; //绿银草茎
     add_Item_object(items, id, 'material');
     items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'lightning_bark'; //雷杉树皮
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'lightning_branch'; //雷击尖枝
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'lightning_iron_logs'; //雷击铁杉木
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'frost_marrow_resin'; //寒髓松树脂
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    id = 'frost_marrow_ice'; //寒髓松冰晶
+    add_Item_object(items, id, 'material');
+    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+
     id = 'termite_mushroom'; //鸡枞
     add_Item_object(items, id, 'material');
     items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类

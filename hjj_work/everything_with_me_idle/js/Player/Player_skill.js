@@ -17,16 +17,18 @@ class Player_skill {
         this.exp = 0; //当前技能经验
         this.level = 0; //当前等级
         this.next_level_need_exp = 0; //升到下一级需要的经验
-        this.exp_levelup_flag; //当前技能能否通过经验升级标记
+        this.levelup_type; //当前技能能否通过经验升级标记
         this.levelmax_flag; //当前技能满级标记
+        this.level_stage = 0; //技能当前等级位于哪一个等级阶段里
         this.rewards = new Array(); //常态等级加成
     }
     //初始化升级相关参数
     levelup_exp_init() {
-        this.exp_levelup_flag = P_skills[this.id].exp_levelup_flag;
-        if (P_skills[this.id].exp_levelup_flag) {
+        this.levelup_type = P_skills[this.id].levelup_type;
+        if (P_skills[this.id].levelup_type == 'exp_up') {
             //该技能可以升级，初始化经验相关
-            this.next_level_need_exp = P_skills[this.id].base_exp; //升到下一级需要的经验
+            this.next_level_need_exp = P_skills[this.id].levelup_data[0].base_exp; //升到下一级需要的经验
+            this.level_stage = 0; //初始位于第一阶段
         } else {
             //该技能不可通过累计经验升级，只能直接给予等级
         }
@@ -107,6 +109,7 @@ export class Player_skills {
             Player_skills_save.passive_skills[id] = new Object();
             Player_skills_save.passive_skills[id].exp = skill_obj.exp;
             Player_skills_save.passive_skills[id].level = skill_obj.level;
+            Player_skills_save.passive_skills[id].level_stage = skill_obj.level_stage;
             Player_skills_save.passive_skills[id].levelmax_flag = skill_obj.levelmax_flag;
         }
         for (let id in this.active_skills) {
@@ -114,6 +117,7 @@ export class Player_skills {
             Player_skills_save.active_skills[id] = new Object();
             Player_skills_save.active_skills[id].exp = skill_obj.exp;
             Player_skills_save.active_skills[id].level = skill_obj.level;
+            Player_skills_save.active_skills[id].level_stage = skill_obj.level_stage;
             Player_skills_save.active_skills[id].levelmax_flag = skill_obj.levelmax_flag;
         }
 
@@ -129,17 +133,16 @@ export class Player_skills {
             let skill_obj = new Player_A_skill(id);
             let skill_save = Player_skills_save.active_skills[id];
 
-            skill_obj.exp = skill_save.exp; //当前经验
-            skill_obj.level = skill_save.level; //当前等级
-            //升到下一级所需经验
-            let algorithm = P_skills[id].levelup_algorithm;
-            let base_exp = P_skills[id].base_exp;
-            skill_obj.next_level_need_exp = skill_levelup_exp_algorithm(algorithm, base_exp, skill_save.level);
-            //满级标记
-            if (skill_obj.level >= P_skills[id].max_level) {
-                skill_obj.levelmax_flag = true;
-            } else {
-                skill_obj.levelmax_flag = false;
+            if (P_skills[id].levelup_type == 'exp_up') {
+                skill_obj.exp = skill_save.exp; //当前经验
+                skill_obj.level = skill_save.level; //当前等级
+                skill_obj.level_stage = skill_save.level_stage; //当前等级阶段
+                skill_obj.levelmax_flag = skill_save.levelmax_flag; //满级标记
+                //升到下一级所需经验
+                let algorithm = P_skills[id].levelup_data[skill_obj.level_stage].algorithm;
+                let base_exp = P_skills[id].levelup_data[skill_obj.level_stage].base_exp;
+                let now_level = skill_obj.level - P_skills[id].levelup_data[skill_obj.level_stage].start_level;
+                skill_obj.next_level_need_exp = skill_levelup_exp_algorithm(algorithm, base_exp, now_level);
             }
             //技能的常态等级加成
             skill_obj.update_skill_rewards();
@@ -150,17 +153,16 @@ export class Player_skills {
             let skill_obj = new Player_P_skill(id);
             let skill_save = Player_skills_save.passive_skills[id];
 
-            skill_obj.exp = skill_save.exp; //当前经验
-            skill_obj.level = skill_save.level; //当前等级
-            //升到下一级所需经验
-            let algorithm = P_skills[id].levelup_algorithm;
-            let base_exp = P_skills[id].base_exp;
-            skill_obj.next_level_need_exp = skill_levelup_exp_algorithm(algorithm, base_exp, skill_save.level);
-            //满级标记
-            if (skill_obj.level >= P_skills[id].max_level) {
-                skill_obj.levelmax_flag = true;
-            } else {
-                skill_obj.levelmax_flag = false;
+            if (P_skills[id].levelup_type == 'exp_up') {
+                skill_obj.exp = skill_save.exp; //当前经验
+                skill_obj.level = skill_save.level; //当前等级
+                skill_obj.level_stage = skill_save.level_stage; //当前等级阶段
+                skill_obj.levelmax_flag = skill_save.levelmax_flag; //满级标记
+                //升到下一级所需经验
+                let algorithm = P_skills[id].levelup_data[skill_obj.level_stage].algorithm;
+                let base_exp = P_skills[id].levelup_data[skill_obj.level_stage].base_exp;
+                let now_level = skill_obj.level - P_skills[id].levelup_data[skill_obj.level_stage].start_level;
+                skill_obj.next_level_need_exp = skill_levelup_exp_algorithm(algorithm, base_exp, now_level);
             }
             //技能的常态等级加成
             skill_obj.update_skill_rewards();
@@ -198,28 +200,27 @@ export class Player_skills {
             if (!is_Empty_Object(this.passive_skills[id])) {
                 //该被动技能已拥有，不重复解锁
                 return;
-            } else {
-                //新的被动技能
-                this.passive_skills[id] = new Player_P_skill(id);
-                //除了初始解锁的技能，后续获得的技能都是1级
-                this.skill_levelup(id);
-                //记录日志
-                let global_flag_manage = global.get_global_flag_manage();
-                global_flag_manage.set_game_log('unluck_skill', id);
             }
+            //新的被动技能
+            this.passive_skills[id] = new Player_P_skill(id);
+            //除了初始解锁的技能，后续获得的技能都是1级
+            this.skill_levelup(id);
+            //记录日志
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('unluck_skill', id);
         } else if (P_skills[id].type == 'Active') {
             //主动技能
             if (!is_Empty_Object(this.active_skills[id])) {
                 //判断这次解锁是通过什么方式解锁的，以解锁原有技能的对应内容
                 //该主动技能已拥有，不重复解锁
                 return;
-            } else {
-                //新的主动技能
-                this.active_skills[id] = new Player_A_skill(id);
-                //记录日志
-                let global_flag_manage = global.get_global_flag_manage();
-                global_flag_manage.set_game_log('unluck_skill', id);
             }
+            //新的主动技能
+            this.active_skills[id] = new Player_A_skill(id);
+            //记录日志
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('unluck_skill', id);
+
             //解锁了新主动技能，更新需要展示这个技能的界面
             this.updata_ASP_value();
         }
@@ -245,22 +246,25 @@ export class Player_skills {
     }
     //给技能增加一定的经验
     get_skill_exp(id, exp) {
-        //经验为0就不用进行后面的计算了
-        if (exp <= 0) {
-            return;
-        }
         //该技能的对象
         let skill_obj = this.get_skill_obj(id);
-        if (is_Empty_Object(skill_obj)) {
+        //在技能的某些阶段可能有经验衰减需要处理
+        let exp_decay = P_skills[id].levelup_data[skill_obj.level_stage].exp_decay;
+        if (exp_decay == undefined) {
+            exp_decay = 0;
+        }
+        let true_exp = exp - exp_decay;
+        //经验为0就不用进行后面的计算了
+        if (true_exp <= 0) {
             return;
         }
 
-        if (skill_obj.levelmax_flag || skill_obj.exp_levelup_flag == false) {
+        if (skill_obj.levelmax_flag || skill_obj.levelup_type == 'unlevelup') {
             //该技能满级了，不加经验
             //这个技能不能通过累计经验的方式升级，也不需要加经验
             return true;
         } else {
-            skill_obj.exp += exp;
+            skill_obj.exp += true_exp;
             if (skill_obj.exp >= skill_obj.next_level_need_exp) {
                 //这个技能经验累计满了，应该升级
                 this.skill_exp_levelup(id);
@@ -278,6 +282,10 @@ export class Player_skills {
         if (skill_obj.exp < skill_obj.next_level_need_exp) {
             return;
         }
+        //技能已经满级，不能升级
+        if (this.judge_skill_level_max(id)) {
+            return;
+        }
 
         let up_level = 0;
         //结算该技能的经验来提升等级
@@ -285,21 +293,22 @@ export class Player_skills {
             skill_obj.exp -= skill_obj.next_level_need_exp;
             skill_obj.level++;
             up_level++;
-            if (skill_obj.level >= P_skills[id].max_level) {
+            //更新等级阶段
+            let level_stage = this.updata_skill_level_stage(id);
+
+            if (this.judge_skill_level_max(id)) {
                 break;
             } else {
-                let algorithm = P_skills[id].levelup_algorithm;
-                let base_exp = P_skills[id].base_exp;
-                let now_level = skill_obj.level;
+                let algorithm = P_skills[id].levelup_data[level_stage].algorithm;
+                let base_exp = P_skills[id].levelup_data[level_stage].base_exp;
+                let now_level = skill_obj.level - P_skills[id].levelup_data[level_stage].start_level;
                 skill_obj.next_level_need_exp = skill_levelup_exp_algorithm(algorithm, base_exp, now_level);
             }
         }
 
         //技能满级的处理
-        if (skill_obj.level >= P_skills[id].max_level) {
-            up_level = up_level - (skill_obj.level - P_skills[id].max_level);
-            skill_obj.levelmax_flag = true;
-            skill_obj.level = P_skills[id].max_level;
+        if (this.judge_skill_level_max(id)) {
+            skill_obj.exp = 0;
         }
 
         //记录日志
@@ -325,7 +334,9 @@ export class Player_skills {
             //将更新后的最终数值属性更新到其他会用的地方
             let end_data_attr = P_attr.get_end_data_attr();
             let P_Askill = player.get_player_ASkill_Manage();
-            P_Askill.updata_player_data(end_data_attr);
+            P_Askill.updata_player_data(end_data_attr); //战斗方面属性更新
+            let live_plan_manage = global.get_live_plan_manage();
+            live_plan_manage.updata_player_data(end_data_attr); //生活技能属性更新
         }
         //更新这个技能在左上角界面的展示效果
         this.updata_PSK_value();
@@ -335,31 +346,28 @@ export class Player_skills {
     skill_levelup(id) {
         //该技能的对象
         let skill_obj = this.get_skill_obj(id);
-        if (is_Empty_Object(skill_obj)) {
-            return;
-        }
-        //技能已经满级，不升级
-        if (skill_obj.level >= P_skills[id].max_level) {
+
+        //技能已经满级，不能升级
+        if (this.judge_skill_level_max(id)) {
             return;
         }
 
         skill_obj.level++;
-
-        //技能满级的处理
-        if (skill_obj.level >= P_skills[id].max_level) {
-            skill_obj.levelmax_flag = true;
-            skill_obj.level = P_skills[id].max_level;
-        }
-
-        if (skill_obj.exp_levelup_flag) {
-            //这个技能正常来说是累计经验升级的，升级之后应该清空经验，更新下一级的经验需求
-            skill_obj.exp = 0;
-            let algorithm = P_skills[id].levelup_algorithm;
-            let base_exp = P_skills[id].base_exp;
-            let now_level = skill_obj.level;
-            skill_obj.next_level_need_exp = skill_levelup_exp_algorithm(algorithm, base_exp, now_level);
-        } else {
-            //这个技能正常来说是不能累计经验升级的，如果有什么操作在这里处理
+        //更新等级阶段
+        let level_stage = this.updata_skill_level_stage(id);
+        //升级完之后还没满级，更新下一级的经验需求
+        if (!this.judge_skill_level_max(id)) {
+            if (skill_obj.levelup_type == 'exp_up') {
+                // 该技能的升级类型是累计经验升级，不断升级直到最高等级
+                // 升级之后应该清空经验，更新下一级的经验需求
+                skill_obj.exp = 0;
+                let algorithm = P_skills[id].levelup_data[level_stage].algorithm;
+                let base_exp = P_skills[id].levelup_data[level_stage].base_exp;
+                let now_level = skill_obj.level - P_skills[id].levelup_data[level_stage].start_level;
+                skill_obj.next_level_need_exp = skill_levelup_exp_algorithm(algorithm, base_exp, now_level);
+            } else {
+                //这个技能正常来说是不能累计经验升级的，如果有什么操作在这里处理
+            }
         }
 
         //记录日志
@@ -381,9 +389,55 @@ export class Player_skills {
             let end_data_attr = P_attr.get_end_data_attr();
             let P_Askill = player.get_player_ASkill_Manage();
             P_Askill.updata_player_data(end_data_attr);
+            let live_plan_manage = global.get_live_plan_manage();
+            live_plan_manage.updata_player_data(end_data_attr); //生活技能属性更新
         }
         //更新这个技能在左上角界面的展示效果
         this.updata_PSK_value();
+    }
+    //判断指定技能当前是否满级，顺便更新满级标记
+    judge_skill_level_max(id) {
+        let skill_obj = this.get_skill_obj(id);
+        //当前阶段的最大等级
+        let level_stage = skill_obj.level_stage;
+        let now_stage_maxlevel = P_skills[id].levelup_data[level_stage].max_level;
+        if (skill_obj.level == now_stage_maxlevel) {
+            //如果技能在当前阶段已经满级，则判断是否能进入下一阶段
+            if (P_skills[id].levelup_data.length <= level_stage + 1) {
+                //技能没有下一阶段了,所以现在满级了
+                skill_obj.levelmax_flag = true;
+                return true;
+            }
+
+            //判断技能的下一阶段能否进入
+            let unluck_flag = P_skills[id].levelup_data[level_stage + 1].unluck_flag;
+            if (unluck_flag == undefined) {
+                //下一阶段没有解锁条件，可以进入
+            } else {
+                let game_flag = global.get_flag(unluck_flag);
+                if (!game_flag) {
+                    //没有满足下一阶段的解锁条件，现在就满级了
+                    skill_obj.levelmax_flag = true;
+                    return;
+                }
+            }
+        }
+        //没有到当前阶段最大等级，或者解锁了下一阶段，所以没有满级
+        skill_obj.levelmax_flag = false;
+        return false;
+    }
+    //更新当前技能所处的等级阶段
+    updata_skill_level_stage(id) {
+        let skill_obj = this.get_skill_obj(id);
+
+        for (let i in P_skills[id].levelup_data) {
+            let obj = P_skills[id].levelup_data[i];
+            if (skill_obj.level <= obj.max_level) {
+                skill_obj.level_stage = i;
+                break;
+            }
+        }
+        return skill_obj.level_stage;
     }
 
     //玩家技能发生变动时需要展示出来，调用这些接口更新界面
@@ -527,52 +581,52 @@ function PSK_type_handle(type_switch) {
                 arr.push(skill_id);
                 break;
             case 'B_all': //全部根基技能
-                if (enums.basic_passive.includes(P_skills[skill_id].passive_type)) {
+                if (enums.basic_passive.includes(P_skills[skill_id].switch_type)) {
                     arr.push(skill_id);
                 }
                 break;
             case 'C_all': //全部战斗技能
-                if (enums.combat_passive.includes(P_skills[skill_id].passive_type)) {
+                if (enums.combat_passive.includes(P_skills[skill_id].switch_type)) {
                     arr.push(skill_id);
                 }
                 break;
             case 'C_W': //战斗技能中的武器技能
-                if (P_skills[skill_id].passive_type == 'weapon_mastery') {
+                if (P_skills[skill_id].switch_type == 'weapon_mastery') {
                     arr.push(skill_id);
                 }
                 break;
             case 'C_Env': //战斗技能中的环境适应技能
-                if (P_skills[skill_id].passive_type == 'environment_adaptation') {
+                if (P_skills[skill_id].switch_type == 'environment_adaptation') {
                     arr.push(skill_id);
                 }
                 break;
             case 'C_Ene': //战斗技能中的对敌精通技能
-                if (P_skills[skill_id].passive_type == 'enemy_mastery') {
+                if (P_skills[skill_id].switch_type == 'enemy_mastery') {
                     arr.push(skill_id);
                 }
                 break;
             case 'L_all': //全部生活技能
-                if (enums.life_passive.includes(P_skills[skill_id].passive_type)) {
+                if (enums.life_passive.includes(P_skills[skill_id].switch_type)) {
                     arr.push(skill_id);
                 }
                 break;
             case 'L_Raw': //生活技能中的原料获取技能
-                if (P_skills[skill_id].passive_type == 'material_acquisition') {
+                if (P_skills[skill_id].switch_type == 'material_acquisition') {
                     arr.push(skill_id);
                 }
                 break;
             case 'L_P': //生活技能中的原料加工技能
-                if (P_skills[skill_id].passive_type == 'material_processing') {
+                if (P_skills[skill_id].switch_type == 'material_processing') {
                     arr.push(skill_id);
                 }
                 break;
             case 'L_F': //生活技能中的成品使用技能
-                if (P_skills[skill_id].passive_type == 'product_usage') {
+                if (P_skills[skill_id].switch_type == 'product_usage') {
                     arr.push(skill_id);
                 }
                 break;
             case 'L_Rec': //生活技能中的回收利用技能
-                if (P_skills[skill_id].passive_type == 'recycling') {
+                if (P_skills[skill_id].switch_type == 'recycling') {
                     arr.push(skill_id);
                 }
                 break;
@@ -626,7 +680,7 @@ function PSK_type_handle(type_switch) {
                 }
                 break;
             case 'S_all': //全部特殊功法
-                if (enums.super_passive.includes(P_skills[skill_id].passive_type)) {
+                if (enums.super_passive.includes(P_skills[skill_id].switch_type)) {
                     arr.push(skill_id);
                 }
                 break;

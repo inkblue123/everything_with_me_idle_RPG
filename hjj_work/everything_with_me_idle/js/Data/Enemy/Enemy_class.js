@@ -4,9 +4,9 @@ import { is_Empty_Object } from '../../Function/Function.js';
 export class Enemy {
     constructor(id) {
         this.id = id; //唯一id
-        this.name; //地点名称
-        this.desc; //地点描述
-        this.type; //地点类型
+        this.name; //敌人名称
+        this.desc; //敌人描述
+        this.type; //敌人类型
         this.attack_attr = new Object(); //攻击属性
         this.defense_attr = new Object(); //防御属性
         this.survival_attr = new Object(); //生存属性
@@ -62,7 +62,7 @@ export class Enemy {
     add_item(item_array_id, item_id, chance, max_num, min_num, equip_rarity) {
         let item_obj = new Object();
         item_obj.id = item_id;
-        item_obj.chance = chance;
+        item_obj.chance = chance; //权重
         item_obj.max_num = max_num;
         item_obj.min_num = min_num;
         if (equip_rarity) item_obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
@@ -73,6 +73,47 @@ export class Enemy {
         this.item_array[item_array_id].item.push(item_obj);
     }
 }
+//伐木技能中的敌人
+export class E_tree extends Enemy {
+    constructor(enemy_id) {
+        super(enemy_id);
+        this.type = 'tree';
+        //主要奖励层级
+        this.reward_level_time = new Array();
+        this.reward_level_item = new Array();
+        //次要奖励
+        this.second_reward_array = new Array();
+    }
+
+    //设置掉落物奖励层级的时间
+    set_reward_level_time(...time) {
+        this.reward_level_time = time;
+    }
+    //创建掉落物奖励层级
+    create_item_array(level, chance) {
+        if (is_Empty_Object(this.reward_level_item[level])) {
+            this.reward_level_item[level] = new Array();
+        }
+        let obj = new Object();
+        obj.item = new Array();
+        obj.item_chance = chance;
+        this.reward_level_item[level].push(obj);
+    }
+    //给这个敌人添加一个可掉落物品
+    add_item(level, item_array_id, item_id, chance, max_num, min_num, equip_rarity) {
+        let item_obj = new Object();
+        item_obj.id = item_id;
+        item_obj.chance = chance; //权重
+        item_obj.max_num = max_num;
+        item_obj.min_num = min_num;
+        if (equip_rarity) item_obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
+        if (is_Empty_Object(this.reward_level_item[level])) {
+            console.log('未定义%d掉落层级', level);
+            return;
+        }
+        this.reward_level_item[level][item_array_id].item.push(item_obj);
+    }
+}
 function add_Enemy_object(enemys, newid) {
     if (enemys[newid] === undefined) {
         enemys[newid] = new Enemy(newid);
@@ -80,12 +121,11 @@ function add_Enemy_object(enemys, newid) {
         console.log(`创建enemys[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
-// function add_normal_Place(enemys, newid) {
-//     if (enemys[newid] === undefined) {
-//         // enemys[newid] = new P_normal(newid);
-//     } else {
-//         console.log(`创建enemys[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
-//     }
-// }
-
-export { add_Enemy_object };
+function add_E_tree_object(enemys, newid) {
+    if (enemys[newid] === undefined) {
+        enemys[newid] = new E_tree(newid);
+    } else {
+        console.log(`创建enemys[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+    }
+}
+export { add_Enemy_object, add_E_tree_object };

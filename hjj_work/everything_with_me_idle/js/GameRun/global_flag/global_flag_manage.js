@@ -131,6 +131,7 @@ export class Global_flag_manage {
 
         console.log('错误的游戏状态类型 %s', type);
     }
+    //设置游戏状态
     set_flag(flag_name, flag_value) {
         let flag_type = this.get_flag_type(flag_name);
         if (flag_type == 'game_status') {
@@ -168,7 +169,7 @@ export class Global_flag_manage {
         // let PKL_monitor_target_summ = new Object();
         //查找当前监控的行为里，有没有击杀敌人相关的行为
         for (let monitor_id in monitor_target_summ) {
-            if (monitor_id.startsWith('PKL_')) {
+            if (monitor_id.startsWith('PKL')) {
                 PKL_flag = true;
                 // PKL_monitor_target_summ[monitor_id] = monitor_target_summ[monitor_id];
             }

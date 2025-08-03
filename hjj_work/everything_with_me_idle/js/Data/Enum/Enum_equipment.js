@@ -251,8 +251,8 @@ function init_Enum_equipment(enums) {
     //哪些武器类型属于单手武器
     add_Enum_Array(enums, 'single_hand');
     enums.single_hand = [
-        'dagger',
-        'sword',
+        'dagger', //匕首
+        'sword', //剑
         'sticks',
         'whips',
         'hand_gun',

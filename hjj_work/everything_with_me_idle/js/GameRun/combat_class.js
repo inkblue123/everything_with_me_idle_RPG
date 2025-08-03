@@ -262,7 +262,7 @@ export class Combat_manage {
         let P_attr = player.get_player_attributes();
         P_attr.change_data_attr('health_point', 10);
 
-        if (global.get_flag('GS_game_event')) {
+        if (global.get_flag('GS_challenge_flag')) {
             //如果玩家处于事件中，死亡意味着事件失败，只退出事件
             let game_event_manage = global.get_game_event_manage();
             game_event_manage.end_challenge('death');

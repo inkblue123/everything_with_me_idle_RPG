@@ -44,7 +44,7 @@ export class Exp_manage {
             return;
         }
         //这个主动技能不能通过累计经验升级
-        if (P_skills[id].exp_levelup_flag == false) {
+        if (P_skills[id].levelup_type == 'unlevelup') {
             return;
         }
         if (is_Empty_Object(this.Active_skill_exp[id])) {
@@ -60,11 +60,7 @@ export class Exp_manage {
     //记录其他练级行为
     set_leveling_behavior() {
         //当前行为，如战斗，伐木，钓鱼等等
-        if (global.get_combat_statu()) {
-            this.leveling_behavior.behavior = 'combat';
-        } else {
-            this.leveling_behavior.behavior = 'NULL';
-        }
+        this.leveling_behavior.behavior = global.get_flag('GS_game_statu');
         //手持武器详细类型
         let P_attr = player.get_player_attributes();
         this.leveling_behavior.weapon_type = P_attr.get_data_attr('weapon_type');
@@ -88,7 +84,7 @@ export class Exp_manage {
         //被动技能获得经验
         for (let id in P_All_P_Skills) {
             //满级和不能获得经验的技能跳过
-            if (!P_All_P_Skills[id].exp_levelup_flag || P_All_P_Skills[id].levelmax_flag) {
+            if (P_All_P_Skills[id].levelup_type == 'unlevelup' || P_All_P_Skills[id].levelmax_flag) {
                 continue;
             }
             //升级行为和当前玩家所进行的行为不符合的跳过

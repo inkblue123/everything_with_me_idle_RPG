@@ -69,11 +69,17 @@ var Option = crtElement('div', null, 'option_page', '');
         let place_manage = global.get_place_manage();
         place_manage.set_now_place('test_combat1');
     };
-    button8 = addElement(Option, 'button');
-    button8.innerHTML = '血量设0';
-    button8.onclick = function () {
+    let button9 = addElement(Option, 'button');
+    button9.innerHTML = '血量设0';
+    button9.onclick = function () {
         let P_attr = player.get_player_attributes();
         P_attr.set_data_attr('health_point', 0);
+    };
+    let button10 = addElement(Option, 'button');
+    button10.innerHTML = '杀光通道的敌人';
+    button10.onclick = function () {
+        let enemy_manage = global.get_enemy_manage();
+        enemy_manage.add_kill_enemy_num(99);
     };
 }
 

@@ -6,10 +6,11 @@ export class Skill {
         this.id = id; //唯一id
         this.name = '未定义技能'; // 技能名称
         this.desc = new Array(); // 技能描述
-        this.exp_levelup_flag = false; //是否可以用经验升级标记
+        this.levelup_type; //升级类型
         this.max_level = 1; //最大等级
+        this.levelup_data = new Array(); //多个等级上限
 
-        this.type; //类型
+        this.type; //大类型，主动技能或被动技能
         this.leveling_behavior = new Object(); //练级行为
         this.init_skill_name(id);
         this.init_skill_desc(id);
@@ -34,14 +35,18 @@ export class Skill {
             this.desc = texts[id].skill_desc;
         }
     }
-
-    //设置通过经验升级的技能的相关参数
-    set_skill_levelup_data(base_exp, max_level, algorithm) {
-        this.exp_levelup_flag = true; //这个技能可以通过累计经验升级
-        if (base_exp) this.base_exp = base_exp; //第一级需要的经验
-        if (max_level) this.max_level = max_level; // 最大等级上限
-        if (algorithm) this.levelup_algorithm = algorithm; // 经验需求量算法
+    //设置一个等级阶段
+    set_levelup_data(base_exp, start_level, max_level, algorithm, exp_decay, unluck_flag) {
+        let obj = new Object();
+        obj.base_exp = base_exp; //第一级需要的经验
+        obj.start_level = start_level; //该等级阶段的初始等级
+        obj.max_level = max_level; //这段等级上限的长度
+        obj.algorithm = algorithm; //经验需求量算法
+        obj.exp_decay = exp_decay; //经验衰减
+        obj.unluck_flag = unluck_flag; //解锁这段等级上限的条件
+        this.levelup_data.push(obj);
     }
+
     //添加什么情况下会获得经验
     add_leveling_behavior(type, ...value) {
         if (type == 'behavior') {
@@ -59,7 +64,7 @@ export class P_Passive_skill extends Skill {
     constructor(id) {
         super(id);
         this.type = 'Passive';
-        this.passive_type; //这个被动技能的类型，比如加成战斗的，加成生活的，武器精通类、使用道具类等等
+        this.switch_type; //这个技能用于过滤时的类型，比如加成战斗的，加成生活的，武器精通类、使用道具类等等
         this.initial_flag; //是否属于玩家初始技能
         this.rewards; //常态等级加成
         this.milepost; // 关键等级节点

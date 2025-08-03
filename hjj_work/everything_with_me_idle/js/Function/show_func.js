@@ -106,7 +106,7 @@ function change_Live_plan_div(button_id) {
 }
 //按下生活规划中，搜索采集部分是某一个具体技能之后，切换到对应界面
 function change_Explore_collection_div(button_id) {
-    let div_obj = ['LBJ', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+    let div_obj = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
 
     for (let key of div_obj) {
         let div_id = key + '_value_div';
@@ -155,6 +155,20 @@ function show_dropdown_table(classification_div, table_id) {
         }
     }
 }
+//按下伐木界面的伐木策略按钮之后，切换界面显示
+function change_LGI_way(button_id) {
+    const LGI_F_way_bar = document.getElementById('LGI_F_way_bar');
+    const LGI_M_way_bar = document.getElementById('LGI_M_way_bar');
+    if (button_id == 'LGI_F_way') {
+        //快速伐木
+        LGI_F_way_bar.style.visibility = 'visible';
+        LGI_M_way_bar.style.visibility = 'hidden';
+    }
+    if (button_id == 'LGI_M_way') {
+        LGI_F_way_bar.style.visibility = 'hidden';
+        LGI_M_way_bar.style.visibility = 'visible';
+    }
+}
 
 export {
     change_PA,
@@ -166,4 +180,5 @@ export {
     show_dropdown_table,
     change_Live_plan_div,
     change_Explore_collection_div,
+    change_LGI_way,
 };

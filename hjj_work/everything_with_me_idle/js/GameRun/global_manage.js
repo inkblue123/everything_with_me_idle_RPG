@@ -1,11 +1,12 @@
-import { Time_manage } from './Time_class.js';
 import { Place_manage } from './Place_class.js';
+import { Time_manage } from './Time_class.js';
 import { Random_manage } from './random_class.js';
 import { Enemy_manage } from './enemy_class.js';
 import { Combat_manage } from './combat_class.js';
 import { Exp_manage } from './exp_manage.js';
 import { Game_event_manage } from './game_event/game_event_manage.js';
 import { Global_flag_manage } from './global_flag/global_flag_manage.js';
+import { Live_plan_manage } from './live_plan/live_plan_manage.js';
 //记录全局参数和游戏状态的对象
 class Global_manage {
     constructor() {
@@ -18,6 +19,7 @@ class Global_manage {
         this.exp_manage; //技能经验管理类
         this.game_event_manage; //游戏事件管理类
         this.global_flag_manage; //游戏状态管理类
+        this.live_plan_manage; //生活技能管理类
     }
     init() {
         //获取配置
@@ -41,6 +43,9 @@ class Global_manage {
 
         this.global_flag_manage = new Global_flag_manage();
         this.global_flag_manage.init();
+
+        this.live_plan_manage = new Live_plan_manage();
+        // this.live_plan_manage.init();
     }
     init_config() {
         //
@@ -72,8 +77,8 @@ class Global_manage {
     get_global_flag_manage() {
         return this.global_flag_manage;
     }
-    get_global_flag_game_status() {
-        return this.global_flag_manage.GS_status;
+    get_live_plan_manage() {
+        return this.live_plan_manage;
     }
     //对外提供一些常用功能的接口
     updata_time_manage() {
@@ -87,9 +92,6 @@ class Global_manage {
     }
     get_game_now_time() {
         return this.time_manage.get_game_now_time();
-    }
-    get_combat_statu() {
-        return this.global_flag_manage.get_flag('GS_combat_statu');
     }
     add_new_enemy() {
         // let now_place = this.place_manage.get_now_place();
@@ -118,9 +120,11 @@ class Global_manage {
         global_save.global_flag_save = this.global_flag_manage.save_global_flag_class();
         //敌人类
         global_save.enemy_save = this.enemy_manage.save_enemy_class();
-
         //游戏事件管理类
         global_save.game_event_save = this.game_event_manage.save_Game_event_class();
+        //生活技能管理类
+        global_save.live_plan_save = this.live_plan_manage.save_Live_plan_class();
+
         //还没有开发需要用到重要随机数的内容，随机数类目前基本没用
         // this.random_manage; //随机数管理类
         //目前战斗管理类只是负责记录参数进行运算的平台，并没有需要保存的信息
@@ -137,6 +141,7 @@ class Global_manage {
         this.game_event_manage.load_Game_event_class(global_save.game_event_save);
         this.place_manage.load_place_class(global_save.place_save);
         this.enemy_manage.load_enemy_class(global_save.enemy_save);
+        this.live_plan_manage.load_Live_plan_class(global_save.live_plan_save);
     }
 }
 //记录全局参数和游戏状态的对象

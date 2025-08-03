@@ -20,8 +20,10 @@ export class Data_attr_manage {
         this.combat_survival_attr = new Object();
         //角色基础属性点
         this.player_base_attr = new Object();
+        //生活技能属性
+        this.live_plan_attr = new Object();
 
-        //玩家所有基础属性汇总，实质上是上面4个类的总和
+        //玩家所有基础属性汇总，实质上是上面所有部分的总和
         this.player_attr = new Object();
         //当前激活的装备栏上所有装备的属性汇总
         this.EQP_attr = new Object();
@@ -64,7 +66,13 @@ export class Data_attr_manage {
         this.player_base_attr['agile'] = 10; //敏捷
         this.player_base_attr['intelligence'] = 10; //智力
         this.player_base_attr['technique'] = 10; //技巧
+        //角色生活技能属性初始化
+        this.live_plan_attr['LGI_speed'] = 3; //伐木攻速
+        this.live_plan_attr['LGI_attack'] = 3; //伐木力
+        this.live_plan_attr['LGI_critical_chance'] = 5; //伐木暴击率
+        this.live_plan_attr['LGI_critical_damage'] = 150; //伐木暴击伤害
 
+        //汇总
         this.prevObjects['player_attr'] = JSON.parse(JSON.stringify(this.player_attr));
         this.prevObjects['EQP_attr'] = JSON.parse(JSON.stringify(this.EQP_attr));
         this.prevObjects['passive_skill_attr'] = JSON.parse(JSON.stringify(this.passive_skill_attr));
@@ -152,6 +160,13 @@ export class Data_attr_manage {
                 this.player_attr[id] = 0;
             }
             this.player_attr[id] += this.player_base_attr[id];
+        }
+        //初始角色生活技能属性
+        for (let id in this.live_plan_attr) {
+            if (is_Empty_Object(this.player_attr[id])) {
+                this.player_attr[id] = 0;
+            }
+            this.player_attr[id] += this.live_plan_attr[id];
         }
     }
     //汇总穿戴的装备上的属性加成

@@ -72,7 +72,13 @@ function init_Text_food_CSB(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '鸡枞汤';
     texts[id].item_desc = '一碗清澈的金黄色汤羹，汤底如晨光般透亮，菌肉脆嫩似嫩笋，咀嚼时能渗出微甜的汁液';
+
+    id = 'apple';
+    add_text_object(texts, id);
+    texts[id].item_name = '苹果';
+    texts[id].item_desc = '一天一苹果，医生远离我';
 }
+
 //弹药的文本
 function init_Text_ammo_CSB(texts) {
     let id = 'wood_arrow';

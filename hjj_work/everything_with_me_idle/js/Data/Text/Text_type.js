@@ -232,7 +232,7 @@ function active_type(texts) {
     texts['auxiliary'].active_type_name = '辅助型';
 }
 //被动技能类型
-function passive_type(texts) {
+function passive_switch_type(texts) {
     // 根基技能 basic
     let id = 'basic_passive';
     add_text_object(texts, id);
@@ -286,7 +286,7 @@ function init_Text_type(texts) {
     material_type(texts);
     //主动技能类型描述
     active_type(texts);
-    //被动技能类型描述
-    passive_type(texts);
+    //被动技能过滤类型描述
+    passive_switch_type(texts);
 }
 export { init_Text_type };

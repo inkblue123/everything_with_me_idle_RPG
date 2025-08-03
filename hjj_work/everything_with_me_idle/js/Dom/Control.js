@@ -54,7 +54,7 @@ Control.show_now_place = function () {
         // if (places[now_place_id].type == 'normal' ) {
         show_new_place(places[now_place_id]);
     }
-    if (global.get_flag('GS_game_event')) {
+    if (global.get_flag('GS_challenge_flag')) {
         add_control_button_end_event('退出', null);
     }
 };

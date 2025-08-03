@@ -1,4 +1,5 @@
 import { is_Empty_Object } from '../Function/Function.js';
+import { addElement } from '../Function/Dom_function.js';
 import { buffs } from '../Data/Buff/Buff.js';
 
 import { places } from '../Data/Place/Place.js';
@@ -130,7 +131,7 @@ function updata_control_place_name(now_place_id) {
     area_name_div.innerHTML = area_name;
     place_name_div.innerHTML = place_ch;
 }
-//移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
+//移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面和参数
 function change_Combat_Normal_game_div(next_place) {
     let next_place_type = places[next_place].type;
     if (next_place_type == 'normal' || next_place_type == 'NPC') {
@@ -151,8 +152,14 @@ function updata_to_normal_place() {
         let enemy_manage = global.get_enemy_manage();
         enemy_manage.delete_all_enemy(); //清除战斗区域的怪物
         //退出战斗状态
-        global.set_flag('GS_combat_statu', false);
+        global.set_flag('GS_game_statu', 'NULL');
     }
+    //根据普通地点的生活技能可用情况，显示或遮罩生活技能规划界面
+    let next_place = place_manage.get_next_place();
+    show_live_plan_div(next_place);
+    //将新地点的信息更新到生活技能对象中
+    let live_plan_manage = global.get_live_plan_manage();
+    live_plan_manage.set_new_place(next_place);
 }
 //移动到新的战斗地点，更新相关参数
 function updata_to_combat_place() {
@@ -164,7 +171,7 @@ function updata_to_combat_place() {
         //从非战斗地点进入战斗地点，执行转场
         show_combat_game_div();
         //进入战斗状态
-        global.set_flag('GS_combat_statu', true);
+        global.set_flag('GS_game_statu', 'combat');
     } else {
         // 从一个战斗区域前往另一个战斗区域，要清除旧的战斗相关的信息
         enemy_manage.delete_all_enemy(); //清除当前战斗区域的怪物
@@ -238,4 +245,46 @@ function check_next_place(next_place) {
         }
     }
     return next_place;
+}
+//根据普通地点的生活技能可用情况，调整生活技能规划界面
+function show_live_plan_div(next_place) {
+    //探索采集类生活技能
+    let live_plan_id = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+    let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
+    for (let i = 0; i < 7; i++) {
+        if (places[next_place].live_plan_flag[i]) {
+            //如果地点可以进行对应技能，去掉遮罩
+            //单选按钮
+            let radio_id = live_plan_id[i] + '_radio_div';
+            let radio_div = document.getElementById(radio_id);
+            let overlay = radio_div.querySelector('.overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+            //内容界面
+            let value_div_id = live_plan_id[i] + '_value_div';
+            let value_div = document.getElementById(value_div_id);
+            overlay = value_div.querySelector('.overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        } else {
+            // 不可进行对应技能，去掉遮罩
+            //单选按钮
+            let radio_id = live_plan_id[i] + '_radio_div';
+            let radio_div = document.getElementById(radio_id);
+            let overlay = radio_div.querySelector('.overlay');
+            if (!overlay) {
+                addElement(radio_div, 'div', null, 'overlay');
+            }
+            //内容界面
+            let value_div_id = live_plan_id[i] + '_value_div';
+            let value_div = document.getElementById(value_div_id);
+            overlay = value_div.querySelector('.overlay');
+            if (!overlay) {
+                let value_overlay = addElement(value_div, 'div', null, 'overlay');
+                value_overlay.innerHTML = '这个地点没有' + live_plan_ch[i] + '的条件';
+            }
+        }
+    }
 }

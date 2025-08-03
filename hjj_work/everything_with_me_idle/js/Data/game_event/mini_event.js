@@ -78,7 +78,7 @@ function init_mini_event(game_events) {
     game_events[id].set_new_process('process4', 'text17');
     game_events[id].add_process_button('process4', 'b10', 'text18');
     game_events[id].add_process_button_click('process4', 'b10', 'next_process', 'process5');
-    game_events[id].add_process_button_thing('process4', 'b10', 'show_div', 'Combat_plan', 'live_plan');
+    game_events[id].add_process_button_thing('process4', 'b10', 'show_div', 'Combat_plan', 'Live_plan');
     game_events[id].add_process_button_thing('process4', 'b10', 'move_place', 'village_home');
     game_events[id].set_new_process('process5', 'text19');
     game_events[id].add_process_button('process5', 'b11', 'text20');

@@ -118,6 +118,7 @@ html {
     /* display: inline-block; */
     /* margin: auto; */
     position: relative;
+    height: auto;
 }
 /* 单选框，表示是否选中的圆点 */
 .radio_div input[type='radio'] {
