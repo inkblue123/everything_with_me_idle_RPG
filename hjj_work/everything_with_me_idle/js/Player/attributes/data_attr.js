@@ -255,6 +255,22 @@ export class Data_attr_manage {
                 }
             }
             //关键节点加成
+            if (!is_Empty_Object(P_skills[id].milepost)) {
+                for (let milepost_level in P_skills[id].milepost) {
+                    if (skill_obj.level < milepost_level) {
+                        //只计算到玩家达到了的关键节点的加成
+                        break;
+                    }
+                    let milepost_array = P_skills[id].milepost[milepost_level];
+                    for (let obj of milepost_array) {
+                        let attr = obj.attr;
+                        if (is_Empty_Object(this.passive_skill_attr[attr])) {
+                            this.passive_skill_attr[attr] = 0;
+                        }
+                        this.passive_skill_attr[attr] += obj.data;
+                    }
+                }
+            }
         }
     }
     //汇总玩家身上所有可用主动技能提供的属性

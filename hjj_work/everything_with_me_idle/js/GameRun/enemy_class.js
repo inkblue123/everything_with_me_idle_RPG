@@ -359,15 +359,13 @@ export class Enemy_manage {
         }
         let chance = get_random(0, all_chance);
         let enemy_id;
-        let id;
-        for (id in enemys) {
-            if (chance > enemys[id].chance) {
-                chance -= enemys[id].chance;
+        for (enemy_id in enemys) {
+            if (chance > enemys[enemy_id].chance) {
+                chance -= enemys[enemy_id].chance;
             } else {
                 break;
             }
         }
-        enemy_id = id;
         return enemy_id;
     }
     //判断当前要刷的这个怪，是否满足它的限制条件

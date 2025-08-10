@@ -6,15 +6,15 @@ import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 //将属性补正数值转义成简写字母
 function attr_correct_handle(attr_correct) {
     //
-    if (0 <= attr_correct && attr_correct <= 0.21) {
+    if (0 <= attr_correct && attr_correct <= 3) {
         return 'D';
-    } else if (0.21 < attr_correct && attr_correct <= 0.41) {
+    } else if (3 < attr_correct && attr_correct <= 6) {
         return 'C';
-    } else if (0.41 < attr_correct && attr_correct <= 0.61) {
+    } else if (6 < attr_correct && attr_correct <= 10) {
         return 'B';
-    } else if (0.61 < attr_correct && attr_correct <= 0.81) {
+    } else if (10 < attr_correct && attr_correct <= 15) {
         return 'A';
-    } else if (0.81 < attr_correct && attr_correct <= 1.01) {
+    } else if (15 < attr_correct && attr_correct <= 20) {
         return 'S';
     }
 }

@@ -40,7 +40,7 @@ export class Skill {
         let obj = new Object();
         obj.base_exp = base_exp; //第一级需要的经验
         obj.start_level = start_level; //该等级阶段的初始等级
-        obj.max_level = max_level; //这段等级上限的长度
+        obj.max_level = max_level; //该等级阶段的等级上限
         obj.algorithm = algorithm; //经验需求量算法
         obj.exp_decay = exp_decay; //经验衰减
         obj.unluck_flag = unluck_flag; //解锁这段等级上限的条件
@@ -66,8 +66,25 @@ export class P_Passive_skill extends Skill {
         this.type = 'Passive';
         this.switch_type; //这个技能用于过滤时的类型，比如加成战斗的，加成生活的，武器精通类、使用道具类等等
         this.initial_flag; //是否属于玩家初始技能
-        this.rewards; //常态等级加成
-        this.milepost; // 关键等级节点
+        this.rewards = new Array(); //常态等级加成
+        this.milepost = new Object(); // 关键等级节点
+    }
+    //设置一条常态等级加成属性
+    add_rewards(attr_name, algorithm) {
+        let obj = new Object();
+        obj.attr = attr_name; //属性名
+        obj.algorithm = algorithm; //常态等级加成算法
+        this.rewards.push(obj);
+    }
+    //在指定的关键等级节点队列里添加一个属性
+    add_milepost(level, attr_name, data) {
+        if (is_Empty_Object(this.milepost[level])) {
+            this.milepost[level] = new Array();
+        }
+        let obj = new Object();
+        obj.attr = attr_name; //属性名
+        obj.data = data; //属性数值
+        this.milepost[level].push(obj);
     }
 }
 //玩家主动技能

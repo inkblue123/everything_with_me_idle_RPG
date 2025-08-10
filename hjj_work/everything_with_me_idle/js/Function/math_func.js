@@ -2,6 +2,19 @@ import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 
+// 技能升级经验需求计算函数
+const skill_levelup_exp_func = {
+    1: skill_levelup_exp_1,
+    2: skill_levelup_exp_2,
+    3: skill_levelup_exp_3,
+};
+// 技能的常态等级加成具体数值计算函数
+const skill_rewards_func = {
+    1: skill_rewards_1,
+    2: skill_rewards_2,
+    // 3: skill_rewards_3,
+};
+
 //简单生成一个随机数
 function get_random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -159,54 +172,91 @@ function Askill_algorithm_1(base_attr) {
 
 //技能升级经验需求计算函数
 function skill_levelup_exp_algorithm(id, base_exp, now_level) {
-    let levelup_exp;
-    switch (id) {
-        case 1: //1号函数
-            levelup_exp = skill_levelup_exp_1(base_exp, now_level);
-            break;
-
-        default:
-            break;
+    const func = skill_levelup_exp_func[id];
+    if (!func) {
+        console.log('技能升级经验需求计算函数没有定义 %d', id);
     }
-    return levelup_exp;
+    return func(base_exp, now_level);
+
+    // let levelup_exp;
+    // switch (id) {
+    //     case 1: //1号函数
+    //         levelup_exp = skill_levelup_exp_1(base_exp, now_level);
+    //         break;
+    //     case 2: //2号函数
+    //         levelup_exp = skill_levelup_exp_2(base_exp, now_level);
+    //         break;
+    //     case 3: //3号函数
+    //         levelup_exp = skill_levelup_exp_3(base_exp, now_level);
+    //         break;
+
+    //     default:
+    //         break;
+    // }
+    // return levelup_exp;
 }
-//技能升级经验需求计算函数1号
+//技能升级经验需求计算函数1号，系数为1.5的指数函数
 function skill_levelup_exp_1(base_exp, now_level) {
     //基数base_exp等于10的时候，
     //等级       1  2  3  4  5  6  7   8   9   10
     //经验需求   10 15 22 33 50 75 113 170 256 384
     if (now_level <= 0) now_level = 1;
-    let levelup_exp = Math.floor(base_exp * Math.pow(1.5, now_level - 1));
-    return levelup_exp;
+    let levelup_exp = base_exp * Math.pow(1.5, now_level - 1);
+    return Math.floor(levelup_exp);
+}
+//技能升级经验需求计算函数2号，系数为1的一次函数
+function skill_levelup_exp_2(base_exp, now_level) {
+    //基数base_exp等于10的时候
+    //等级       1  2  3  4  5  6  7   8   9   10
+    //经验需求   10 20 30 40 50 60 70  80  90  100
+    if (now_level <= 0) now_level = 1;
+    let levelup_exp = base_exp * now_level;
+    return Math.floor(levelup_exp);
+}
+//技能升级经验需求计算函数3号
+function skill_levelup_exp_3(base_exp, now_level) {
+    //基数base_exp等于10的时候
+    //等级       1  2  3  4   5   6   7   8   9  10
+    //经验需求   10 23 41 67 101 146 207 285 388 520
+    if (now_level <= 0) now_level = 1;
+    let levelup_exp = base_exp * Math.pow(1.2, now_level - 1);
+    levelup_exp = levelup_exp * (now_level - 1) * 1.1 + base_exp;
+    return Math.floor(levelup_exp);
 }
 //技能的常态等级加成具体数值计算函数
 function skill_rewards_algorithm(id, now_level) {
-    let data;
-    switch (id) {
-        case 1: //1号函数
-            data = skill_rewards_1(now_level);
-            break;
-
-        default:
-            break;
+    const func = skill_rewards_func[id];
+    if (!func) {
+        console.log('技能的常态等级加成具体数值计算函数没有定义 %d', id);
     }
-    return data;
+    return func(now_level);
 }
 //技能的常态等级加成计算函数1号
 function skill_rewards_1(now_level) {
-    //
     //等级  0  1   2   3   4   5   6   7    8   9   10
     //加成  1 1.2 1.4 1.5 1.6 1.7 1.8 1.85 1.9 1.95 2.0
+    //加成  0 20   40  50  60  70  80  85   90  95  100
+
     if (now_level <= 0) {
         return 0;
     } else if (now_level >= 1 && now_level <= 2) {
-        return 1 + now_level * 0.2;
+        return now_level * 20;
     } else if (now_level >= 3 && now_level <= 6) {
-        return 1.2 + now_level * 0.1;
+        return 20 + now_level * 10;
     } else if (now_level >= 7 && now_level <= 10) {
-        return 1.5 + now_level * 0.05;
+        return 50 + now_level * 5;
     } else if (now_level > 10) {
-        return 2;
+        return 100;
+    }
+}
+//技能的常态等级加成计算函数2号
+function skill_rewards_2(now_level) {
+    //等级  0  1  2  3  4  5  6  7  8  9  10
+    //加成  0  5  10 15 20 25 30 35 40 45 50
+    if (now_level <= 0) {
+        return 0;
+    } else {
+        return now_level * 5;
     }
 }
 export {

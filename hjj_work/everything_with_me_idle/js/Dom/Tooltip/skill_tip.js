@@ -201,8 +201,8 @@ function init_show_passive_skill_tip(skill_obj) {
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
     name_lable.innerHTML = skill_obj.name; //技能名
     //描述
-    let desc_lable = addElement(Tooltip, 'div', null, 'lable_down');
-    desc_lable.innerHTML = skill_obj.desc; //技能描述
+    // let desc_lable = addElement(Tooltip, 'div', null, 'lable_down');
+    // desc_lable.innerHTML = skill_obj.desc; //技能描述
     //被动技能类型和等级
     show_passive_skill_type(Tooltip, skill_obj);
     //追加展示技能等级相关
@@ -210,6 +210,7 @@ function init_show_passive_skill_tip(skill_obj) {
     //追加展示被动技能的常态等级加成
     show_passive_skill_rewards(Tooltip, skill_obj.rewards);
     //追加展示被动技能的关键等级节点加成
+    show_passive_skill_milepost(Tooltip, skill_obj);
 }
 //追加展示被动技能的类型和等级
 function show_passive_skill_type(div, skill_obj) {
@@ -288,31 +289,84 @@ function show_passive_skill_rewards(div, rewards) {
         return true;
     }
 
-    let rewards_div;
     if (rewards.length == 1) {
         //如果常态等级的加成只有一条属性，就直接居中显示
-        rewards_div = addElement(div, 'div', null, 'lable_down');
-        let attr = rewards[0].attr;
-        let attr_name = texts[attr].attr_name;
-        let ch = attr_name + '：' + rewards[0].data;
+        let rewards_div = addElement(div, 'div', null, 'lable_down');
+        let attr_id = rewards[0].attr;
+        let attr_name = get_attr_name(attr_id);
+        let ch;
+        if (enums['need_per_cent_attr'].includes(attr_id)) {
+            ch = attr_name + '：' + rewards[0].data + '%';
+        } else {
+            ch = attr_name + '：' + rewards[0].data;
+        }
         rewards_div.innerHTML = ch;
     } else {
         //如果有多条属性，就每行两个依次往下排列
-        rewards_div = addElement(div, 'div', null, 'page_columns_11');
+        let rewards_div = addElement(div, 'div', null, 'page_columns_11');
         for (let reward_obj of rewards) {
             let attr_div = addElement(rewards_div, 'div', null, 'table_2_value');
 
-            let attr = reward_obj.attr;
-            let attr_name = addElement(attr_div, 'div', null, 'TLV_left');
-            // if (texts[attr].attr_name.length > 4) {
-            // attr_name.innerHTML = texts[attr].min_attr_name + '：'; //完整名称太长,选用简称
-            // } else {
-            attr_name.innerHTML = texts[attr].attr_name + '：';
-            // }
-            let attr_value = addElement(attr_div, 'div', null, 'TLV_right');
-            attr_value.innerHTML = reward_obj.data;
+            let attr_id = reward_obj.attr;
+            let attr_name_div = addElement(attr_div, 'div', null, 'TLV_left');
+            attr_name_div.innerHTML = get_attr_name(attr_id) + '：';
+            let attr_value_div = addElement(attr_div, 'div', null, 'TLV_right');
+            if (enums['need_per_cent_attr'].includes(attr_id)) {
+                attr_value_div.innerHTML = reward_obj.data + '%';
+            } else {
+                attr_value_div.innerHTML = reward_obj.data;
+            }
         }
     }
+}
+//追加展示被动技能的关键节点加成
+function show_passive_skill_milepost(div, skill_obj) {
+    let skill_id = skill_obj.id;
+    //这个技能没有关键节点加成
+    if (is_Empty_Object(P_skills[skill_id].milepost)) {
+        return true;
+    }
+    let milepost_div = addElement(div, 'div', null, 'lable_end');
+
+    for (let milepost_level in P_skills[skill_id].milepost) {
+        if (skill_obj.level >= milepost_level) {
+            //玩家达到了的关键节点，显示对应数值
+            let ch = '等级' + milepost_level + '奖励：';
+            let milepost_array = P_skills[skill_id].milepost[milepost_level];
+            for (let i in milepost_array) {
+                let obj = milepost_array[i];
+                let attr_id = obj.attr;
+                let attr_name = get_attr_name(attr_id); //属性名
+                let attr_data = obj.data; //属性数值
+                if (i == 0) {
+                    ch = ch + attr_name + '：' + attr_data;
+                } else {
+                    ch = ch + '，' + attr_name + '：' + attr_data;
+                }
+            }
+            let a_milepost_div = addElement(milepost_div, 'div', null, 'lable_down');
+            a_milepost_div.innerHTML = ch;
+        } else {
+            //玩家没达到的关键节点，用问号显示，且只显示一条
+            let a_milepost_div = addElement(milepost_div, 'div', null, 'lable_down');
+            let ch = '等级？？奖励：？？？';
+            a_milepost_div.innerHTML = ch;
+            break;
+        }
+    }
+}
+function get_attr_name(attr_id) {
+    let attr_name;
+    if (is_Empty_Object(texts[attr_id].attr_name)) {
+        console.log('%s属性名称未定义', attr_id);
+    }
+
+    // if (texts[attr].attr_name.length > 4) {
+    // attr_name = texts[attr_id].min_attr_name; //完整名称太长,选用简称
+    // } else {
+    attr_name = texts[attr_id].attr_name;
+    // }
+    return attr_name;
 }
 
 export { init_skill_tip };

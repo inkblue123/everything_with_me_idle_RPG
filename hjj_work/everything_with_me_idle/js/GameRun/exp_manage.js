@@ -27,6 +27,8 @@ export class Leveling_Behavior {
         //战斗中即时获取的参数
         this.attack_num = 0; //攻击次数
         this.attack_damage = 0; //攻击伤害
+        //伐木技能需要的参数
+        this.LGI_damage = 0; //伐木伤害
     }
 }
 
@@ -56,6 +58,10 @@ export class Exp_manage {
     set_combat_leveling_behavior(attack_num, attack_damage) {
         this.leveling_behavior.attack_num += attack_num;
         this.leveling_behavior.attack_damage += attack_damage;
+    }
+    //记录战斗时发生的练级行为
+    set_logging_leveling_behavior(LGI_damage) {
+        this.leveling_behavior.LGI_damage += LGI_damage;
     }
     //记录其他练级行为
     set_leveling_behavior() {

@@ -388,14 +388,17 @@ export class Player_active_skills_Manage {
         } else if (effect.attack_num.type == 'fixed') {
             this.main_Attack.attack_num = effect.attack_num.num;
         }
+        //结算技能补正
+
         //基础数值等于攻击力+属性补正
         //计算属性补正
         let askill_base_attr = get_Askill_base_attr(start_skill.attr_correct, this.player_end_attr);
-        askill_base_attr = askill_base_attr + this.player_end_attr['attack'];
+        askill_base_attr = this.player_end_attr['attack'] * (1 + askill_base_attr * 0.01);
 
         //计算攻击效果
         let algorithm = start_skill.algorithm;
         Attack_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);
+
         //玩家属性里如果有伤害增幅的属性，现在就结算
         if (!is_Empty_Object(this.player_end_attr['sword_damage'])) {
             //剑造成的伤害增加

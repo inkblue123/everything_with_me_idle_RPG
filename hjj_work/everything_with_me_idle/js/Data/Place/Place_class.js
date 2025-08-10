@@ -128,14 +128,14 @@ export class P_normal extends Place {
         this.LGI_reborn_time = reborn_time;
     }
     //设置这个地点伐木时可能出现的树
-    set_logging_tree(id, chance, infinite_flag, max_cumulative_num, cumulative_time) {
+    set_logging_tree(id, chance, rare_flag, max_cumulative_num, cumulative_time) {
         if (is_Empty_Object(this.LGI_trees)) {
             this.LGI_trees = new Object();
         }
         let obj = new Object();
         obj.id = id; //树的id
         obj.chance = chance; //树的刷新权重
-        obj.infinite_flag = infinite_flag; //树是否可以无限刷新
+        obj.rare_flag = rare_flag; //树是否可以无限刷新
         obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
         obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
         this.LGI_trees[id] = obj;

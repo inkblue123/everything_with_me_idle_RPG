@@ -208,6 +208,12 @@ export class Global_flag_manage {
         let exp_manage = global.get_exp_manage();
         exp_manage.set_combat_leveling_behavior(attack_num, attack_damage);
     }
+    //玩家行为-伐木行为记录
+    record_logging_behavior(LGI_damage) {
+        let exp_manage = global.get_exp_manage();
+        exp_manage.set_logging_leveling_behavior(LGI_damage);
+    }
+
     //玩家行为-正常完成了某个事件
     record_event_finish_end(id) {
         let game_event_manage = global.get_game_event_manage();

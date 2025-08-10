@@ -6,6 +6,7 @@ import { init_Text_skill } from './Text_skill/Text_skill.js';
 import { init_Text_game_event } from './Text_game_event.js';
 import { init_Text_div } from './Text_div.js';
 import { init_Text_buff } from './Text_buff.js';
+import { init_Text_attr } from './Text_attr.js';
 
 var texts = new Object();
 
@@ -25,5 +26,7 @@ init_Text_game_event(texts);
 init_Text_div(texts);
 //初始化文本数据库中与buff相关的文本
 init_Text_buff(texts);
+//初始化文本数据库中与属性名称相关的文本
+init_Text_attr(texts);
 
 export { texts };

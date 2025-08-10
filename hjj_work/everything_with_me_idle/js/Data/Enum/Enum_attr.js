@@ -41,6 +41,9 @@ function init_Enum_attr(enums) {
     enums['need_per_cent_attr'] = [
         'critical_chance', //暴击率
         'critical_damage', //暴击伤害
+        'sword_damage', //增加用剑造成的伤害
+        'axe_LGI_damage', //增加斧头伐木造成的伤害
+        'gloves_LGI_damage', //增加空手伐木造成的伤害
     ];
 }
 

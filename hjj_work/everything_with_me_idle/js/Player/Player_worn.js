@@ -238,6 +238,10 @@ export class Player_worn {
         if (attribute_show.style.display == '') {
             attribute_show.style.display = 'none';
             equipment_show.style.display = '';
+            const PA_switch_button = document.getElementById('PA_switch_button');
+            const EQP_switch_button = document.getElementById('EQP_switch_button');
+            EQP_switch_button.style.display = 'none';
+            PA_switch_button.style.display = '';
         }
         //切换到当前激活的的装备栏上
         for (let EQP_column of equipment_show.children) {

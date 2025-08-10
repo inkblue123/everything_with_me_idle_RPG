@@ -88,8 +88,10 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
         //切换属性和装备栏的按钮
         var Player_attr_switch_div = crtElement('div', 'Player_attr_switch_div', 'page_columns_12', '');
         var PA_switch_div = addElement(Player_attr_switch_div, 'div', 'PA_switch_div', 'page_columns_1');
-        var PA_switch_button = addElement(PA_switch_div, 'button', null, 'PA_switch_button');
+        var PA_switch_button = addElement(PA_switch_div, 'button', 'PA_switch_button', 'PA_switch_button', 'none');
         PA_switch_button.innerHTML = `属性\n展示`;
+        var EQP_switch_button = addElement(PA_switch_div, 'button', 'EQP_switch_button', 'PA_switch_button', '');
+        EQP_switch_button.innerHTML = `装备\n展示`;
         var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', 'page_auto_columns');
         for (let i = 0; i < 4; i++) {
             var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'radio_div EQP_switch_radio_div');
@@ -232,9 +234,16 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
 
     //角色名文本框，实时修改角色名称
     Player_name.addEventListener('change', updata_player_name);
-    //角色属性界面切换开关
+    //角色属性和装备栏界面切换开关
     PA_switch_button.onclick = function () {
         change_PA();
+        PA_switch_button.style.display = 'none';
+        EQP_switch_button.style.display = '';
+    };
+    EQP_switch_button.onclick = function () {
+        change_PA();
+        EQP_switch_button.style.display = 'none';
+        PA_switch_button.style.display = '';
     };
     //角色装备栏切换开关
     let radios = player_status.querySelectorAll('input[type="radio"][name="EQP_switch"]');

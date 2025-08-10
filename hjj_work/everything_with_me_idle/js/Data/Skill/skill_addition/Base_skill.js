@@ -7,7 +7,7 @@ function init_base_Active_skill(B_skills) {
     add_P_Active_skill(B_skills, id);
     B_skills[id].active_condition = { damage_type: ['melee'] }; //武器需要是近战类型
     B_skills[id].active_type = 'attack'; //攻击类型主动技能
-    B_skills[id].attr_correct = { power: 1 }; //哪些属性作为基础数值进行计算
+    B_skills[id].attr_correct = { power: 5 }; //哪些属性作为基础数值进行计算
     B_skills[id].algorithm = 1; //使用哪个算法进行计算
     B_skills[id].start_time = 'end'; //结束时计算
     //技能效果
@@ -27,7 +27,7 @@ function init_base_Active_skill(B_skills) {
     add_P_Active_skill(B_skills, id);
     B_skills[id].active_condition = {}; //无要求
     B_skills[id].active_type = 'auxiliary'; //辅助类型
-    B_skills[id].attr_correct = { power: 1 }; //哪些属性作为基础数值进行计算
+    B_skills[id].attr_correct = { power: 5 }; //哪些属性作为基础数值进行计算
     B_skills[id].algorithm = 1; //使用哪个算法进行计算
     B_skills[id].start_time = 'end'; //结束时计算
     //技能效果
@@ -41,7 +41,7 @@ function init_base_Active_skill(B_skills) {
     add_P_Active_skill(B_skills, id);
     B_skills[id].active_condition = { weapon_type: ['shield'] }; //无要求
     B_skills[id].active_type = 'defense'; //防御类型
-    B_skills[id].attr_correct = { power: 1 }; //哪些属性作为基础数值进行计算
+    B_skills[id].attr_correct = { power: 5 }; //哪些属性作为基础数值进行计算
     B_skills[id].algorithm = 1; //使用哪个算法进行计算
     B_skills[id].start_time = 'start'; //启动时计算
     //技能效果

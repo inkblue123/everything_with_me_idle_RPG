@@ -267,27 +267,41 @@ export class Logging_manage {
     //更新角色属性或者伐木模式
     updata_player_data(player_end_attr) {
         if (player_end_attr) this.player_end_attr = player_end_attr;
-        if (this.now_LGI_way == 'LGI_F_way') {
-            //快速伐木
-            this.true_LGI_speed = this.player_end_attr['LGI_speed'];
-        } else if (this.now_LGI_way == 'LGI_M_way') {
-            //精细伐木
-            this.true_LGI_speed = this.player_end_attr['LGI_speed'] * 1.5;
-        }
+        //更新伐木时的玩家参数
+        this.updata_true_LGI_data();
     }
     //伐木模式切换，更新数值
     updata_logger_way(now_way) {
         this.now_LGI_way = now_way;
-        if (this.now_LGI_way == 'LGI_F_way') {
-            //快速伐木
-            this.true_LGI_speed = this.player_end_attr['LGI_speed'];
-        } else if (this.now_LGI_way == 'LGI_M_way') {
-            //精细伐木
-            this.true_LGI_speed = this.player_end_attr['LGI_speed'] * 1.5;
-        }
+        //更新伐木时的玩家参数
+        this.updata_true_LGI_data();
         this.reset_round();
     }
+    //更新伐木时的玩家参数
+    updata_true_LGI_data() {
+        //伐木速度
+        this.true_LGI_speed = this.player_end_attr['LGI_speed'];
+        //武器类型的伐木速度增幅
+        for (let weapon_type of this.player_end_attr['weapon_type']) {
+            let speed_attr_name = weapon_type + '_LGI_speed';
+            if (!is_Empty_Object(this.player_end_attr[speed_attr_name])) {
+                this.true_LGI_speed += this.player_end_attr[speed_attr_name];
+            }
+        }
+        //伐木暴击率
+        this.true_LGI_critical_chance = this.player_end_attr['LGI_critical_chance'];
+        //伐木暴击伤害
+        this.true_LGI_critical_damage = this.player_end_attr['LGI_critical_damage'];
 
+        if (this.now_LGI_way == 'LGI_M_way') {
+            //精细伐木有数值补正
+            this.true_LGI_speed = this.player_end_attr['LGI_speed'] * 1.5;
+            this.true_LGI_critical_chance = this.player_end_attr['LGI_critical_chance'] + 30;
+            this.true_LGI_critical_damage = this.player_end_attr['LGI_critical_damage'] + 50;
+        } else if (this.now_LGI_way == 'LGI_F_way') {
+            //快速伐木没有属性补正，就等于玩家属性
+        }
+    }
     //树活着的砍伐逻辑
     tree_live_logging() {
         this.now_round_time = this.now_time - this.round_start_time;
@@ -297,24 +311,19 @@ export class Logging_manage {
             return;
         }
         //到时候了，准备砍一下树
-        let LGI_attack = this.player_end_attr['LGI_attack'];
-        if (this.now_LGI_way == 'LGI_F_way') {
-            //快速伐木
-            this.true_LGI_critical_chance = this.player_end_attr['LGI_critical_chance'];
-            this.true_LGI_critical_damage = this.player_end_attr['LGI_critical_damage'];
-        } else if (this.now_LGI_way == 'LGI_M_way') {
-            //精细伐木
-            this.true_LGI_critical_chance = this.player_end_attr['LGI_critical_chance'] + 30;
-            this.true_LGI_critical_damage = this.player_end_attr['LGI_critical_damage'] + 50;
-        }
-
+        //获取伐木伤害
+        let LGI_damage = this.get_LGI_damage();
         //是否暴击
         let random = get_random(0, 100);
         if (random < this.true_LGI_critical_chance) {
-            LGI_attack = LGI_attack * (this.true_LGI_critical_damage * 0.01);
+            LGI_damage = LGI_damage * (this.true_LGI_critical_damage * 0.01);
         }
+        //砍到树身上
+        this.tree_manage.attack_tree(LGI_damage);
 
-        this.tree_manage.attack_tree(LGI_attack);
+        //记录砍了多少伤害，用于结算伐木技能的经验
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.record_logging_behavior(LGI_damage);
 
         if (!this.tree_manage.get_tree_statu()) {
             //树死了，进入掉落物品逻辑
@@ -327,7 +336,7 @@ export class Logging_manage {
             }
             //如果这棵树是稀有的树，需要处理积累数量
             let tree_id = this.tree_manage.get_tree_id();
-            if (!places[this.now_place].LGI_trees[tree_id].infinite_flag) {
+            if (places[this.now_place].LGI_trees[tree_id].rare_flag) {
                 this.last_logger_place_data[this.now_place][tree_id].cumulative_num--;
             }
         }
@@ -373,8 +382,8 @@ export class Logging_manage {
             //没有当前地点的缓存，生成缓存数据
             let obj = new Object();
             for (let id in LGI_trees) {
-                //可以无限刷新的树不需要记录缓存
-                if (LGI_trees[id].infinite_flag) continue;
+                //不稀有的树不需要记录缓存
+                if (!LGI_trees[id].rare_flag) continue;
 
                 //
                 obj[id] = new Object();
@@ -424,18 +433,20 @@ export class Logging_manage {
         }
         //得到了tree_id
 
-        if (LGI_trees[tree_id].infinite_flag) {
-            //随机得到的树可以无限刷新，那本次随机就是它了
+        if (!LGI_trees[tree_id].rare_flag) {
+            //随机得到的树不是稀有树，那本次随机就是它了
             return tree_id;
         } else {
-            //随机得到的树是数量有限的，查看缓存中是否还有数量
+            //随机得到的树是稀有树，查看缓存中是否还有数量
             if (this.last_logger_place_data[this.now_place][tree_id].cumulative_num <= 0) {
                 //没了，随机选一个可以无限刷新的id
                 let keys = new Array();
                 for (let id in LGI_trees) {
-                    if (LGI_trees[tree_id].infinite_flag) keys.push(id);
+                    if (!LGI_trees[tree_id].rare_flag) {
+                        keys.push(id);
+                    }
                 }
-                //这个地点没有可以无限刷新的树，不可刷新
+                //这个地点没有可以非稀有的树，不可刷新
                 if (keys.length <= 0) return false;
 
                 let random = get_random(1, keys.length);
@@ -450,6 +461,27 @@ export class Logging_manage {
     //获取伐木攻击进度比例
     get_attack_ratio() {
         return `${(this.now_round_time / (this.true_LGI_speed * 1000)) * 100}%`;
+    }
+    //获取最终伐木伤害
+    get_LGI_damage() {
+        //战斗时的伤害计算流程有5个阶段
+        //计算最终面板，结算技能补正，结算技能伤害，结算伤害增幅，伤害打到敌人结算
+        //而在伐木中，只有计算最终面板，结算伤害增幅，伤害打到敌人结算，这三个阶段
+        //计算最终面板实际上在玩家属性类中已经实时的更新完成了
+        //伐木的敌人并没有防御和闪避
+        //因此此处只需要计算伐木的伤害增幅即可
+        let LGI_attack = this.player_end_attr['LGI_attack'];
+
+        let damage_add = 0;
+        //武器类型伤害增幅
+        for (let weapon_type of this.player_end_attr['weapon_type']) {
+            let damage_attr_name = weapon_type + '_LGI_damage';
+            if (!is_Empty_Object(this.player_end_attr[damage_attr_name])) {
+                damage_add += this.player_end_attr[damage_attr_name];
+            }
+        }
+        let LGI_damage = LGI_attack * (1 + damage_add * 0.01);
+        return LGI_damage;
     }
     //树刚刚复活时，将新复活的树的信息展示出来
     show_new_tree_div() {
