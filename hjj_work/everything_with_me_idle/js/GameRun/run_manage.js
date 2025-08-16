@@ -37,7 +37,7 @@ function updata_game_data() {
         let combat_manage = global.get_combat_manage();
         combat_manage.run_combat();
         //刷出新怪
-        global.add_new_enemy();
+        enemy_manage.add_new_enemy();
     } else if (enums['live_plan_GS'].includes(now_GS)) {
         //当前处于生活技能状态，更新数值
         let live_plan_manage = global.get_live_plan_manage();

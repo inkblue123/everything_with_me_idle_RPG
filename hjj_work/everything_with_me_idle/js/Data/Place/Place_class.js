@@ -118,6 +118,9 @@ export class P_normal extends Place {
     set_live_plan_flag(flag) {
         //伐木、钓鱼、挖矿、采集、潜水、考古、探索
         //这些是探索采集类的生活技能，通过这个函数设置
+        //用二进制数字的01来表示是否可执行
+        //比如输入flag=1，二进制就是0000001，从最小的位置开始排，就是只允许第一个技能，也就是伐木
+        //如果希望允许钓鱼、采集、潜水，就是0011010，也就是需要输入flag=26
         for (let i = 0; i < 7; i++) {
             this.live_plan_flag[i] = flag % 2;
             flag = parseInt(flag / 2);
@@ -127,6 +130,30 @@ export class P_normal extends Place {
     set_logging_data(reborn_time) {
         this.LGI_reborn_time = reborn_time;
     }
+    //设置这个地点的钓鱼相关参数
+    set_fishing_data() {
+        // this.LGI_reborn_time = reborn_time;
+    }
+    //设置这个地点的挖矿相关参数
+    set_mining_data() {
+        // this.LGI_reborn_time = reborn_time;
+    }
+    //设置这个地点的采集相关参数
+    set_foraging_data(defense) {
+        this.FAG_defense = defense;
+    }
+    //设置这个地点的潜水相关参数
+    set_diving_data() {
+        // this.LGI_reborn_time = reborn_time;
+    }
+    //设置这个地点的考古相关参数
+    set_archaeology_data() {
+        // this.LGI_reborn_time = reborn_time;
+    }
+    //设置这个地点的探索相关参数
+    set_exploration_data() {
+        // this.LGI_reborn_time = reborn_time;
+    }
     //设置这个地点伐木时可能出现的树
     set_logging_tree(id, chance, rare_flag, max_cumulative_num, cumulative_time) {
         if (is_Empty_Object(this.LGI_trees)) {
@@ -135,10 +162,23 @@ export class P_normal extends Place {
         let obj = new Object();
         obj.id = id; //树的id
         obj.chance = chance; //树的刷新权重
-        obj.rare_flag = rare_flag; //树是否可以无限刷新
+        obj.rare_flag = rare_flag; //树是否属于稀有单位
         obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
         obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
         this.LGI_trees[id] = obj;
+    }
+    //设置这个地点采集时可能的产物
+    set_foraging_item(id, chance, rare_flag, max_cumulative_num, cumulative_time) {
+        if (is_Empty_Object(this.FAG_item)) {
+            this.FAG_item = new Object();
+        }
+        let obj = new Object();
+        obj.id = id; //物品id
+        obj.chance = chance; //物品掉落权重
+        obj.rare_flag = rare_flag; //物品是否属于稀有物品
+        obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
+        obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
+        this.FAG_item[id] = obj;
     }
 }
 //战斗地点
@@ -297,6 +337,15 @@ export class P_store extends Place {
         this.goods.push(good_obj);
     }
 }
+//资源地点
+export class P_resource extends Place {
+    constructor(place_id, area_id) {
+        super(place_id, area_id);
+        this.type = 'resource';
+    }
+
+    set_resource_type() {}
+}
 
 function add_Place_object(places, newid, area) {
     if (places[newid] === undefined) {
@@ -333,5 +382,19 @@ function add_store_Place(places, newid, area) {
         console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
     }
 }
+function add_resource_Place(places, newid, area) {
+    if (places[newid] === undefined) {
+        places[newid] = new P_resource(newid, area);
+    } else {
+        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+    }
+}
 
-export { add_Place_object, add_normal_Place, add_combat_Place, add_NPC_Place, add_store_Place };
+export {
+    add_Place_object,
+    add_normal_Place, //
+    add_combat_Place,
+    add_NPC_Place,
+    add_store_Place,
+    add_resource_Place,
+};

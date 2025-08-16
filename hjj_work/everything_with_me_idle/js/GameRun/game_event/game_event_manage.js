@@ -232,7 +232,7 @@ export class Game_event_manage {
         this.end_challenge('finish');
     }
     //获取游戏事件类部分的游戏存档
-    save_Game_event_class() {
+    save_Game_event_manage() {
         let game_event_save = new Object();
         game_event_save.main_quest_save = this.main_quest_manage.save_main_quest_manage();
         game_event_save.side_quest_save = this.side_quest_manage.save_side_quest_manage();
@@ -241,7 +241,7 @@ export class Game_event_manage {
         return game_event_save;
     }
     //加载游戏事件类的游戏存档
-    load_Game_event_class(game_event_save) {
+    load_Game_event_manage(game_event_save) {
         if (is_Empty_Object(game_event_save)) {
             return;
         }

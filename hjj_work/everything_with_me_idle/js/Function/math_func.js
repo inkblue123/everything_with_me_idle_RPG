@@ -41,7 +41,7 @@ function format_numbers(input) {
 
     // 处理数组
     if (Array.isArray(input)) {
-        return input.map((item) => formatNumbers(item));
+        return input.map((item) => format_numbers(item));
     }
 
     // 处理对象
@@ -55,7 +55,7 @@ function format_numbers(input) {
                 result[key] = Math.round(value);
             } else if (typeof value === 'object' && value !== null) {
                 // 递归处理嵌套对象或数组
-                result[key] = formatNumbers(value);
+                result[key] = format_numbers(value);
             } else {
                 // 其他类型（字符串、布尔值等）直接保留
                 result[key] = value;

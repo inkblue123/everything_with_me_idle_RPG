@@ -142,13 +142,13 @@ export class Time_manage {
         return this.game_date;
     }
     //获取时间类部分的游戏存档
-    save_Time_class() {
+    save_Time_manage() {
         let Time_save = new Object();
         Time_save.game_date = this.game_date; //当前游戏日期
         return Time_save;
     }
     //加载时间类的游戏存档
-    load_Time_class(Time_save) {
+    load_Time_manage(Time_save) {
         if (is_Empty_Object(Time_save)) {
             return;
         }

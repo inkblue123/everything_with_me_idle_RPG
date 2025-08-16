@@ -52,10 +52,10 @@ export class Enemy {
         this.survival_attr['magic_max'] = magic_max; //最大魔力上限
         this.survival_attr['energy_max'] = energy_max; //最大精力上限
     }
-    create_item_array(chance) {
+    create_item_array(drop_chance) {
         let obj = new Object();
-        obj.item = new Array();
-        obj.item_chance = chance;
+        obj.items = new Object();
+        obj.drop_chance = drop_chance;
         this.item_array.push(obj);
     }
     //给这个敌人添加一个可掉落物品
@@ -70,7 +70,7 @@ export class Enemy {
             console.log('未定义%d掉落列表', item_array_id);
             return;
         }
-        this.item_array[item_array_id].item.push(item_obj);
+        this.item_array[item_array_id].items[item_id] = item_obj;
     }
 }
 //伐木技能中的敌人
@@ -90,13 +90,13 @@ export class E_tree extends Enemy {
         this.reward_level_time = time;
     }
     //创建掉落物奖励层级
-    create_item_array(level, chance) {
+    create_item_array(level, drop_chance) {
         if (is_Empty_Object(this.reward_level_item[level])) {
             this.reward_level_item[level] = new Array();
         }
         let obj = new Object();
-        obj.item = new Array();
-        obj.item_chance = chance;
+        obj.items = new Object();
+        obj.drop_chance = drop_chance;
         this.reward_level_item[level].push(obj);
     }
     //给这个敌人添加一个可掉落物品
@@ -111,7 +111,7 @@ export class E_tree extends Enemy {
             console.log('未定义%d掉落层级', level);
             return;
         }
-        this.reward_level_item[level][item_array_id].item.push(item_obj);
+        this.reward_level_item[level][item_array_id].items[item_id] = item_obj;
     }
 }
 function add_Enemy_object(enemys, newid) {

@@ -72,6 +72,7 @@ class Tree_manage {
             console.log('id为%s的树没有定义%d档的奖励', this.id, reward_level);
             return;
         }
+        let random_manage = global.get_random_manage(); //随机数管理类
         let drop_item_arry = new Array();
         let enemy_reward_level_data = enemys[this.id].reward_level_item[reward_level];
         //获取敌人有几个掉落列表，对每个掉落列表进行一次判定
@@ -79,19 +80,17 @@ class Tree_manage {
         for (let i = 0; i < n; i++) {
             //根据掉落概率，判断这个列表里的物品要掉几次
             let enemy_item_array = enemy_reward_level_data[i];
-            let chance = enemy_item_array.item_chance; //掉率
+            let chance = enemy_item_array.drop_chance; //掉率
             let drop_times = parseInt(chance / 100);
             chance = chance % 100;
-            let random = get_random(0, 99);
-            if (random < chance) {
+            let random = get_random(0, 100);
+            if (random <= chance) {
                 drop_times += 1;
             }
             for (let j = 0; j < drop_times; j++) {
                 //根据权重，获取掉落哪一个物品
-                random = this.get_random_chance_drop(enemy_item_array);
-
-                let data_obj = enemy_item_array.item[random];
-                let item_id = data_obj.id; //这次掉落的物品的id
+                let item_id = random_manage.get_tree_death_item_id(this.id, reward_level, i);
+                let data_obj = enemy_item_array.items[item_id];
 
                 let item_obj = new Object();
                 item_obj.id = item_id;
@@ -121,25 +120,6 @@ class Tree_manage {
         }
         return uniqueArr;
     }
-    //根据能掉落的的所有物品概率权重，随机得到一个物品的序号
-    get_random_chance_drop(enemy_item_array) {
-        let drop_items = enemy_item_array.item;
-        let all_chance = 0;
-        for (let id in drop_items) {
-            all_chance += drop_items[id].chance;
-        }
-        let chance = get_random(0, all_chance);
-        let num = 0;
-        for (let id in drop_items) {
-            if (chance > drop_items[id].chance) {
-                chance -= drop_items[id].chance;
-                num++;
-            } else {
-                break;
-            }
-        }
-        return num;
-    }
     //获取血量比例
     get_HP_ratio() {
         return `${(this.health_point / this.health_max) * 100}%`;
@@ -166,7 +146,7 @@ export class Logging_manage {
         this.tree_manage = new Tree_manage(); //伐木的目标对象
     }
     //获取伐木技能管理对象的存档
-    save_logging_class() {
+    save_logging_manage() {
         let logging_save = new Object();
         //获取每个子对象的存档
         //伐木管理对象
@@ -176,7 +156,7 @@ export class Logging_manage {
         return logging_save;
     }
     //加载伐木技能存档
-    load_Logging_class(logging_save) {
+    load_Logging_manage(logging_save) {
         if (is_Empty_Object(logging_save)) {
             return;
         }
@@ -204,6 +184,7 @@ export class Logging_manage {
     //地点变化时，对伐木界面特殊更新
     updata_super_game_div(next_place) {
         //地点的生活技能可用标记第0个是伐木
+        // 伐木、钓鱼、挖矿、采集、潜水、考古、探索
         if (places[next_place].live_plan_flag[0]) {
             //新地点可以伐木，会正常调用set_new_place函数，不需要这里特殊处理
             return;
@@ -313,11 +294,6 @@ export class Logging_manage {
         //到时候了，准备砍一下树
         //获取伐木伤害
         let LGI_damage = this.get_LGI_damage();
-        //是否暴击
-        let random = get_random(0, 100);
-        if (random < this.true_LGI_critical_chance) {
-            LGI_damage = LGI_damage * (this.true_LGI_critical_damage * 0.01);
-        }
         //砍到树身上
         this.tree_manage.attack_tree(LGI_damage);
 
@@ -418,20 +394,8 @@ export class Logging_manage {
             return false;
         }
         //根据权重获得id
-        let all_chance = 0;
-        for (let id in LGI_trees) {
-            all_chance += LGI_trees[id].chance;
-        }
-        let chance = get_random(0, all_chance);
-        let tree_id;
-        for (tree_id in LGI_trees) {
-            if (chance > LGI_trees[tree_id].chance) {
-                chance -= LGI_trees[tree_id].chance;
-            } else {
-                break;
-            }
-        }
-        //得到了tree_id
+        let random_manage = global.get_random_manage(); //随机数管理类
+        let tree_id = random_manage.get_place_add_tree_id(this.now_place);
 
         if (!LGI_trees[tree_id].rare_flag) {
             //随机得到的树不是稀有树，那本次随机就是它了
@@ -464,12 +428,9 @@ export class Logging_manage {
     }
     //获取最终伐木伤害
     get_LGI_damage() {
-        //战斗时的伤害计算流程有5个阶段
-        //计算最终面板，结算技能补正，结算技能伤害，结算伤害增幅，伤害打到敌人结算
-        //而在伐木中，只有计算最终面板，结算伤害增幅，伤害打到敌人结算，这三个阶段
-        //计算最终面板实际上在玩家属性类中已经实时的更新完成了
-        //伐木的敌人并没有防御和闪避
-        //因此此处只需要计算伐木的伤害增幅即可
+        //伐木的伤害计算流程有5个阶段
+        //计算最终面板，伤害增幅结算，暴击结算，伤害打到树上结算
+        // 这里进行结算伤害增幅和结算暴击
         let LGI_attack = this.player_end_attr['LGI_attack'];
 
         let damage_add = 0;
@@ -481,6 +442,12 @@ export class Logging_manage {
             }
         }
         let LGI_damage = LGI_attack * (1 + damage_add * 0.01);
+
+        //暴击结算
+        let random_manage = global.get_random_manage(); //随机数管理类
+        if (random_manage.try_critical(this.true_LGI_critical_chance)) {
+            LGI_damage = LGI_damage * (this.true_LGI_critical_damage * 0.01);
+        }
         return LGI_damage;
     }
     //树刚刚复活时，将新复活的树的信息展示出来
@@ -497,8 +464,8 @@ export class Logging_manage {
             //每一级奖励中可能有多组掉落列表，遍历每一个掉落列表
             for (let drop_array of reward_level) {
                 //每个掉落列表里有多个可能的掉落物，获取所有掉落物
-                for (let item of drop_array.item) {
-                    drop_item_arry.push(item.id);
+                for (let item_id in drop_array.items) {
+                    drop_item_arry.push(item_id);
                 }
             }
         }

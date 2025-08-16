@@ -24,7 +24,7 @@ function make_logging_div(LGI_value_div) {
     let drop_table_scroll_box = addElement(
         LGI_drop_table_div,
         'div',
-        'drop_table_scroll_box',
+        'LGI_drop_table_scroll_box',
         'LP_div overflow_y_div',
         ''
     );
@@ -86,15 +86,16 @@ function make_logging_div(LGI_value_div) {
     addElement_radio(LGI_M_way_radio_div, `LGI_M_way`, 'LGI_switch', `LGI_M_way`, `精细伐木`);
 
     //中部右侧
-    var LGI_R_button = addElement(LGI_middle_div, 'button', 'LGI_R_button');
+    var LGI_R_button = addElement(LGI_middle_div, 'button', 'LGI_R_button', 'LP_button');
     LGI_R_button.innerHTML = `更换目标`;
 
     //伐木下部，开始按钮
     let LGI_down_div = addElement(LGI_value_div, 'div', 'LGI_down_div', null, '');
-    LGI_down_div.style.height = '20%';
-    var LGI_S_button = addElement(LGI_down_div, 'button', 'LGI_S_button', null, '');
+    var LGI_S_button = addElement(LGI_down_div, 'button', 'LGI_S_button', 'LP_button', '');
+    // var LGI_S_button = addElement(LGI_down_div, 'button', 'LGI_S_button', null, '');
     LGI_S_button.innerHTML = `开始伐木`;
-    var LGI_E_button = addElement(LGI_down_div, 'button', 'LGI_E_button', null, 'none');
+    var LGI_E_button = addElement(LGI_down_div, 'button', 'LGI_E_button', 'LP_button', 'none');
+    // var LGI_E_button = addElement(LGI_down_div, 'button', 'LGI_E_button', null, 'none');
     LGI_E_button.innerHTML = `停止伐木`;
 }
 
@@ -120,7 +121,7 @@ function set_logging_button(LGI_value_div) {
         global.set_flag('GS_game_statu', 'logging');
         //开启一轮伐木，重置伐木的参数
         let live_plan_manage = global.get_live_plan_manage();
-        let logging_manage = live_plan_manage.get_logging_manage();
+        let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
         logging_manage.reset_round();
         //开始伐木按钮切换成停止伐木
         LGI_S_button.style.display = 'none';
@@ -128,19 +129,16 @@ function set_logging_button(LGI_value_div) {
     };
     //停止伐木按钮
     LGI_E_button.onclick = function () {
-        global.set_flag('GS_game_statu', 'NULL');
-        LGI_S_button.style.display = '';
-        LGI_E_button.style.display = 'none';
         let live_plan_manage = global.get_live_plan_manage();
-        let logging_manage = live_plan_manage.get_logging_manage();
+        let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
+        logging_manage.stop_game_statu();
         logging_manage.reset_round();
-        logging_manage.updata_logging_div();
     };
     //更换伐木目标按钮
     let LGI_R_button = LGI_value_div.querySelector('#LGI_R_button');
     LGI_R_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
-        let logging_manage = live_plan_manage.get_logging_manage();
+        let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
         //更换当前伐木目标
         logging_manage.reborn_tree();
         //停止当前伐木动作

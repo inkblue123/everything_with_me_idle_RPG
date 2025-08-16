@@ -5,6 +5,7 @@ import { game_dom_init } from './Dom/Dom.js';
 import { global } from './GameRun/global_manage.js';
 import { player } from './Player/Player.js';
 import { dom } from './Dom/Dom.js';
+import { get_random } from './Function/math_func.js';
 
 window.addEventListener('load', () => {
     //加载游戏布局

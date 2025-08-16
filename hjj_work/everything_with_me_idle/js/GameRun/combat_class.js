@@ -315,25 +315,25 @@ export class Combat_manage {
             //敌人没有掉落品，直接结束
             return;
         }
-        let drop_item_arry = new Array();
+
+        let random_manage = global.get_random_manage(); //随机数管理类
+        let drop_item_arry = new Array(); //掉落物汇总数组
         //获取敌人有几个掉落列表，对每个掉落列表进行一次判定
         let n = enemys[enemy_id].item_array.length;
         for (let i = 0; i < n; i++) {
             //根据掉落概率，判断这个列表里的物品要掉几次
             let enemy_item_obj = enemys[enemy_id].item_array[i];
-            let chance = enemy_item_obj.item_chance; //掉率
+            let chance = enemy_item_obj.drop_chance; //掉率
             let drop_times = parseInt(chance / 100);
             chance = chance % 100;
-            let random = get_random(0, 99);
-            if (random < chance) {
+            let random = get_random(0, 100);
+            if (random <= chance) {
                 drop_times += 1;
             }
             for (let j = 0; j < drop_times; j++) {
                 //根据权重，获取掉落哪一个物品
-                random = this.get_random_chance_drop(enemy_item_obj);
-
-                let data_obj = enemy_item_obj.item[random];
-                let item_id = data_obj.id; //这次掉落的物品的id
+                let item_id = random_manage.get_enemy_death_item_id(enemy_id, i);
+                let data_obj = enemy_item_obj.items[item_id];
 
                 let item_obj = new Object();
                 item_obj.id = item_id;
@@ -362,25 +362,6 @@ export class Combat_manage {
             }
         }
         return uniqueArr;
-    }
-    //根据能掉落的的所有物品概率权重，随机得到一个物品的序号
-    get_random_chance_drop(enemy_item_obj) {
-        let drop_items = enemy_item_obj.item;
-        let all_chance = 0;
-        for (let id in drop_items) {
-            all_chance += drop_items[id].chance;
-        }
-        let chance = get_random(0, all_chance);
-        let num = 0;
-        for (let id in drop_items) {
-            if (chance > drop_items[id].chance) {
-                chance -= drop_items[id].chance;
-                num++;
-            } else {
-                break;
-            }
-        }
-        return num;
     }
 }
 

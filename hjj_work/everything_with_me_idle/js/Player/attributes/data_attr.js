@@ -71,6 +71,8 @@ export class Data_attr_manage {
         this.live_plan_attr['LGI_attack'] = 3; //伐木力
         this.live_plan_attr['LGI_critical_chance'] = 5; //伐木暴击率
         this.live_plan_attr['LGI_critical_damage'] = 150; //伐木暴击伤害
+        this.live_plan_attr['FAG_attack'] = 5; //采集力
+        this.live_plan_attr['FAG_speed'] = 5; //采集速度
 
         //汇总
         this.prevObjects['player_attr'] = JSON.parse(JSON.stringify(this.player_attr));

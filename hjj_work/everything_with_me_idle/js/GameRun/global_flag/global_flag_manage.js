@@ -55,7 +55,7 @@ export class Global_flag_manage {
     }
     init() {}
     //获取游戏标记类的游戏存档
-    save_global_flag_class() {
+    save_global_flag_manage() {
         let global_flag_save = new Object();
         global_flag_save.GS_status = new Object();
         //游戏状态标记
@@ -67,7 +67,7 @@ export class Global_flag_manage {
         return global_flag_save;
     }
     //加载游戏标记类的游戏存档
-    load_global_flag_class(global_flag_save) {
+    load_global_flag_manage(global_flag_save) {
         if (is_Empty_Object(global_flag_save)) {
             return;
         }

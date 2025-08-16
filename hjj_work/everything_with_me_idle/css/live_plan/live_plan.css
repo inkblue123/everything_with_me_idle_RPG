@@ -1,0 +1,69 @@
+@import url('./logging.css');
+@import url('./foraging.css');
+/* 生活规划总界面 */
+#Live_plan {
+    box-sizing: border-box;
+    border: 2px solid #797691; /* 内框 */
+    user-select: none;
+}
+/* 生活规划n个子界面的切换按钮的div */
+#Live_plan_switch_div {
+    height: 10%;
+    background-color: #ffd700;
+}
+/* 生活规划n个子界面的切换按钮 */
+.Live_plan_switch_button {
+    flex: 1;
+    font-size: 15px;
+    border: 1px solid #797691; /* 内框 */
+}
+/* 容纳具体的探索采集合成制造内容的div */
+#Live_plan_value_div {
+    height: 90%;
+}
+/* 探索采集-容纳全部内容的div */
+/* #EC_div {
+    background-color: rgb(255, 0, 0);
+} */
+
+/* 合成制造界面-容纳战斗规划全部内容的div */
+#SM_div {
+    background-color: rgb(72, 255, 0);
+}
+
+.LP_div {
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}
+/* 掉落品的div */
+.drop_value {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    border-bottom: 1px solid #797691;
+}
+/* 生活技能不可用时的遮罩 */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    /* 字体居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 字体颜色 */
+    color: white;
+    /* 字体大小 */
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* 生活技能里统一格式的按钮 */
+.LP_button {
+    width: 70px;
+    height: 45px;
+}

@@ -103,7 +103,7 @@ export class Place_manage {
         return this.last_normal_place;
     }
     //获取地点类部分的游戏存档
-    save_place_class() {
+    save_place_manage() {
         let place_save = new Object();
         place_save.now_place = this.now_place; //当前地点
         place_save.last_normal_place = this.last_normal_place; //上次安全地点
@@ -111,7 +111,7 @@ export class Place_manage {
         return place_save;
     }
     //加载地点类的游戏存档
-    load_place_class(place_save) {
+    load_place_manage(place_save) {
         if (is_Empty_Object(place_save)) {
             return;
         }
@@ -252,35 +252,31 @@ function show_live_plan_div(next_place) {
     let live_plan_id = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
     let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
     for (let i = 0; i < 7; i++) {
+        //单选按钮
+        let radio_id = live_plan_id[i] + '_radio_div';
+        let radio_div = document.getElementById(radio_id);
+
+        //内容界面
+        let value_div_id = live_plan_id[i] + '_value_div';
+        let value_div = document.getElementById(value_div_id);
+
         if (places[next_place].live_plan_flag[i]) {
             //如果地点可以进行对应技能，去掉遮罩
-            //单选按钮
-            let radio_id = live_plan_id[i] + '_radio_div';
-            let radio_div = document.getElementById(radio_id);
-            let overlay = radio_div.querySelector('.overlay');
+            let overlay = radio_div.querySelector('.overlay'); //按钮上的遮罩
             if (overlay) {
                 overlay.remove();
             }
-            //内容界面
-            let value_div_id = live_plan_id[i] + '_value_div';
-            let value_div = document.getElementById(value_div_id);
-            overlay = value_div.querySelector('.overlay');
+            overlay = value_div.querySelector('.overlay'); //内容界面上的遮罩
             if (overlay) {
                 overlay.remove();
             }
         } else {
-            // 不可进行对应技能，去掉遮罩
-            //单选按钮
-            let radio_id = live_plan_id[i] + '_radio_div';
-            let radio_div = document.getElementById(radio_id);
-            let overlay = radio_div.querySelector('.overlay');
+            // 不可进行对应技能，添加遮罩
+            let overlay = radio_div.querySelector('.overlay'); //按钮上的遮罩
             if (!overlay) {
                 addElement(radio_div, 'div', null, 'overlay');
             }
-            //内容界面
-            let value_div_id = live_plan_id[i] + '_value_div';
-            let value_div = document.getElementById(value_div_id);
-            overlay = value_div.querySelector('.overlay');
+            overlay = value_div.querySelector('.overlay'); //内容界面上的遮罩
             if (!overlay) {
                 let value_overlay = addElement(value_div, 'div', null, 'overlay');
                 value_overlay.innerHTML = '这个地点没有' + live_plan_ch[i] + '的条件';

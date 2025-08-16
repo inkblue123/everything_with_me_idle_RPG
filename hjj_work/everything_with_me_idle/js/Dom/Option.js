@@ -1,4 +1,5 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
+import { get_random } from '../Function/math_func.js';
 import { save_game, delete_save, load_save, load_save_show_tip } from '../LoadAndSave/load.js';
 import { player } from '../Player/Player.js';
 import { global } from '../GameRun/global_manage.js';
@@ -80,6 +81,36 @@ var Option = crtElement('div', null, 'option_page', '');
     button10.onclick = function () {
         let enemy_manage = global.get_enemy_manage();
         enemy_manage.add_kill_enemy_num(99);
+    };
+    let button11 = addElement(Option, 'button');
+    button11.innerHTML = '测试';
+    button11.onclick = function () {
+        let x = 1;
+        let chance_arr = new Array();
+        for (let j = 0; j < 100; j++) {
+            let chance = 0;
+            let true_num = 0;
+            let false_num = 0;
+            for (let i = 0; i < 10000; i++) {
+                let random = get_random(0, 100);
+                if (random <= chance) {
+                    true_num++;
+                    chance = 0;
+                } else {
+                    false_num++;
+                    chance += x;
+                }
+            }
+            let all_chance = (true_num / 10000) * 100;
+            chance_arr.push(all_chance);
+            console.log('第%d次尝试，概率为%s', j, all_chance);
+        }
+        let all_chance = 0;
+        for (let chance of chance_arr) {
+            all_chance += chance;
+        }
+        all_chance = all_chance / 100;
+        console.log('宏观概率为%s', all_chance);
     };
 }
 

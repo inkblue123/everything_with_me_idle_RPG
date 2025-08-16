@@ -101,8 +101,9 @@ class place_enemy {
             console.log(`${this.id}敌人未知，重置成普通敌人`);
             this.id = 'Training_Dummy';
         }
-        let skill_num = enemys[this.id].active_skill.length;
-        this.now_active_id = enemys[this.id].active_skill[get_random(0, skill_num - 1)];
+        let skill_num = enemys[this.id].active_skill.length; //这个敌人拥有的技能数量
+        let skill_id = get_random(0, skill_num - 1); //随机选择一个技能
+        this.now_active_id = enemys[this.id].active_skill[skill_id];
         this.now_active_stage = 0;
         return true;
     }
@@ -341,7 +342,8 @@ export class Enemy_manage {
         }
 
         //获取这次要刷的敌人id
-        let enemy_id = this.get_random_chance_enemy_id(places[this.now_place].enemy);
+        let random_manage = global.get_random_manage();
+        let enemy_id = random_manage.get_place_add_enemy_id(this.now_place);
         //判断这次要刷的怪有没有限制条件，现在能不能刷
         if (!this.judge_add_new_enemy_id(enemy_id)) {
             return false;
@@ -350,23 +352,6 @@ export class Enemy_manage {
         //在指定位置新增这个怪
         let enemy = this.add_enemy(place_x, place_y, enemy_id);
         return true;
-    }
-    //根据能刷的所有怪的刷新概率权重，随机得到一个敌人id
-    get_random_chance_enemy_id(enemys) {
-        let all_chance = 0;
-        for (let id in enemys) {
-            all_chance += enemys[id].chance;
-        }
-        let chance = get_random(0, all_chance);
-        let enemy_id;
-        for (enemy_id in enemys) {
-            if (chance > enemys[enemy_id].chance) {
-                chance -= enemys[enemy_id].chance;
-            } else {
-                break;
-            }
-        }
-        return enemy_id;
     }
     //判断当前要刷的这个怪，是否满足它的限制条件
     judge_add_new_enemy_id(enemy_id) {
@@ -490,13 +475,13 @@ export class Enemy_manage {
         }
     }
     //获取敌人类部分的游戏存档
-    save_enemy_class() {
+    save_enemy_manage() {
         let enemy_save = new Object();
         enemy_save.combat_place_enemys = this.combat_place_enemys; //当前地点内的敌人
         return enemy_save;
     }
     //加载敌人类的游戏存档
-    load_enemy_class(enemy_save) {
+    load_enemy_manage(enemy_save) {
         if (is_Empty_Object(enemy_save)) {
             return;
         }

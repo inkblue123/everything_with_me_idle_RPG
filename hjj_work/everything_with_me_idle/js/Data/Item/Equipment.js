@@ -44,7 +44,7 @@ function init_Item_Equipment(items) {
         //攻击，精准，暴击率，暴击伤害，攻击速度
         // items[id].init_Equipment_attack_attr(5, 5, 5, 20, 2);//手动设置攻击属性
 
-        id = 'test_sword'; //木剑
+        id = 'test_sword'; //测试剑
         add_Item_object(items, id, item_type); //id，物品主要分类
         items[id].init_Item_other(1, ['weapon']); //堆叠数量，物品次要分类
         items[id].init_Equipment('sword'); //物品小分类，是否特制
