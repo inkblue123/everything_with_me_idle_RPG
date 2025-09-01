@@ -1,12 +1,7 @@
 import { player } from '../Player/Player.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
-import {
-    add_show_Tooltip,
-    add_click_Active_skill_worn_remove,
-    delete_player_active_div,
-    delete_active_show_div,
-} from './Dom_function.js';
+import { add_show_Tooltip, add_click_Active_skill_worn_remove, delete_player_active_div, delete_active_show_div } from './Dom_function.js';
 import { is_Empty_Object } from './Function.js';
 
 //更新角色名
@@ -92,8 +87,7 @@ function updata_player_active_slots_num() {
             if (use_slots_num == 1) {
                 active_time_bar_div.children[i].style.width = aslot_width + 'px';
             } else {
-                active_time_bar_div.children[i].style.width =
-                    aslot_width + (div_gap * (use_slots_num - 1)) / use_slots_num + 'px';
+                active_time_bar_div.children[i].style.width = aslot_width + (div_gap * (use_slots_num - 1)) / use_slots_num + 'px';
             }
             active_time_bar_div.children[i].style.display = '';
         } else {
@@ -205,12 +199,4 @@ function updata_player_active() {
     updata_player_active_show();
 }
 
-export {
-    updata_player_name,
-    updata_attribute_show,
-    updata_player_EQP,
-    updata_player_active_slots_num,
-    updata_player_active_show,
-    updata_player_active,
-    updata_player_active_time_bar,
-};
+export { updata_player_name, updata_attribute_show, updata_player_EQP, updata_player_active_slots_num, updata_player_active_show, updata_player_active, updata_player_active_time_bar };

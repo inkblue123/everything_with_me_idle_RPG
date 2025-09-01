@@ -8,15 +8,7 @@ import { Foraging_manage } from './foraging.js';
 //生活技能规划管理对象
 export class Live_plan_manage {
     constructor() {
-        this.EC_live_plan_class_name = [
-            'logging_manage',
-            'fishing_manage',
-            'mining_manage',
-            'foraging_manage',
-            'diving_manage',
-            'archaeology_manage',
-            'exploration_manage',
-        ];
+        this.EC_live_plan_class_name = ['logging_manage', 'fishing_manage', 'mining_manage', 'foraging_manage', 'diving_manage', 'archaeology_manage', 'exploration_manage'];
         this.logging_manage = new Logging_manage(); //伐木管理对象
         this.foraging_manage = new Foraging_manage(); //采集管理对象
     }
@@ -26,6 +18,7 @@ export class Live_plan_manage {
         //获取每个子对象的存档
         //伐木管理对象
         Live_plan_save.logging_save = this.logging_manage.save_logging_manage();
+        Live_plan_save.foraging_save = this.foraging_manage.save_foraging_manage();
 
         //保存当前生活技能规划界面展示了哪个大分类
         let EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
@@ -56,6 +49,8 @@ export class Live_plan_manage {
         }
         //伐木存档
         this.logging_manage.load_Logging_manage(Live_plan_save.logging_save);
+        //采集存档
+        this.foraging_manage.load_Foraging_manage(Live_plan_save.foraging_save);
 
         // 将生活技能规划界面切换到存档中保存的技能上
         change_Live_plan_div(Live_plan_save.LP_type); //切换到大类
@@ -74,47 +69,21 @@ export class Live_plan_manage {
     }
     //更新当前正在进行的生活技能的数值
     updata_live_plan_game_data(now_GS) {
-        if (now_GS == 'logging') {
-            // 伐木 logging LGI
-            this.logging_manage.updata_logging_data();
-        } else if (now_GS == 'fishing') {
-            //钓鱼 fishing FIS
-        } else if (now_GS == 'mining') {
-            //挖矿 mining MIN
-        } else if (now_GS == 'foraging') {
-            //采集 foraging FAG
-            this.foraging_manage.updata_foraging_data();
-        } else if (now_GS == 'diving') {
-            //潜水 diving DIV
-        } else if (now_GS == 'archaeology') {
-            //考古 archaeology ACL
-        } else if (now_GS == 'exploration') {
-            //探索 exploration ELT
-        } else if (now_GS == 'engrave') {
-            //雕刻
+        if (!enums['live_plan_GS'].includes(now_GS)) {
+            console.log('当前进行的游戏状态不属于生活技能，无法处理');
+            return;
         }
+        let manage_name = now_GS + '_manage';
+        this[manage_name].updata_live_plan_data();
     }
     //更新当前正在进行的生活技能的界面
     updata_live_plan_game_div(now_GS) {
-        if (now_GS == 'logging') {
-            //伐木
-            this.logging_manage.updata_logging_div();
-        } else if (now_GS == 'fishing') {
-            //钓鱼
-        } else if (now_GS == 'mining') {
-            //挖矿
-        } else if (now_GS == 'foraging') {
-            //采集
-            this.foraging_manage.updata_foraging_div();
-        } else if (now_GS == 'diving') {
-            //潜水
-        } else if (now_GS == 'archaeology') {
-            //考古
-        } else if (now_GS == 'exploration') {
-            //探索
-        } else if (now_GS == 'engrave') {
-            //雕刻
+        if (!enums['live_plan_GS'].includes(now_GS)) {
+            console.log('当前进行的游戏状态不属于生活技能，无法处理');
+            return;
         }
+        let manage_name = now_GS + '_manage';
+        this[manage_name].updata_live_plan_div();
     }
     //玩家属性更新，更新到生活技能类里
     updata_player_data(end_data_attr) {
@@ -142,8 +111,7 @@ export class Live_plan_manage {
                 continue;
             }
             //如果地点可以进行对应技能，更新地点信息
-            if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]]))
-                this[this.EC_live_plan_class_name[i]].set_new_place(next_place);
+            if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]])) this[this.EC_live_plan_class_name[i]].set_new_place(next_place);
         }
         //合成制造类生活技能
 
@@ -161,8 +129,7 @@ export class Live_plan_manage {
             }
             EC_skill = EC_skill.substring(0, 3);
             let i = EC_live_plan_min_name[EC_skill];
-            if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]]))
-                this[this.EC_live_plan_class_name[i]].updata_super_game_div(next_place);
+            if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]])) this[this.EC_live_plan_class_name[i]].updata_super_game_div(next_place);
         }
     }
     //重置当前正在进行的生活技能的回合

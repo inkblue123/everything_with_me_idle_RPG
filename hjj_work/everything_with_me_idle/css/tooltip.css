@@ -61,7 +61,7 @@
     border: 1px solid #ccc; /* 可选：给子布局添加边框，方便查看 */
 }
 /* 每行2列表格布局中的每个元素 */
-/* 每个元素只给右侧画线，专门为第3n + 1个元素左右都画线，实现表格内的样式 */
+/* 每个元素只给右侧画线，专门为第2n + 1个元素左右都画线，实现表格内的样式 */
 .table_2_value {
     display: flex;
     justify-content: space-between;

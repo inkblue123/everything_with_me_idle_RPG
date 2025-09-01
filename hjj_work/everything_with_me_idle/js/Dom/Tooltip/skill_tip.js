@@ -271,9 +271,7 @@ function show_skill_level(div, skill_obj) {
         } else {
             let exp_radio = (skill_obj.exp / skill_obj.next_level_need_exp) * 100;
             exp_bar.children[0].children[0].style.width = `${exp_radio}%`;
-            exp_bar.children[1].innerText = `exp：${Math.floor(skill_obj.exp)}/${Math.ceil(
-                skill_obj.next_level_need_exp
-            )}`;
+            exp_bar.children[1].innerText = `exp：${Math.floor(skill_obj.exp)}/${Math.ceil(skill_obj.next_level_need_exp)}`;
         }
     } else {
         //该技能升级不靠经验，目前依靠的是达成某些事情

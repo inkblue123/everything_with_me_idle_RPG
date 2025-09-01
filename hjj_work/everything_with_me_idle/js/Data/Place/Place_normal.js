@@ -62,9 +62,13 @@ function init_village_backhill_normal_place(places) {
     id = 'logged_forest'; //已开荒的林区
     add_normal_Place(places, id, 'village_backhill');
     places[id].add_connect_normal_place('VBH_rest_location', 'LF_grass', 'LF_woodland', 'LF_creek');
-    places[id].set_live_plan_flag(1); //当前地点可以执行的生活技能
+    places[id].set_live_plan_flag(9); //当前地点可以执行的生活技能
     places[id].set_logging_data(5); //这个地点的伐木相关参数，树的复活时间5秒
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树
+    places[id].set_foraging_data(100); //这个地点的采集相关参数，采集防御力100点
+    places[id].set_foraging_item('red_berry', 10, false); //这个地点可采集的物品，红浆果
+    places[id].set_foraging_item('yellow_berry', 10, false); //这个地点可采集的物品，黄浆果
+    places[id].set_foraging_item('black_berry', 10, false); //这个地点可采集的物品，黑浆果
 
     id = 'LF_grass'; //已开荒的林区-草地
     add_normal_Place(places, id, 'village_backhill');
@@ -80,7 +84,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_foraging_item('broken_fur', 50, false); //这个地点可采集的物品，碎毛皮
     places[id].set_foraging_item('hard_rock', 10, false); //这个地点可采集的物品，坚硬岩石
     places[id].set_foraging_item('copper_coin', 1, false); //这个地点可采集的物品，铜币
-    places[id].set_foraging_item('wood_sticks', 1, false); //这个地点可采集的物品，木制棍棒
+    places[id].set_foraging_item('wood_sticks', 1, false, null, null, 'ordinary'); //这个地点可采集的物品，木制棍棒
     places[id].set_foraging_item('termite_mushroom', 1, true, 2, 2880); //这个地点可采集的物品，鸡枞
 
     id = 'LF_woodland'; //已开荒的林区-林地
@@ -95,13 +99,13 @@ function init_village_backhill_normal_place(places) {
     places[id].set_foraging_item('broken_fur', 50, false); //这个地点可采集的物品，碎毛皮
     places[id].set_foraging_item('animal_bone', 10, false); //这个地点可采集的物品，兽骨
     places[id].set_foraging_item('Oak_logs', 10, false); //这个地点可采集的物品，橡树原木
-    places[id].set_foraging_item('wood_sticks', 1, false); //这个地点可采集的物品，木制棍棒
+    places[id].set_foraging_item('wood_sticks', 1, false, null, null, 'ordinary'); //这个地点可采集的物品，木制棍棒
 
     id = 'LF_creek'; //已开荒的林区-小溪
     add_normal_Place(places, id, 'village_backhill');
     places[id].add_connect_normal_place('logged_forest');
     places[id].set_live_plan_flag(8); //当前地点可以执行的生活技能
-    places[id].set_foraging_data(100); //这个地点的采集相关参数，采集防御力50点
+    places[id].set_foraging_data(100); //这个地点的采集相关参数，采集防御力100点
     places[id].set_foraging_item('decayed_wood', 50, false); //这个地点可采集的物品，朽木
     places[id].set_foraging_item('river_mussel', 10, false); //这个地点可采集的物品，河蚌
     places[id].set_foraging_item('river_crab', 10, false); //这个地点可采集的物品，河蟹

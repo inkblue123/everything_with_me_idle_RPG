@@ -21,19 +21,8 @@ function make_logging_div(LGI_value_div) {
     let LGI_drop_table_div = addElement(LGI_up_div, 'div', 'LGI_drop_table_div', '', '');
     let LGI_drop_table_head = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_head', 'LP_div', '');
     LGI_drop_table_head.innerHTML = '可能的产物';
-    let drop_table_scroll_box = addElement(
-        LGI_drop_table_div,
-        'div',
-        'LGI_drop_table_scroll_box',
-        'LP_div overflow_y_div',
-        ''
-    );
-    var LGI_drop_table_value_div = addElement(
-        drop_table_scroll_box,
-        'div',
-        'LGI_drop_table_value_div',
-        'classification_div'
-    );
+    let drop_table_scroll_box = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_scroll_box', 'LP_div overflow_y_div', '');
+    var LGI_drop_table_value_div = addElement(drop_table_scroll_box, 'div', 'LGI_drop_table_value_div', 'classification_div');
     var drop_value = addElement(LGI_drop_table_value_div, 'div', null, 'drop_value');
     drop_value.innerHTML = '无';
 
@@ -43,18 +32,8 @@ function make_logging_div(LGI_value_div) {
     let LGI_M_L_div = addElement(LGI_middle_div, 'div', null, null);
     //快速伐木的进度条
     var LGI_F_way_bar = addElement(LGI_M_L_div, 'div', 'LGI_F_way_bar', 'progress_bar player_logging_bar', '');
-    var LGI_F_way_frame = addElement(
-        LGI_F_way_bar,
-        'div',
-        'LGI_F_way_frame',
-        'progress_bar_frame player_logging_frame'
-    ); //条的外框
-    var LGI_F_way_current = addElement(
-        LGI_F_way_frame,
-        'div',
-        'LGI_F_way_current',
-        'progress_bar_current player_logging_current'
-    );
+    var LGI_F_way_frame = addElement(LGI_F_way_bar, 'div', 'LGI_F_way_frame', 'progress_bar_frame player_logging_frame'); //条的外框
+    var LGI_F_way_current = addElement(LGI_F_way_frame, 'div', 'LGI_F_way_current', 'progress_bar_current player_logging_current');
     LGI_F_way_bar.Data = new Object();
     LGI_F_way_bar.children[0].children[0].style.width = '0%';
 
@@ -65,18 +44,8 @@ function make_logging_div(LGI_value_div) {
     let LGI_M_M_div = addElement(LGI_middle_div, 'div', null, null);
     //精细伐木的进度条
     var LGI_M_way_bar = addElement(LGI_M_M_div, 'div', 'LGI_M_way_bar', 'progress_bar player_logging_bar', '');
-    var LGI_M_way_frame = addElement(
-        LGI_M_way_bar,
-        'div',
-        'LGI_M_way_frame',
-        'progress_bar_frame player_logging_frame'
-    ); //条的外框
-    var LGI_M_way_current = addElement(
-        LGI_M_way_frame,
-        'div',
-        'LGI_M_way_current',
-        'progress_bar_current player_logging_current'
-    );
+    var LGI_M_way_frame = addElement(LGI_M_way_bar, 'div', 'LGI_M_way_frame', 'progress_bar_frame player_logging_frame'); //条的外框
+    var LGI_M_way_current = addElement(LGI_M_way_frame, 'div', 'LGI_M_way_current', 'progress_bar_current player_logging_current');
     LGI_M_way_bar.Data = new Object();
     //初始隐藏精细伐木进度条
     LGI_M_way_bar.style.visibility = 'hidden';

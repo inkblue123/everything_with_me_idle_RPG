@@ -1,10 +1,5 @@
 'use strict';
-import {
-    get_Askill_base_attr,
-    Attack_effect_algorithm,
-    Defense_effect_algorithm,
-    format_numbers,
-} from '../Function/math_func.js';
+import { get_Askill_base_attr, Attack_effect_algorithm, Defense_effect_algorithm, format_numbers } from '../Function/math_func.js';
 import { is_Empty_Object, is_overlap } from '../Function/Function.js';
 import { updata_player_active } from '../Function/Updata_func.js';
 import { Attack_effect, Defense_effect } from '../GameRun/combat_class.js';

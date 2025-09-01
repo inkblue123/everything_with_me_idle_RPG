@@ -11,19 +11,9 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
     //界面上部，区分当前展示的内容的按钮
     var player_status_switch = crtElement('div', 'player_status_switch_div', 'page_flex', '');
     //属性 player_attribute PAB
-    var PAB_switch_button = addElement(
-        player_status_switch,
-        'button',
-        'PAB_switch_button',
-        'player_status_switch_button'
-    );
+    var PAB_switch_button = addElement(player_status_switch, 'button', 'PAB_switch_button', 'player_status_switch_button');
     //技能 player_skill PSK
-    var PSK_switch_button = addElement(
-        player_status_switch,
-        'button',
-        'PSK_switch_button',
-        'player_status_switch_button'
-    );
+    var PSK_switch_button = addElement(player_status_switch, 'button', 'PSK_switch_button', 'player_status_switch_button');
     PAB_switch_button.innerHTML = `属性`;
     PSK_switch_button.innerHTML = `技能`;
     //界面下部，具体展示内容的窗口
@@ -95,13 +85,7 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
         var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', 'page_auto_columns');
         for (let i = 0; i < 4; i++) {
             var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'radio_div EQP_switch_radio_div');
-            addElement_radio(
-                EQP_switch_radio_div,
-                `EQP_${i + 1}`,
-                'EQP_switch',
-                `EQP_column_${i + 1}`,
-                `装备栏\n${i + 1}`
-            );
+            addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, 'EQP_switch', `EQP_column_${i + 1}`, `装备栏\n${i + 1}`);
         }
         //默认激活第一个装备栏
         EQP_switch_div.children[0].children[0].checked = true;
@@ -116,12 +100,7 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
         // 左侧的分类下拉表格界面
         {
             var PSK_scroll_box = addElement(PSK_div, 'div', 'PSK_scroll_box', 'overflow_y_div');
-            var PSK_classification_div = addElement(
-                PSK_scroll_box,
-                'div',
-                'PSK_classification_div',
-                'classification_div'
-            );
+            var PSK_classification_div = addElement(PSK_scroll_box, 'div', 'PSK_classification_div', 'classification_div');
             // 全部
             var PSK_ALL_radio_div = addElement(PSK_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(PSK_ALL_radio_div, `PSK_all`, 'PSK_switch', `PSK_all`, `全部`);

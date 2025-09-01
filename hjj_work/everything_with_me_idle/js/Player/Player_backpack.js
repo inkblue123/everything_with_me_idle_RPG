@@ -3,7 +3,6 @@ import { check_Equipment, is_Empty_Object } from '../Function/Function.js';
 import { add_show_Tooltip, add_click_Equipment_worn, addElement } from '../Function/Dom_function.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
-import { global } from '../GameRun/global_manage.js';
 //玩家背包中的一个物品
 class Player_Item {
     constructor(id) {

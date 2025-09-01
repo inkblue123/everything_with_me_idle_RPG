@@ -121,6 +121,7 @@ export class P_normal extends Place {
         //用二进制数字的01来表示是否可执行
         //比如输入flag=1，二进制就是0000001，从最小的位置开始排，就是只允许第一个技能，也就是伐木
         //如果希望允许钓鱼、采集、潜水，就是0011010，也就是需要输入flag=26
+        // 伐木+1、钓鱼+2、挖矿+4、采集+8、潜水+16、考古+32、探索+64
         for (let i = 0; i < 7; i++) {
             this.live_plan_flag[i] = flag % 2;
             flag = parseInt(flag / 2);
@@ -163,12 +164,17 @@ export class P_normal extends Place {
         obj.id = id; //树的id
         obj.chance = chance; //树的刷新权重
         obj.rare_flag = rare_flag; //树是否属于稀有单位
-        obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
-        obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
+        if (rare_flag == undefined) {
+            console.log('%s地点定义伐木的树%s时没有设定稀有标记', this.id, id);
+        }
+        if (rare_flag) {
+            obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
+            obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
+        }
         this.LGI_trees[id] = obj;
     }
     //设置这个地点采集时可能的产物
-    set_foraging_item(id, chance, rare_flag, max_cumulative_num, cumulative_time) {
+    set_foraging_item(id, chance, rare_flag, max_cumulative_num, cumulative_time, equip_rarity) {
         if (is_Empty_Object(this.FAG_item)) {
             this.FAG_item = new Object();
         }
@@ -176,8 +182,15 @@ export class P_normal extends Place {
         obj.id = id; //物品id
         obj.chance = chance; //物品掉落权重
         obj.rare_flag = rare_flag; //物品是否属于稀有物品
-        obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
-        obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
+        if (rare_flag == undefined) {
+            console.log('%s地点定义采集物品%s时没有设定稀有标记', this.id, id);
+        }
+        if (rare_flag) {
+            obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
+            obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
+        }
+        if (equip_rarity) obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
+
         this.FAG_item[id] = obj;
     }
 }

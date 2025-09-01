@@ -141,7 +141,7 @@ export class Logging_manage {
         this.true_LGI_critical_chance; //实际用于计算的伐木暴击率
         this.true_LGI_critical_damage; //实际用于计算的伐木暴击伤害
 
-        this.last_logger_place_data = new Object(); //曾经到过的伐木地点的参数
+        this.logger_place_data = new Object(); //曾经到过的伐木地点的参数
 
         this.tree_manage = new Tree_manage(); //伐木的目标对象
     }
@@ -151,7 +151,7 @@ export class Logging_manage {
         //获取每个子对象的存档
         //伐木管理对象
         logging_save.now_time = this.now_time;
-        logging_save.last_logger_place_data = this.last_logger_place_data;
+        logging_save.logger_place_data = this.logger_place_data;
 
         return logging_save;
     }
@@ -162,12 +162,11 @@ export class Logging_manage {
         }
         let now_time = global.get_game_now_time();
         let save_time = logging_save.now_time;
-        this.last_logger_place_data = JSON.parse(JSON.stringify(logging_save.last_logger_place_data));
-
-        for (let place_id in logging_save.last_logger_place_data) {
-            let save_obj = logging_save.last_logger_place_data[place_id];
-            let manage_obj = this.last_logger_place_data[place_id];
-
+        // 伐木地点参数加载，需要将存档中的时间同步到当前时间
+        this.logger_place_data = logging_save.logger_place_data;
+        for (let place_id in logging_save.logger_place_data) {
+            let save_obj = logging_save.logger_place_data[place_id];
+            let manage_obj = this.logger_place_data[place_id];
             for (let tree_id in save_obj) {
                 let save_tree_last_cumulative_time = save_time - save_obj[tree_id].last_cumulative_time;
                 manage_obj[tree_id].last_cumulative_time = now_time - save_tree_last_cumulative_time;
@@ -175,13 +174,17 @@ export class Logging_manage {
         }
     }
     //更新当前地点，初始化伐木信息
+    // 上层管理类会调用，必须定义，必须使用这个名称
     set_new_place(now_place) {
         this.now_place = now_place;
         this.now_time = global.get_game_now_time();
+        //更新一遍当前地点的重要缓存数据
+        this.updata_logger_place_data();
         //进入新地点，无条件重刷一棵树
         this.reborn_tree();
     }
     //地点变化时，对伐木界面特殊更新
+    // 上层管理类会调用，必须定义，必须使用这个名称
     updata_super_game_div(next_place) {
         //地点的生活技能可用标记第0个是伐木
         // 伐木、钓鱼、挖矿、采集、潜水、考古、探索
@@ -194,7 +197,8 @@ export class Logging_manage {
         this.delete_logging_div('move_place');
     }
     //开始伐木，更新伐木技能的数值
-    updata_logging_data() {
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    updata_live_plan_data() {
         this.now_time = global.get_game_now_time();
         if (this.tree_manage.get_tree_statu()) {
             //树活着，读条进行砍伐
@@ -205,7 +209,8 @@ export class Logging_manage {
         }
     }
     //开始伐木，更新伐木技能的界面
-    updata_logging_div() {
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    updata_live_plan_div() {
         let tree_statu = this.tree_manage.get_tree_statu();
         if (tree_statu) {
             //树活着，应该更新玩家攻击进度和树的血量
@@ -244,13 +249,51 @@ export class Logging_manage {
             }
         }
     }
+    //重置一轮伐木的参数
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    reset_round() {
+        this.round_start_time = global.get_game_now_time();
+        this.now_round_time = 0;
 
+        //重置玩家攻击进度条
+        let logging_way_bar;
+        let logging_way = global.get_flag('GS_logging_way');
+        if (logging_way == 'LGI_F_way') {
+            logging_way_bar = document.getElementById('LGI_F_way_bar');
+        } else if (logging_way == 'LGI_M_way') {
+            logging_way_bar = document.getElementById('LGI_M_way_bar');
+        }
+        let now_attack_ratio = this.get_attack_ratio();
+        if (logging_way_bar.Data.attack_ratio != now_attack_ratio) {
+            logging_way_bar.children[0].children[0].style.width = now_attack_ratio;
+            logging_way_bar.Data.HP_ratio = now_attack_ratio;
+        }
+    }
+    //停止伐木状态
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    stop_game_statu() {
+        let now_GS = global.get_flag('GS_game_statu');
+        //当前状态不是伐木，不处理
+        if (now_GS != 'logging') {
+            return;
+        }
+        //停止伐木
+        global.set_flag('GS_game_statu', 'NULL');
+        //重置按钮
+        const LGI_S_button = document.getElementById('LGI_S_button');
+        const LGI_E_button = document.getElementById('LGI_E_button');
+        LGI_S_button.style.display = '';
+        LGI_E_button.style.display = 'none';
+        //
+    }
     //更新角色属性或者伐木模式
+    // 上层管理类会调用，必须定义，必须使用这个名称
     updata_player_data(player_end_attr) {
         if (player_end_attr) this.player_end_attr = player_end_attr;
         //更新伐木时的玩家参数
         this.updata_true_LGI_data();
     }
+
     //伐木模式切换，更新数值
     updata_logger_way(now_way) {
         this.now_LGI_way = now_way;
@@ -313,7 +356,7 @@ export class Logging_manage {
             //如果这棵树是稀有的树，需要处理积累数量
             let tree_id = this.tree_manage.get_tree_id();
             if (places[this.now_place].LGI_trees[tree_id].rare_flag) {
-                this.last_logger_place_data[this.now_place][tree_id].cumulative_num--;
+                this.logger_place_data[this.now_place][tree_id].cumulative_num--;
             }
         }
         //砍完重置回合
@@ -328,14 +371,13 @@ export class Logging_manage {
         if (this.now_time - tree_death_time < reborn_time * 1000) {
             return;
         }
+        //更新一遍当前地点的重要缓存数据
+        this.updata_logger_place_data();
         //刷新复活一棵树
         this.reborn_tree();
     }
     //刷新复活一棵树
     reborn_tree() {
-        //更新一遍当前地点的重要缓存数据
-        this.updata_logger_place_data();
-
         //随机获得当前地点的某树的id
         let tree_id = this.get_random_chance_tree_id();
         if (tree_id == false) {
@@ -354,7 +396,7 @@ export class Logging_manage {
     //更新当前地点的缓存数据
     updata_logger_place_data() {
         let LGI_trees = places[this.now_place].LGI_trees;
-        if (is_Empty_Object(this.last_logger_place_data[this.now_place])) {
+        if (is_Empty_Object(this.logger_place_data[this.now_place])) {
             //没有当前地点的缓存，生成缓存数据
             let obj = new Object();
             for (let id in LGI_trees) {
@@ -366,9 +408,9 @@ export class Logging_manage {
                 obj[id].cumulative_num = LGI_trees[id].max_cumulative_num;
                 obj[id].last_cumulative_time = this.now_time;
             }
-            this.last_logger_place_data[this.now_place] = obj;
+            this.logger_place_data[this.now_place] = obj;
         } else {
-            let obj = this.last_logger_place_data[this.now_place];
+            let obj = this.logger_place_data[this.now_place];
             //当前地点已有缓存，更新一遍
             for (let id in obj) {
                 if (obj[id].cumulative_num >= LGI_trees[id].max_cumulative_num) {
@@ -397,12 +439,16 @@ export class Logging_manage {
         let random_manage = global.get_random_manage(); //随机数管理类
         let tree_id = random_manage.get_place_add_tree_id(this.now_place);
 
+        if (is_Empty_Object(LGI_trees[tree_id].rare_flag)) {
+            console.log('%s地点设定的%s伐木对象没有定义稀有标记', this.now_place, tree_id);
+            return false;
+        }
         if (!LGI_trees[tree_id].rare_flag) {
             //随机得到的树不是稀有树，那本次随机就是它了
             return tree_id;
         } else {
             //随机得到的树是稀有树，查看缓存中是否还有数量
-            if (this.last_logger_place_data[this.now_place][tree_id].cumulative_num <= 0) {
+            if (this.logger_place_data[this.now_place][tree_id].cumulative_num <= 0) {
                 //没了，随机选一个可以无限刷新的id
                 let keys = new Array();
                 for (let id in LGI_trees) {
@@ -417,7 +463,7 @@ export class Logging_manage {
                 return keys[random - 1];
             } else {
                 //有积累的数量，本次随机就是它了
-                // this.last_logger_place_data[this.now_place][tree_id].cumulative_num--;
+                // this.logger_place_data[this.now_place][tree_id].cumulative_num--;
                 return tree_id;
             }
         }
@@ -478,25 +524,7 @@ export class Logging_manage {
             drop_value.innerHTML = items[id].name;
         }
     }
-    //重置一轮伐木的参数
-    reset_round() {
-        this.round_start_time = global.get_game_now_time();
-        this.now_round_time = 0;
 
-        //重置玩家攻击进度条
-        let logging_way_bar;
-        let logging_way = global.get_flag('GS_logging_way');
-        if (logging_way == 'LGI_F_way') {
-            logging_way_bar = document.getElementById('LGI_F_way_bar');
-        } else if (logging_way == 'LGI_M_way') {
-            logging_way_bar = document.getElementById('LGI_M_way_bar');
-        }
-        let now_attack_ratio = this.get_attack_ratio();
-        if (logging_way_bar.Data.attack_ratio != now_attack_ratio) {
-            logging_way_bar.children[0].children[0].style.width = now_attack_ratio;
-            logging_way_bar.Data.HP_ratio = now_attack_ratio;
-        }
-    }
     //清空伐木界面
     delete_logging_div(delete_flag) {
         //树的名称
@@ -526,22 +554,6 @@ export class Logging_manage {
         logging_way_bar.children[0].children[0].style.width = '100%';
 
         tree_head.Data.statu = false;
-    }
-    //停止伐木状态
-    stop_game_statu() {
-        let now_GS = global.get_flag('GS_game_statu');
-        //当前状态不是伐木，不处理
-        if (now_GS != 'logging') {
-            return;
-        }
-        //停止伐木
-        global.set_flag('GS_game_statu', 'NULL');
-        //重置按钮
-        const LGI_S_button = document.getElementById('LGI_S_button');
-        const LGI_E_button = document.getElementById('LGI_E_button');
-        LGI_S_button.style.display = '';
-        LGI_E_button.style.display = 'none';
-        //
     }
 }
 

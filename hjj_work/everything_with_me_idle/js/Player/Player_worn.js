@@ -78,11 +78,7 @@ export class Player_worn {
                     empty_flag = true;
                 }
             } else if (wp == 'main_hand_two') {
-                if (
-                    is_Empty_Object(ac_EQP['main_hand']) &&
-                    is_Empty_Object(ac_EQP['main_hand_two']) &&
-                    is_Empty_Object(ac_EQP['deputy'])
-                ) {
+                if (is_Empty_Object(ac_EQP['main_hand']) && is_Empty_Object(ac_EQP['main_hand_two']) && is_Empty_Object(ac_EQP['deputy'])) {
                     empty_flag = true;
                 }
             } else if (wp == 'deputy') {
@@ -170,11 +166,7 @@ export class Player_worn {
                         empty_flag = true;
                     }
                 } else if (wp == 'main_hand_two') {
-                    if (
-                        is_Empty_Object(ac_EQP['main_hand']) &&
-                        is_Empty_Object(ac_EQP['main_hand_two']) &&
-                        is_Empty_Object(ac_EQP['deputy'])
-                    ) {
+                    if (is_Empty_Object(ac_EQP['main_hand']) && is_Empty_Object(ac_EQP['main_hand_two']) && is_Empty_Object(ac_EQP['deputy'])) {
                         empty_flag = true;
                     }
                 } else if (wp == 'deputy') {

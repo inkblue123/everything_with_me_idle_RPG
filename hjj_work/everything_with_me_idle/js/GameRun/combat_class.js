@@ -244,12 +244,7 @@ export class Combat_manage {
             P_attr.change_data_attr('health_point', e_damage);
 
             //添加一条敌人攻击的游戏日志
-            global_flag_manage.set_game_log(
-                'enemy_attack',
-                E_Attack_effect.id,
-                e_damage,
-                E_Attack_effect.main_Attack.damage_type
-            );
+            global_flag_manage.set_game_log('enemy_attack', E_Attack_effect.id, e_damage, E_Attack_effect.main_Attack.damage_type);
             //记录玩家受击行为
             global_flag_manage.record_attacted_num(e_damage);
         }

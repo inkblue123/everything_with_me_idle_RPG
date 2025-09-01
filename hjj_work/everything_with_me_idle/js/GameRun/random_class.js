@@ -1,6 +1,5 @@
-import { is_Empty_Object, get_uniqueArr } from '../Function/Function.js';
+import { is_Empty_Object } from '../Function/Function.js';
 import { format_numbers } from '../Function/math_func.js';
-import { global } from '../GameRun/global_manage.js';
 import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 
@@ -120,6 +119,7 @@ export class Random_manage {
     save_Random_manage() {
         let Random_manage_save = new Object();
         //稀有游戏内容管理对象
+        Random_manage_save.rare_manage_save = new Object();
         for (let key in this.rare_manage) {
             Random_manage_save.rare_manage_save[key] = this.rare_manage[key];
         }
@@ -184,19 +184,19 @@ export class Random_manage {
         }
         return rare_arr;
     }
-    //从drop_arr里按照权重随机获得一个id
-    chance_randow_get_id(drop_arr, thing_flag, father_id) {
-        //寻找队列里的稀有对象
-        let rare_arr = this.get_rare_arr(drop_arr);
+    //从掉落对象里按照权重随机获得一个id
+    chance_randow_get_id(drop_obj, thing_flag, father_id) {
         //按照权重随机，先得到一个正常随机结果
-        let id = get_obj_arr_chance_random(drop_arr);
+        let id = get_obj_chance_random_id(drop_obj);
 
+        //寻找队列里的稀有对象
+        let rare_arr = this.get_rare_arr(drop_obj);
         //没有稀有对象，不需要处理保底，直接返回权重随机的结果
         if (is_Empty_Object(rare_arr)) {
             return id;
         }
         //初始化稀有对象的保底信息
-        this.init_rare_manage(rare_arr, drop_arr, thing_flag, father_id);
+        this.init_rare_manage(rare_arr, drop_obj, thing_flag, father_id);
 
         if (rare_arr.includes(id)) {
             //随机的结果是稀有对象，重置该对象的保底计数，更新其他对象的保底计数
@@ -216,6 +216,7 @@ export class Random_manage {
 
                 if (floors_flag == true) {
                     this.add_rare_floors(key);
+                    continue;
                 }
                 if (this.rare_manage.try_floors(key)) {
                     //有一个对象成功触发保底，将本次随机的结果改成这个稀有对象，并更新其他对象
@@ -225,6 +226,10 @@ export class Random_manage {
             }
         }
         return id;
+    }
+    //从drop_arr里按照权重随机获得一个id，不涉及稀有对象和保底
+    chance_randow_get_id_norare(drop_obj) {
+        return get_obj_chance_random_id(drop_obj);
     }
     //在地点中刷怪，返回一个敌人id
     get_place_add_enemy_id(place_id) {
@@ -263,7 +268,7 @@ function get_random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 //输入随机目标对象数组，根据每个对象的权重，随机得到某个对象的id
-function get_obj_arr_chance_random(arr) {
+function get_obj_chance_random_id(arr) {
     let all_chance = 0;
     for (let id in arr) {
         all_chance += arr[id].chance;
@@ -280,7 +285,7 @@ function get_obj_arr_chance_random(arr) {
     return id;
 }
 //输入权重数组，根据权重随机得到数组序号
-function get_chance_arr_random(arr) {
+function get_arr_chance_random_num(arr) {
     let all_chance = 0;
     for (let chance of arr) {
         all_chance += chance;

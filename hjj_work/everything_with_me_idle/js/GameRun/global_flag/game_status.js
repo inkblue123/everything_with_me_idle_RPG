@@ -1,7 +1,4 @@
-import { is_Empty_Object } from '../../Function/Function.js';
-
 import { enums } from '../../Data/Enum/Enum.js';
-import { global } from '../global_manage.js';
 
 export class Game_status {
     constructor() {

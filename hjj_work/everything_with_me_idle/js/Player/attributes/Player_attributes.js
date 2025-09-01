@@ -1,7 +1,5 @@
 'use strict';
 import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
-import { items } from '../../Data/Item/Item.js';
-import { enums } from '../../Data/Enum/Enum.js';
 import { Data_attr_manage } from './data_attr.js';
 import { Buff_attr_manage } from './buff_attr.js';
 

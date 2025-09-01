@@ -1,10 +1,4 @@
 import { crtElement, addElement, empty_dom } from '../../Function/Dom_function.js';
-import { is_Empty_Object, attr_correct_handle } from '../../Function/Function.js';
-
-import { texts } from '../../Data/Text/Text.js';
-import { enums } from '../../Data/Enum/Enum.js';
-import { P_skills } from '../../Data/Skill/Skill.js';
-import { player } from '../../Player/Player.js';
 
 import { init_item_tip } from './item_tip.js';
 import { init_skill_tip } from './skill_tip.js';

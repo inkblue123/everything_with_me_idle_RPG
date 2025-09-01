@@ -9,25 +9,23 @@ function make_foraging_div(FAG_value_div) {
     let FAG_drop_table_head = addElement(FAG_up_div, 'div', 'FAG_drop_table_head', 'LP_div', '');
     FAG_drop_table_head.innerHTML = '可能的产物';
     //掉落物列表内容
-    let FAG_drop_table_scroll_box = addElement(
-        FAG_up_div,
-        'div',
-        'FAG_drop_table_scroll_box',
-        'LP_div overflow_y_div',
-        ''
-    );
-    var FAG_drop_table_value_div = addElement(
-        FAG_drop_table_scroll_box,
-        'div',
-        'FAG_drop_table_value_div',
-        'classification_div'
-    );
-    var drop_value = addElement(FAG_drop_table_value_div, 'div', null, 'drop_value');
-    drop_value.innerHTML = '无';
+    let FAG_drop_table_scroll_box = addElement(FAG_up_div, 'div', 'FAG_drop_table_scroll_box', 'LP_div overflow_y_div', '');
+    var FAG_drop_table_value_div = addElement(FAG_drop_table_scroll_box, 'div', 'FAG_drop_table_value_div', 'classification_div');
+    var FAG_no_show_value_div = addElement(FAG_drop_table_value_div, 'div', 'FAG_no_show_value_div', 'drop_value');
+    var FAG_have_show_value_div = addElement(FAG_drop_table_value_div, 'div', 'FAG_have_show_value_div', 'page_columns_111');
 
-    //采集中部，采集进度条
-    let FAG_middle_div = addElement(FAG_value_div, 'div', 'FAG_middle_div', 'page_columns_111', '');
-    //快速采集的进度条
+    // for (let i = 0; i < 10; i++) {
+    //     let FAG_drop_value = addElement(FAG_drop_table_value_div, 'div', 'FAG_drop_value', 'drop_value');
+    //     FAG_drop_value.innerHTML = i;
+    // }
+
+    //采集中部，采集提示信息
+    let FAG_middle_div = addElement(FAG_value_div, 'div', 'FAG_middle_div', null, '');
+    //采集概率展示
+    var FAG_show_chance_div = addElement(FAG_middle_div, 'div', 'FAG_show_chance_div', ' player_foraging_bar');
+    FAG_show_chance_div.innerHTML = '采集概率：';
+
+    //采集的进度条
     var FAG_bar = addElement(FAG_middle_div, 'div', 'FAG_bar', 'progress_bar player_foraging_bar', '');
     var FAG_frame = addElement(FAG_bar, 'div', 'FAG_frame', 'progress_bar_frame player_foraging_frame'); //条的外框
     var FAG_current = addElement(FAG_frame, 'div', 'FAG_current', 'progress_bar_current player_foraging_current');
@@ -52,8 +50,8 @@ function set_foraging_button(FAG_value_div) {
         global.set_flag('GS_game_statu', 'foraging');
         //开启一轮采集，重置采集的参数
         let live_plan_manage = global.get_live_plan_manage();
-        // let foraging_manage = live_plan_manage.get_EC_live_skill_manage('foraging_manage');
-        // foraging_manage.reset_round();
+        let foraging_manage = live_plan_manage.get_EC_live_skill_manage('foraging_manage');
+        foraging_manage.reset_round();
         //开始采集按钮切换成停止采集
         FAG_S_button.style.display = 'none';
         FAG_E_button.style.display = '';

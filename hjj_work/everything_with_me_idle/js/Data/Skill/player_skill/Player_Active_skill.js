@@ -33,12 +33,7 @@ function init_Player_Active_skill(P_skills) {
     add_P_Active_skill(P_skills, id);
     P_skills[id].need_slot_num = 4; //需要几个技能槽
     //这个技能的每个槽使用哪个基础技能
-    P_skills[id].need_slot_id = [
-        'normal_attack_Melee',
-        'normal_attack_Melee',
-        'normal_attack_Melee',
-        'normal_attack_Melee',
-    ];
+    P_skills[id].need_slot_id = ['normal_attack_Melee', 'normal_attack_Melee', 'normal_attack_Melee', 'normal_attack_Melee'];
     P_skills[id].levelup_type = 'unlevelup';
 
     //盾牌防御

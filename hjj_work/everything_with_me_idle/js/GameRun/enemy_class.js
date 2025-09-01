@@ -545,10 +545,7 @@ export class Enemy_manage {
     }
     //记录离开时的怪物数据
     set_leave_enemy_data() {
-        if (
-            places[this.now_place].combat_type != 'limited_enemy_road' &&
-            places[this.now_place].combat_type != 'limited_enemy_trap'
-        ) {
+        if (places[this.now_place].combat_type != 'limited_enemy_road' && places[this.now_place].combat_type != 'limited_enemy_trap') {
             //只有通道和陷阱类型的战斗区域需要记录数据
             return true;
         }

@@ -8,18 +8,8 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
 {
     //界面上部，区分当前展示的内容的按钮
     var Combat_plan_switch_div = crtElement('div', 'Combat_plan_switch_div', 'page_flex', '');
-    var BP_switch_button = addElement(
-        Combat_plan_switch_div,
-        'button',
-        'BP_switch_button',
-        'Combat_plan_switch_button'
-    );
-    var CBP_switch_button = addElement(
-        Combat_plan_switch_div,
-        'button',
-        'CBP_switch_button',
-        'Combat_plan_switch_button'
-    );
+    var BP_switch_button = addElement(Combat_plan_switch_div, 'button', 'BP_switch_button', 'Combat_plan_switch_button');
+    var CBP_switch_button = addElement(Combat_plan_switch_div, 'button', 'CBP_switch_button', 'Combat_plan_switch_button');
     BP_switch_button.innerHTML = `背包物品`;
     CBP_switch_button.innerHTML = `战斗规划`;
     //界面下部，具体展示内容的窗口
@@ -89,12 +79,7 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
         // 左侧的分类下拉表格界面
         {
             var CBP_scroll_box = addElement(CBP_div, 'div', 'CBP_scroll_box', 'overflow_y_div');
-            var CBP_classification_div = addElement(
-                CBP_scroll_box,
-                'div',
-                'CBP_classification_div',
-                'classification_div'
-            );
+            var CBP_classification_div = addElement(CBP_scroll_box, 'div', 'CBP_classification_div', 'classification_div');
             // 主动技能规划 Active_skill_plan ASP
             var ASP_radio_div = addElement(CBP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(ASP_radio_div, `ASP_button`, 'CBP_switch', `ASP_button`, `主动技能规划`);
