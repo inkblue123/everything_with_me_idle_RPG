@@ -1,211 +1,315 @@
-import { add_Item_object } from './Item_class.js';
-//物品的大类别枚举
-const Item_type = Object.freeze({
-    //武器装备 equipment
-    Weapon: 'weapon', //武器
-    Armor: 'armor', //防具
-    Deputy: 'deputy', //副手
-    Ornament: 'ornament', //饰品
-    //可使用物品 consumable
-    Food: 'food_CSB', //食品
-    Ammo: 'ammo_CSB', //弹药
-    Life: 'life_CSB', //生活消耗品
-    //材料 material
-    Raw: 'raw_MTR', //自然材料
-    Process: 'process_MTR', //人工材料
-    Finish: 'finish_MTR', //成品
-    Other: 'other_MTR', //其他物品
-});
-
-//材料的具体类别，好像不好用，
-const material_type = Object.freeze({
-    // 天然材料 raw_MTR
-    For_logging: 'for_logging', //来自伐木的物品
-    For_fishing: 'for_fishing', //来自钓鱼的物品
-    For_mining: 'for_mining', //来自挖矿的物品
-    For_harvest: 'for_harvest', //来自采集的物品
-    For_monster: 'for_monster', //来自怪物掉落的物品
-
-    //人工材料 process_MTR
-    For_cooking: 'for_cooking', //来自烹饪的物品
-    For_making: 'for_making', //来自制造的物品
-    For_forging: 'for_forging', //来自锻造的物品
-    For_alchemy: 'for_alchemy', //来自炼金的物品
-    //成品,已经不再参与合成,但是有用的物品
-    //大多数物品合成出来就属于其他分类了
-    Key: 'key', //钥匙
-    Money: 'money', //货币
-    //其他物品,纯垃圾桶,但凡有点用处的物品都不应该放到这里
-    Other: 'other',
-});
+import { add_Material_object } from './Item_class.js';
 
 //初始化物品数据库中与材料相关的文本
 function init_Item_Material(items) {
-    //自然材料
-    init_Item_raw_MTR(items);
-    //人工材料
-    init_Item_process_MTR(items);
+    //测试物品
+    // init_test_item(items)
+    //木头系列
+    init_ordinary_wood(items); //凡木
+    init_spirit_wood(items); //灵木
+    //草系列
+    init_spirit_grass(items); //灵草
+    //蘑菇系列
+    init_ordinary_mushroom(items); //普通蘑菇
+    init_rare_mushroom(items); //稀有蘑菇
+    //水产系列
+    init_aquatic(items); //水产
+    //毛皮系列
+    init_fur(items); //毛皮
+    init_leather(items); //皮革
+    //骨头系列
+    init_bone(items); //骨头
+    //生肉系列
+    init_raw_meat(items); //生肉
+    //石头与矿石系列
+    init_rock(items); //石头
+    //加工零件系列
+    init_wood_parts(items); //木制零件
+    init_iron_parts(items); //铁制零件
+    //精制调味料
+    init_refined_seasoning(items);
+    //丹药精华
+    init_elixir_essence(items);
 }
-//自然材料
-function init_Item_raw_MTR(items) {
-    let id = 'Oak_logs'; //橡树原木
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
-    // items[id].init_Material('for_logging'); //材料小分类
+//测试物品
+// function init_test_item(items) {
+//     let id;
+//     let secon_type = 'test'; //材料大类中的灵草小类
+//     id = 'viresilver_stem'; //绿银草茎
+//     add_Material_object(items, id);
+//     items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+//     id = 'symbiotic_root'; //竹蛇共生根
+//     add_Material_object(items, id);
+//     items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+//     id = 'violet_bamboo_blade'; //紫斑竹刃
+//     add_Material_object(items, id);
+//     items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+// }
+
+//凡木
+function init_ordinary_wood(items) {
+    let id;
+    let secon_type = 'ordinary_wood'; //材料大类中的凡木小类
+
+    id = 'Oak_logs'; //橡树原木
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     // items[id].init_Item_price('coin', 5); //物品价值
     id = 'Oak_woodchip'; //橡树木屑
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
-    // items[id].init_Material('for_logging'); //材料小分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
     // items[id].init_Item_price('coin', 1); //物品价值
 
     id = 'Willow_logs'; //柳树原木
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
-    // items[id].init_Material('for_logging'); //材料小分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     // items[id].init_Item_price('coin', 6); //物品价值
     id = 'Willow_woodchip'; //柳树木屑
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
-    // items[id].init_Material('for_logging'); //材料小分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
     // items[id].init_Item_price('coin', 2); //物品价值
     id = 'birch_logs'; //桦树原木
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     id = 'birch_woodchip'; //桦树木屑
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
     id = 'pine_logs'; //松树原木
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     id = 'pine_woodchip'; //松树木屑
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
     id = 'fir_logs'; //杉树原木
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     id = 'fir_woodchip'; //杉树木屑
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
 
     id = 'decayed_wood'; //朽木
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
-    id = 'symbiotic_root'; //竹蛇共生根
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
-    id = 'violet_bamboo_blade'; //紫斑竹刃
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
-    id = 'viresilver_stem'; //绿银草茎
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+}
+//灵木
+function init_spirit_wood(items) {
+    let id;
+    let secon_type = 'spirit_wood'; //材料大类中的灵木小类
+
     id = 'lightning_bark'; //雷杉树皮
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
     id = 'lightning_branch'; //雷击尖枝
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
     id = 'lightning_iron_logs'; //雷击铁杉木
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
     id = 'frost_marrow_resin'; //寒髓松树脂
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
     id = 'frost_marrow_ice'; //寒髓松冰晶
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+}
+//灵草
+function init_spirit_grass(items) {
+    let id;
+    let secon_type = 'spirit_grass'; //材料大类中的灵草小类
+
+    id = 'viresilver_stem'; //绿银草茎
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
+    id = 'symbiotic_root'; //竹蛇共生根
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
+    id = 'violet_bamboo_blade'; //紫斑竹刃
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+}
+//普通蘑菇
+function init_ordinary_mushroom(items) {
+    let id;
+    let secon_type = 'ordinary_mushroom'; //材料大类中的普通蘑菇小类
+
+    id = 'porcini'; //牛肝菌
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
+    id = 'craterellus'; //喇叭菌
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
+    id = 'coral_fungus'; //珊瑚菌
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+
+    id = 'chanterelle'; //鸡油菌
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+}
+//稀有蘑菇
+function init_rare_mushroom(items) {
+    let id;
+    let secon_type = 'rare_mushroom'; //材料大类中的稀有蘑菇小类
 
     id = 'termite_mushroom'; //鸡枞
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    id = 'ice_matsutake'; //冰松茸
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+}
+//水产
+function init_aquatic(items) {
+    let id;
+    let secon_type = 'aquatic'; //材料大类中的水产小类
 
     id = 'river_mussel'; //河蚌
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
     id = 'river_crab'; //河蟹
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
     id = 'creek_fish'; //溪鱼
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(300, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    id = 'iron_bone_fish'; //铁骨鱼
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    id = 'bite_fish'; //咬鱼
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+}
+//毛皮
+function init_fur(items) {
+    let id;
+    let secon_type = 'fur'; //材料大类中的毛皮小类
 
     id = 'broken_fur'; //碎毛皮
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(50, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     id = 'ordinary_fur'; //普通毛皮
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(50, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     id = 'high_quality_fur'; //优质毛皮
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(20, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(20, secon_type); //堆叠数量，物品小类
+}
+//皮革
+function init_leather(items) {
+    let id;
+    let secon_type = 'leather'; //材料大类中的骨头小类
+
+    id = 'stitching_leather'; //缝合皮革
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    id = 'ordinary_leather'; //普通皮革
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    id = 'hard_and_thick_leather'; //硬厚皮革
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+}
+//骨头
+function init_bone(items) {
+    let id;
+    let secon_type = 'bone'; //材料大类中的骨头小类
 
     id = 'animal_bone'; //兽骨
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(50, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+}
+//生肉
+function init_raw_meat(items) {
+    let id;
+    let secon_type = 'raw_meat'; //材料大类中的生肉小类
+
     id = 'animal_raw_meat'; //野兽生肉
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(50, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     id = 'animal_viscus'; //野兽内脏
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(50, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+}
+//石与矿石
+function init_rock(items) {
+    let id;
+    let secon_type = 'rock'; //材料大类中的岩石小类
 
     id = 'hard_rock'; //坚硬岩石
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(50, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     id = 'lowFe_rock'; //含铁岩石
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(50, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     id = '​​highFe_rock'; //富铁矿石
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(50, ['raw_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
 }
-function init_Item_process_MTR(items) {
-    let id = 'normal_board'; //普通木板
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
+
+//木制零件
+function init_wood_parts(items) {
+    let id;
+    let secon_type = 'wood_parts'; //材料大类中的木制零件小类
+
+    id = 'normal_board'; //普通木板
+    add_Material_object(items, id);
+    items[id].init_Item_other(3, secon_type); //堆叠数量，物品小类
     // items[id].init_Material('for_making'); //材料小分类
     // items[id].init_Item_price('coin', 10); //物品价值
     id = 'Oak_board'; //橡木板
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(3, secon_type); //堆叠数量，物品小类
     // items[id].init_Material('for_making'); //材料小分类
     // items[id].init_Item_price('coin', 12); //物品价值
     id = 'Willow_board'; //柳木板
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(3, ['process_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(3, secon_type); //堆叠数量，物品小类
     // items[id].init_Material('for_making'); //材料小分类
     // items[id].init_Item_price('coin', 14); //物品价值
-
-    id = 'stitching_leather'; //缝合皮革
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['process_MTR']); //堆叠数量，物品大分类
-    id = 'ordinary_leather'; //普通皮革
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['process_MTR']); //堆叠数量，物品大分类
-    id = 'hard_and_thick_leather'; //硬厚皮革
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['process_MTR']); //堆叠数量，物品大分类
+}
+//铁质零件
+function init_iron_parts(items) {
+    let id;
+    let secon_type = 'iron_parts'; //材料大类中的铁质零件小类
 
     id = 'iron_waste'; //铁质废品
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['process_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     id = 'iron_ingot'; //铁锭
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(30, ['process_MTR']); //堆叠数量，物品大分类
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+}
+//精制调味料
+function init_refined_seasoning(items) {
+    let id;
+    let secon_type = 'refined_seasoning'; //材料大类中的精制调味料小类
 
-    id = 'copper_coin'; //铜币
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(500, ['process_MTR']); //堆叠数量，物品大分类
-    id = 'greedy_copper_coin'; //贪婪的铜币
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(1, ['process_MTR']); //堆叠数量，物品大分类
-    id = 'sliver_coin'; //银币
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(500, ['process_MTR']); //堆叠数量，物品大分类
-    id = 'gold_coin'; //金币
-    add_Item_object(items, id, 'material');
-    items[id].init_Item_other(500, ['process_MTR']); //堆叠数量，物品大分类
+    id = 'fish_meat_floss'; //鱼肉松
+    add_Material_object(items, id);
+    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    id = 'animal_meat_floss'; //兽肉松
+    add_Material_object(items, id);
+    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    id = 'berry_jam'; //浆果果酱
+    add_Material_object(items, id);
+    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+}
+//丹药精华
+function init_elixir_essence(items) {
+    let id;
+    let secon_type = 'elixir_essence'; //材料大类中的丹药精华小类
+
+    // id = 'AAAA'; //
+    // add_Material_object(items, id);
+    // items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
 }
 
 export { init_Item_Material };

@@ -1,7 +1,7 @@
 import { init_Enum_equipment } from './Enum_equipment.js';
 import { init_Enum_item } from './Enum_item.js';
 import { init_Enum_attr } from './Enum_attr.js';
-import { init_Enum_material } from './Enum_material.js';
+// import { init_Enum_material } from './Enum_material.js';
 import { init_Enum_type } from './Enum_type.js';
 import { init_Enum_game_status } from './Enum_game_status.js';
 
@@ -16,7 +16,7 @@ init_Enum_equipment(enums);
 //初始化枚举库中与属性相关的内容
 init_Enum_attr(enums);
 //初始化枚举库中与材料相关的内容
-init_Enum_material(enums);
+// init_Enum_material(enums);
 //初始化枚举库中与类型相关的内容
 init_Enum_type(enums);
 //初始化枚举库中与游戏状态参数相关的内容

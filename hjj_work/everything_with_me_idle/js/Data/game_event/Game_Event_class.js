@@ -6,7 +6,11 @@ export class Game_Event {
         this.id = id; //唯一id
         this.name; //事件名称
         this.type; //事件类型
+        this.button_name; //事件在控制界面的按钮上的名称
+
         this.conditions_appear = new Array(); //事件出现条件
+        this.finish_condition = new Object(); //事件完成条件
+        this.finish_reward = new Object(); //事件完成奖励
         this.init_event_name_desc(id);
     }
     //设置该事件的出现条件
@@ -22,22 +26,69 @@ export class Game_Event {
             this.conditions_appear.push(appear_obj);
         }
     }
+    //设置事件完成条件
+    set_finish_condition(...args) {
+        if (args.length % 2 != 0) {
+            console.log('输入的条件个数不是偶数，需要确认输入的条件是否正确');
+            return;
+        }
+        for (let i = 0; i < args.length; i += 2) {
+            let finish_key = args[i];
+            let finish_value = args[i + 1];
+            this.finish_condition[finish_key] = finish_value;
+        }
+    }
+    //设置事件完成奖励
+    set_finish_reward(type, ...args) {
+        //奖励是给予游戏状态，标记完成了相关内容
+        if (type == 'game_flag') {
+            if (args.length % 2 != 0) {
+                console.log('输入的条件个数不是偶数，需要确认输入的条件是否正确');
+                return;
+            }
+            if (is_Empty_Object(this.finish_reward['game_flag'])) {
+                this.finish_reward['game_flag'] = new Object();
+            }
+            for (let i = 0; i < args.length; i += 2) {
+                let finish_key = args[i];
+                let finish_value = args[i + 1];
+                this.finish_reward['game_flag'][finish_key] = finish_value;
+            }
+        }
+        //奖励是开启新事件
+        if (type == 'start_event') {
+            if (is_Empty_Object(this.finish_reward['start_event'])) {
+                this.finish_reward['start_event'] = new Array();
+            }
+            for (let i = 0; i < args.length; i++) {
+                this.finish_reward['start_event'].push(args[i]);
+            }
+        }
+    }
     //调用文本数据库中的地点名称和描述
     init_event_name_desc(id) {
-        if (texts[id] === undefined) {
+        if (is_Empty_Object(texts[id])) {
             //尚未定义
             this.name = '未命名事件';
             this.desc = '未设定事件描述';
         } else {
-            if (texts[id].event_name) {
-                this.name = texts[id].event_name;
-            } else {
+            //事件名
+            if (is_Empty_Object(texts[id].event_name)) {
                 this.name = '未命名事件';
-            }
-            if (texts[id].event_desc) {
-                this.desc = texts[id].event_desc;
             } else {
+                this.name = texts[id].event_name;
+            }
+            //事件描述
+            if (is_Empty_Object(texts[id].event_desc)) {
                 this.desc = '未设定事件描述';
+            } else {
+                this.desc = texts[id].event_desc;
+            }
+            //事件在控制界面的按钮上的名称
+            if (is_Empty_Object(texts[id].button_name)) {
+                this.button_name = this.name;
+            } else {
+                this.button_name = texts[id].button_name;
             }
         }
     }
@@ -101,9 +152,9 @@ export class Mini_event extends Game_Event {
             button_obj.condition = new Object();
         }
         for (let i = 0; i < condition_value.length; i += 2) {
-            let condition_name = condition_value[i];
+            let condition_id = condition_value[i];
             let condition_status = condition_value[i + 1];
-            button_obj.condition[condition_name] = condition_status;
+            button_obj.condition[condition_id] = condition_status;
         }
     }
     //设置一个按钮按下之后要做的事
@@ -157,6 +208,26 @@ export class Mini_event extends Game_Event {
                 attr_obj.value = thing_value[i + 1];
                 thing_obj[thing_type].push(attr_obj);
             }
+        } else if (thing_type == 'set_global_flag') {
+            //设置全局游戏状态
+            if (thing_value.length % 2 != 0) {
+                console.log('设置玩家属性时需要给予2倍数的参数，需要确认输入是否正确');
+                return;
+            }
+            for (let i = 0; i < thing_value.length; i += 2) {
+                let attr_obj = new Object();
+                attr_obj.id = thing_value[i];
+                attr_obj.value = thing_value[i + 1];
+                thing_obj[thing_type].push(attr_obj);
+            }
+        } else if (thing_type == 'get_side_quest') {
+            //设置全局游戏状态
+            for (let i = 0; i < thing_value.length; i++) {
+                let event_id = thing_value[i];
+                thing_obj[thing_type].push(event_id);
+            }
+        } else {
+            console.log('未知的迷你事件中要做的事：%s，没有开发对应的处理逻辑', thing_type);
         }
     }
     //向迷你事件的一个流程里添加一个buff,进入这个流程时获得
@@ -170,41 +241,61 @@ export class Mini_event extends Game_Event {
         }
     }
 }
+export class Side_quest extends Game_Event {
+    constructor(id) {
+        super(id);
+        this.type = 'side_quest';
+    }
+}
 
 function add_Game_Event_object(game_events, newid) {
     if (game_events[newid] === undefined) {
         game_events[newid] = new Game_Event(newid);
     } else {
-        console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建game_events[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_Main_quest_obj(game_events, newid) {
     if (game_events[newid] === undefined) {
         game_events[newid] = new Main_quest(newid);
     } else {
-        console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建game_events[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_Achievement_obj(game_events, newid) {
     if (game_events[newid] === undefined) {
         game_events[newid] = new Achievement(newid);
     } else {
-        console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建game_events[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_Challenge_obj(game_events, newid) {
     if (game_events[newid] === undefined) {
         game_events[newid] = new Challenge(newid);
     } else {
-        console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建game_events[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_Mini_event_obj(game_events, newid) {
     if (game_events[newid] === undefined) {
         game_events[newid] = new Mini_event(newid);
     } else {
-        console.log(`创建game_events[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建game_events[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
+    }
+}
+function add_Side_event_obj(game_events, newid) {
+    if (game_events[newid] === undefined) {
+        game_events[newid] = new Side_quest(newid);
+    } else {
+        console.log('创建game_events[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 
-export { add_Game_Event_object, add_Main_quest_obj, add_Achievement_obj, add_Challenge_obj, add_Mini_event_obj };
+export {
+    add_Game_Event_object,
+    add_Main_quest_obj, //
+    add_Achievement_obj,
+    add_Challenge_obj,
+    add_Mini_event_obj,
+    add_Side_event_obj,
+};

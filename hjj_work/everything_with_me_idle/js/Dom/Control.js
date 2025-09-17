@@ -101,7 +101,7 @@ function show_new_place(new_place) {
     //展示新地点的描述
     Place_desc_div.innerHTML = new_place.desc;
 
-    //可以前往普通区域
+    //无条件可以前往的普通区域
     if (!is_Empty_Object(new_place.connect_normal_place)) {
         for (let next_place_id of new_place.connect_normal_place) {
             add_control_button_move(next_place_id, '前往', null);
@@ -164,8 +164,8 @@ function show_new_NPC(new_NPC) {
 
     //可以进行的常态事件
     if (!is_Empty_Object(new_NPC.behaviors)) {
-        for (let next_place_id of new_NPC.behaviors) {
-            add_control_button_start_event(next_place_id, '进行', null);
+        for (let event_id of new_NPC.behaviors) {
+            add_control_button_start_event(event_id);
         }
     }
     //有条件出现的事件
@@ -173,7 +173,7 @@ function show_new_NPC(new_NPC) {
         for (let event_id of new_NPC.condition_behaviors) {
             //对每个事件的出现条件进行判断，满足条件才在界面中添加按钮
             if (check_condition_appear_behaviors(event_id)) {
-                add_control_button_start_event(event_id, '进行', null);
+                add_control_button_start_event(event_id);
             }
         }
     }
@@ -242,10 +242,10 @@ function add_control_button_move(new_place_id, front_text, after_text) {
         place_manage.set_now_place(new_place_id);
     });
 }
-//向玩家控制界面添加一个按钮，按钮的效果是开启特殊事件
-function add_control_button_start_event(event_id, front_text, after_text) {
-    //组成按钮上的文本
-    let button_text = make_button_text(front_text, game_events[event_id].name, after_text);
+//向玩家控制界面添加一个按钮，按钮的效果是开启事件
+function add_control_button_start_event(event_id) {
+    //获取按钮上的文本
+    let button_text = game_events[event_id].button_name;
     //生成按钮
     let move_place_button = addElement(player_Control_div, 'div', null, 'player_Control_button');
     move_place_button.innerHTML = button_text;

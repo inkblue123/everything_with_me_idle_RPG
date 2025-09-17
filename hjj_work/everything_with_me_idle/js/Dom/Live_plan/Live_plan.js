@@ -1,8 +1,9 @@
 import { crtElement, addElement, addElement_radio } from '../../Function/Dom_function.js';
 import { show_dropdown_table, change_Live_plan_div, change_Explore_collection_div } from '../../Function/show_func.js';
 import { player } from '../../Player/Player.js';
+import { global } from '../../GameRun/global_manage.js';
 import { make_logging_div, set_logging_button } from './logging.js';
-// import { make_fishing_div, set_fishing_button } from './fishing.js';
+import { make_fishing_div, set_fishing_button } from './fishing.js';
 // import { make_mining_div, set_mining_button } from './mining.js';
 import { make_foraging_div, set_foraging_button } from './foraging.js';
 // import { make_diving_div, set_diving_button } from './diving.js';
@@ -15,13 +16,13 @@ var Live_plan = crtElement('div', 'Live_plan', null, '');
 
 {
     //界面上部，区分当前展示的内容的按钮
-    var Live_plan_switch_div = crtElement('div', 'Live_plan_switch_div', 'page_flex', '');
+    var Live_plan_switch_div = crtElement('div', 'Live_plan_switch_div', 'page_flex', 'none');
     var EC_switch_button = addElement(Live_plan_switch_div, 'button', 'EC_switch_button', 'Live_plan_switch_button');
     var SM_switch_button = addElement(Live_plan_switch_div, 'button', 'SM_switch_button', 'Live_plan_switch_button');
     EC_switch_button.innerHTML = `搜索采集`;
     SM_switch_button.innerHTML = `合成制造`;
     //界面下部，具体展示内容的窗口
-    var Live_plan_value_div = crtElement('div', 'Live_plan_value_div', 'page_columns_1', '');
+    var Live_plan_value_div = crtElement('div', 'Live_plan_value_div', 'page_columns_1', 'none');
     var EC_div = addElement(Live_plan_value_div, 'div', 'EC_div', 'page_columns_12');
     var SM_div = addElement(Live_plan_value_div, 'div', 'SM_div', 'page_columns_12', 'none');
     //搜索采集窗口 Explore_collection EC
@@ -61,7 +62,7 @@ var Live_plan = crtElement('div', 'Live_plan', null, '');
             make_logging_div(LGI_value_div);
             //钓鱼
             var FIS_value_div = addElement(EC_div, 'div', 'FIS_value_div', null, 'none');
-            // make_fishing_div(FIS_value_div);
+            make_fishing_div(FIS_value_div);
             //挖矿
             var MIN_value_div = addElement(EC_div, 'div', 'MIN_value_div', null, 'none');
             // make_mining_div(MIN_value_div);
@@ -115,8 +116,14 @@ var Live_plan = crtElement('div', 'Live_plan', null, '');
         }
     }
 
+    //未解锁任何生活技能时的填充页
+    var lock_all_Live_plan_div = crtElement('div', 'lock_all_Live_plan_div', null, '');
+    lock_all_Live_plan_div.innerHTML = '未解锁任何生活技能';
+    lock_all_Live_plan_div.dataset.flag = true;
+
     Live_plan.appendChild(Live_plan_switch_div);
     Live_plan.appendChild(Live_plan_value_div);
+    Live_plan.appendChild(lock_all_Live_plan_div);
 }
 
 // 为组件添加触发事件
@@ -132,6 +139,12 @@ var Live_plan = crtElement('div', 'Live_plan', null, '');
     let radios = Live_plan.querySelectorAll('input[type="radio"][name="EC_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
+            //停止当前进行的生活技能
+            let live_plan_manage = global.get_live_plan_manage();
+            live_plan_manage.stop_now_live_skill();
+            //停止游戏状态
+            global.set_flag('GS_game_statu', 'NULL');
+            //切换界面
             change_Explore_collection_div(this.id);
         });
     });
@@ -139,16 +152,16 @@ var Live_plan = crtElement('div', 'Live_plan', null, '');
     //为伐木界面中的按钮添加交互逻辑
     set_logging_button(LGI_value_div);
     //为钓鱼界面中的按钮添加交互逻辑
-    // set_fishing_button(FAG_value_div);
+    set_fishing_button(FIS_value_div);
     //为挖矿界面中的按钮添加交互逻辑
-    // set_mining_button(FAG_value_div);
+    // set_mining_button(MIN_value_div);
     //为采集界面中的按钮添加交互逻辑
     set_foraging_button(FAG_value_div);
     //为潜水界面中的按钮添加交互逻辑
-    // set_diving_button(FAG_value_div);
+    // set_diving_button(DIV_value_div);
     //为考古界面中的按钮添加交互逻辑
-    // set_archaeology_button(FAG_value_div);
+    // set_archaeology_button(ACL_value_div);
     //为探索界面中的按钮添加交互逻辑
-    // set_exploration_button(FAG_value_div);
+    // set_exploration_button(ELT_value_div);
 }
 export { Live_plan };

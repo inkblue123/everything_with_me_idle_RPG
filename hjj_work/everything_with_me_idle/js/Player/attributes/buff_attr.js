@@ -30,28 +30,33 @@ class game_time_BUFF extends BUFF {
         let time_manage = global.get_time_manage();
         this.buff_start_time = time_manage.get_game_now_time(); //获得buff的游戏时间
         this.last_buff_time = this.buff_start_time; //上次触发buff的时间
-        if (this.time_value != 'infinite') {
-            this.buff_have_time = this.time_value * 1000; //buff剩余有效时间
+        //buff数据库规定这个buff的持续时间
+        if (buffs[this.id].time_value == 'infinite') {
+            this.buff_have_time = 'infinite';
+        } else {
+            this.buff_have_time = buffs[this.id].time_value * 1000; //buff剩余有效时间
         }
     }
     //使用存档数据初始化
-    load_init(buff_have_time) {
+    load_init(buff_save) {
         let time_manage = global.get_time_manage();
         let game_now_time = time_manage.get_game_now_time();
-        this.buff_start_time = game_now_time - buff_have_time; //推算获得buff的游戏时间
-        this.last_buff_time = this.buff_start_time; //上次触发buff的时间
-        if (this.time_value != 'infinite') {
-            this.buff_have_time = buff_have_time; //buff剩余有效时间
+        if (buff_save.buff_have_time == 'infinite') {
+            // this.buff_start_time = buff_save.buff_start_time;//持续时间无限的buff其实不需要起始时间
+            this.last_buff_time = game_now_time; //上次触发buff的时间
+        } else {
+            this.buff_start_time = game_now_time - buff_save.buff_have_time; //推算获得buff的游戏时间
+            this.last_buff_time = this.buff_start_time; //上次触发buff的时间
         }
+        this.buff_have_time = buff_save.buff_have_time; //buff剩余有效时间
     }
     //检查这个buff应该运行、等待、清除的状态
     get_buff_status(game_now_time) {
-        if (this.time_value != 'infinite') {
-            //持续时间超过了有效时间
-            // if (game_now_time - this.buff_start_time >= this.time_value * 1000) {
-            //     return 'delete';
-            // }
-            //有效时间归零了
+        if (this.buff_have_time == 'infinite') {
+            //buff持续时间无限，可以执行
+        } else {
+            //buff持续时间有限，检查时间
+            //持续时间归零了
             if (this.buff_have_time <= 0) {
                 return 'delete';
             }
@@ -87,15 +92,13 @@ class game_time_BUFF extends BUFF {
             }
         }
         //更新参数
-        if (this.time_value != 'infinite') {
+        if (this.buff_have_time != 'infinite') {
             this.buff_have_time -= time_in;
         }
         this.last_buff_time = game_now_time;
     }
     //清除这个buff的效果
     delete_buff(game_now_time) {
-        //对基于游戏时间生效的buff，激活时将每秒应当生效的属性和经过的时间进行等比计算，
-
         for (let buff_value of this.buff_value) {
             if (buff_value.buff_type == 'change_game_speed') {
                 delete_change_game_speed_buff();
@@ -146,14 +149,9 @@ export class Buff_attr_manage {
         if (!is_Empty_Object(this.game_time_buff)) {
             buff_attr_save.game_time_buff = new Object();
             for (let id in this.game_time_buff) {
-                let buff_obj = new Object();
                 //每个buff目前只保存剩余时间
                 //之后或许还需要保存buff的加成效果等参数
-                if (buffs[id].time_value != 'infinite') {
-                    buff_obj.buff_have_time = this.game_time_buff[id].buff_have_time;
-                }
-
-                buff_attr_save.game_time_buff[id] = buff_obj;
+                buff_attr_save.game_time_buff[id] = this.game_time_buff[id];
             }
         }
 
@@ -170,10 +168,9 @@ export class Buff_attr_manage {
 
         if (!is_Empty_Object(buff_attr_save.game_time_buff)) {
             for (let id in buff_attr_save.game_time_buff) {
-                let buff_have_time = buff_attr_save.game_time_buff[id].buff_have_time;
-                //有些无限时间的buff是没有剩余时间的，buff_have_time会是未定义，已经在load_init里处理了
                 let buff_obj = new game_time_BUFF(id);
-                buff_obj.load_init(buff_have_time);
+                // let buff_have_time = buff_attr_save.game_time_buff[id].buff_have_time;
+                buff_obj.load_init(buff_attr_save.game_time_buff[id]);
                 this.game_time_buff[id] = buff_obj;
             }
         }

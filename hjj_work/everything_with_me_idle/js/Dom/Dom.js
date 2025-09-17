@@ -57,7 +57,7 @@ function game_dom_init() {
         //游离于游戏布局之上，跟随鼠标的小窗口
         dom.tooltip = Tooltip;
 
-        dom.map = crtElement('div', 'map', 'section', '', '#33fff9');
+        dom.map = crtElement('div', 'map', 'section', '', '');
         dom.map.textContent = '地图界面';
 
         // dom.remenber = crtElement('div', null, 'section', '', '#3357ff');

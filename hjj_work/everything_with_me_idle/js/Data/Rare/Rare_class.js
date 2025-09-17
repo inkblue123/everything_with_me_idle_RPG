@@ -58,7 +58,7 @@ function add_Rare_object(rares, newid) {
     if (rares[newid] === undefined) {
         rares[newid] = new Rare(newid);
     } else {
-        console.log(`创建rares[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建rares[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 

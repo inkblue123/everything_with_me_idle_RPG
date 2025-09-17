@@ -1,4 +1,4 @@
-import { is_Empty_Object } from '../../Function/Function.js';
+import { is_Empty_Object, get_monitor_ch } from '../../Function/Function.js';
 import { addElement } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
 import { texts } from '../../Data/Text/Text.js';
@@ -66,9 +66,21 @@ export class Challenge_manage {
         //检测事件目标是否达成
         let finish_flag = true;
         for (let id in this.monitor_target) {
-            if (this.monitor_data[id] < this.monitor_target[id]) {
-                finish_flag = false;
-                break;
+            if (typeof this.monitor_data[id] == 'number') {
+                //数字类型目标，数值小于目标值时没有完成
+                if (this.monitor_data[id] < this.monitor_target[id]) {
+                    finish_flag = false;
+                    break;
+                }
+            } else if (typeof this.monitor_data[id] == 'boolean') {
+                //布尔类型目标，当前值与目标值不同时没有完成
+                if (this.monitor_data[id] != this.monitor_target[id]) {
+                    finish_flag = false;
+                    break;
+                }
+            } else {
+                console.log('未知类型的监控行为目标数值，无法设定初始值');
+                return;
             }
         }
         if (finish_flag) {
@@ -132,7 +144,13 @@ export class Challenge_manage {
     init_monitor_target() {
         this.monitor_target = game_events[this.challenge_id].finish_condition;
         for (let id in this.monitor_target) {
-            this.monitor_data[id] = 0;
+            if (typeof this.monitor_target[id] == 'number') {
+                this.monitor_data[id] = 0;
+            } else if (typeof this.monitor_target[id] == 'boolean') {
+                this.monitor_data[id] = false;
+            } else {
+                console.log('未知类型的监控行为目标数值，无法设定初始值');
+            }
         }
     }
     //重置参数
@@ -149,11 +167,22 @@ export class Challenge_manage {
             console.log('当前没有挑战，却触发了更新函数，说明外部程序没有更新好挑战的监控行为');
             return;
         }
-        if (this.monitor_data[type] >= this.monitor_target[type]) {
-            //这一条监控行为已经达成，不需要继续监控
+        if (typeof this.monitor_data[type] == 'number') {
+            if (this.monitor_data[type] >= this.monitor_target[type]) {
+                //这一条监控行为已经达成，不需要继续监控
+                return;
+            }
+            this.monitor_data[type] += value;
+        } else if (typeof this.monitor_data[type] == 'boolean') {
+            if (this.monitor_data[type] == this.monitor_target[type]) {
+                //这一条监控行为已经达成，不需要继续监控
+                return;
+            }
+            this.monitor_data[type] = value;
+        } else {
+            console.log('非数字且非布尔类型的监控行为目标数值，异常，不知道怎么更新');
             return;
         }
-        this.monitor_data[type] += value;
         this.updata_challenge();
     }
     //初始化脑海-重要事件界面中关于挑战的信息
@@ -176,10 +205,15 @@ export class Challenge_manage {
             monitor_value_div.dataset.monitor_id = monitor_id;
             let monitor_flag_div = addElement(monitor_value_div, 'div', null, 'monitor_flag_div');
             let monitor_desc_div = addElement(monitor_value_div, 'div', null, 'monitor_desc_div');
-            //获取指定监控数据是否达成
-            monitor_flag_div.innerHTML = this.get_monitor_flag(monitor_id);
+            //获取指定监控数据是否达成，转换成图标
+            let flag = this.get_monitor_flag(monitor_id);
+            if (flag) {
+                monitor_flag_div.innerHTML = '☑';
+            } else {
+                monitor_flag_div.innerHTML = '☐';
+            }
             //获取指定监控数据的文本
-            monitor_desc_div.innerHTML = this.get_monitor_ch(monitor_id);
+            monitor_desc_div.innerHTML = get_monitor_ch(monitor_id, this.monitor_data, this.monitor_target);
         }
     }
     //更新脑海-重要事件界面中关于挑战的信息
@@ -197,9 +231,15 @@ export class Challenge_manage {
             let monitor_flag_div = monitor_value_div.children[0];
             let monitor_desc_div = monitor_value_div.children[1];
             //获取指定监控数据是否达成
-            monitor_flag_div.innerHTML = this.get_monitor_flag(monitor_id);
+            let flag = this.get_monitor_flag(monitor_id);
+            if (flag) {
+                monitor_flag_div.innerHTML = '☑';
+            } else {
+                monitor_flag_div.innerHTML = '☐';
+            }
+            // monitor_flag_div.innerHTML = this.get_monitor_flag(monitor_id);
             //获取指定监控数据的文本
-            monitor_desc_div.innerHTML = this.get_monitor_ch(monitor_id);
+            monitor_desc_div.innerHTML = get_monitor_ch(monitor_id, this.monitor_data, this.monitor_target);
         }
     }
     //清空脑海-重要事件界面中关于挑战的信息
@@ -216,37 +256,24 @@ export class Challenge_manage {
             console.log('错误，当前%s挑战中没有%s监控行为', this.challenge_id, id);
             return false;
         }
-        if (id.startsWith('EE_')) {
-            //如果完成条件是达成型
+
+        if (typeof this.monitor_data[id] == 'number') {
+            //数字型目标，当前数值达到目标值就算达成
+            if (this.monitor_data[id] >= this.monitor_target[id]) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (typeof this.monitor_data[id] == 'boolean') {
+            //布尔型目标，当前数值和目标值一致就算达成
             if (this.monitor_data[id] == this.monitor_target[id]) {
-                return '☑';
+                return true;
             } else {
-                return '☐';
+                return false;
             }
         } else {
-            //如果完成条件是累计型
-            if (this.monitor_data[id] < this.monitor_target[id]) {
-                return '☐';
-            } else {
-                return '☑';
-            }
+            console.log('非数字且非布尔类型的监控行为目标数值，异常，不知道怎么判断达成');
+            return;
         }
-    }
-    //获取某条监控行为呈现到div布局中的文本
-    get_monitor_ch(id) {
-        if (is_Empty_Object(this.monitor_target[id])) {
-            console.log('错误，当前%s挑战中没有%s监控行为', this.challenge_id, id);
-            return false;
-        }
-        let ch;
-        if (id.startsWith('EE_')) {
-            //如果完成条件是达成型
-            let monitor_id = id.slice(3);
-            ch = '完成' + texts[monitor_id].event_name;
-        } else {
-            //如果完成条件是累计型
-            ch = texts[id].condition_name + ' (' + this.monitor_data[id] + '/' + this.monitor_target[id] + ')';
-        }
-        return ch;
     }
 }

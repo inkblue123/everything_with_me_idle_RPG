@@ -11,6 +11,7 @@ export class Place {
         this.area_id; //地点所在的区域
         this.area_name; //区域名称
         this.connect_normal_place = new Array(); //可以联通的普通地点
+        this.condition_connect_normal_place = new Array(); //满足条件才可联通的普通地点
         this.connect_combat_place = new Array(); //可以联通的战斗地点
         this.connect_store_place = new Array(); //可以联通的商店
         this.connect_other_place = new Array(); //可以联通的其他地点
@@ -44,6 +45,24 @@ export class Place {
     add_connect_normal_place(...args) {
         for (let id of args) {
             this.connect_normal_place.push(id);
+        }
+    }
+    //添加这个地点满足条件才可联通的其他普通地点
+    add_condition_connect_normal_place(place_id, ...value) {
+        if (is_Empty_Object(this.condition_connect_normal_place)) {
+            this.condition_connect_normal_place = new Object();
+        }
+        if (value.length < 2 || value.length % 2 != 0) {
+            console.log('参数数量错误，至少输入一对条件和条件值');
+            return;
+        }
+        for (let i = 0; i < value.length; i += 2) {
+            //输入参数后面每两个参数，一个是条件id，另一个是条件的值
+            let status_id = value[i];
+            let status_value = value[i + 1];
+            let status_obj = new Object();
+            status_obj[status_id] = status_value;
+            this.condition_connect_normal_place[place_id] = status_obj;
         }
     }
     //添加这个地点可以联通的其他战斗地点
@@ -90,7 +109,7 @@ export class Place {
         }
     }
     //添加在这个地点有条件触发的事件
-    add_condition_event(...value) {
+    add_condition_trigger_event(...value) {
         if (value.length < 3 || value.length % 2 != 1) {
             console.log('参数数量错误，至少输入3个参数，且应该是奇数个参数');
             return;
@@ -129,34 +148,63 @@ export class P_normal extends Place {
     }
     //设置这个地点的伐木相关参数
     set_logging_data(reborn_time) {
+        if (this.live_plan_flag[0] == false) {
+            console.log('%s地点不允许伐木却设定了伐木相关参数');
+        }
         this.LGI_reborn_time = reborn_time;
     }
     //设置这个地点的钓鱼相关参数
-    set_fishing_data() {
-        // this.LGI_reborn_time = reborn_time;
+    set_fishing_data(pass_takebait, max_takebait, max_wait_time) {
+        if (this.live_plan_flag[1] == false) {
+            console.log('%s地点不允许钓鱼却设定了钓鱼相关参数');
+        }
+        //等鱼上钩阶段，地点上钩及格阈值
+        this.FIS_pass_takebait = pass_takebait;
+        //等鱼上钩阶段，地点上钩最大阈值
+        this.FIS_max_takebait = max_takebait;
+        //等鱼上钩阶段，随机上钩时间最大值
+        this.FIS_max_wait_time = max_wait_time;
     }
     //设置这个地点的挖矿相关参数
     set_mining_data() {
+        if (this.live_plan_flag[2] == false) {
+            console.log('%s地点不允许挖矿却设定了挖矿相关参数');
+        }
         // this.LGI_reborn_time = reborn_time;
     }
     //设置这个地点的采集相关参数
     set_foraging_data(defense) {
+        if (this.live_plan_flag[3] == false) {
+            console.log('%s地点不允许采集却设定了采集相关参数');
+        }
         this.FAG_defense = defense;
     }
     //设置这个地点的潜水相关参数
     set_diving_data() {
+        if (this.live_plan_flag[4] == false) {
+            console.log('%s地点不允许潜水却设定了潜水相关参数');
+        }
         // this.LGI_reborn_time = reborn_time;
     }
     //设置这个地点的考古相关参数
     set_archaeology_data() {
+        if (this.live_plan_flag[5] == false) {
+            console.log('%s地点不允许考古却设定了考古相关参数');
+        }
         // this.LGI_reborn_time = reborn_time;
     }
     //设置这个地点的探索相关参数
     set_exploration_data() {
+        if (this.live_plan_flag[6] == false) {
+            console.log('%s地点不允许探索却设定了探索相关参数');
+        }
         // this.LGI_reborn_time = reborn_time;
     }
     //设置这个地点伐木时可能出现的树
     set_logging_tree(id, chance, rare_flag, max_cumulative_num, cumulative_time) {
+        if (this.live_plan_flag[0] == false) {
+            console.log('%s地点不允许伐木却设定了伐木相关参数');
+        }
         if (is_Empty_Object(this.LGI_trees)) {
             this.LGI_trees = new Object();
         }
@@ -173,8 +221,33 @@ export class P_normal extends Place {
         }
         this.LGI_trees[id] = obj;
     }
+    //设置这个地点钓鱼时可能出现的鱼
+    set_fishing_fish(id, chance, rare_flag, max_cumulative_num, cumulative_time, equip_rarity) {
+        if (this.live_plan_flag[1] == false) {
+            console.log('%s地点不允许钓鱼却设定了钓鱼相关参数');
+        }
+        if (is_Empty_Object(this.FIS_fishs)) {
+            this.FIS_fishs = new Object();
+        }
+        let obj = new Object();
+        obj.id = id; //鱼的id
+        obj.chance = chance; //鱼刷新权重
+        obj.rare_flag = rare_flag; //鱼是否属于稀有单位
+        if (rare_flag == undefined) {
+            console.log('%s地点定义钓鱼的鱼%s时没有设定稀有标记', this.id, id);
+        }
+        if (rare_flag) {
+            obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
+            obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
+        }
+
+        this.FIS_fishs[id] = obj;
+    }
     //设置这个地点采集时可能的产物
     set_foraging_item(id, chance, rare_flag, max_cumulative_num, cumulative_time, equip_rarity) {
+        if (this.live_plan_flag[3] == false) {
+            console.log('%s地点不允许采集却设定了采集相关参数');
+        }
         if (is_Empty_Object(this.FAG_item)) {
             this.FAG_item = new Object();
         }
@@ -229,14 +302,7 @@ export class P_combat extends Place {
         }
     }
     //设置刷怪的相关参数
-    set_add_enemy_data(
-        max_live_enemy_num,
-        add_enemy_time,
-        little_enemy_num,
-        little_enemy_time,
-        add_enemy_distance,
-        add_enemy_skill_point
-    ) {
+    set_add_enemy_data(max_live_enemy_num, add_enemy_time, little_enemy_num, little_enemy_time, add_enemy_distance, add_enemy_skill_point) {
         this.max_live_enemy_num = max_live_enemy_num; //同场最多敌人数量
         //刷怪规则1，定时刷怪
         this.add_enemy_time = add_enemy_time; //定时刷怪时间间隔
@@ -270,7 +336,11 @@ export class P_NPC extends Place {
         this.behaviors = new Array(); //常态可执行行动
         this.condition_behaviors = new Array(); //条件可执行行动
         this.condition_meet_chat = new Array(); //条件见面对话
-        this.default_meet_chat = texts[place_id].default_meet_chat; //默认见面对话
+        if (is_Empty_Object(texts[place_id])) {
+            console.log('未定义NPC地点%s的文本信息', place_id);
+        } else {
+            this.default_meet_chat = texts[place_id].default_meet_chat; //默认见面对话
+        }
     }
     //添加在这个npc面前可以做的行动，在玩家控制界面添加一个按钮
     add_behavior(...args) {
@@ -279,12 +349,14 @@ export class P_NPC extends Place {
         }
     }
     //添加在这个npc面前满足条件才可以做的行动，满足条件时才在控制界面添加按钮
+    //条件与事件绑定，地点库中不保存条件
     add_condition_behavior(...value) {
         for (let event_id of value) {
             this.condition_behaviors.push(event_id);
         }
     }
     //初始化见面时满足条件才说的话
+    //npc说的话就只是一句文本，文本库中没有保存条件的数据结构，所以条件绑定在npc地点库中
     add_condition_meet_chat(...value) {
         if (value.length < 3 || value.length % 2 != 1) {
             console.log('参数数量错误，至少输入3个参数，且应该是奇数个参数');
@@ -364,42 +436,42 @@ function add_Place_object(places, newid, area) {
     if (places[newid] === undefined) {
         places[newid] = new Place(newid, area);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建places[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_normal_Place(places, newid, area) {
     if (places[newid] === undefined) {
         places[newid] = new P_normal(newid, area);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建places[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_combat_Place(places, newid, area) {
     if (places[newid] === undefined) {
         places[newid] = new P_combat(newid, area);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建places[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_NPC_Place(places, newid, area) {
     if (places[newid] === undefined) {
         places[newid] = new P_NPC(newid, area);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建places[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_store_Place(places, newid, area) {
     if (places[newid] === undefined) {
         places[newid] = new P_store(newid, area);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建places[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_resource_Place(places, newid, area) {
     if (places[newid] === undefined) {
         places[newid] = new P_resource(newid, area);
     } else {
-        console.log(`创建places[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建places[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 

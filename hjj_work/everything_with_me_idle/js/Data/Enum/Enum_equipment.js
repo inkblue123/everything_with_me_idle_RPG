@@ -244,13 +244,16 @@ function set_level_attr_Presets(enums) {
 function init_Enum_equipment(enums) {
     //创建新的内容之前建议先用add_Enum_Array,重名情况会用console.log输出
     //如果已经有过内容则应该考虑换个名字
+    let id;
 
     //哪些武器类型属于双手武器
-    add_Enum_Array(enums, 'both_hand');
-    enums.both_hand = ['battle_axe', 'long_handled', 'hammers', 'gloves', 'bow', 'crossbow', 'spray_gun'];
+    id = 'both_hand';
+    add_Enum_Array(enums, id);
+    enums[id] = ['battle_axe', 'long_handled', 'hammers', 'gloves', 'bow', 'crossbow', 'spray_gun'];
     //哪些武器类型属于单手武器
-    add_Enum_Array(enums, 'single_hand');
-    enums.single_hand = [
+    id = 'single_hand';
+    add_Enum_Array(enums, id);
+    enums[id] = [
         'dagger', //匕首
         'sword', //剑
         'sticks',
@@ -265,8 +268,9 @@ function init_Enum_equipment(enums) {
         'summon_core',
     ];
     //特制武器可能的稀有度
-    add_Enum_Array(enums, 'special_rarity');
-    enums.special_rarity = [
+    id = 'special_rarity';
+    add_Enum_Array(enums, id);
+    enums[id] = [
         'damaged', //破损
         'ordinary', //普通
         'excellent', //优良
@@ -276,15 +280,17 @@ function init_Enum_equipment(enums) {
     ];
     //制式武器可能的稀有度
     //破损，普通，优良，稀有，史诗
-    add_Enum_Array(enums, 'no_special_rarity');
-    enums.no_special_rarity = ['damaged', 'ordinary', 'excellent', 'rare', 'epic'];
+    id = 'no_special_rarity';
+    add_Enum_Array(enums, id);
+    enums[id] = ['damaged', 'ordinary', 'excellent', 'rare', 'epic'];
     //装备可能放置的位置
-    add_Enum_Array(enums, 'wearing_position');
-    enums.wearing_position = ['main_hand', 'head', 'chest', 'legs', 'feet', 'deputy', 'ornament'];
-    //装备可能的小类型
-    add_Enum_Array(enums, 'equipment_type');
-    enums.equipment_type = [
-        'empty_hands', //空手
+    id = 'wearing_position';
+    add_Enum_Array(enums, id);
+    enums[id] = ['main_hand', 'head', 'chest', 'legs', 'feet', 'deputy', 'ornament'];
+    //装备大类中，属于“武器”的可能的小类型
+    id = 'weapon_equipment_type';
+    add_Enum_Array(enums, id);
+    enums[id] = [
         // 近战武器
         'dagger', //匕首
         'sword', //剑
@@ -307,19 +313,12 @@ function init_Enum_equipment(enums) {
         'magic_core', //法术核心
         'spread_core', //扩散核心
         'summon_core', //召唤核心
-        //防具
-        'helmet', //头盔
-        'chest_armor', //胸甲
-        'leg_armor', //腿甲
-        'shoes', //鞋子
-        //副手
-        'shield', //盾牌
-
-        'ornament', //饰品
     ];
+
     //装备类型及其对应的伤害类型
-    add_Enum_Object(enums, 'weapon_damage_type');
-    enums.weapon_damage_type = {
+    id = 'weapon_damage_type';
+    add_Enum_Object(enums, id);
+    enums[id] = {
         //近战
         dagger: 'melee',
         sword: 'melee',
@@ -343,8 +342,10 @@ function init_Enum_equipment(enums) {
         spread_core: 'magic',
         summon_core: 'magic',
     };
-    add_Enum_Array(enums, 'damage_type');
-    enums.damage_type = ['melee', 'ranged', 'magic'];
+    //伤害类型枚举
+    id = 'damage_type';
+    add_Enum_Array(enums, id);
+    enums[id] = ['melee', 'ranged', 'magic'];
 
     //设置每种装备类型的属性倾向
     set_equipment_type_attr_Presets(enums);

@@ -42,8 +42,8 @@ export class Mini_event {
         //设置事件完成标记
         let global_flag_manage = global.get_global_flag_manage();
         if (flag == 'finish') {
-            //事件完成
-            global_flag_manage.set_flag(event_id, flag);
+            //仅设置事件本身完成
+            global_flag_manage.set_flag(event_id, true);
             if (game_events[event_id].game_log_flag == true || game_events[event_id].game_log_flag == undefined) {
                 global_flag_manage.set_game_log('finish_event', event_id);
             }
@@ -112,10 +112,26 @@ export class Mini_event {
                 //设置玩家属性
                 let P_attr = player.get_player_attributes();
                 for (let attr_obj of thing_obj[thing_type]) {
-                    let id = attr_obj.id;
-                    let value = attr_obj.value;
+                    let id = attr_obj.id; //玩家属性id
+                    let value = attr_obj.value; //属性要被修改到的值
                     P_attr.set_data_attr(id, value);
                 }
+            } else if (thing_type == 'set_global_flag') {
+                //设置全局游戏状态
+                let global_flag_manage = global.get_global_flag_manage();
+                for (let attr_obj of thing_obj[thing_type]) {
+                    let id = attr_obj.id; //要设置的游戏状态的key
+                    let value = attr_obj.value; //要设置成的游戏状态值
+                    global_flag_manage.set_flag(id, value);
+                }
+            } else if (thing_type == 'get_side_quest') {
+                //获得支线任务
+                let game_event_manage = global.get_game_event_manage();
+                for (let event_id of thing_obj[thing_type]) {
+                    game_event_manage.start_game_event(event_id);
+                }
+            } else {
+                console.log('未知的迷你事件中要做的事：%s，没有开发对应的处理逻辑', thing_type);
             }
         }
     }

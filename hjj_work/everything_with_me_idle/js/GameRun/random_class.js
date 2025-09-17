@@ -231,18 +231,6 @@ export class Random_manage {
     chance_randow_get_id_norare(drop_obj) {
         return get_obj_chance_random_id(drop_obj);
     }
-    //在地点中刷怪，返回一个敌人id
-    get_place_add_enemy_id(place_id) {
-        let enemys = places[place_id].enemy;
-        let enemy_id = this.chance_randow_get_id(enemys, 'ADD_ENEMY', place_id);
-        return enemy_id;
-    }
-    //在可伐木地点刷新树，返回一个敌人id
-    get_place_add_tree_id(place_id) {
-        let LGI_trees = places[place_id].LGI_trees;
-        let tree_id = this.chance_randow_get_id(LGI_trees, 'ADD_ENEMY', place_id);
-        return tree_id;
-    }
     //敌人死亡，在指定掉落列表里返回一个物品id
     get_enemy_death_item_id(enemy_id, arr_id) {
         let items = enemys[enemy_id].item_array[arr_id].items;

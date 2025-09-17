@@ -23,7 +23,7 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
             var BP_scroll_box = addElement(BP_div, 'div', 'BP_scroll_box', 'overflow_y_div');
             var BP_classification_div = addElement(BP_scroll_box, 'div', 'BP_classification_div', 'classification_div');
             // 全部
-            var BP_ALL_radio_div = addElement(BP_classification_div, 'div', null, 'radio_div switch_radio_div_1');
+            var BP_ALL_radio_div = addElement(BP_classification_div, 'div', 'BP_ALL_radio_div', 'radio_div switch_radio_div_1');
             addElement_radio(BP_ALL_radio_div, `BP_all`, 'BP_switch', `all`, `全部`);
             //默认激活"全部"过滤条件
             BP_ALL_radio_div.children[0].checked = true;
@@ -32,43 +32,43 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
             var BP_EQP_button = addElement(BP_classification_div, 'button', 'BP_EQP_button', 'dropdown_button_1');
             BP_EQP_button.innerHTML = `武器装备`;
             var BP_EQP_droptable = addElement(BP_classification_div, 'div', 'BP_EQP_droptable', 'dropdown_table');
-            var BP_EQP_all_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_EQP_all_radio_div, `BP_EQP_all`, 'BP_switch', `EQP_all`, `全部`);
-            var BP_EQP_W_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_EQP_W_radio_div, `BP_EQP_W`, 'BP_switch', `EQP_W`, `主手武器`);
-            var BP_EQP_A_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_EQP_A_radio_div, `BP_EQP_A`, 'BP_switch', `EQP_A`, `防具`);
-            var BP_EQP_D_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_EQP_D_radio_div, `BP_EQP_D`, 'BP_switch', `EQP_D`, `副手`);
-            var BP_EQP_O_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_EQP_O_radio_div, `BP_EQP_O`, 'BP_switch', `EQP_O`, `饰品`);
+            // var BP_EQP_all_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_EQP_all_radio_div, `BP_EQP_all`, 'BP_switch', `EQP_all`, `全部`);
+            // var BP_EQP_W_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_EQP_W_radio_div, `BP_EQP_W`, 'BP_switch', `EQP_W`, `主手武器`);
+            // var BP_EQP_A_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_EQP_A_radio_div, `BP_EQP_A`, 'BP_switch', `EQP_A`, `防具`);
+            // var BP_EQP_D_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_EQP_D_radio_div, `BP_EQP_D`, 'BP_switch', `EQP_D`, `副手`);
+            // var BP_EQP_O_radio_div = addElement(BP_EQP_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_EQP_O_radio_div, `BP_EQP_O`, 'BP_switch', `EQP_O`, `饰品`);
 
             //消耗品 consumable
             var BP_CSB_button = addElement(BP_classification_div, 'button', 'BP_CSB_button', 'dropdown_button_1');
             BP_CSB_button.innerHTML = `消耗品`;
             var BP_CSB_droptable = addElement(BP_classification_div, 'div', 'BP_CSB_droptable', 'dropdown_table');
-            var BP_CSB_all_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_CSB_all_radio_div, `BP_CSB_all`, 'BP_switch', `CSB_all`, `全部`);
-            var BP_CSB_F_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_CSB_F_radio_div, `BP_CSB_F`, 'BP_switch', `CSB_F`, `食品`);
-            var BP_CSB_A_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_CSB_A_radio_div, `BP_CSB_A`, 'BP_switch', `CSB_A`, `弹药`);
-            var BP_CSB_L_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_CSB_L_radio_div, `BP_CSB_L`, 'BP_switch', `CSB_L`, `生活消耗品`);
+            // var BP_CSB_all_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_CSB_all_radio_div, `BP_CSB_all`, 'BP_switch', `CSB_all`, `全部`);
+            // var BP_CSB_F_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_CSB_F_radio_div, `BP_CSB_F`, 'BP_switch', `CSB_F`, `食品`);
+            // var BP_CSB_A_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_CSB_A_radio_div, `BP_CSB_A`, 'BP_switch', `CSB_A`, `弹药`);
+            // var BP_CSB_L_radio_div = addElement(BP_CSB_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_CSB_L_radio_div, `BP_CSB_L`, 'BP_switch', `CSB_L`, `生活消耗品`);
             //材料 Material
             var BP_MTR_button = addElement(BP_classification_div, 'button', 'BP_MTR_button', 'dropdown_button_1');
             BP_MTR_button.innerHTML = `材料物品`;
             var BP_MTR_droptable = addElement(BP_classification_div, 'div', 'BP_MTR_droptable', 'dropdown_table');
-            var BP_MTR_all_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_MTR_all_radio_div, `BP_MTR_all`, 'BP_switch', `MTR_all`, `全部`);
-            var BP_MTR_R_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_MTR_R_radio_div, `BP_MTR_R`, 'BP_switch', `MTR_R`, `自然材料`);
-            var BP_MTR_P_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_MTR_P_radio_div, `BP_MTR_B`, 'BP_switch', `MTR_P`, `人工材料`);
-            var BP_MTR_F_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_MTR_F_radio_div, `BP_MTR_C`, 'BP_switch', `MTR_F`, `成品`);
-            var BP_MTR_O_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(BP_MTR_O_radio_div, `BP_MTR_L`, 'BP_switch', `MTR_O`, `其他物品`);
+            // var BP_MTR_all_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_MTR_all_radio_div, `BP_MTR_all`, 'BP_switch', `MTR_all`, `全部`);
+            // var BP_MTR_R_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_MTR_R_radio_div, `BP_MTR_R`, 'BP_switch', `MTR_R`, `自然材料`);
+            // var BP_MTR_P_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_MTR_P_radio_div, `BP_MTR_B`, 'BP_switch', `MTR_P`, `人工材料`);
+            // var BP_MTR_F_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_MTR_F_radio_div, `BP_MTR_C`, 'BP_switch', `MTR_F`, `成品`);
+            // var BP_MTR_O_radio_div = addElement(BP_MTR_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            // addElement_radio(BP_MTR_O_radio_div, `BP_MTR_L`, 'BP_switch', `MTR_O`, `其他物品`);
         }
         //右侧具体的背包物品
         var BP_value_scroll_box = addElement(BP_div, 'div', 'BP_value_scroll_box', 'overflow_y_div');
@@ -162,6 +162,7 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
     //展开隐藏的分类按钮
     BP_EQP_button.onclick = function () {
         //点击就激活武器装备分类下的“全部”过滤条件
+        let BP_EQP_all_radio_div = document.getElementById('BP_EQP_all_radio_div');
         BP_EQP_all_radio_div.children[0].checked = true;
         let P_backpack = player.get_player_backpack();
         P_backpack.updata_BP_value();
@@ -169,6 +170,7 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
     };
     BP_CSB_button.onclick = function () {
         //点击就激活消耗品分类下的“全部”过滤条件
+        let BP_CSB_all_radio_div = document.getElementById('BP_CSB_all_radio_div');
         BP_CSB_all_radio_div.children[0].checked = true;
         let P_backpack = player.get_player_backpack();
         P_backpack.updata_BP_value();
@@ -176,6 +178,7 @@ var Combat_plan = crtElement('div', 'Combat_plan', null, '');
     };
     BP_MTR_button.onclick = function () {
         //点击就激活材料分类下的“全部”过滤条件
+        let BP_MTR_all_radio_div = document.getElementById('BP_MTR_all_radio_div');
         BP_MTR_all_radio_div.children[0].checked = true;
         let P_backpack = player.get_player_backpack();
         P_backpack.updata_BP_value();

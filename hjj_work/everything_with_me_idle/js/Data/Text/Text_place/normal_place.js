@@ -1,6 +1,6 @@
 import { add_text_object } from '../Text_class.js';
 //所有普通地点的文本
-function normal_place(texts) {
+function normal_place_text(texts) {
     //位于测试区域的普通地点
     test_normal_place(texts);
     //位于村庄区域的普通地点
@@ -119,4 +119,4 @@ function virgin_forest_normal_place(texts) {
     texts[id].place_desc = '森林深处也不是全都充满危险，至少这里看起来稍微安静些，适合歇息';
 }
 
-export { normal_place };
+export { normal_place_text };

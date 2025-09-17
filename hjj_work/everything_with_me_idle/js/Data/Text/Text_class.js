@@ -20,7 +20,7 @@ function add_text_object(texts, newid) {
     if (texts[newid] === undefined) {
         texts[newid] = new Text(newid);
     } else {
-        console.log(`texts[${newid}] is no undefined`);
+        console.log('创建texts[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 

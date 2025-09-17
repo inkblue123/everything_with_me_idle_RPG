@@ -8,7 +8,7 @@ export class Buff {
         this.init_Buff_name_desc(id);
     }
 
-    //调用文本数据库中的地点名称和描述
+    //调用文本数据库中的buff名称和描述
     init_Buff_name_desc(id) {
         if (texts[id] === undefined) {
             //尚未定义
@@ -46,8 +46,8 @@ export class Buff {
             buff_value.data = value[1]; //每次buff生效获得多少数值
         }
         if (buff_type == 'change_game_speed') {
-            //给予属性的buff
-            buff_value.data = value[0]; //每次buff生效获得多少数值
+            //改变游戏速度的buff
+            buff_value.data = value[0]; //buff生效期间改变多少
         }
         this.buff_value.push(buff_value);
     }
@@ -56,15 +56,8 @@ function add_Buff_object(buffs, newid) {
     if (buffs[newid] === undefined) {
         buffs[newid] = new Buff(newid);
     } else {
-        console.log(`创建buffs[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建buffs[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
-// function add_normal_Place(enemys, newid) {
-//     if (enemys[newid] === undefined) {
-//         // enemys[newid] = new P_normal(newid);
-//     } else {
-//         console.log(`创建buffs[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
-//     }
-// }
 
 export { add_Buff_object };

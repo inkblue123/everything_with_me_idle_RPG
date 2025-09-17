@@ -188,28 +188,28 @@ function add_Skill_object(skills, newid) {
     if (skills[newid] === undefined) {
         skills[newid] = new Skill(newid);
     } else {
-        console.log(`创建skills[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建skills[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_P_Passive_skill(skills, newid) {
     if (skills[newid] === undefined) {
         skills[newid] = new P_Passive_skill(newid);
     } else {
-        console.log(`创建skills[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建skills[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_P_Active_skill(skills, newid) {
     if (skills[newid] === undefined) {
         skills[newid] = new P_Active_skill(newid);
     } else {
-        console.log(`创建skills[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建skills[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_E_Active_skill(skills, newid) {
     if (skills[newid] === undefined) {
         skills[newid] = new E_Active_skill(newid);
     } else {
-        console.log(`创建skills[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log('创建skills[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 

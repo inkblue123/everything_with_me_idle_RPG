@@ -129,34 +129,102 @@ function Equipment_wearing_position(texts) {
     texts['deputy'].wearing_desc = '这件装备可以放在副手';
 }
 
+//消耗品大类中的小类型名称
+function consumable_type(texts) {
+    let id;
+
+    id = 'ingredient';
+    add_text_object(texts, id);
+    texts[id].type_name = '食材';
+    id = 'food';
+    add_text_object(texts, id);
+    texts[id].type_name = '食品';
+    id = 'dry_product';
+    add_text_object(texts, id);
+    texts[id].type_name = '干制品';
+    id = 'crude_drug';
+    add_text_object(texts, id);
+    texts[id].type_name = '药材';
+    id = 'potion';
+    add_text_object(texts, id);
+    texts[id].type_name = '药水';
+    id = 'elixir';
+    add_text_object(texts, id);
+    texts[id].type_name = '丹药';
+    id = 'arrow';
+    add_text_object(texts, id);
+    texts[id].type_name = '箭矢';
+    id = 'bolt';
+    add_text_object(texts, id);
+    texts[id].type_name = '弩箭';
+    id = 'spray_gun_bullet';
+    add_text_object(texts, id);
+    texts[id].type_name = '喷枪弹药';
+    id = 'throwable';
+    add_text_object(texts, id);
+    texts[id].type_name = '可投掷弹药';
+    id = 'magic_core_bullet';
+    add_text_object(texts, id);
+    texts[id].type_name = '法术核心弹药';
+    id = 'bait';
+    add_text_object(texts, id);
+    texts[id].type_name = '鱼饵';
+    id = 'treasure_chest';
+    add_text_object(texts, id);
+    texts[id].type_name = '宝箱';
+    id = 'ordinary_coin';
+    add_text_object(texts, id);
+    texts[id].type_name = '凡间钱币';
+}
 //材料的类型名称
 function material_type(texts) {
-    add_text_object(texts, 'raw_MTR');
-    texts['raw_MTR'].type_name = '自然材料';
-    add_text_object(texts, 'process_MTR');
-    texts['process_MTR'].type_name = '人工材料';
-    add_text_object(texts, 'finish_MTR');
-    texts['finish_MTR'].type_name = '成品';
-    add_text_object(texts, 'other_MTR');
-    texts['other_MTR'].type_name = '其他物品';
+    let id;
 
-    add_text_object(texts, 'for_logging');
-    texts['for_logging'].source = '伐木';
-    add_text_object(texts, 'for_fishing');
-    texts['for_fishing'].source = '钓鱼';
-    add_text_object(texts, 'for_mining');
-    texts['for_mining'].source = '挖矿';
-    add_text_object(texts, 'for_harvest');
-    texts['for_harvest'].source = '采集';
-
-    add_text_object(texts, 'for_cooking');
-    texts['for_cooking'].source = '烹饪';
-    add_text_object(texts, 'for_making');
-    texts['for_making'].source = '制造';
-    add_text_object(texts, 'for_forging');
-    texts['for_forging'].source = '锻造';
-    add_text_object(texts, 'for_alchemy');
-    texts['for_alchemy'].source = '炼金';
+    id = 'ordinary_wood';
+    add_text_object(texts, id);
+    texts[id].type_name = '凡木';
+    id = 'spirit_wood';
+    add_text_object(texts, id);
+    texts[id].type_name = '灵木';
+    id = 'spirit_grass';
+    add_text_object(texts, id);
+    texts[id].type_name = '灵草';
+    id = 'ordinary_mushroom';
+    add_text_object(texts, id);
+    texts[id].type_name = '普通蘑菇';
+    id = 'rare_mushroom';
+    add_text_object(texts, id);
+    texts[id].type_name = '稀有蘑菇';
+    id = 'aquatic';
+    add_text_object(texts, id);
+    texts[id].type_name = '水产';
+    id = 'fur';
+    add_text_object(texts, id);
+    texts[id].type_name = '毛皮';
+    id = 'leather';
+    add_text_object(texts, id);
+    texts[id].type_name = '皮革';
+    id = 'bone';
+    add_text_object(texts, id);
+    texts[id].type_name = '骨头';
+    id = 'raw_meat';
+    add_text_object(texts, id);
+    texts[id].type_name = '生肉';
+    id = 'rock';
+    add_text_object(texts, id);
+    texts[id].type_name = '岩石';
+    id = 'wood_parts';
+    add_text_object(texts, id);
+    texts[id].type_name = '木制零件';
+    id = 'iron_parts';
+    add_text_object(texts, id);
+    texts[id].type_name = '铁质零件';
+    id = 'refined_seasoning';
+    add_text_object(texts, id);
+    texts[id].type_name = '精制调味料';
+    id = 'elixir_essence';
+    add_text_object(texts, id);
+    texts[id].type_name = '丹药精华';
 }
 //主动技能类型
 function active_type(texts) {
@@ -210,6 +278,28 @@ function passive_switch_type(texts) {
     add_text_object(texts, id);
     texts[id].passive_type_name = '特殊功法';
 }
+//钓鱼技能内的状态名称
+function fish_status(texts) {
+    let id;
+
+    //钓鱼状态的具体值是从1开始的枚举
+    //数字枚举已经统一定义过，不再重复定义
+    id = 1;
+    // add_text_object(texts, id);
+    texts[id].fish_status_name = '无';
+    id = 2;
+    // add_text_object(texts, id);
+    texts[id].fish_status_name = '等鱼上钩';
+    id = 3;
+    // add_text_object(texts, id);
+    texts[id].fish_status_name = '遛鱼';
+    id = 4;
+    // add_text_object(texts, id);
+    texts[id].fish_status_name = '钓鱼完成';
+    id = 5;
+    // add_text_object(texts, id);
+    texts[id].fish_status_name = '鱼跑了';
+}
 //初始化文本数据库中与类型相关的文本
 function init_Text_type(texts) {
     //武器装备类型描述
@@ -218,11 +308,15 @@ function init_Text_type(texts) {
     Equipment_rarity(texts);
     //武器装备的可装备位置描述
     Equipment_wearing_position(texts);
+    //消耗品大类中的小类描述
+    consumable_type(texts);
     //材料类型描述
     material_type(texts);
     //主动技能类型描述
     active_type(texts);
     //被动技能过滤类型描述
     passive_switch_type(texts);
+    //钓鱼技能内的状态名称
+    fish_status(texts);
 }
 export { init_Text_type };

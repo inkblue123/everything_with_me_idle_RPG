@@ -1,3 +1,4 @@
+import { add_text_object } from './Text_class.js';
 import { init_Text_type } from './Text_type.js';
 import { init_Text_item } from './Text_item/Text_item.js';
 import { init_Text_place } from './Text_place/Text_place.js';
@@ -9,6 +10,12 @@ import { init_Text_buff } from './Text_buff.js';
 import { init_Text_attr } from './Text_attr.js';
 
 var texts = new Object();
+
+//使用数字枚举当作id的文本在这里初始化
+//更细的分类使用对象的成员名来区分
+for (let i = 0; i < 101; i++) {
+    add_text_object(texts, i);
+}
 
 //初始化文本数据库中与类型相关的文本
 init_Text_type(texts);

@@ -61,7 +61,7 @@
     height: 20px;
     margin: auto;
     border: 0px;
-    background-color: #3a4e75;
+    background-color: #797691;
     color: white;
     line-height: 1; /*设置行间距为1，也就去掉了默认的行间距*/
     font-size: 20px;
@@ -223,6 +223,7 @@
 /* 背包物品分类单选按钮 */
 .EQP_switch_radio_div {
     margin: auto;
+    border: 2px solid #797691; /* 内框 */
 }
 
 /* 装备栏选择多选框，和圆点绑定的文本 */
@@ -231,7 +232,7 @@
     height: 50px;
     font-size: 15px; /*文本大小*/
     text-align: center;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     /* 让文本按照换行符换行，同时保留空格 */
     white-space: pre-wrap;
     color: #000;
@@ -240,13 +241,13 @@
 /* 装备栏选择多选框，选中之后，圆点绑定的文本的样式 */
 .EQP_switch_radio_div input[type='radio']:checked + label {
     color: #fff;
-    background-color: #3597db;
+    /* background-color: #3597db; */
 }
 
 /* 容纳具体技能内容的div */
-#PSK_div {
+/* #PSK_div {
     background-color: #ffd700;
-}
+} */
 /* 容纳具体技能内容的div */
 #PSK_value_div {
     display: flex;

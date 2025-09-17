@@ -80,8 +80,8 @@ export class Player_attributes {
         let health_max = this.get_data_attr('health_max');
 
         const HP_bar = document.getElementById('HP_bar');
-        HP_bar.children[0].children[0].style.width = `${(health_point / health_max) * 100}%`;
-        HP_bar.children[1].innerText = `${Math.floor(health_point)}/${Math.ceil(health_max)} 生命`;
+        HP_bar.children[0].children[0].style.width = (health_point / health_max) * 100 + '%';
+        HP_bar.children[1].innerText = Math.floor(health_point) + '/' + Math.ceil(health_max) + '生命';
     }
     //更新魔力条上的数值
     updata_MP_bar_div() {
@@ -89,8 +89,8 @@ export class Player_attributes {
         let magic_max = this.get_data_attr('magic_max');
 
         const MP_bar = document.getElementById('MP_bar');
-        MP_bar.children[0].children[0].style.width = `${(magic_point / magic_max) * 100}%`;
-        MP_bar.children[1].innerText = `${Math.floor(magic_point)}/${Math.ceil(magic_max)} 魔力`;
+        MP_bar.children[0].children[0].style.width = (magic_point / magic_max) * 100 + '%';
+        MP_bar.children[1].innerText = Math.floor(magic_point) + '/' + Math.ceil(magic_max) + '魔力';
     }
     //更新精力条上的数值
     updata_ENP_bar_div() {
@@ -98,7 +98,7 @@ export class Player_attributes {
         let energy_max = this.get_data_attr('energy_max');
 
         const ENP_bar = document.getElementById('ENP_bar');
-        ENP_bar.children[0].children[0].style.width = `${(energy_point / energy_max) * 100}%`;
-        ENP_bar.children[1].innerText = `${Math.floor(energy_point)}/${Math.ceil(energy_max)} 精力`;
+        ENP_bar.children[0].children[0].style.width = (energy_point / energy_max) * 100 + '%';
+        ENP_bar.children[1].innerText = Math.floor(energy_point) + '/' + Math.ceil(energy_max) + '精力';
     }
 }

@@ -128,10 +128,15 @@ class Global_manage {
         this.time_manage.load_Time_manage(global_save.Time_save);
         this.global_flag_manage.load_global_flag_manage(global_save.global_flag_save);
         this.game_event_manage.load_Game_event_manage(global_save.game_event_save);
-        this.place_manage.load_place_manage(global_save.place_save);
         this.enemy_manage.load_enemy_manage(global_save.enemy_save);
         this.live_plan_manage.load_Live_plan_manage(global_save.live_plan_save);
         this.random_manage.load_Random_manage(global_save.random_manage);
+        // 其他的游戏部分内容展示有很多依赖于地点的切换，所以地点存档最后更新
+        this.place_manage.load_place_manage(global_save.place_save);
+
+        //
+        // this.place_manage.set_now_place(global_save.place_save.);
+        // this.place_manage.set_now_place(global_save.place_save.);
     }
 }
 //记录全局参数和游戏状态的对象

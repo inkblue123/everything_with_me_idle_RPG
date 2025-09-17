@@ -17,6 +17,9 @@ const skill_rewards_func = {
 
 //简单生成一个随机数
 function get_random(min, max) {
+    if (max < min) {
+        console.log('最大值比最小值要小，参数异常');
+    }
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 //将玩家属性折算成一个结果

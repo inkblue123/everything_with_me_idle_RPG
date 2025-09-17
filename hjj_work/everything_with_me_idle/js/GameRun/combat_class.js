@@ -273,7 +273,7 @@ export class Combat_manage {
     enemy_death(enemy, main_Attack) {
         //玩家使用main_Attack击败了敌人，进行事件、经验相关的结算
         let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.record_kill_enemy_num(main_Attack);
+        global_flag_manage.record_kill_enemy_num(main_Attack, enemy);
         //地点可能是有限刷怪区域，记录敌人死亡的数据
         let enemy_manage = global.get_enemy_manage();
         enemy_manage.add_kill_enemy_num(1);

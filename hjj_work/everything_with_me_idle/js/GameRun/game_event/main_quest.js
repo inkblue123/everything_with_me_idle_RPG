@@ -1,10 +1,8 @@
-import { is_Empty_Object } from '../../Function/Function.js';
+import { is_Empty_Object, get_monitor_ch } from '../../Function/Function.js';
 import { addElement } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
-import { enums } from '../../Data/Enum/Enum.js';
 import { texts } from '../../Data/Text/Text.js';
 import { global } from '../global_manage.js';
-import { player } from '../../Player/Player.js';
 //主线任务管理类
 export class Main_quest_manage {
     constructor() {
@@ -40,7 +38,7 @@ export class Main_quest_manage {
     //启动主线任务
     start_main_quest(event_id) {
         if (this.main_quest_id != null) {
-            //已经处于挑战中，不能同时开启多个挑战
+            //已经处于主线中，不能同时开启另一个主线
             console.log('已经处于%s主线中，不能同时启动另一个主线', this.main_quest_id);
             return 0;
         }
@@ -60,40 +58,57 @@ export class Main_quest_manage {
         //检测事件目标是否达成
         let finish_flag = true;
         for (let id in this.monitor_target) {
-            if (this.monitor_data[id] < this.monitor_target[id]) {
-                finish_flag = false;
-                break;
+            if (typeof this.monitor_data[id] == 'number') {
+                //数字类型目标，数值小于目标值时没有完成
+                if (this.monitor_data[id] < this.monitor_target[id]) {
+                    finish_flag = false;
+                    break;
+                }
+            } else if (typeof this.monitor_data[id] == 'boolean') {
+                //布尔类型目标，当前值与目标值不同时没有完成
+                if (this.monitor_data[id] != this.monitor_target[id]) {
+                    finish_flag = false;
+                    break;
+                }
+            } else {
+                console.log('未知类型的监控行为目标数值，无法设定初始值');
+                return;
             }
         }
         if (finish_flag) {
-            this.end_main_quest();
+            this.end_main_quest('finish');
         }
     }
     //完成当前主线任务
-    end_main_quest() {
+    end_main_quest(end_type) {
         let event_id = this.main_quest_id;
-        //获得主线任务奖励
-        let finish_reward = game_events[this.main_quest_id].finish_reward;
-        for (let key in finish_reward) {
-            if (key == 'game_flag') {
-                //设置完成标记
-                let global_flag_manage = global.get_global_flag_manage();
-                for (let flag_name in finish_reward['game_flag']) {
-                    global_flag_manage.set_flag(flag_name, finish_reward['game_flag'][flag_name]);
-                    global_flag_manage.set_game_log('finish_event', flag_name);
-                }
-            } else if (key == 'start_event') {
-                //启动下一个主线
-                let game_event_manage = global.get_game_event_manage();
-                for (let id of finish_reward['start_event']) {
-                    game_event_manage.start_game_event(id);
+        let game_event_manage = global.get_game_event_manage();
+        if (end_type == 'finish') {
+            //获得主线任务奖励
+            let global_flag_manage = global.get_global_flag_manage();
+            let finish_reward = game_events[this.main_quest_id].finish_reward;
+            for (let key in finish_reward) {
+                if (key == 'game_flag') {
+                    //设置完成标记
+                    for (let flag_name in finish_reward['game_flag']) {
+                        global_flag_manage.set_flag(flag_name, finish_reward['game_flag'][flag_name]);
+                        global_flag_manage.set_game_log('finish_event', flag_name);
+                    }
+                } else if (key == 'start_event') {
+                    //启动下一个主线
+                    for (let id of finish_reward['start_event']) {
+                        game_event_manage.start_game_event(id);
+                    }
                 }
             }
+            //记录玩家完成了一个事件
+            global_flag_manage.record_event_finish_end(event_id);
+        } else {
+            console.log('理论上主线只能正常完成，不存在其他结束状态，遇到了异常状态%s', end_type);
         }
         //清除数据
         this.reset_monitor_data(); //主线任务类中的行为监控
-        let global_event_manage = global.get_game_event_manage();
-        global_event_manage.delete_monitor_target_summ(event_id); //游戏事件管理类中的行为监控
+        game_event_manage.delete_monitor_target_summ(event_id); //游戏事件管理类中的行为监控
         //将新的主线情况展示到脑海-重要事件界面中
         this.init_main_quest_IE_div();
     }
@@ -105,7 +120,13 @@ export class Main_quest_manage {
     init_monitor_target() {
         this.monitor_target = game_events[this.main_quest_id].finish_condition;
         for (let id in this.monitor_target) {
-            this.monitor_data[id] = 0;
+            if (typeof this.monitor_target[id] == 'number') {
+                this.monitor_data[id] = 0;
+            } else if (typeof this.monitor_target[id] == 'boolean') {
+                this.monitor_data[id] = false;
+            } else {
+                console.log('未知类型的监控行为目标数值，无法设定初始值');
+            }
         }
     }
     //重置参数
@@ -114,21 +135,30 @@ export class Main_quest_manage {
         this.monitor_data = new Object();
         this.monitor_target = new Object();
     }
-    //玩家行为-有事件正常完成结束
-    record_event_finish_end(event_id) {
-        let change_flag = false; //变动标记
-        for (let id in this.monitor_data) {
-            //寻找当前需要监控的数据中关于完成事件的条件
-            if (!id.startsWith('EE_')) continue;
-            let monitor_event_id = id.slice(3);
-            if (monitor_event_id == event_id && this.monitor_data[id] != true) {
-                this.monitor_data[id] = true;
-                change_flag = true;
+    //触发了监控行为，更新数值
+    updata_monitor_data(type, value) {
+        if (this.main_quest_id == null) {
+            //当前没有挑战，不需要监控任何参数
+            console.log('当前没有主线，却触发了更新函数，说明外部程序没有更新好主线的监控行为');
+            return;
+        }
+        if (typeof this.monitor_data[type] == 'number') {
+            if (this.monitor_data[type] >= this.monitor_target[type]) {
+                //这一条监控行为已经达成，不需要继续监控
+                return;
             }
+            this.monitor_data[type] += value;
+        } else if (typeof this.monitor_data[type] == 'boolean') {
+            if (this.monitor_data[type] == this.monitor_target[type]) {
+                //这一条监控行为已经达成，不需要继续监控
+                return;
+            }
+            this.monitor_data[type] = value;
+        } else {
+            console.log('非数字且非布尔类型的监控行为目标数值，异常，不知道怎么更新');
+            return;
         }
-        if (change_flag) {
-            this.updata_main_quest();
-        }
+        this.updata_main_quest();
     }
     //初始化脑海-重要事件界面中关于主线任务的信息
     init_main_quest_IE_div() {
@@ -151,9 +181,14 @@ export class Main_quest_manage {
             let monitor_flag_div = addElement(monitor_value_div, 'div', null, 'monitor_flag_div');
             let monitor_desc_div = addElement(monitor_value_div, 'div', null, 'monitor_desc_div');
             //获取指定监控数据是否达成
-            monitor_flag_div.innerHTML = this.get_monitor_flag(id);
+            let flag = this.get_monitor_flag(id);
+            if (flag) {
+                monitor_flag_div.innerHTML = '☑';
+            } else {
+                monitor_flag_div.innerHTML = '☐';
+            }
             //获取指定监控数据的文本
-            monitor_desc_div.innerHTML = this.get_monitor_ch(id);
+            monitor_desc_div.innerHTML = get_monitor_ch(id, this.monitor_data, this.monitor_target);
         }
     }
     //更新脑海-重要事件界面中关于主线任务的信息
@@ -171,9 +206,14 @@ export class Main_quest_manage {
             let monitor_flag_div = monitor_value_div.children[0];
             let monitor_desc_div = monitor_value_div.children[1];
             //获取指定监控数据是否达成
-            monitor_flag_div.innerHTML = this.get_monitor_flag(id);
+            let flag = this.get_monitor_flag(id);
+            if (flag) {
+                monitor_flag_div.innerHTML = '☑';
+            } else {
+                monitor_flag_div.innerHTML = '☐';
+            }
             //获取指定监控数据的文本
-            monitor_desc_div.innerHTML = this.get_monitor_ch(id);
+            monitor_desc_div.innerHTML = get_monitor_ch(id, this.monitor_data, this.monitor_target);
         }
     }
     //判断某条监控行为是否达成
@@ -182,37 +222,23 @@ export class Main_quest_manage {
             console.log('错误，当前%s主线中没有%s监控行为', this.main_quest_id, id);
             return false;
         }
-        if (id.startsWith('EE_')) {
-            //如果完成条件是达成型
+        if (typeof this.monitor_data[id] == 'number') {
+            //数字型目标，当前数值达到目标值就算达成
+            if (this.monitor_data[id] >= this.monitor_target[id]) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (typeof this.monitor_data[id] == 'boolean') {
+            //布尔型目标，当前数值和目标值一致就算达成
             if (this.monitor_data[id] == this.monitor_target[id]) {
-                return '☑';
+                return true;
             } else {
-                return '☐';
+                return false;
             }
         } else {
-            //如果完成条件是累计型
-            if (this.monitor_data[id] < this.monitor_target[id]) {
-                return '☐';
-            } else {
-                return '☑';
-            }
+            console.log('非数字且非布尔类型的监控行为目标数值，异常，不知道怎么判断达成');
+            return;
         }
-    }
-    //获取某条监控行为呈现到div布局中的文本
-    get_monitor_ch(id) {
-        if (is_Empty_Object(this.monitor_target[id])) {
-            console.log('错误，当前%s主线中没有%s监控行为', this.main_quest_id, id);
-            return false;
-        }
-        let ch;
-        if (id.startsWith('EE_')) {
-            //如果完成条件是达成型
-            let monitor_id = id.slice(3);
-            ch = '完成' + texts[monitor_id].event_name;
-        } else {
-            //如果完成条件是累计型
-            ch = texts[id].condition_name + ' (' + this.monitor_data[id] + '/' + this.monitor_target[id] + ')';
-        }
-        return ch;
     }
 }

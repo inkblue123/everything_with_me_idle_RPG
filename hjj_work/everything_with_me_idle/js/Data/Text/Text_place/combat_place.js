@@ -1,6 +1,6 @@
 import { add_text_object } from '../Text_class.js';
 //所有战斗地点的文本
-function combat_place(texts) {
+function combat_place_text(texts) {
     //位于测试区域的战斗地点
     test_combat_place(texts);
     //位于村庄区域的战斗地点
@@ -59,4 +59,4 @@ function backhill_cave_combat_place(texts) {
     // texts[id].place_desc = '村庄兵营为考验新的战士准备的地方';
 }
 
-export { combat_place };
+export { combat_place_text };

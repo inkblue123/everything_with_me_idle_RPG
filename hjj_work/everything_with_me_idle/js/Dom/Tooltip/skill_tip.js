@@ -37,7 +37,7 @@ function init_active_skill_tip(show_slot_num) {
         return false;
     }
     //创造主动技能展示的布局
-    Tooltip.style.width = `${P_skills[id].need_slot_num * TOOLTIP_WIDTH}px`;
+    Tooltip.style.width = P_skills[id].need_slot_num * TOOLTIP_WIDTH + 'px';
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
     name_lable.innerHTML = P_skills[id].name; //技能名
     let slot_div = addElement(Tooltip, 'div', null, 'slot_div');
@@ -75,7 +75,7 @@ function init_show_active_skill_tip(skill_obj) {
     }
 
     //创造主动技能展示的布局
-    Tooltip.style.width = `${P_skills[skill_id].need_slot_num * TOOLTIP_WIDTH}px`;
+    Tooltip.style.width = P_skills[skill_id].need_slot_num * TOOLTIP_WIDTH + 'px';
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
     name_lable.innerHTML = P_skills[skill_id].name; //技能名
 
@@ -135,11 +135,11 @@ function show_active_skill_condition(slot_value_div, active_skill) {
                 let AC_WT = active_skill.active_condition.weapon_type;
                 if (is_Empty_Object(AC_WT)) {
                     C_desc_div.innerHTML += '未设定';
-                    console.log(`没设定${id}技能的武器类型限制条件`);
+                    console.log('没设定%s技能的武器类型限制条件', id);
                 } else {
                     for (let i in AC_WT) {
                         let w_type = AC_WT[i];
-                        if (enums['equipment_type'].includes(w_type)) {
+                        if (enums['Equipment_secon_type'].includes(w_type)) {
                             if (i == 0) {
                                 C_desc_div.innerHTML += texts[w_type].type_name;
                             } else {
@@ -196,7 +196,7 @@ function show_active_skill_attr_correct(slot_value_div, active_skill) {
 
 //传入玩家拥有的一个被动技能对象，展示它的详细信息
 function init_show_passive_skill_tip(skill_obj) {
-    Tooltip.style.width = `${TOOLTIP_WIDTH}px`;
+    Tooltip.style.width = TOOLTIP_WIDTH + 'px';
     //名称
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
     name_lable.innerHTML = skill_obj.name; //技能名
@@ -266,12 +266,14 @@ function show_skill_level(div, skill_obj) {
         var exp_number = addElement(exp_bar, 'div', 'exp_number', 'progress_bar_number'); //进度条上显示的数字，表示当前进度具体数值
         if (skill_obj.levelmax_flag) {
             //技能满级了
-            exp_bar.children[0].children[0].style.width = `100%`;
-            exp_bar.children[1].innerText = `exp：MAX`;
+            exp_bar.children[0].children[0].style.width = '100%';
+            exp_bar.children[1].innerText = 'exp：MAX';
         } else {
             let exp_radio = (skill_obj.exp / skill_obj.next_level_need_exp) * 100;
-            exp_bar.children[0].children[0].style.width = `${exp_radio}%`;
-            exp_bar.children[1].innerText = `exp：${Math.floor(skill_obj.exp)}/${Math.ceil(skill_obj.next_level_need_exp)}`;
+            exp_bar.children[0].children[0].style.width = exp_radio + '%';
+            let now_exp = Math.floor(skill_obj.exp);
+            let next_level_exp = Math.ceil(skill_obj.next_level_need_exp);
+            exp_bar.children[1].innerText = 'exp：' + now_exp + '/' + next_level_exp;
         }
     } else {
         //该技能升级不靠经验，目前依靠的是达成某些事情

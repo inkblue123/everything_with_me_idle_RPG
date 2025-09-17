@@ -1,4 +1,4 @@
-import { is_Empty_Object } from '../../Function/Function.js';
+import { is_Empty_Object, get_monitor_ch } from '../../Function/Function.js';
 import { addElement } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
 import { texts } from '../../Data/Text/Text.js';
@@ -32,8 +32,38 @@ class Side_quest {
     init_monitor_target() {
         this.monitor_target = game_events[this.event_id].finish_condition;
         for (let id in this.monitor_target) {
-            this.monitor_data[id] = 0;
+            if (typeof this.monitor_target[id] == 'number') {
+                this.monitor_data[id] = 0;
+            } else if (typeof this.monitor_target[id] == 'boolean') {
+                this.monitor_data[id] = false;
+            } else {
+                console.log('未知类型的监控行为目标数值，无法设定初始值');
+            }
         }
+    }
+    //触发了监控行为，更新数值
+    updata_monitor_data(type, value) {
+        if (is_Empty_Object(this.monitor_data[type])) {
+            //当前支线没有type这个监控行为，不需要更新数值
+            return false;
+        }
+        if (typeof this.monitor_data[type] == 'number') {
+            if (this.monitor_data[type] >= this.monitor_target[type]) {
+                //这一条监控行为已经达成，不需要继续监控
+                return false;
+            }
+            this.monitor_data[type] += value;
+        } else if (typeof this.monitor_data[type] == 'boolean') {
+            if (this.monitor_data[type] == this.monitor_target[type]) {
+                //这一条监控行为已经达成，不需要继续监控
+                return false;
+            }
+            this.monitor_data[type] = value;
+        } else {
+            console.log('非数字且非布尔类型的监控行为目标数值，异常，不知道怎么更新');
+            return false;
+        }
+        return true;
     }
     //判断某条监控行为是否达成
     get_monitor_flag(id) {
@@ -41,20 +71,23 @@ class Side_quest {
             console.log('错误，当前%s支线中没有%s监控行为', this.event_id, id);
             return false;
         }
-        if (id.startsWith('EE_')) {
-            //如果完成条件是达成型
-            if (this.monitor_data[id] == this.monitor_target[id]) {
-                return '☑';
+        if (typeof this.monitor_data[id] == 'number') {
+            //数字型目标，当前数值达到目标值就算达成
+            if (this.monitor_data[id] >= this.monitor_target[id]) {
+                return true;
             } else {
-                return '☐';
+                return false;
+            }
+        } else if (typeof this.monitor_data[id] == 'boolean') {
+            //布尔型目标，当前数值和目标值一致就算达成
+            if (this.monitor_data[id] == this.monitor_target[id]) {
+                return true;
+            } else {
+                return false;
             }
         } else {
-            //如果完成条件是累计型
-            if (this.monitor_data[id] < this.monitor_target[id]) {
-                return '☐';
-            } else {
-                return '☑';
-            }
+            console.log('非数字且非布尔类型的监控行为目标数值，异常，不知道怎么判断达成');
+            return;
         }
     }
     //获取某条监控行为呈现到div布局中的文本
@@ -63,24 +96,27 @@ class Side_quest {
             console.log('错误，当前%s支线中没有%s监控行为', this.event_id, id);
             return false;
         }
-        let ch;
-        if (id.startsWith('EE_')) {
-            //如果完成条件是达成型
-            let monitor_id = id.slice(3);
-            ch = '完成' + texts[monitor_id].event_name;
-        } else {
-            //如果完成条件是累计型
-            ch = texts[id].condition_name + ' (' + this.monitor_data[id] + '/' + this.monitor_target[id] + ')';
-        }
-        return ch;
+        return get_monitor_ch(id, this.monitor_data, this.monitor_target);
     }
     //获取支线任务是否完成
     judge_quest_finish() {
         let finish_flag = true;
         for (let id in this.monitor_target) {
-            if (this.monitor_data[id] < this.monitor_target[id]) {
-                finish_flag = false;
-                break;
+            if (typeof this.monitor_data[id] == 'number') {
+                //数字类型目标，数值小于目标值时没有完成
+                if (this.monitor_data[id] < this.monitor_target[id]) {
+                    finish_flag = false;
+                    break;
+                }
+            } else if (typeof this.monitor_data[id] == 'boolean') {
+                //布尔类型目标，当前值与目标值不同时没有完成
+                if (this.monitor_data[id] != this.monitor_target[id]) {
+                    finish_flag = false;
+                    break;
+                }
+            } else {
+                console.log('未知类型的监控行为目标数值，无法设定初始值');
+                return;
             }
         }
         return finish_flag;
@@ -114,11 +150,10 @@ export class Side_quest_manage {
     }
     //启动支线任务
     start_side_quest(event_id) {
-        for (let old_event_id in this.Side_quest_objs) {
-            if (old_event_id == event_id) {
-                console.log('已经处于%s支线中，不能同时启动同一个支线', old_event_id);
-                return;
-            }
+        let now_side_quest_id = Object.keys(this.Side_quest_objs);
+        if (now_side_quest_id.includes(event_id)) {
+            console.log('已经处于%s支线中，不能同时启动同一个支线', event_id);
+            return;
         }
         //初始化一个支线任务对象
         let new_side_quest = new Side_quest();
@@ -190,54 +225,18 @@ export class Side_quest_manage {
     get_side_quest_num() {
         return Object.keys(this.Side_quest_objs).length;
     }
-    //玩家行为-有事件正常完成结束
-    record_event_finish_end(event_id) {
-        let change_flag = false; //变动标记
-        for (let id in this.monitor_data) {
-            //寻找当前需要监控的数据中关于完成事件的条件
-            if (!id.startsWith('EE_')) continue;
-            let monitor_event_id = id.slice(3);
-            if (monitor_event_id == event_id && this.monitor_data[id] != true) {
-                this.monitor_data[id] = true;
-                change_flag = true;
-            }
-        }
-        if (change_flag) {
-            this.updata_side_quest();
-        }
-    }
-    //击杀敌人记录
-    record_kill_enemy_num(attack_effect) {
-        if (is_Empty_Object(Side_quest_objs)) {
-            //当前没有任何支线，不需要监控任何参数
-            return;
-        }
-
-        let change_flag = false;
+    //触发了监控行为，更新数值
+    updata_monitor_data(type, value) {
+        let updata_flag = false;
         for (let event_id in this.Side_quest_objs) {
             let side_quest = this.Side_quest_objs[event_id];
-            for (let id in side_quest.monitor_data) {
-                if (!id.startsWith('PKL_')) {
-                    continue;
-                }
-                switch (id) {
-                    case 'PKL_melee_kill': //近战击杀
-                        //判断击杀是否属于近战伤害击杀
-                        if (attack_effect.damage_type == 'melee') {
-                            if (side_quest.monitor_data[id] < side_quest.monitor_target[id]) {
-                                side_quest.monitor_data[id]++;
-                                change_flag = true;
-                            }
-                        }
-                        break;
-                    default:
-                        console.log('错误的需要监控的击杀敌人行为，未定义相应的监控函数，%s', id);
-                        break;
-                }
+            let ret = side_quest.updata_monitor_data(type, value);
+            if (ret) {
+                updata_flag = true;
             }
         }
-        //如果有监控的参数变动，更新当前游戏事件
-        if (change_flag) {
+        //有任一支线任务的监控行为发生了更新
+        if (updata_flag) {
             this.updata_side_quest();
         }
     }
@@ -263,7 +262,12 @@ export class Side_quest_manage {
                 let monitor_flag_div = addElement(monitor_value_div, 'div', null, 'monitor_flag_div');
                 let monitor_desc_div = addElement(monitor_value_div, 'div', null, 'monitor_desc_div');
                 //获取指定监控数据是否达成
-                monitor_flag_div.innerHTML = side_quest.get_monitor_flag(monitor_id);
+                let flag = side_quest.get_monitor_flag(monitor_id);
+                if (flag) {
+                    monitor_flag_div.innerHTML = '☑';
+                } else {
+                    monitor_flag_div.innerHTML = '☐';
+                }
                 //获取指定监控数据的文本
                 monitor_desc_div.innerHTML = side_quest.get_monitor_ch(monitor_id);
             }
@@ -283,7 +287,12 @@ export class Side_quest_manage {
                 let monitor_flag_div = monitor_value_div.children[0];
                 let monitor_desc_div = monitor_value_div.children[1];
                 //获取指定监控数据是否达成
-                monitor_flag_div.innerHTML = side_quest.get_monitor_flag(monitor_id);
+                let flag = side_quest.get_monitor_flag(monitor_id);
+                if (flag) {
+                    monitor_flag_div.innerHTML = '☑';
+                } else {
+                    monitor_flag_div.innerHTML = '☐';
+                }
                 //获取指定监控数据的文本
                 monitor_desc_div.innerHTML = side_quest.get_monitor_ch(monitor_id);
             }

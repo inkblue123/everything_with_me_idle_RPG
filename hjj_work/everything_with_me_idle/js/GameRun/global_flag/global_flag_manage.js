@@ -158,7 +158,7 @@ export class Global_flag_manage {
     }
 
     //玩家行为-击杀敌人记录
-    record_kill_enemy_num(main_Attack) {
+    record_kill_enemy_num(main_Attack, enemy) {
         let game_event_manage = global.get_game_event_manage();
         let monitor_target_summ = game_event_manage.get_monitor_target_summ();
         let PKL_flag;
@@ -171,7 +171,9 @@ export class Global_flag_manage {
             }
         }
         //有击杀敌人的行为，更新相关事件
-        if (PKL_flag) game_event_manage.record_kill_enemy_num(main_Attack);
+        if (PKL_flag) {
+            game_event_manage.record_kill_enemy_num(main_Attack, enemy);
+        }
     }
     //玩家行为-受击次数记录
     record_attacted_num() {
@@ -209,7 +211,6 @@ export class Global_flag_manage {
         let exp_manage = global.get_exp_manage();
         exp_manage.set_logging_leveling_behavior(LGI_damage);
     }
-
     //玩家行为-正常完成了某个事件
     record_event_finish_end(id) {
         let game_event_manage = global.get_game_event_manage();

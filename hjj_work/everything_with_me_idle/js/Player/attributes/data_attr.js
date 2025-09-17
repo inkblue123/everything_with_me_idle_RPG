@@ -71,6 +71,8 @@ export class Data_attr_manage {
         this.live_plan_attr['LGI_attack'] = 3; //伐木力
         this.live_plan_attr['LGI_critical_chance'] = 5; //伐木暴击率
         this.live_plan_attr['LGI_critical_damage'] = 150; //伐木暴击伤害
+        this.live_plan_attr['FIS_takebait_attack'] = 500; //钓鱼上钩力
+        this.live_plan_attr['FIS_walkfish_attack'] = 5; //钓鱼遛鱼力
         this.live_plan_attr['FAG_attack'] = 5; //采集力
         this.live_plan_attr['FAG_speed'] = 5; //采集速度
 
@@ -193,7 +195,7 @@ export class Data_attr_manage {
                 //副手武器的攻速不计算
                 if (wp == 'deputy' && i == 'attack_speed') continue;
                 //回旋武器的攻速单独计算
-                if (items[id].equipment_type.includes('boomerang') && i == 'attack_speed') {
+                if (items[id].secon_type.includes('boomerang') && i == 'attack_speed') {
                     let num = EQP.rarity[rarity];
                     this.EQP_attr[i] += items[id].equip_attr[i] / num;
                     continue;
@@ -210,12 +212,12 @@ export class Data_attr_manage {
         if (!is_Empty_Object(worn_EQP['main_hand'])) {
             //带了单手武器
             let item_id = worn_EQP['main_hand'].id; //主手位置的装备的id
-            let item_eqt = items[item_id].equipment_type; //该装备的武器类型
+            let item_eqt = items[item_id].secon_type; //该装备的武器类型
             this.EQP_attr['weapon_type'] = this.EQP_attr['weapon_type'].concat(item_eqt);
         } else if (!is_Empty_Object(worn_EQP['main_hand_two'])) {
             //带了双手武器
             let item_id = worn_EQP['main_hand_two'].id; //双手位置的装备的id
-            let item_eqt = items[item_id].equipment_type; //该装备的武器类型
+            let item_eqt = items[item_id].secon_type; //该装备的武器类型
             this.EQP_attr['weapon_type'] = this.EQP_attr['weapon_type'].concat(item_eqt);
         } else {
             //没有带武器，空手
@@ -228,7 +230,7 @@ export class Data_attr_manage {
         if (!is_Empty_Object(worn_EQP['deputy'])) {
             //带了副手装备
             let item_id = worn_EQP['deputy'].id; //主手位置的装备的id
-            let item_eqt = items[item_id].equipment_type; //该装备的武器类型
+            let item_eqt = items[item_id].secon_type; //该装备的武器类型
             this.EQP_attr['weapon_type'] = this.EQP_attr['weapon_type'].concat(item_eqt);
         }
         //去重

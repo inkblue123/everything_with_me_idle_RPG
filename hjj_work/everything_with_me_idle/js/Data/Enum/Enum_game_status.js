@@ -9,12 +9,10 @@ function init_monitor_data(enums) {
     //玩家受击的行为由ATD_开头，所以不用在枚举库中定义
     // id = 'Player_attacted_status'; //玩家受击相关参数
     // add_Enum_Array(enums, id);
-    // enums[id] = ['ATD_all_armor'];
 
     //玩家击杀行为由PKL_开头，不再定义
     // id = 'Player_kill_enemy_status'; //玩家击杀敌人相关参数
     // add_Enum_Array(enums, id);
-    // enums[id] = ['PKL_melee_kill'];
 }
 //初始化枚举库中与游戏状态参数相关的内容
 function init_game_status(enums) {
@@ -25,6 +23,13 @@ function init_game_status(enums) {
         GS_game_statu: 'NULL', //当前游戏状态，比如战斗中、伐木中、钓鱼中等等
         GS_challenge_flag: false, //是否处于挑战中
         GS_logging_way: 'LGI_F_way', //伐木技能选择的伐木策略
+        GS_unlock_logging: false, //伐木技能是否解锁
+        GS_unlock_fishing: false, //钓鱼技能是否解锁
+        GS_unlock_mining: false, //挖矿技能是否解锁
+        GS_unlock_foraging: false, //采集技能是否解锁
+        GS_unlock_diving: false, //潜水技能是否解锁
+        GS_unlock_archaeology: false, //考古技能是否解锁
+        GS_unlock_exploration: false, //探索技能是否解锁
     };
     //生活技能枚举
     //这里枚举的技能是会写入GS_game_statu游戏状态的，运行时遇到对应的状态就处理相应的逻辑

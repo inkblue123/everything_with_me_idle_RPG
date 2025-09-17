@@ -99,7 +99,7 @@ export class Game_event_manage {
     record_attack_num() {}
     //受击次数记录
     record_attacted_num() {
-        //寻找监控行为汇总里的玩家击杀敌人类型的行为
+        //寻找监控行为汇总里的玩家受击类型的行为
         if (is_Empty_Object(this.monitor_target_summ['ATD'])) {
             //没有关于击杀敌人的监控行为
             return;
@@ -119,7 +119,7 @@ export class Game_event_manage {
     }
     //防御技能生效记录
     record_defense_skill_effect(skill_id) {
-        //寻找监控行为汇总里的玩家击杀敌人类型的行为
+        //寻找监控行为汇总里的玩家防御技能生效类型的行为
         if (is_Empty_Object(this.monitor_target_summ['DSE'])) {
             //没有关于击杀敌人的监控行为
             return;
@@ -136,7 +136,7 @@ export class Game_event_manage {
         this.updata_monitor_data(DSE_monitor_summ, DSE_data);
     }
     //击杀敌人记录
-    record_kill_enemy_num(attack_effect) {
+    record_kill_enemy_num(attack_effect, enemy) {
         //寻找监控行为汇总里的玩家击杀敌人类型的行为
         if (is_Empty_Object(this.monitor_target_summ['PKL'])) {
             //没有关于击杀敌人的监控行为
@@ -144,23 +144,43 @@ export class Game_event_manage {
         }
         let PKL_monitor_summ = this.monitor_target_summ['PKL'];
         let PKL_data = new Object();
+        let flag;
         for (let id in PKL_monitor_summ) {
-            if (id == 'PKL_melee_kill') {
-                if (attack_effect.damage_type == 'melee') {
-                    PKL_data[id] = 1;
-                }
-            } else if (id == 'PKL_ranged_kill') {
-                if (attack_effect.damage_type == 'ranged') {
-                    PKL_data[id] = 1;
-                }
+            //获取这条监控需要的细节
+            let PKL_type = get_PKL_type(id);
+            if (PKL_type == 'DamageType') {
+                //这条监控关注伤害类型
+                flag = check_PKL_DamageType(id, attack_effect);
+            } else if (PKL_type == 'EnemyId') {
+                //这条监控关注击杀的敌人id
+                flag = check_PKL_EnemyId(id, enemy);
+            }
+            //玩家行为和监控行为符合，击杀敌人的记录数+1
+            if (flag) {
+                PKL_data[id] = 1;
             }
         }
         //将行为的结果数据更新到对应的事件中
         this.updata_monitor_data(PKL_monitor_summ, PKL_data);
     }
+
     //有事件正常完成结束
     record_event_finish_end(event_id) {
-        this.main_quest_manage.record_event_finish_end(event_id);
+        //寻找监控行为汇总里关于事件完成的行为
+        if (is_Empty_Object(this.monitor_target_summ['EE'])) {
+            //没有关于事件完成的监控行为
+            return;
+        }
+        let EE_monitor_summ = this.monitor_target_summ['EE'];
+        let EE_data = new Object();
+        for (let id in EE_monitor_summ) {
+            let monitor_name = 'EE_' + event_id;
+            if (id == monitor_name) {
+                EE_data[id] = true;
+            }
+        }
+        //将行为的结果数据更新到对应的事件中
+        this.updata_monitor_data(EE_monitor_summ, EE_data);
     }
     //将行为的结果数据更新到对应的事件中
     updata_monitor_data(monitor_summ, monitor_data) {
@@ -265,4 +285,48 @@ export class Game_event_manage {
         //加载右下角的重要事件界面
         this.init_IE_div();
     }
+}
+//获取击杀敌人的监控行为更细的类型
+function get_PKL_type(monitor_id) {
+    let parts = monitor_id.split('_');
+
+    if (parts[0] != 'PKL') {
+        console.log('%s不是击杀敌人的监控行为', monitor_id);
+        return;
+    }
+    if (parts.length < 2) {
+        console.log('%s监控行为名不符合要求', monitor_id);
+        return;
+    }
+    let PKL_type = parts[1];
+    return PKL_type;
+}
+//监控行为monitor_id是指定伤害类型击杀敌人，判断这次击杀是否符合
+function check_PKL_DamageType(monitor_id, attack_effect) {
+    if (monitor_id == 'PKL_DamageType_melee') {
+        if (attack_effect.damage_type == 'melee') {
+            return true;
+        }
+    } else if (id == 'PKL_DamageType_ranged') {
+        if (attack_effect.damage_type == 'ranged') {
+            return true;
+        }
+    } else if (id == 'PKL_DamageType_magic') {
+        if (attack_effect.damage_type == 'magic') {
+            return true;
+        }
+    }
+    return false;
+}
+//监控行为monitor_id要求击杀特定id的敌人，判断这次击杀是否符合
+function check_PKL_EnemyId(monitor_id, enemy) {
+    //获取监控要求的敌人id
+    let firstIndex = monitor_id.indexOf('_');
+    let secondIndex = monitor_id.indexOf('_', firstIndex + 1);
+    let monitor_enemy_id = monitor_id.slice(secondIndex + 1);
+    //判断是否符合
+    if (enemy.id == monitor_enemy_id) {
+        return true;
+    }
+    return false;
 }

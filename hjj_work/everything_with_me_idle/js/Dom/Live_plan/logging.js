@@ -10,13 +10,11 @@ function make_logging_div(LGI_value_div) {
     //树的头像
     let tree_head = addElement(tree_head_div, 'div', 'tree_head', 'LP_div', '');
     tree_head.innerHTML = '没有目标';
-    tree_head.Data = new Object();
     //树的生命进度条
     var tree_blood_bar = addElement(tree_head_div, 'div', 'tree_blood_bar', 'progress_bar', '');
     var tree_blood_frame = addElement(tree_blood_bar, 'div', 'tree_blood_frame', 'progress_bar_frame'); //条的外框
     var tree_blood_current = addElement(tree_blood_frame, 'div', 'tree_blood_current', 'progress_bar_current'); //长度随当前精力变化的色块
     var tree_blood_number = addElement(tree_blood_bar, 'div', 'tree_blood_number', 'progress_bar_number'); //显示的数字，表示当前精力具体数值
-    tree_blood_bar.Data = new Object();
     //掉落物列表
     let LGI_drop_table_div = addElement(LGI_up_div, 'div', 'LGI_drop_table_div', '', '');
     let LGI_drop_table_head = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_head', 'LP_div', '');
@@ -34,7 +32,6 @@ function make_logging_div(LGI_value_div) {
     var LGI_F_way_bar = addElement(LGI_M_L_div, 'div', 'LGI_F_way_bar', 'progress_bar player_logging_bar', '');
     var LGI_F_way_frame = addElement(LGI_F_way_bar, 'div', 'LGI_F_way_frame', 'progress_bar_frame player_logging_frame'); //条的外框
     var LGI_F_way_current = addElement(LGI_F_way_frame, 'div', 'LGI_F_way_current', 'progress_bar_current player_logging_current');
-    LGI_F_way_bar.Data = new Object();
     LGI_F_way_bar.children[0].children[0].style.width = '0%';
 
     var LGI_F_way_radio_div = addElement(LGI_M_L_div, 'div', null, 'radio_div LGI_radio_div');
@@ -46,7 +43,6 @@ function make_logging_div(LGI_value_div) {
     var LGI_M_way_bar = addElement(LGI_M_M_div, 'div', 'LGI_M_way_bar', 'progress_bar player_logging_bar', '');
     var LGI_M_way_frame = addElement(LGI_M_way_bar, 'div', 'LGI_M_way_frame', 'progress_bar_frame player_logging_frame'); //条的外框
     var LGI_M_way_current = addElement(LGI_M_way_frame, 'div', 'LGI_M_way_current', 'progress_bar_current player_logging_current');
-    LGI_M_way_bar.Data = new Object();
     //初始隐藏精细伐木进度条
     LGI_M_way_bar.style.visibility = 'hidden';
     LGI_M_way_bar.children[0].children[0].style.width = '0%';
@@ -77,8 +73,8 @@ function set_logging_button(LGI_value_div) {
             global.set_flag('GS_logging_way', this.id);
             change_LGI_way(this.id);
             let live_plan_manage = global.get_live_plan_manage();
-            let logging_manage = live_plan_manage.get_logging_manage();
-            logging_manage.updata_logger_way(this.id);
+            let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
+            logging_manage.updata_logging_way(this.id);
         });
     });
 
@@ -114,7 +110,7 @@ function set_logging_button(LGI_value_div) {
         global.set_flag('GS_game_statu', 'NULL');
         LGI_S_button.style.display = '';
         LGI_E_button.style.display = 'none';
-        logging_manage.updata_logging_div();
+        logging_manage.updata_live_plan_data();
     };
 }
 export { make_logging_div, set_logging_button };

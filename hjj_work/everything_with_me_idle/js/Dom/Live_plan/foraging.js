@@ -29,7 +29,6 @@ function make_foraging_div(FAG_value_div) {
     var FAG_bar = addElement(FAG_middle_div, 'div', 'FAG_bar', 'progress_bar player_foraging_bar', '');
     var FAG_frame = addElement(FAG_bar, 'div', 'FAG_frame', 'progress_bar_frame player_foraging_frame'); //条的外框
     var FAG_current = addElement(FAG_frame, 'div', 'FAG_current', 'progress_bar_current player_foraging_current');
-    FAG_bar.Data = new Object();
     FAG_bar.children[0].children[0].style.width = '0%';
 
     //采集下部，开始按钮

@@ -106,6 +106,7 @@ export class Place_manage {
     save_place_manage() {
         let place_save = new Object();
         place_save.now_place = this.now_place; //当前地点
+        place_save.last_place = this.last_place; //当前地点
         place_save.last_normal_place = this.last_normal_place; //上次安全地点
 
         return place_save;
@@ -115,10 +116,37 @@ export class Place_manage {
         if (is_Empty_Object(place_save)) {
             return;
         }
-        //上次安全地点，放在上面替换掉当前地点，在之后进入存档的地点时就会正常填入上次安全地点
-        this.now_place = place_save.last_normal_place;
-        //如果地点有进入门槛，读档的时候就不能再收门槛了，可能这个接口要换成无条件进入
-        this.set_now_place(place_save.now_place);
+
+        let next_place = place_save.now_place;
+        this.next_place = place_save.now_place;
+        //移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面，更新其他模块
+        let next_place_type = places[next_place].type;
+        if (next_place_type == 'normal' || next_place_type == 'NPC') {
+            //根据玩家生活技能解锁情况，展示或隐藏生活技能界面与按钮
+            show_unlock_live_plan_div();
+            //根据普通地点的生活技能可用情况，显示或遮罩生活技能规划界面
+            show_place_can_live_plan_div(next_place);
+            //将新地点的信息更新到生活技能对象中
+            let live_plan_manage = global.get_live_plan_manage();
+            live_plan_manage.load_set_new_place(next_place);
+        } else if (next_place_type == 'combat') {
+            updata_to_combat_place();
+        }
+
+        //进入新地点会获得一些效果，在进入时获得
+        goto_new_place_get(next_place);
+
+        //更新存档地点参数
+        this.now_place = place_save.now_place;
+        this.last_normal_place = place_save.last_normal_place;
+        this.last_place = place_save.last_place;
+        this.next_place = undefined;
+
+        //根据新地点参数，更新相关界面信息
+        updata_control_place_name(next_place);
+        //展示新地点的内容
+        let control = document.getElementById('control');
+        control.show_now_place();
     }
 }
 
@@ -154,9 +182,11 @@ function updata_to_normal_place() {
         //退出战斗状态
         global.set_flag('GS_game_statu', 'NULL');
     }
+    //根据玩家生活技能解锁情况，展示或隐藏生活技能界面与按钮
+    show_unlock_live_plan_div();
     //根据普通地点的生活技能可用情况，显示或遮罩生活技能规划界面
     let next_place = place_manage.get_next_place();
-    show_live_plan_div(next_place);
+    show_place_can_live_plan_div(next_place);
     //将新地点的信息更新到生活技能对象中
     let live_plan_manage = global.get_live_plan_manage();
     live_plan_manage.set_new_place(next_place);
@@ -246,8 +276,8 @@ function check_next_place(next_place) {
     }
     return next_place;
 }
-//根据普通地点的生活技能可用情况，调整生活技能规划界面
-function show_live_plan_div(next_place) {
+//根据普通地点的生活技能可用情况，给不可用的生活技能规划界面和按钮添加遮罩
+function show_place_can_live_plan_div(next_place) {
     //探索采集类生活技能
     let live_plan_id = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
     let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
@@ -282,5 +312,87 @@ function show_live_plan_div(next_place) {
                 value_overlay.innerHTML = '这个地点没有' + live_plan_ch[i] + '的条件';
             }
         }
+    }
+}
+//根据生活技能的解锁情况，隐藏不可见的生活技能界面和按钮
+function show_unlock_live_plan_div() {
+    //探索采集类生活技能
+    let live_plan_name = ['logging', 'fishing', 'mining', 'foraging', 'diving', 'archaeology', 'exploration'];
+    let live_plan_div_id = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+    let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
+    let global_flag_manage = global.get_global_flag_manage();
+    let unlock_skill_num = 0; //解锁技能数
+    let only_unlock_skill_order = -1; //唯一解锁的技能
+
+    for (let i = 0; i < 7; i++) {
+        //单选按钮
+        let radio_id = live_plan_div_id[i] + '_radio_div';
+        let radio_div = document.getElementById(radio_id);
+        //内容界面
+        // let value_div_id = live_plan_div_id[i] + '_value_div';
+        // let value_div = document.getElementById(value_div_id);
+
+        let status_id = 'GS_unlock_' + live_plan_name[i];
+        let status = global_flag_manage.get_flag(status_id);
+
+        if (status == true) {
+            unlock_skill_num++;
+            only_unlock_skill_order = i;
+            //解锁了的技能，单选按钮可以无条件出现
+            radio_div.style.display = '';
+            //同时只能展示一个技能的内容界面，所以在后续逻辑中判断应该要展示哪个
+            // value_div.style.display = '';
+        } else {
+            radio_div.style.display = 'none';
+            // value_div.style.display = 'none';
+        }
+    }
+    let lock_all_Live_plan_div = document.getElementById('lock_all_Live_plan_div');
+    if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == true) {
+        //没有解锁生活技能，生活规划界面也是初始状态，不需要变化
+        return;
+    }
+    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == true) {
+        //有生活技能解锁，生活规划界面不能再展示填充页了
+        let Live_plan_switch_div = document.getElementById('Live_plan_switch_div');
+        let Live_plan_value_div = document.getElementById('Live_plan_value_div');
+        Live_plan_switch_div.style.display = '';
+        Live_plan_value_div.style.display = '';
+        lock_all_Live_plan_div.style.display = 'none';
+        lock_all_Live_plan_div.dataset.flag = false;
+    }
+    //根据解锁的技能，展示对应的界面
+    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == false) {
+        if (unlock_skill_num == 1) {
+            //如果解锁了一个技能，单选按钮和内容界面都应该切换到这个技能上
+            for (let i = 0; i < 7; i++) {
+                //单选按钮
+                let radio_id = live_plan_div_id[i] + '_radio_div';
+                let radio_div = document.getElementById(radio_id);
+                //内容界面
+                let value_div_id = live_plan_div_id[i] + '_value_div';
+                let value_div = document.getElementById(value_div_id);
+
+                if (i == only_unlock_skill_order) {
+                    // radio_div.style.display = '';
+                    radio_div.children[0].checked = true;
+                    value_div.style.display = '';
+                } else {
+                    // radio_div.style.display = 'none';
+                    value_div.style.display = 'none';
+                }
+            }
+        } else {
+            //如果解锁了多个技能，
+            //单选按钮应该全部展示
+            //内容界面应该不变
+            //所以不需要处理
+            return;
+        }
+    }
+    if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == false) {
+        //没有解锁生活技能，但是生活规划界面处于非初始状态，属于异常情况
+        console.log('错误情况');
+        return;
     }
 }

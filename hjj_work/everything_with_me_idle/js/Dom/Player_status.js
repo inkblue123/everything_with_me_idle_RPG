@@ -4,7 +4,8 @@ import { updata_player_name, updata_player_EQP } from '../Function/Updata_func.j
 import { change_Player_status_div, show_dropdown_table } from '../Function/show_func.js';
 import { player } from '../Player/Player.js';
 
-var player_status = crtElement('div', 'player_status', null, '', '#000000');
+var player_status = crtElement('div', 'player_status', null, '');
+// var player_status = crtElement('div', 'player_status', null, '', '#000000');
 
 //创建左上角，角色状态界面内的详细组件
 {
@@ -62,7 +63,8 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
         //角色装备栏
         var equipment_show = addElement(attr_equip_div, 'div', 'equipment_show', 'page_columns_1', 'none');
         for (let i = 0; i < 4; i++) {
-            var EQP_i = addElement(equipment_show, 'div', `EQP_column_${i + 1}`, 'page_columns_11', '');
+            let column_id = 'EQP_column_' + (i + 1);
+            var EQP_i = addElement(equipment_show, 'div', column_id, 'page_columns_11', '');
             var EQP_left = addElement(EQP_i, 'div', null, 'page_columns_111', ''); //装备栏左侧，角色的4个防具和主副手
             var EQP_arms_div = addElement(EQP_left, 'div', null, 'EQP_arms_div', '');
             var EQP_Armor_div = addElement(EQP_left, 'div', null, 'EQP_Armor_div', '');
@@ -85,7 +87,10 @@ var player_status = crtElement('div', 'player_status', null, '', '#000000');
         var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', 'page_auto_columns');
         for (let i = 0; i < 4; i++) {
             var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'radio_div EQP_switch_radio_div');
-            addElement_radio(EQP_switch_radio_div, `EQP_${i + 1}`, 'EQP_switch', `EQP_column_${i + 1}`, `装备栏\n${i + 1}`);
+            let id = 'EQP_' + (i + 1);
+            let value = 'EQP_column_' + (i + 1);
+            let text = '装备栏\n' + (i + 1);
+            addElement_radio(EQP_switch_radio_div, id, 'EQP_switch', value, text);
         }
         //默认激活第一个装备栏
         EQP_switch_div.children[0].children[0].checked = true;

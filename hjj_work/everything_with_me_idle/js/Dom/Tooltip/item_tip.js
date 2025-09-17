@@ -78,17 +78,17 @@ function show_equipment_type(show_item) {
     }
     let type_ch = '';
     //武器类型获取，类型描述展示
-    let type_num = items[show_item.id].equipment_type.length;
+    let type_num = items[show_item.id].secon_type.length;
     if (type_num == 0) {
         type_ch = '错误武器类型';
     } else if (type_num == 1) {
         //单种类武器
-        let e_type = items[show_item.id].equipment_type[0]; //获取这唯一的武器类型
+        let e_type = items[show_item.id].secon_type[0]; //获取这唯一的武器类型
         type_ch = texts[e_type].type_name; //获取类型名称
         type_describe.innerHTML = texts[e_type].type_desc; //展示武器类型的描述
     } else if (type_num > 1) {
         //复合类型武器
-        for (let e_type of items[show_item.id].equipment_type) {
+        for (let e_type of items[show_item.id].secon_type) {
             type_ch = type_ch + texts[e_type].type_name + '，';
         }
         type_ch = type_ch.substring(0, type_ch.length - 1);
@@ -141,7 +141,7 @@ function show_equipment_attr(show_item) {
                 T_value.innerHTML = '+' + items[id].equip_attr[attr] + '%';
             } else if (attr == 'attack_speed') {
                 //回旋武器的攻击速度单独处理
-                if (items[id].equipment_type.includes('boomerang')) {
+                if (items[id].secon_type.includes('boomerang')) {
                     // this.EQP_attr[i] += items[id].equip_attr[i] / num;
                     T_value.innerHTML = '+(' + items[id].equip_attr[attr] + '/' + show_item.num + ')秒';
                 } else {

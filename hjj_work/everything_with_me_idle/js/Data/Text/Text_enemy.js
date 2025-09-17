@@ -1,6 +1,6 @@
 import { add_text_object } from './Text_class.js';
 
-//敌人相关的文本
+//普通敌人的文本
 function normal_enemy(texts) {
     let id = 'Training_Dummy';
     add_text_object(texts, id);
@@ -42,6 +42,7 @@ function normal_enemy(texts) {
     add_text_object(texts, id);
     texts[id].enemy_name = '树精';
 }
+//伐木敌人-树的文本
 function tree_enemy(texts) {
     let id = 'bushes';
     add_text_object(texts, id);
@@ -71,12 +72,27 @@ function tree_enemy(texts) {
     add_text_object(texts, id);
     texts[id].enemy_name = '紫斑竹';
 }
+//钓鱼敌人-鱼的文本
+function fish_enemy(texts) {
+    let id;
+    id = 'river_mussel';
+    // add_text_object(texts, id);//同id对象已定义
+    texts[id].enemy_name = '河蚌';
+    id = 'river_crab';
+    // add_text_object(texts, id);//同id对象已定义
+    texts[id].enemy_name = '河蟹';
+    id = 'creek_fish';
+    // add_text_object(texts, id);//同id对象已定义
+    texts[id].enemy_name = '溪鱼';
+}
 //初始化文本数据库中与敌人相关的文本
 function init_Text_enemy(texts) {
     //普通敌人的文本
     normal_enemy(texts);
-    //普通敌人的文本
+    //伐木敌人-树的文本
     tree_enemy(texts);
+    //钓鱼敌人-鱼的文本
+    fish_enemy(texts);
 }
 
 export { init_Text_enemy };

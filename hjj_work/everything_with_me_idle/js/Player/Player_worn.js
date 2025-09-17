@@ -21,18 +21,22 @@ class Player_Item_E extends Player_Item {
 export class Player_worn {
     constructor() {
         this.worn_EQP = new Object();
+        this.now_active_EQP; //当前激活的装备栏
     }
 
     init() {
         //初始化身上穿戴的装备
         for (let i = 0; i < 4; i++) {
-            this.worn_EQP[`EQP_column_${i + 1}`] = new Object();
+            let id = 'EQP_column_' + (i + 1);
+            this.worn_EQP[id] = new Object();
         }
+        this.now_active_EQP = 0; //初始激活0号装备栏
     }
     //获取玩家装备栏的游戏存档
     save_Player_worn() {
         let Player_worn_save = new Object();
         Player_worn_save.worn_EQP = this.worn_EQP;
+        Player_worn_save.now_active_EQP = this.now_active_EQP;
         return Player_worn_save;
     }
     //加载玩家装备栏的游戏存档
@@ -41,6 +45,7 @@ export class Player_worn {
             return;
         }
         this.worn_EQP = Player_worn_save.worn_EQP;
+        this.now_active_EQP = Player_worn_save.now_active_EQP;
         this.updata_equipment_show();
     }
     //穿戴一件装备，默认目标位置没有装备
@@ -307,7 +312,7 @@ function add_aEQP_data(aBP_item, wp, alpha = 1) {
     if (num == 1) {
         EQP_div_data.innerHTML = items[id].name; //装备栏上物品的名称
     } else {
-        EQP_div_data.innerHTML = `${items[id].name} x${num}`; //装备栏上物品的名称x数量
+        EQP_div_data.innerHTML = items[id].name + ' x' + num; //装备栏上物品的名称x数量
     }
     EQP_div_data.style.color = hex2Rgba(enums[rarity].rarity_color, alpha); //装备栏物品的稀有度颜色
     EQP_div_data.style.opacity = 1; //高亮显示表示已经装备

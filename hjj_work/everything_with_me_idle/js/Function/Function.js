@@ -1,7 +1,6 @@
-import { player } from '../Player/Player.js';
 import { items } from '../Data/Item/Item.js';
+import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
-import { P_skills, B_skills } from '../Data/Skill/Skill.js';
 
 //将属性补正数值转义成简写字母
 function attr_correct_handle(attr_correct) {
@@ -23,6 +22,10 @@ function check_Equipment(id, equip_rarity) {
     if (items[id] === undefined) {
         //该物品未定义
         console.log('check_Equipment : 输入的物品是未定义物品,id：%s', id);
+        return false;
+    }
+    if (typeof equip_rarity != 'string') {
+        console.log('输入的equip_rarity不是一个具体的稀有度字符串');
         return false;
     }
     if (items[id].main_type.includes('equipment')) {
@@ -84,6 +87,96 @@ function get_object_only_key(obj) {
     }
     return keys[0];
 }
+function get_monitor_ch(id, monitor_data, monitor_target) {
+    if (is_Empty_Object(monitor_target[id]) || is_Empty_Object(monitor_data[id])) {
+        console.log('错误，输入参数中没有%s监控行为', id);
+        return;
+    }
+    let end_ch; //最终输出文本
+    let condition_name = ''; //监控行为的文本
+    let preset_flag = false; //是否有预设文本
+    if (!is_Empty_Object(texts[id])) {
+        if (!is_Empty_Object(texts[id].condition_name)) {
+            //这个条件有预设名称，直接使用该文本
+            condition_name = texts[id].condition_name;
+            preset_flag = true;
+        }
+    }
+    if (preset_flag == false) {
+        //这个条件没有预设文本，尝试根据条件内容组合出文本
+        condition_name = make_condition_name(id);
+    }
+
+    if (typeof monitor_data[id] == 'number') {
+        //数字型目标，一般是累计数量，需要在文本后面加一个进度
+        //例如：4个防具部位都有穿着的情况下受击（0/10）
+        //其中“4个防具部位都有穿着的情况下受击”是这条监控行为的文本
+        //后面跟着的部分表示完成的进度
+        let after_text = ' (' + monitor_data[id] + '/' + monitor_target[id] + ')';
+        end_ch = condition_name + after_text;
+    } else if (typeof monitor_data[id] == 'boolean') {
+        //布尔型目标，一般是完成某个事件
+        //例如：完成新手战斗测试
+        //前面需要加个“完成”字样
+        if (preset_flag) {
+            //有预设优先使用预设
+            end_ch = condition_name;
+        } else {
+            //没有预设使用组合，在前面补齐动词
+            end_ch = '完成' + condition_name;
+        }
+    } else {
+        console.log('非数字且非布尔类型的监控行为目标数值，异常');
+        return;
+    }
+
+    return end_ch;
+}
+//根据监控行为的id，尝试组合出文本
+function make_condition_name(monitor_id) {
+    let firstIndex = monitor_id.indexOf('_');
+
+    let monitor_type = monitor_id.substring(0, firstIndex);
+    if (!enums['monitor_type'].includes(monitor_type)) {
+        console.log('未定义的监控行为的类型：%s', monitor_type);
+        return;
+    }
+    if (monitor_type == 'ATD') {
+        console.log('目前不应该调用这个逻辑');
+        return;
+    } else if (monitor_type == 'DSE') {
+        console.log('目前不应该调用这个逻辑');
+        return;
+    } else if (monitor_type == 'PKL') {
+        let secondIndex = monitor_id.indexOf('_', firstIndex + 1);
+        if (secondIndex < 0) {
+            console.log('监控行为id：%s不符合要求', monitor_id);
+            return;
+        }
+        let PKL_type = monitor_id.substring(firstIndex + 1, secondIndex);
+        if (PKL_type == 'DamageType') {
+            let damage_type = monitor_id.slice(secondIndex + 1);
+            let damage_type_name = texts['damage_type'].skill_desc[damage_type];
+            return damage_type_name + '击杀敌人';
+        } else if (PKL_type == 'EnemyId') {
+            let enemy_id = monitor_id.slice(secondIndex + 1);
+            let enemy_name = texts[enemy_id].enemy_name;
+            return '击杀' + enemy_name;
+        }
+    } else if (monitor_type == 'EE') {
+        let event_id = monitor_id.slice(firstIndex + 1);
+        if (is_Empty_Object(texts[event_id])) {
+            console.log('未知事件');
+            return;
+        }
+        if (is_Empty_Object(texts[event_id].event_name)) {
+            console.log('未知事件名');
+            return;
+        }
+        let event_name = texts[event_id].event_name;
+        return event_name;
+    }
+}
 
 export {
     check_Equipment,
@@ -93,4 +186,5 @@ export {
     attr_correct_handle,
     is_overlap,
     get_object_only_key,
+    get_monitor_ch,
 };

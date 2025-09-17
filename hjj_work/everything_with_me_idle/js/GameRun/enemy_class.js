@@ -70,11 +70,13 @@ class place_enemy {
 
     //获取当前血条比例
     get_HP_ratio() {
-        return `${(this.health_point / this.combat_survival_attr['health_max']) * 100}%`;
+        let ratio = (this.health_point / this.combat_survival_attr['health_max']) * 100;
+        return ratio + '%';
     }
     //获取当前攻击进度比例
     get_attack_ratio() {
-        return `${(this.attack_point / this.now_skill_attack_speed) * 100}%`;
+        let ratio = (this.attack_point / this.now_skill_attack_speed) * 100;
+        return ratio + '%';
     }
     //获取当前要执行的主动技能的攻击速度
     get_active_skill_attack_speed() {
@@ -82,7 +84,7 @@ class place_enemy {
         if (is_Empty_Object(E_skills[this.now_active_id])) {
             //未定义的敌人技能，改成普通攻击
             this.now_active_id = 'normal_attack';
-            console.log(`敌人技能库中未定义${this.now_active_id}技能`);
+            console.log('敌人技能库中未定义%s技能', this.now_active_id);
         } else if (E_skills[this.now_active_id].attack_speed.length == 0) {
             //未设定该技能的攻速，选用敌人自己的攻速
             skill_attack_speed = this.combat_attack_attr['attack_speed'];
@@ -98,7 +100,7 @@ class place_enemy {
     set_next_active() {
         if (is_Empty_Object(enemys[this.id])) {
             //敌人数据库中不存在该敌人，重置成普通敌人
-            console.log(`${this.id}敌人未知，重置成普通敌人`);
+            console.log('%s敌人未知，重置成普通敌人', this.id);
             this.id = 'Training_Dummy';
         }
         let skill_num = enemys[this.id].active_skill.length; //这个敌人拥有的技能数量
@@ -342,8 +344,9 @@ export class Enemy_manage {
         }
 
         //获取这次要刷的敌人id
+        let enemys = places[this.now_place].enemy; //当前地点所有敌人的对象
         let random_manage = global.get_random_manage();
-        let enemy_id = random_manage.get_place_add_enemy_id(this.now_place);
+        let enemy_id = random_manage.chance_randow_get_id(enemys, 'ADD_ENEMY', this.now_place);
         //判断这次要刷的怪有没有限制条件，现在能不能刷
         if (!this.judge_add_new_enemy_id(enemy_id)) {
             return false;
@@ -381,7 +384,7 @@ export class Enemy_manage {
     //在指定位置刷出一个敌人
     add_enemy(place_x, place_y, enemy_id) {
         if (place_x != 'little_distance' && place_x != 'middle_distance' && place_x != 'remote_distance') {
-            console.log(`add_enemy：输入的目标地点错误 ${place_x}`);
+            console.log('add_enemy：输入的目标地点错误%s', place_x);
         }
         let field = this.combat_place_enemys[place_x];
         field[place_y] = new place_enemy(enemy_id);

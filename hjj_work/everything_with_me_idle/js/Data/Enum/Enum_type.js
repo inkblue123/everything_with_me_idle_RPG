@@ -67,12 +67,28 @@ function init_skill_type(enums) {
     ];
 }
 
+function init_monitor_type(enums) {
+    let id;
+
+    id = 'monitor_type';
+    add_Enum_Array(enums, id);
+    enums[id] = [
+        'EE', //事件正常完成
+        'ATD', //玩家受击
+        'DSE', //防御技能生效
+        'PKL', //玩家击杀敌人
+    ];
+}
+
 function init_Enum_type(enums) {
     //每种装备稀有度对应的颜色
     init_type_color(enums);
 
     //玩家主动被动技能的分类
     init_skill_type(enums);
+
+    //游戏事件的监控行为的类型
+    init_monitor_type(enums);
 }
 
 export { init_Enum_type };

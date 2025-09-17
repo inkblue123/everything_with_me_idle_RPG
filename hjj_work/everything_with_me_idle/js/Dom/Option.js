@@ -26,6 +26,27 @@ var Option = crtElement('div', null, 'option_page', '');
         P_All_Skills.player_unlock_skill('shield_defense');
         game_event_manage.end_mini_event('new_player_teach_3', 'finish');
         player.Player_get_item('test_sword', 1, 'ordinary'); //测试用武器
+        //物品测试
+        player.Player_get_item('Oak_logs', 10);
+        player.Player_get_item('birch_logs', 10);
+        player.Player_get_item('fir_logs', 10);
+        player.Player_get_item('lightning_bark', 10);
+        player.Player_get_item('frost_marrow_resin', 10);
+        player.Player_get_item('viresilver_stem', 10);
+        player.Player_get_item('porcini', 10);
+        player.Player_get_item('chanterelle', 10);
+        player.Player_get_item('termite_mushroom', 10);
+        player.Player_get_item('river_mussel', 10);
+        player.Player_get_item('creek_fish', 10);
+        player.Player_get_item('animal_raw_meat', 10);
+        player.Player_get_item('red_berry', 10);
+        player.Player_get_item('yellow_berry', 10);
+        player.Player_get_item('grilled_fish', 10);
+        player.Player_get_item('termite_mushroom_soup', 10);
+        player.Player_get_item('fish_jerky', 10);
+        player.Player_get_item('wood_arrow', 10);
+        player.Player_get_item('copper_coin', 10);
+        player.Player_get_item('greedy_copper_coin', 10);
     };
 
     let button2 = addElement(Option, 'button');
@@ -35,20 +56,43 @@ var Option = crtElement('div', null, 'option_page', '');
         game_event_manage.test_finish_now_challenge();
         game_event_manage.init_IE_div();
     };
-
-    let button3 = addElement(Option, 'button');
-    button3.innerHTML = '暂停游戏';
-    button3.onclick = function () {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed(0);
+    button2 = addElement(Option, 'button');
+    button2.innerHTML = '逐渐解锁生活技能';
+    button2.onclick = function () {
+        if (!global.get_flag('GS_unlock_foraging')) {
+            global.set_flag('GS_unlock_foraging', true);
+        } else if (!global.get_flag('GS_unlock_fishing')) {
+            global.set_flag('GS_unlock_fishing', true);
+        } else if (!global.get_flag('GS_unlock_mining')) {
+            global.set_flag('GS_unlock_mining', true);
+        } else if (!global.get_flag('GS_unlock_logging')) {
+            global.set_flag('GS_unlock_logging', true);
+        } else if (!global.get_flag('GS_unlock_diving')) {
+            global.set_flag('GS_unlock_diving', true);
+        } else if (!global.get_flag('GS_unlock_archaeology')) {
+            global.set_flag('GS_unlock_archaeology', true);
+        } else if (!global.get_flag('GS_unlock_exploration')) {
+            global.set_flag('GS_unlock_exploration', true);
+        }
+        //移动到当前位置，触发刷新界面的逻辑
+        let place_manage = global.get_place_manage();
+        let now_place = place_manage.get_now_place();
+        place_manage.set_now_place(now_place);
     };
 
-    let button4 = addElement(Option, 'button');
-    button4.innerHTML = '恢复游戏';
-    button4.onclick = function () {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed(1);
-    };
+    // let button3 = addElement(Option, 'button');
+    // button3.innerHTML = '暂停游戏';
+    // button3.onclick = function () {
+    //     let time_manage = global.get_time_manage();
+    //     time_manage.set_game_speed(0);
+    // };
+
+    // let button4 = addElement(Option, 'button');
+    // button4.innerHTML = '恢复游戏';
+    // button4.onclick = function () {
+    //     let time_manage = global.get_time_manage();
+    //     time_manage.set_game_speed(1);
+    // };
     let button5 = addElement(Option, 'button');
     button5.innerHTML = '导出存档';
     button5.onclick = function () {
@@ -81,36 +125,6 @@ var Option = crtElement('div', null, 'option_page', '');
     button10.onclick = function () {
         let enemy_manage = global.get_enemy_manage();
         enemy_manage.add_kill_enemy_num(99);
-    };
-    let button11 = addElement(Option, 'button');
-    button11.innerHTML = '测试';
-    button11.onclick = function () {
-        let x = 1;
-        let chance_arr = new Array();
-        for (let j = 0; j < 100; j++) {
-            let chance = 0;
-            let true_num = 0;
-            let false_num = 0;
-            for (let i = 0; i < 10000; i++) {
-                let random = get_random(0, 100);
-                if (random <= chance) {
-                    true_num++;
-                    chance = 0;
-                } else {
-                    false_num++;
-                    chance += x;
-                }
-            }
-            let all_chance = (true_num / 10000) * 100;
-            chance_arr.push(all_chance);
-            console.log('第%d次尝试，概率为%s', j, all_chance);
-        }
-        let all_chance = 0;
-        for (let chance of chance_arr) {
-            all_chance += chance;
-        }
-        all_chance = all_chance / 100;
-        console.log('宏观概率为%s', all_chance);
     };
 }
 

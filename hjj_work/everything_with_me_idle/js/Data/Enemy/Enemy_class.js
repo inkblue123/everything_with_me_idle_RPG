@@ -52,6 +52,7 @@ export class Enemy {
         this.survival_attr['magic_max'] = magic_max; //最大魔力上限
         this.survival_attr['energy_max'] = energy_max; //最大精力上限
     }
+    //创建一个掉落队列
     create_item_array(drop_chance) {
         let obj = new Object();
         obj.items = new Object();
@@ -114,18 +115,37 @@ export class E_tree extends Enemy {
         this.reward_level_item[level][item_array_id].items[item_id] = item_obj;
     }
 }
+//钓鱼技能中的敌人
+export class E_fish extends Enemy {
+    constructor(enemy_id) {
+        super(enemy_id);
+        this.type = 'fish';
+        this.flee_point; //逃跑力
+    }
+    //设置属于鱼的属性
+    init_fish_attr(flee_point) {
+        this.flee_point = flee_point;
+    }
+}
 function add_Enemy_object(enemys, newid) {
     if (enemys[newid] === undefined) {
         enemys[newid] = new Enemy(newid);
     } else {
-        console.log(`创建enemys[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log(`创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容`, newid);
     }
 }
 function add_E_tree_object(enemys, newid) {
     if (enemys[newid] === undefined) {
         enemys[newid] = new E_tree(newid);
     } else {
-        console.log(`创建enemys[${newid}]时已有同名对象，需要确认是否会清空原有内容`);
+        console.log(`创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容`, newid);
     }
 }
-export { add_Enemy_object, add_E_tree_object };
+function add_E_fish_object(enemys, newid) {
+    if (enemys[newid] === undefined) {
+        enemys[newid] = new E_fish(newid);
+    } else {
+        console.log(`创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容`, newid);
+    }
+}
+export { add_Enemy_object, add_E_tree_object, add_E_fish_object };

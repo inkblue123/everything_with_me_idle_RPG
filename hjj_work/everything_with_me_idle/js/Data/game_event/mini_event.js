@@ -94,14 +94,59 @@ function init_mini_event(game_events) {
 
     id = 'get_up'; //起床
     add_Mini_event_obj(game_events, id);
-    //该迷你事件出现的条件
-    // game_events[id].set_conditions_appear('UGS_village_barracks_week', 3);
+    //该迷你事件出现的条件，无条件
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_buff('first', 'get_up_buff');
     game_events[id].add_process_button('first', 'b1', 'text2');
     game_events[id].add_process_button_click('first', 'b1', 'next_process', 'end');
     game_events[id].add_process_button_thing('first', 'b1', 'move_place', 'village_home');
+    game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
+
+    id = 'unlock_foraging_logging'; //解锁采集和伐木技能
+    add_Mini_event_obj(game_events, id);
+    //该迷你事件出现的条件
+    game_events[id].set_conditions_appear('unlock_foraging_logging', false);
+    //该迷你事件的所有流程
+    game_events[id].set_new_process('first', 'text1');
+    game_events[id].add_process_buff('first', 'get_up_buff');
+    game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1
+    game_events[id].add_process_button_click('first', 'b1', 'chat', 'text3'); //b1按钮点击之后触发对话
+    game_events[id].add_process_button_condition('first', 'b1', 'b1', false); //b1按钮出现条件是b1按钮没有被点击过
+    game_events[id].add_process_button('first', 'b2', 'text4');
+    game_events[id].add_process_button_click('first', 'b2', 'chat', 'text5'); //b2按钮点击之后触发对话
+    game_events[id].add_process_button_condition('first', 'b2', 'b2', false); //b2按钮出现条件是b2按钮没有被点击过
+    game_events[id].add_process_button('first', 'b3', 'text6');
+    game_events[id].add_process_button_click('first', 'b3', 'next_process', 'process1');
+    game_events[id].add_process_button_condition('first', 'b3', 'b1', true, 'b2', true); //b3按钮出现条件是b1和b2按钮都按过了
+    game_events[id].set_new_process('process1', 'text7');
+    game_events[id].add_process_button('process1', 'b4', 'text8');
+    game_events[id].add_process_button_click('process1', 'b4', 'next_process', 'process2');
+    game_events[id].set_new_process('process2', 'text9');
+    game_events[id].add_process_button('process2', 'b5', 'text10');
+    game_events[id].add_process_button_click('process2', 'b5', 'next_process', 'process3');
+    game_events[id].add_process_button_thing('process2', 'b5', 'set_global_flag', 'GS_unlock_foraging', true); //解锁采集技能
+    game_events[id].add_process_button_thing('process2', 'b5', 'move_place', 'village_old_woman'); //原地移动一次，刷新界面内的信息，将刚解锁的技能展示出来
+    game_events[id].set_new_process('process3', 'text11');
+    game_events[id].add_process_button('process3', 'b6', 'text12');
+    game_events[id].add_process_button_click('process3', 'b6', 'next_process', 'process4');
+    game_events[id].add_process_button_thing('process3', 'b6', 'set_global_flag', 'GS_unlock_logging', true); //解锁伐木技能
+    game_events[id].add_process_button_thing('process3', 'b6', 'move_place', 'village_old_woman'); //原地移动一次，刷新界面内的信息，将刚解锁的技能展示出来
+    game_events[id].set_new_process('process4', 'text13');
+    game_events[id].add_process_button('process4', 'b7', 'text14');
+    game_events[id].add_process_button_click('process4', 'b7', 'next_process', 'process5');
+    game_events[id].add_process_button_thing('process4', 'b7', 'get_side_quest', 'study_fishing');
+    game_events[id].set_new_process('process5', 'text15');
+    game_events[id].add_process_button('process5', 'b8', 'text16');
+    game_events[id].add_process_button_click('process5', 'b8', 'next_process', 'process6');
+    // game_events[id].add_process_button_thing('process5', 'b8', 'get_side_quest', 'study_mining');
+    game_events[id].set_new_process('process6', 'text17');
+    game_events[id].add_process_button('process6', 'b9', 'text18');
+    game_events[id].add_process_button_click('process6', 'b9', 'next_process', 'end');
+    game_events[id].add_process_button('process6', 'b10', 'text19');
+    game_events[id].add_process_button_click('process6', 'b10', 'next_process', 'end');
+    game_events[id].add_process_button('process6', 'b11', 'text20');
+    game_events[id].add_process_button_click('process6', 'b11', 'next_process', 'end');
     game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
 }
 

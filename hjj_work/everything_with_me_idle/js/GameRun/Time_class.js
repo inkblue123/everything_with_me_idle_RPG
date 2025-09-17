@@ -67,8 +67,8 @@ export class Time_manage {
         if (this.one_second_num >= this.FPS) {
             // let currentDate = new Date();
             // let currentDate_ms = Date.now();
-            // console.log(`${currentDate} ${currentDate_ms}`);
-            // console.log(`运行了30次`);
+            // console.log('%s %s',currentDate);
+            // console.log('运行了30次');
             this.one_second_num = 0;
         }
     }
