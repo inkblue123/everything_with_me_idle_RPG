@@ -1,13 +1,7 @@
 import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object, attr_correct_handle } from '../../Function/Function.js';
 import { load_save } from '../../LoadAndSave/load.js';
 
 import { texts } from '../../Data/Text/Text.js';
-import { enums } from '../../Data/Enum/Enum.js';
-import { P_skills } from '../../Data/Skill/Skill.js';
-import { player } from '../../Player/Player.js';
-
-import { Tooltip } from './Tooltip.js';
 
 const TOOLTIP_WIDTH = 320;
 
@@ -23,6 +17,7 @@ function init_game_save_tip(type, value) {
 
 //初始化“导入存档”提示框
 function init_load_save_tip(value) {
+    let Tooltip = document.getElementById('tooltip');
     //小窗口移动到左上角
     Tooltip.style.left = '0px';
     Tooltip.style.top = '0px';
@@ -87,6 +82,7 @@ function init_load_save_tip(value) {
 
 //初始化“导出存档”提示框
 function init_save_game_tip(value) {
+    let Tooltip = document.getElementById('tooltip');
     //小窗口移动到左上角
     Tooltip.style.left = '0px';
     Tooltip.style.top = '0px';

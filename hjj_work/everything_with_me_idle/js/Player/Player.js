@@ -1,11 +1,12 @@
 'use strict';
-import { check_Equipment, is_Empty_Object } from '../Function/Function.js';
+import { check_Equipment, is_Empty_Object, get_item_id_key, get_item_obj } from '../Function/Function.js';
 import { Player_attributes } from './attributes/Player_attributes.js';
 import { Player_backpack } from './Player_backpack.js';
 import { Player_worn } from './Player_worn.js';
 import { Player_active_skills_Manage } from './Player_active_skills.js';
 import { Player_skills } from './Player_skill.js';
 import { global } from '../GameRun/global_manage.js';
+import { items } from '../Data/Item/Item.js';
 
 export class Player_Object {
     constructor() {
@@ -66,79 +67,115 @@ export class Player_Object {
     get_player_All_active_skills() {
         return this.player_skills.active_skills;
     }
-    //给玩家背包添加物品，js版函数重载
+    //给玩家背包添加物品
     Player_get_item(...args) {
-        let id, num, equip_rarity;
+        let item_obj;
         if (typeof args[0] == 'object') {
-            //输入的是一格物品，是一个Player_Item对象
-            id = args[0].id;
-            num = args[0].num;
-            let keys = Object.keys(args[0].rarity);
-            equip_rarity = keys[0];
+            //输入的是一个物品对象，不需要额外处理
+            item_obj = args[0];
         } else {
-            // 有多个参数，输入的是物品的id、数量、稀有度等等信息
-            id = args[0];
-            num = args[1];
-            equip_rarity = args[2];
+            // 有多个参数，输入的是物品的id、数量、稀有度等等信息，需要转换成物品对象
+            let id = args[0];
+            let num = args[1];
+            if (items[id].main_type.includes('equipment')) {
+                //物品是装备，args内参数的含义按以下顺序排列：
+                //稀有度
+                let equip_rarity = args[2];
+                item_obj = get_item_obj(id, num, equip_rarity);
+            } else if (items[id].main_type.includes('material')) {
+                item_obj = get_item_obj(id, num);
+                //物品是材料，没有独特属性
+            } else if (items[id].main_type.includes('consumable')) {
+                //物品是消耗品，args内参数的含义按以下顺序排列：
+                //暂无
+                item_obj = get_item_obj(id, num);
+            }
         }
-        let ret = this.player_backpack.Player_get_item(id, num, equip_rarity);
+        let ret = this.player_backpack.Player_get_item(item_obj);
         if (ret >= 0) {
             //物品添加正常，记录日志
             let global_flag_manage = global.get_global_flag_manage();
-            global_flag_manage.set_game_log('get_item', id, num, equip_rarity);
+            global_flag_manage.set_game_log('get_item', item_obj);
             //背包物品变动，刷新背包界面
             this.player_backpack.updata_BP_value();
         }
     }
     //给玩家背包添加物品，不触发日志的接口
     Player_get_item_nolog(...args) {
-        let id, num, equip_rarity;
+        let item_obj;
         if (typeof args[0] == 'object') {
-            //输入的是一格物品，是一个Player_Item对象
-            id = args[0].id;
-            num = args[0].num;
-            let keys = Object.keys(args[0].rarity);
-            equip_rarity = keys[0];
+            //输入的是一个物品对象，不需要额外处理
+            item_obj = args[0];
         } else {
-            // 有多个参数，输入的是物品的id、数量、稀有度等等信息
-            id = args[0];
-            num = args[1];
-            equip_rarity = args[2];
+            // 有多个参数，输入的是物品的id、数量、稀有度等等信息，需要转换成物品对象
+            let id = args[0];
+            let num = args[1];
+            if (items[id].main_type.includes('equipment')) {
+                //物品是装备，args内参数的含义按以下顺序排列：
+                //稀有度
+                let equip_rarity = args[2];
+                item_obj = get_item_obj(id, num, equip_rarity);
+            } else if (items[id].main_type.includes('material')) {
+                item_obj = get_item_obj(id, num);
+                //物品是材料，没有独特属性
+            } else if (items[id].main_type.includes('consumable')) {
+                //物品是消耗品，args内参数的含义按以下顺序排列：
+                //暂无
+                item_obj = get_item_obj(id, num);
+            }
         }
-        let ret = this.player_backpack.Player_get_item(id, num, equip_rarity);
+
+        let ret = this.player_backpack.Player_get_item(item_obj);
+        if (ret >= 0) {
+            //背包物品变动，刷新背包界面
+            this.player_backpack.updata_BP_value();
+        }
     }
-    //从玩家背包里去掉武器装备
-    Player_lose_Equipment(...args) {
+    //从玩家背包里去掉指定物品
+    Player_lose_item(...args) {
+        let item_obj;
         if (typeof args[0] == 'object') {
-            //输入的是一格物品，是一个Player_Item对象
-            let id = args[0].id;
-            let num = args[0].num;
-            let keys = Object.keys(args[0].rarity);
-            let equip_rarity = keys[0];
-            this.player_backpack.Player_lose_Equipment(id, num, equip_rarity);
+            //输入的是一个物品对象，不需要额外处理
+            item_obj = args[0];
         } else {
-            // 有多个参数，输入的是物品的id、数量、稀有度等等信息
-            this.player_backpack.Player_lose_Equipment(args[0], args[1], args[2]);
+            // 有多个参数，输入的是物品的id、数量、稀有度等等信息，需要转换成物品对象
+            let id = args[0];
+            let num = args[1];
+            if (items[id].main_type.includes('equipment')) {
+                //物品是装备，args内参数的含义按以下顺序排列：
+                //稀有度
+                let equip_rarity = args[2];
+                item_obj = get_item_obj(id, num, equip_rarity);
+            } else if (items[id].main_type.includes('material')) {
+                item_obj = get_item_obj(id, num);
+                //物品是材料，没有独特属性
+            } else if (items[id].main_type.includes('consumable')) {
+                //物品是消耗品，args内参数的含义按以下顺序排列：
+                //暂无
+                item_obj = get_item_obj(id, num);
+            }
         }
+        this.player_backpack.Player_lose_item(item_obj);
     }
+
     //穿戴一件装备
-    worn_Equipment(id, num, equip_rarity) {
+    worn_Equipment(item_obj) {
         //校验装备参数是否合法
-        if (!check_Equipment(id, equip_rarity)) {
+        if (!check_Equipment(item_obj.id, item_obj.equip_rarity)) {
             return 0;
         }
+        let id = item_obj.id;
         //脱下身上即将穿戴的目标位置的原装备
         let raw_worn_E = new Object();
         this.player_worn.Remove_worn_Equipment(id, raw_worn_E);
-        let keys = Object.keys(raw_worn_E);
-        for (let key of keys) {
+        for (let key in raw_worn_E) {
             //如果原位置已有装备，则将原装备放回背包
             if (!is_Empty_Object(raw_worn_E[key])) {
                 this.Player_get_item_nolog(raw_worn_E[key]);
             }
         }
         //将装备放到身上装备栏里对应的位置
-        this.player_worn.worn_Equipment(id, num, equip_rarity);
+        this.player_worn.worn_Equipment(item_obj);
         //背包物品变动，刷新背包界面
         this.player_backpack.updata_BP_value();
     }

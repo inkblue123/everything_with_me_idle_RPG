@@ -1,6 +1,6 @@
 import { get_random } from '../../Function/math_func.js';
 import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
+import { is_Empty_Object, compare_dataset_value, set_dataset_value } from '../../Function/Function.js';
 import { enemys } from '../../Data/Enemy/Enemy.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
@@ -578,12 +578,9 @@ export class Fishing_manage {
             let fish_id = this.fish_manage.get_fish_id();
 
             //获取钓鱼物品
-            let items_obj = this.get_fish_death_item(fish_id);
-            for (let key in items_obj) {
-                let id = items_obj[key].id;
-                let num = items_obj[key].num;
-                let rarity = items_obj[key].rarity;
-                player.Player_get_item(id, num, rarity);
+            let items_arr = this.get_fish_death_item(fish_id);
+            for (let item_key in items_arr) {
+                player.Player_get_item(item_key[item_key]);
             }
 
             //结算钓鱼经验
@@ -634,18 +631,15 @@ export class Fishing_manage {
             }
             for (let j = 0; j < drop_times; j++) {
                 //根据权重，获取掉落哪一个物品
-                let item_id = random_manage.get_enemy_death_item_id(fish_id, i);
-                let data_obj = enemy_item_obj.items[item_id];
+                let item_key = random_manage.get_enemy_death_item_id(fish_id, i);
+                let data_obj = enemy_item_obj.items[item_key];
 
                 let item_obj = new Object();
-                item_obj.id = item_id;
+                item_obj.id = data_obj.id;
                 item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
-                if (is_Empty_Object(items[item_id])) {
-                    console.log('掉落的%s物品在物品数据库中没有定义', item_id);
-                }
                 if (items[item_id].main_type.includes('equipment')) {
                     //如果掉落的是装备，还需要记录稀有度
-                    item_obj.rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
+                    item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
                 }
                 //将掉落的信息存起来
                 drop_item_arry.push(item_obj);
@@ -654,16 +648,12 @@ export class Fishing_manage {
         //对掉落物去重
         let uniqueArr = new Object();
         for (let item_obj of drop_item_arry) {
-            let id = item_obj.id;
-            let key = id;
-            if (items[id].main_type.includes('equipment')) {
-                key = id + rarity;
-            }
+            let item_key = get_item_id_key(item_obj);
 
-            if (is_Empty_Object(uniqueArr[key])) {
-                uniqueArr[key] = item_obj;
+            if (is_Empty_Object(uniqueArr[item_key])) {
+                uniqueArr[item_key] = item_obj;
             } else {
-                uniqueArr[key].num += item_obj.num;
+                uniqueArr[item_key].num += item_obj.num;
             }
         }
         return uniqueArr;
@@ -828,7 +818,7 @@ export class Fishing_manage {
                 let FAG_drop_value = addElement(FIS_drop_table_value_div, 'div', null, 'drop_value');
                 if (items[id].main_type.includes('equipment')) {
                     //如果掉落的是装备，改变字体颜色变成稀有度的颜色
-                    FAG_drop_value.style.color = hex2Rgba(enums[rarity].rarity_color, alpha);
+                    FAG_drop_value.style.color = hex2Rgba(enums[equip_rarity].rarity_color, alpha);
                 }
                 FAG_drop_value.innerHTML = items[id].name;
             }

@@ -1,13 +1,7 @@
 /* 玩家控制界面的样式 */
 #control {
-    /* display: grid; */
-    /* 单列布局 */
-    /* grid-template-columns: 1fr; */
-    /* grid-template-rows: repeat(auto-fit, minmax(95px, 1fr)); */
-    /* grid-template-rows: auto; */
-    /* color: white; */
-    /* font-size: 24px; */
-    /* height: 50%; */
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     border: 2px solid #797691; /* 内框 */
     user-select: none;
@@ -16,10 +10,12 @@
 /* 左边显示当前地点，右边显示时间的div*/
 #control_name_div {
     display: flex;
+    height: 10%;
     padding: 0 5px;
     /* 占据一整行，类型在左，内容在右 */
     justify-content: space-between;
-    border: 2px solid #797691; /* 内框 */
+    border-bottom: 2px solid #797691; /* 内框 */
+    box-sizing: border-box;
 }
 #control_name_left_div {
     text-align: left;
@@ -48,41 +44,124 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
     /* text-align: center;  */
     justify-content: center;
     align-items: center;
-    min-height: 80px;
+    min-height: 20%;
+    /* 避免文本仅靠左右边界 */
     margin: 0px 5px;
     white-space: pre-wrap; /* 保留空格和换行 */
+    border-bottom: 1px solid #797691;
     /* background-color: rgb(19, 250, 54); */
-    /* border: 1px solid #797691;  */
 }
 /* 用来容纳角色当前位置可以进行的操作的容器 */
 #player_Control_div {
-    box-sizing: border-box;
-    /* background-color: rgb(250, 19, 19); */
-    border: 1px solid #797691;
+    display: flex;
+    /* flex: 1;  */
+    flex-direction: column;
 }
 
 /* 可执行操作按钮 */
 .player_Control_button {
-    box-sizing: border-box;
+    display: flex;
     min-height: 30px;
     width: 100%;
     text-align: center;
     cursor: pointer;
+    font-size: 15px;
+    justify-content: center;
+    align-items: center;
     /* background-color: rgb(250, 19, 19); */
-    border-top: 1px solid #797691; /* 内框 */
-    border-bottom: 1px solid #797691; /* 内框 */
+    /* border-bottom: 2px solid #797691;  */
 }
 /* 展示有限刷怪区域敌人剩余数量的div */
 #remain_enemy_div {
-    box-sizing: border-box;
-    /* min-height: 30px; */
+    /* box-sizing: border-box; */
     width: 100%;
     text-align: center;
-    /* background-color: rgb(250, 19, 19); */
-    /* border-top: 1px solid #797691;  */
-    /* border-bottom: 1px solid #797691; */
+}
+
+/* 交易界面下部的交易情况div */
+#goods_trade_div {
+    display: flex;
+    flex: 1; /* 填充剩余空间 */
+    border-top: 1px solid #797691; /* 内框 */
+}
+/* 左侧玩家出售物品的div */
+#sell_div {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* 填充剩余空间 */
+    border-right: 2px solid #797691; /* 内框 */
+}
+/* 中间展示交易情况的div */
+#trade_result_div {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* 填充剩余空间 */
+}
+/* 右侧玩家购买物品的div */
+#buy_div {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* 填充剩余空间 */
+    border-left: 2px solid #797691; /* 内框 */
+}
+/* 玩家出售/购买界面div的头部标题 */
+.sell_buy_name_div {
+    display: flex;
+    min-height: 10%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #797691; /* 内框 */
+}
+/* 交易情况文本的div */
+#trade_result_name_div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 60%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #797691;
+}
+/* 交易情况-补齐货币的按钮 */
+#supplement_money_button {
+    display: flex;
+    text-align: center;
+    cursor: pointer;
+    font-size: 15px;
+    /* width: 50%; */
+    height: 20%;
+    justify-content: center;
+    align-items: center;
+    /* border: 2px solid #797691; */
+}
+/* 交易情况-确认交易的按钮 */
+#trade_button {
+    position: relative;
+    /* display: relative; */
+    text-align: center;
+    cursor: pointer;
+    font-size: 15px;
+    /* width: 50%; */
+    height: 30%;
+    justify-content: center;
+    align-items: center;
+    /* border: 2px solid #797691; */
+}
+.sell_buy_scroll_box {
+    /* height: auto; */
+    height: 100%;
+}
+/* 背包界面-右侧布局中具体的一个物品 */
+.sell_buy_value {
+    width: 100%;
+    /* background-color: #ffffff; */
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
 }

@@ -23,6 +23,13 @@ function init_Enum_item(enums) {
     //材料大类中可能的小类
     id = 'Material_secon_type';
     add_Enum_Array(enums, id);
+
+    //购买出售物品时，这些小类中的物品不会涨价和贬值
+    id = 'preserve_value_secon_type';
+    add_Enum_Array(enums, id);
+    enums[id] = [
+        'ordinary_coin', //凡间钱币
+    ];
 }
 
 export { init_Enum_item };

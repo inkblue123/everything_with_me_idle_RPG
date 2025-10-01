@@ -22,7 +22,7 @@ function make_fishing_div(FIS_value_div) {
     let FIS_drop_table_head = addElement(FIS_up_R_div, 'div', 'FIS_drop_table_head', 'FIS_table_head_text');
     FIS_drop_table_head.innerHTML = '可能的产物';
     let FIS_drop_table_scroll_box = addElement(FIS_up_R_div, 'div', 'FIS_drop_table_scroll_box', ' overflow_y_div', '');
-    let FIS_drop_table_value_div = addElement(FIS_drop_table_scroll_box, 'div', 'FIS_drop_table_value_div', 'classification_div');
+    let FIS_drop_table_value_div = addElement(FIS_drop_table_scroll_box, 'div', 'FIS_drop_table_value_div', 'in_overflow_div');
     let drop_value = addElement(FIS_drop_table_value_div, 'div', null, 'drop_value');
     drop_value.innerHTML = '无';
 
@@ -41,7 +41,7 @@ function make_fishing_div(FIS_value_div) {
     let FIS_bait_table_head = addElement(FIS_M_R_div, 'div', 'FIS_bait_table_head', 'FIS_table_head_text');
     FIS_bait_table_head.innerHTML = '鱼饵选择';
     let FIS_bait_table_scroll_box = addElement(FIS_M_R_div, 'div', 'FIS_bait_table_scroll_box', ' overflow_y_div', '');
-    let FIS_bait_table_value_div = addElement(FIS_bait_table_scroll_box, 'div', 'FIS_bait_table_value_div', 'classification_div');
+    let FIS_bait_table_value_div = addElement(FIS_bait_table_scroll_box, 'div', 'FIS_bait_table_value_div', 'in_overflow_div');
     // for (let i = 0; i < 10; i++) {
     //     let bait_value = addElement(FIS_bait_table_value_div, 'div', null, 'FIS_bait_value');
     //     bait_value.innerHTML = '无';
@@ -65,9 +65,9 @@ function make_fishing_div(FIS_value_div) {
     //钓鱼下部，开始按钮
     let FIS_down_div = addElement(FIS_value_div, 'div', 'FIS_down_div', null, '');
     var FIS_S_button = addElement(FIS_down_div, 'button', 'FIS_S_button', 'LP_button', '');
-    FIS_S_button.innerHTML = `开始钓鱼`;
+    FIS_S_button.innerHTML = '开始钓鱼';
     var FIS_E_button = addElement(FIS_down_div, 'button', 'FIS_E_button', 'LP_button', 'none');
-    FIS_E_button.innerHTML = `停止钓鱼`;
+    FIS_E_button.innerHTML = '停止钓鱼';
 }
 
 //为钓鱼界面中的按钮添加交互逻辑

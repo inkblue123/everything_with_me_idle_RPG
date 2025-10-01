@@ -40,7 +40,7 @@ export class Main_quest_manage {
         if (this.main_quest_id != null) {
             //已经处于主线中，不能同时开启另一个主线
             console.log('已经处于%s主线中，不能同时启动另一个主线', this.main_quest_id);
-            return 0;
+            return false;
         }
         //进入事件状态
         this.main_quest_id = event_id;
@@ -48,7 +48,9 @@ export class Main_quest_manage {
         //启动事件游戏参数监测
         this.init_monitor_target();
         //将主线情况展示到脑海-重要事件界面中
-        this.init_main_quest_IE_div();
+        //外面的游戏事件类统一初始化界面
+        // this.init_main_quest_IE_div();
+        return true;
     }
 
     //更新主线任务进度
@@ -83,16 +85,15 @@ export class Main_quest_manage {
     end_main_quest(end_type) {
         let event_id = this.main_quest_id;
         let game_event_manage = global.get_game_event_manage();
+        let global_flag_manage = global.get_global_flag_manage();
         if (end_type == 'finish') {
             //获得主线任务奖励
-            let global_flag_manage = global.get_global_flag_manage();
             let finish_reward = game_events[this.main_quest_id].finish_reward;
             for (let key in finish_reward) {
                 if (key == 'game_flag') {
                     //设置完成标记
                     for (let flag_name in finish_reward['game_flag']) {
                         global_flag_manage.set_flag(flag_name, finish_reward['game_flag'][flag_name]);
-                        global_flag_manage.set_game_log('finish_event', flag_name);
                     }
                 } else if (key == 'start_event') {
                     //启动下一个主线
@@ -102,15 +103,21 @@ export class Main_quest_manage {
                 }
             }
             //记录玩家完成了一个事件
+            global_flag_manage.set_game_log('finish_event', event_id); //在脑海-流水账里生成一条日志
             global_flag_manage.record_event_finish_end(event_id);
         } else {
             console.log('理论上主线只能正常完成，不存在其他结束状态，遇到了异常状态%s', end_type);
         }
+        //主线结束原因设置短期游戏参数
+        let SGS_flag_name = 'SGS_' + event_id;
+        global_flag_manage.set_flag(SGS_flag_name, end_type);
         //清除数据
         this.reset_monitor_data(); //主线任务类中的行为监控
         game_event_manage.delete_monitor_target_summ(event_id); //游戏事件管理类中的行为监控
-        //将新的主线情况展示到脑海-重要事件界面中
-        this.init_main_quest_IE_div();
+        // 将新的主线情况展示到脑海-重要事件界面中
+        // this.init_main_quest_IE_div();
+        // 统一刷新脑海-重要事件界面
+        game_event_manage.init_IE_div();
     }
     //获取主线任务id
     get_main_quest_id() {
@@ -140,25 +147,26 @@ export class Main_quest_manage {
         if (this.main_quest_id == null) {
             //当前没有挑战，不需要监控任何参数
             console.log('当前没有主线，却触发了更新函数，说明外部程序没有更新好主线的监控行为');
-            return;
+            return false;
         }
         if (typeof this.monitor_data[type] == 'number') {
             if (this.monitor_data[type] >= this.monitor_target[type]) {
                 //这一条监控行为已经达成，不需要继续监控
-                return;
+                return false;
             }
             this.monitor_data[type] += value;
         } else if (typeof this.monitor_data[type] == 'boolean') {
             if (this.monitor_data[type] == this.monitor_target[type]) {
                 //这一条监控行为已经达成，不需要继续监控
-                return;
+                return false;
             }
             this.monitor_data[type] = value;
         } else {
             console.log('非数字且非布尔类型的监控行为目标数值，异常，不知道怎么更新');
-            return;
+            return false;
         }
         this.updata_main_quest();
+        return true;
     }
     //初始化脑海-重要事件界面中关于主线任务的信息
     init_main_quest_IE_div() {
@@ -215,6 +223,11 @@ export class Main_quest_manage {
             //获取指定监控数据的文本
             monitor_desc_div.innerHTML = get_monitor_ch(id, this.monitor_data, this.monitor_target);
         }
+    }
+    //清空脑海-重要事件界面中关于主线任务的信息
+    delete_main_quest_IE_div() {
+        let main_quest_div = document.getElementById('main_quest_div');
+        main_quest_div.replaceChildren();
     }
     //判断某条监控行为是否达成
     get_monitor_flag(id) {

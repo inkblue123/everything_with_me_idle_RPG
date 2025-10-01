@@ -40,7 +40,7 @@ export class Challenge_manage {
     start_challenge(event_id) {
         if (global.get_flag('GS_challenge_flag')) {
             //已经处于挑战中，不能同时开启多个挑战
-            return 0;
+            return false;
         }
         //进入事件状态
         global.set_flag('GS_challenge_flag', true);
@@ -49,7 +49,8 @@ export class Challenge_manage {
         //初始化需要监控的行为以及他们的目标数值
         this.init_monitor_target();
         //将监测情况展示到脑海-重要事件界面中
-        this.init_challenge_IE_div();
+        //外面的游戏事件类统一初始化界面
+        // this.init_challenge_IE_div();
 
         //如果有事件起始地点，则移动过去
         if (game_events[event_id].place) {
@@ -57,6 +58,7 @@ export class Challenge_manage {
             this.event_start_place = place_manage.get_now_place();
             place_manage.set_now_place(game_events[event_id].place);
         }
+        return true;
     }
 
     //更新当前游戏事件
@@ -106,7 +108,6 @@ export class Challenge_manage {
                     //设置完成标记
                     for (let flag_name in finish_reward['game_flag']) {
                         global_flag_manage.set_flag(flag_name, finish_reward['game_flag'][flag_name]);
-                        global_flag_manage.set_game_log('finish_event', flag_name);
                     }
                 } else if (key == 'start_event') {
                     //启动相连的其他事件
@@ -117,9 +118,10 @@ export class Challenge_manage {
                 }
             }
             //记录玩家完成了一个事件
+            global_flag_manage.set_game_log('finish_event', event_id);
             global_flag_manage.record_event_finish_end(event_id);
         }
-
+        //挑战结束原因设置短期游戏参数
         let SGS_flag_name = 'SGS_' + event_id;
         global_flag_manage.set_flag(SGS_flag_name, end_type);
 
@@ -130,11 +132,13 @@ export class Challenge_manage {
         }
         //清除数据
         this.reset_monitor_data(); //挑战管理类中的行为监控
-        let global_event_manage = global.get_game_event_manage();
-        global_event_manage.delete_monitor_target_summ(event_id); //游戏事件管理类中的行为监控
+        let game_event_manage = global.get_game_event_manage();
+        game_event_manage.delete_monitor_target_summ(event_id); //游戏事件管理类中的行为监控
 
         //清除挑战界面信息
-        this.reset_challenge_IE_div();
+        // this.delete_challenge_IE_div();
+        // 统一刷新脑海-重要事件界面
+        game_event_manage.init_IE_div();
     }
     //获取当前挑战id
     get_now_challenge_id() {
@@ -189,7 +193,7 @@ export class Challenge_manage {
     init_challenge_IE_div() {
         //当前没有事件，不需要更新
         if (this.challenge_id == null) {
-            this.reset_challenge_IE_div();
+            this.delete_challenge_IE_div();
             return;
         }
         let challenge_div = document.getElementById('challenge_div');
@@ -237,13 +241,12 @@ export class Challenge_manage {
             } else {
                 monitor_flag_div.innerHTML = '☐';
             }
-            // monitor_flag_div.innerHTML = this.get_monitor_flag(monitor_id);
             //获取指定监控数据的文本
             monitor_desc_div.innerHTML = get_monitor_ch(monitor_id, this.monitor_data, this.monitor_target);
         }
     }
     //清空脑海-重要事件界面中关于挑战的信息
-    reset_challenge_IE_div() {
+    delete_challenge_IE_div() {
         //清空原本内容
         let challenge_div = document.getElementById('challenge_div');
         challenge_div.replaceChildren();

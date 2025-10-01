@@ -53,16 +53,32 @@ function load_save_show_tip() {
     let tooltip = document.getElementById('tooltip');
     tooltip.InitTip('load_save', null);
 }
-//导入存档功能-加载具体存档文件
+//导入存档功能-加载密文存档
 function load_save(save_str) {
-    //导入的存档会直接保存
-    window.localStorage.setItem('v0.1', save_str);
-    //base64解密
-    console.log('%s', save_str);
-    save_str = b64_to_utf8(save_str);
-    //把字符串转换成存档对象
-    console.log('%s', save_str);
-    let save_obj = JSON.parse(save_str);
+    let save_obj;
+    if (save_str.indexOf('global_save') != -1) {
+        //输入内容是明文字符串存档
+        //字符串->对象->字符串，去掉多于的换行和空格
+        save_str = JSON.stringify(JSON.parse(save_str));
+        //用base64加密
+        let b64_save_str = utf8_to_b64(save_str);
+        console.log('%s', b64_save_str);
+        //在浏览器中保存存档
+        window.localStorage.setItem('v0.1', b64_save_str);
+
+        //把字符串转换成存档对象
+        save_obj = JSON.parse(save_str);
+    } else {
+        //输入的是b64加密存档
+        //在浏览器中保存存档
+        window.localStorage.setItem('v0.1', save_str);
+        //base64解密
+        console.log('%s', save_str);
+        save_str = b64_to_utf8(save_str);
+        //把字符串转换成存档对象
+        console.log('%s', save_str);
+        save_obj = JSON.parse(save_str);
+    }
 
     //针对新游戏开场剧情的处理
     if (!global.get_flag('new_game_start')) {
@@ -155,4 +171,10 @@ function b64_to_utf8(str) {
     }
 }
 
-export { init_game, save_game, delete_save, load_save, load_save_show_tip };
+export {
+    init_game, //
+    save_game,
+    delete_save,
+    load_save,
+    load_save_show_tip,
+};

@@ -8,7 +8,7 @@ import { player } from '../Player/Player.js';
 //记录地点相关内容的对象
 export class Place_manage {
     constructor() {
-        this.now_place; //当前地点
+        this.now_place = 'game_statr'; //当前地点
         this.last_place; //上次地点
         this.next_place; //接下来要移动到的地点
         this.last_normal_place; //上一个安全的地点
@@ -24,8 +24,8 @@ export class Place_manage {
             this.set_now_place(true_next_place, goto_flag);
             return;
         }
-        //移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面
-        change_Combat_Normal_game_div(next_place);
+        //移动时，如果涉及整体游戏界面布局的变化，则更新游戏界面
+        change_game_div(next_place);
 
         if (this.now_place != next_place) {
             //进入新地点会获得一些效果，在进入时获得
@@ -36,6 +36,8 @@ export class Place_manage {
 
         //更新新旧地点参数
         this.updata_new_place_data();
+        //更新背包界面物品的点击效果
+        updata_backpack_value(this.last_place, this.now_place);
         //根据新地点参数，更新相关界面信息
         updata_control_place_name(next_place);
 
@@ -130,7 +132,9 @@ export class Place_manage {
             let live_plan_manage = global.get_live_plan_manage();
             live_plan_manage.load_set_new_place(next_place);
         } else if (next_place_type == 'combat') {
-            updata_to_combat_place();
+            updata_to_combat_place(next_place);
+        } else if (next_place_type == 'store') {
+            updata_to_store_place(next_place);
         }
 
         //进入新地点会获得一些效果，在进入时获得
@@ -144,6 +148,8 @@ export class Place_manage {
 
         //根据新地点参数，更新相关界面信息
         updata_control_place_name(next_place);
+        //更新背包界面物品的点击效果
+        updata_backpack_value(this.last_place, this.now_place);
         //展示新地点的内容
         let control = document.getElementById('control');
         control.show_now_place();
@@ -159,59 +165,91 @@ function updata_control_place_name(now_place_id) {
     area_name_div.innerHTML = area_name;
     place_name_div.innerHTML = place_ch;
 }
-//移动时，如果涉及战斗地点和普通地点之间的切换，则更新游戏界面和参数
-function change_Combat_Normal_game_div(next_place) {
+//移动时，如果涉及整体游戏界面布局的变化，则更新游戏界面
+function change_game_div(next_place) {
     let next_place_type = places[next_place].type;
     if (next_place_type == 'normal' || next_place_type == 'NPC') {
-        updata_to_normal_place();
+        updata_to_normal_place(next_place);
     } else if (next_place_type == 'combat') {
-        updata_to_combat_place();
+        updata_to_combat_place(next_place);
+    } else if (next_place_type == 'store') {
+        updata_to_store_place(next_place);
     }
 }
 //移动到新的普通地点，更新相关参数
-function updata_to_normal_place() {
+function updata_to_normal_place(next_place) {
     let place_manage = global.get_place_manage();
     let now_place_type = place_manage.get_now_place_type();
-    if (now_place_type == 'combat') {
+    if (now_place_type == 'normal' || now_place_type == 'NPC') {
+        //从普通地点到另一个普通地点，不需要执行额外操作
+    } else if (now_place_type == 'combat') {
         //从战斗地点进入普通地点，执行转场
         show_normal_game_div();
-
         // 清除旧的战斗相关的信息
         let enemy_manage = global.get_enemy_manage();
         enemy_manage.delete_all_enemy(); //清除战斗区域的怪物
         //退出战斗状态
         global.set_flag('GS_game_statu', 'NULL');
+    } else if (now_place_type == 'store') {
+        //从商店移动到普通地点，执行转场
+        show_live_plan_div();
     }
     //根据玩家生活技能解锁情况，展示或隐藏生活技能界面与按钮
     show_unlock_live_plan_div();
     //根据普通地点的生活技能可用情况，显示或遮罩生活技能规划界面
-    let next_place = place_manage.get_next_place();
     show_place_can_live_plan_div(next_place);
     //将新地点的信息更新到生活技能对象中
     let live_plan_manage = global.get_live_plan_manage();
     live_plan_manage.set_new_place(next_place);
 }
 //移动到新的战斗地点，更新相关参数
-function updata_to_combat_place() {
+function updata_to_combat_place(next_place) {
     let place_manage = global.get_place_manage();
     let enemy_manage = global.get_enemy_manage();
     let now_place_type = place_manage.get_now_place_type();
-    if (now_place_type != 'combat') {
-        // if (now_place_type == 'normal' || now_place_type == 'NPC') {
+    if (now_place_type == 'normal' || now_place_type == 'NPC') {
         //从非战斗地点进入战斗地点，执行转场
         show_combat_game_div();
         //进入战斗状态
         global.set_flag('GS_game_statu', 'combat');
-    } else {
-        // 从一个战斗区域前往另一个战斗区域，要清除旧的战斗相关的信息
-        enemy_manage.delete_all_enemy(); //清除当前战斗区域的怪物
+    } else if (now_place_type == 'combat') {
+        // 从一个战斗区域前往另一个战斗区域，
+        //理论上不应该出现这样的地图联通情况
+        console.log('理论上不应出现战斗地点连战斗地点的地图设计');
+        return;
+        //如果确实要做
+        //要清除旧的战斗相关的信息
+        // enemy_manage.delete_all_enemy(); //清除当前战斗区域的怪物
+    } else if (now_place_type == 'store') {
+        // 从商店前往战斗区域，理论上不应该出现这样的地图联通情况
+        console.log('理论上不应出现商店地点战连斗地点的地图设计');
+        return;
     }
 
-    let next_place = place_manage.get_next_place();
-    enemy_manage.set_new_place(next_place); //设置新的战斗区域的敌人情况
+    //设置新的战斗区域的敌人情况
+    enemy_manage.set_new_place(next_place);
     //玩家主动技能重置
     let P_Askill = player.get_player_ASkill_Manage();
     P_Askill.reset_round();
+}
+//移动到商店地点，更新相关参数
+function updata_to_store_place(next_place) {
+    let place_manage = global.get_place_manage();
+    let now_place_type = place_manage.get_now_place_type();
+    if (now_place_type == 'normal' || now_place_type == 'NPC') {
+        //从普通地点到商店，执行转场
+        show_store_div();
+    } else if (now_place_type == 'combat') {
+        //从战斗地点到商店，理论上不应该出现这样的地图联通情况
+        console.log('理论上不应出现战斗地点连商店地点的地图设计');
+        return;
+    } else if (now_place_type == 'store') {
+        // 从一个商店前往另一个商店，不需要额外操作
+        console.log('理论上不应出现商店地点连商店地点的地图设计');
+    }
+    //将新地点的信息更新到商店管理对象中
+    let store_manage = global.get_store_manage();
+    store_manage.set_new_place(next_place);
 }
 //展示战斗时的游戏界面
 function show_combat_game_div() {
@@ -228,6 +266,32 @@ function show_normal_game_div() {
 
     game_up_combat.style.display = 'none';
     game_up_nomal.style.display = '';
+}
+//针对非战斗时的游戏界面，展示生活技能规划的窗口
+function show_live_plan_div() {
+    const Live_plan_div = document.getElementById('Live_plan');
+    const Store_div = document.getElementById('Store');
+    const goods_trade_div = document.getElementById('goods_trade_div');
+
+    Live_plan_div.style.display = '';
+    Store_div.style.display = 'none';
+    goods_trade_div.style.display = 'none';
+}
+//针对非战斗时的游戏界面，展示商店的窗口
+function show_store_div() {
+    const Live_plan_div = document.getElementById('Live_plan');
+    const Store_div = document.getElementById('Store');
+    const goods_trade_div = document.getElementById('goods_trade_div');
+    const PL_div = document.getElementById('PL_div');
+    const IBB_div = document.getElementById('IBB_div');
+
+    Live_plan_div.style.display = 'none';
+    Store_div.style.display = '';
+    goods_trade_div.style.display = '';
+    //商店界面内部切换到商品列表界面
+    PL_switch_radio_div.children[0].checked = true;
+    PL_div.style.display = '';
+    IBB_div.style.display = 'none';
 }
 //进入新地点会获得一些效果，在进入时获得
 function goto_new_place_get(next_place) {
@@ -285,32 +349,20 @@ function show_place_can_live_plan_div(next_place) {
         //单选按钮
         let radio_id = live_plan_id[i] + '_radio_div';
         let radio_div = document.getElementById(radio_id);
-
+        let radio_overlay = radio_div.querySelector('.overlay'); //按钮上的遮罩
         //内容界面
         let value_div_id = live_plan_id[i] + '_value_div';
         let value_div = document.getElementById(value_div_id);
+        let value_overlay = value_div.querySelector('.overlay'); //内容界面上的遮罩
 
         if (places[next_place].live_plan_flag[i]) {
-            //如果地点可以进行对应技能，去掉遮罩
-            let overlay = radio_div.querySelector('.overlay'); //按钮上的遮罩
-            if (overlay) {
-                overlay.remove();
-            }
-            overlay = value_div.querySelector('.overlay'); //内容界面上的遮罩
-            if (overlay) {
-                overlay.remove();
-            }
+            //如果地点可以进行对应技能，隐藏遮罩
+            radio_overlay.style.display = 'none';
+            value_overlay.style.display = 'none';
         } else {
-            // 不可进行对应技能，添加遮罩
-            let overlay = radio_div.querySelector('.overlay'); //按钮上的遮罩
-            if (!overlay) {
-                addElement(radio_div, 'div', null, 'overlay');
-            }
-            overlay = value_div.querySelector('.overlay'); //内容界面上的遮罩
-            if (!overlay) {
-                let value_overlay = addElement(value_div, 'div', null, 'overlay');
-                value_overlay.innerHTML = '这个地点没有' + live_plan_ch[i] + '的条件';
-            }
+            // 不可进行对应技能，显示遮罩
+            radio_overlay.style.display = '';
+            value_overlay.style.display = '';
         }
     }
 }
@@ -348,21 +400,21 @@ function show_unlock_live_plan_div() {
         }
     }
     let lock_all_Live_plan_div = document.getElementById('lock_all_Live_plan_div');
-    if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == true) {
+    if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == 'true') {
         //没有解锁生活技能，生活规划界面也是初始状态，不需要变化
         return;
     }
-    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == true) {
+    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == 'true') {
         //有生活技能解锁，生活规划界面不能再展示填充页了
         let Live_plan_switch_div = document.getElementById('Live_plan_switch_div');
         let Live_plan_value_div = document.getElementById('Live_plan_value_div');
         Live_plan_switch_div.style.display = '';
         Live_plan_value_div.style.display = '';
         lock_all_Live_plan_div.style.display = 'none';
-        lock_all_Live_plan_div.dataset.flag = false;
+        lock_all_Live_plan_div.dataset.flag = 'false';
     }
     //根据解锁的技能，展示对应的界面
-    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == false) {
+    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == 'false') {
         if (unlock_skill_num == 1) {
             //如果解锁了一个技能，单选按钮和内容界面都应该切换到这个技能上
             for (let i = 0; i < 7; i++) {
@@ -390,9 +442,28 @@ function show_unlock_live_plan_div() {
             return;
         }
     }
-    if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == false) {
+    if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == 'false') {
         //没有解锁生活技能，但是生活规划界面处于非初始状态，属于异常情况
         console.log('错误情况');
         return;
+    }
+}
+//更新背包界面物品的点击效果
+function updata_backpack_value(last_place, now_place) {
+    let last_place_type = places[last_place].type;
+    let now_place_type = places[now_place].type;
+    //进入商店和离开商店时，左下背包界面物品的点击效果要发生变化
+    //所以满足条件时需要刷新一遍
+
+    //离开商店
+    if (last_place_type == 'store' && now_place_type != 'store') {
+        //刷新背包界面的按钮
+        let P_backpack = player.get_player_backpack();
+        P_backpack.updata_BP_value();
+    }
+    //进入商店
+    if (now_place_type == 'store' && last_place_type != 'store') {
+        let P_backpack = player.get_player_backpack();
+        P_backpack.updata_BP_value();
     }
 }

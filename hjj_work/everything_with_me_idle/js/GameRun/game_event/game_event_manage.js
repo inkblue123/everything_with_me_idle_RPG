@@ -26,17 +26,22 @@ export class Game_event_manage {
             console.log('未定义事件%s', event_id);
             return;
         }
+        let start_flag = false; //启动成功标识
         //启动事件管理类
         if (game_events[event_id].type == 'main_quest') {
-            this.main_quest_manage.start_main_quest(event_id);
+            start_flag = this.main_quest_manage.start_main_quest(event_id);
         } else if (game_events[event_id].type == 'side_quest') {
-            this.side_quest_manage.start_side_quest(event_id);
+            start_flag = this.side_quest_manage.start_side_quest(event_id);
         } else if (game_events[event_id].type == 'challenge') {
-            this.challenge_manage.start_challenge(event_id);
+            start_flag = this.challenge_manage.start_challenge(event_id);
         } else if (game_events[event_id].type == 'mini_event') {
             this.mini_event_manage.start_mini_event(event_id);
         }
-        this.add_monitor_target_summ(event_id);
+        //事件启动成功
+        if (start_flag) {
+            this.add_monitor_target_summ(event_id); //添加新事件需要监控的行为
+            this.init_IE_div(); //统一初始化重要事件界面
+        }
     }
     //将事件所要监控的行为进行汇总
     add_monitor_target_summ(event_id) {
@@ -83,6 +88,21 @@ export class Game_event_manage {
             }
         } else if (event_type == 'side_quest') {
             //支线任务可能有多个，如果AB任务都涉及到同一个行为，去除A时应该保留这个行为，所以不能去除，应该重新构建
+            this.monitor_target_summ = new Object();
+            let main_quest_id = this.main_quest_manage.get_main_quest_id();
+            if (main_quest_id != null) {
+                this.add_monitor_target_summ(main_quest_id);
+            }
+            let challenge_id = this.challenge_manage.get_now_challenge_id();
+            if (challenge_id != null) {
+                this.add_monitor_target_summ(challenge_id);
+            }
+            let side_quest_id_array = this.side_quest_manage.get_side_quest_id_array();
+            for (let side_quest_id of side_quest_id_array) {
+                if (side_quest_id != event_id) {
+                    this.add_monitor_target_summ(side_quest_id);
+                }
+            }
         }
     }
     //结束当前挑战
@@ -217,23 +237,30 @@ export class Game_event_manage {
     //初始化脑海-重要事件界面的信息
     init_IE_div() {
         let flag = true;
-        //如果有主线任务，则初始化主线任务的界面
         let main_quest_id = this.main_quest_manage.get_main_quest_id();
         if (main_quest_id != null) {
+            //如果有主线任务，则初始化主线任务的界面
             this.main_quest_manage.init_main_quest_IE_div();
             flag = false;
+        } else {
+            //没有主线则清空
+            this.main_quest_manage.delete_main_quest_IE_div();
         }
         //如果有支线任务，则初始化支线任务的界面
         let side_quest_num = this.side_quest_manage.get_side_quest_num();
         if (side_quest_num != 0) {
             this.side_quest_manage.init_side_quest_IE_div();
             flag = false;
+        } else {
+            this.side_quest_manage.delete_side_quest_IE_div();
         }
-        //如果有挑战，则初始化挑战的界面
         let challenge_id = this.challenge_manage.get_now_challenge_id();
         if (challenge_id != null) {
+            //如果有挑战，则初始化挑战的界面
             this.challenge_manage.init_challenge_IE_div();
             flag = false;
+        } else {
+            this.challenge_manage.delete_challenge_IE_div();
         }
         //特殊情况，没有任何重要事件的界面
         if (flag) {
@@ -266,22 +293,20 @@ export class Game_event_manage {
         this.side_quest_manage.load_side_quest_manage(game_event_save.side_quest_save);
         this.challenge_manage.load_challenge_manage(game_event_save.challenge_save);
         //重新构建事件的行为监控
-        let event_id = this.main_quest_manage.get_main_quest_id();
-        if (!is_Empty_Object(game_events[event_id])) {
-            this.add_monitor_target_summ(event_id);
+        let main_quest_id = this.main_quest_manage.get_main_quest_id();
+        if (!is_Empty_Object(game_events[main_quest_id])) {
+            this.add_monitor_target_summ(main_quest_id);
         }
-
-        event_id = this.challenge_manage.get_now_challenge_id();
-        if (!is_Empty_Object(game_events[event_id])) {
-            this.add_monitor_target_summ(event_id);
+        let challenge_id = this.challenge_manage.get_now_challenge_id();
+        if (!is_Empty_Object(game_events[challenge_id])) {
+            this.add_monitor_target_summ(challenge_id);
         }
-        // let event_id_arr = this.side_quest_manage.get_side_quest_id();
-        // for (let id of event_id_arr) {
-        //     if (!is_Empty_Object(game_events[id])) {
-        //         this.add_monitor_target_summ(id);
-        //     }
-        // }
-
+        let side_quest_id_array = this.side_quest_manage.get_side_quest_id_array();
+        for (let side_quest_id of side_quest_id_array) {
+            if (!is_Empty_Object(game_events[side_quest_id])) {
+                this.add_monitor_target_summ(side_quest_id);
+            }
+        }
         //加载右下角的重要事件界面
         this.init_IE_div();
     }

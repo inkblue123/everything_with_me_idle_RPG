@@ -2,7 +2,7 @@ import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 import { items } from '../Data/Item/Item.js';
-import { is_Empty_Object } from '../Function/Function.js';
+import { is_Empty_Object, get_item_id_key } from '../Function/Function.js';
 import { get_random } from '../Function/math_func.js';
 
 export class Attack_effect {
@@ -278,12 +278,9 @@ export class Combat_manage {
         let enemy_manage = global.get_enemy_manage();
         enemy_manage.add_kill_enemy_num(1);
         //敌人掉落物品
-        let items_obj = this.get_enemy_death_item(enemy.id);
-        for (let key in items_obj) {
-            let id = items_obj[key].id;
-            let num = items_obj[key].num;
-            let rarity = items_obj[key].rarity;
-            player.Player_get_item(id, num, rarity);
+        let items_arr = this.get_enemy_death_item(enemy.id);
+        for (let item_key in items_arr) {
+            player.Player_get_item(items_arr[item_key]);
         }
     }
     //获取当前玩家攻击的索敌目标
@@ -327,33 +324,29 @@ export class Combat_manage {
             }
             for (let j = 0; j < drop_times; j++) {
                 //根据权重，获取掉落哪一个物品
-                let item_id = random_manage.get_enemy_death_item_id(enemy_id, i);
-                let data_obj = enemy_item_obj.items[item_id];
+                let item_key = random_manage.get_enemy_death_item_id(enemy_id, i);
+                let data_obj = enemy_item_obj.items[item_key];
 
                 let item_obj = new Object();
-                item_obj.id = item_id;
+                item_obj.id = data_obj.id;
                 item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
-                if (items[item_id].main_type.includes('equipment')) {
+                if (items[data_obj.id].main_type.includes('equipment')) {
                     //如果掉落的是装备，还需要记录稀有度
-                    item_obj.rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
+                    item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
                 }
                 //将掉落的信息存起来
                 drop_item_arry.push(item_obj);
             }
         }
-        //对掉落物去重
+        //对掉落物去重进行合并
         let uniqueArr = new Object();
         for (let item_obj of drop_item_arry) {
-            let id = item_obj.id;
-            let key = id;
-            if (items[id].main_type.includes('equipment')) {
-                key = id + rarity;
-            }
+            let item_key = get_item_id_key(item_obj);
 
-            if (is_Empty_Object(uniqueArr[key])) {
-                uniqueArr[key] = item_obj;
+            if (is_Empty_Object(uniqueArr[item_key])) {
+                uniqueArr[item_key] = item_obj;
             } else {
-                uniqueArr[key].num += item_obj.num;
+                uniqueArr[item_key].num += item_obj.num;
             }
         }
         return uniqueArr;

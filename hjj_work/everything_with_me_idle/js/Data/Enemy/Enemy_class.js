@@ -1,5 +1,6 @@
+import { is_Empty_Object, get_item_obj, get_item_id_key } from '../../Function/Function.js';
 import { texts } from '../Text/Text.js';
-import { is_Empty_Object } from '../../Function/Function.js';
+import { items } from '../Item/Item.js';
 
 export class Enemy {
     constructor(id) {
@@ -60,18 +61,47 @@ export class Enemy {
         this.item_array.push(obj);
     }
     //给这个敌人添加一个可掉落物品
-    add_item(item_array_id, item_id, chance, max_num, min_num, equip_rarity) {
-        let item_obj = new Object();
-        item_obj.id = item_id;
+    // add_item(item_array_id, item_id, chance, max_num, min_num, equip_rarity) {
+    //     let item_;
+    //     let item_obj = new Object();
+
+    //     item_obj.id = item_id;
+    //     item_obj.chance = chance; //权重
+    //     item_obj.max_num = max_num;
+    //     item_obj.min_num = min_num;
+    //     if (equip_rarity) item_obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
+    //     if (is_Empty_Object(this.item_array[item_array_id])) {
+    //         console.log('未定义%d掉落列表', item_array_id);
+    //         return;
+    //     }
+    //     this.item_array[item_array_id].items[item_id] = item_obj;
+    // }
+    //给这个敌人添加一个可掉落物品
+    add_item(item_array_id, item_id, chance, max_num, min_num, ...args) {
+        let item_obj;
+        if (items[item_id].main_type.includes('equipment')) {
+            //物品是装备，args内参数的含义按以下顺序排列：
+            //稀有度
+            let equip_rarity = args[0];
+            item_obj = get_item_obj(item_id, 1, equip_rarity);
+        } else if (items[item_id].main_type.includes('material')) {
+            item_obj = get_item_obj(item_id, 1);
+            //物品是材料，没有独特属性
+        } else if (items[item_id].main_type.includes('consumable')) {
+            //物品是消耗品，args内参数的含义按以下顺序排列：
+            // 暂无
+            item_obj = get_item_obj(item_id, 1);
+        }
+
         item_obj.chance = chance; //权重
         item_obj.max_num = max_num;
         item_obj.min_num = min_num;
-        if (equip_rarity) item_obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
         if (is_Empty_Object(this.item_array[item_array_id])) {
             console.log('未定义%d掉落列表', item_array_id);
             return;
         }
-        this.item_array[item_array_id].items[item_id] = item_obj;
+        let item_key = get_item_id_key(item_obj);
+        this.item_array[item_array_id].items[item_key] = item_obj;
     }
 }
 //伐木技能中的敌人
@@ -101,18 +131,30 @@ export class E_tree extends Enemy {
         this.reward_level_item[level].push(obj);
     }
     //给这个敌人添加一个可掉落物品
-    add_item(level, item_array_id, item_id, chance, max_num, min_num, equip_rarity) {
+    add_item(level, item_array_id, item_id, chance, max_num, min_num, ...args) {
         let item_obj = new Object();
-        item_obj.id = item_id;
+        if (items[item_id].main_type.includes('equipment')) {
+            //物品是装备，args内参数的含义按以下顺序排列：
+            //稀有度
+            equip_rarity = args[0];
+            item_obj = get_item_obj(item_id, 1, equip_rarity);
+        } else if (items[item_id].main_type.includes('material')) {
+            item_obj = get_item_obj(item_id, 1);
+            //物品是材料，没有独特属性
+        } else if (items[item_id].main_type.includes('consumable')) {
+            //物品是消耗品，args内参数的含义按以下顺序排列：
+            // 暂无
+            item_obj = get_item_obj(item_id, 1);
+        }
         item_obj.chance = chance; //权重
         item_obj.max_num = max_num;
         item_obj.min_num = min_num;
-        if (equip_rarity) item_obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
         if (is_Empty_Object(this.reward_level_item[level])) {
             console.log('未定义%d掉落层级', level);
             return;
         }
-        this.reward_level_item[level][item_array_id].items[item_id] = item_obj;
+        let item_key = get_item_id_key(item_obj);
+        this.reward_level_item[level][item_array_id].items[item_key] = item_obj;
     }
 }
 //钓鱼技能中的敌人
@@ -131,21 +173,21 @@ function add_Enemy_object(enemys, newid) {
     if (enemys[newid] === undefined) {
         enemys[newid] = new Enemy(newid);
     } else {
-        console.log(`创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容`, newid);
+        console.log('创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_E_tree_object(enemys, newid) {
     if (enemys[newid] === undefined) {
         enemys[newid] = new E_tree(newid);
     } else {
-        console.log(`创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容`, newid);
+        console.log('创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 function add_E_fish_object(enemys, newid) {
     if (enemys[newid] === undefined) {
         enemys[newid] = new E_fish(newid);
     } else {
-        console.log(`创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容`, newid);
+        console.log('创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
 export { add_Enemy_object, add_E_tree_object, add_E_fish_object };

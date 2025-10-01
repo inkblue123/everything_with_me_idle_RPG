@@ -10,7 +10,7 @@ function make_foraging_div(FAG_value_div) {
     FAG_drop_table_head.innerHTML = '可能的产物';
     //掉落物列表内容
     let FAG_drop_table_scroll_box = addElement(FAG_up_div, 'div', 'FAG_drop_table_scroll_box', 'LP_div overflow_y_div', '');
-    var FAG_drop_table_value_div = addElement(FAG_drop_table_scroll_box, 'div', 'FAG_drop_table_value_div', 'classification_div');
+    var FAG_drop_table_value_div = addElement(FAG_drop_table_scroll_box, 'div', 'FAG_drop_table_value_div', 'in_overflow_div');
     var FAG_no_show_value_div = addElement(FAG_drop_table_value_div, 'div', 'FAG_no_show_value_div', 'drop_value');
     var FAG_have_show_value_div = addElement(FAG_drop_table_value_div, 'div', 'FAG_have_show_value_div', 'page_columns_111');
 
@@ -34,9 +34,9 @@ function make_foraging_div(FAG_value_div) {
     //采集下部，开始按钮
     let FAG_down_div = addElement(FAG_value_div, 'div', 'FAG_down_div', null, '');
     var FAG_S_button = addElement(FAG_down_div, 'button', 'FAG_S_button', 'LP_button', '');
-    FAG_S_button.innerHTML = `开始采集`;
+    FAG_S_button.innerHTML = '开始采集';
     var FAG_E_button = addElement(FAG_down_div, 'button', 'FAG_E_button', 'LP_button', 'none');
-    FAG_E_button.innerHTML = `停止采集`;
+    FAG_E_button.innerHTML = '停止采集';
 }
 
 //为采集界面中的按钮添加交互逻辑

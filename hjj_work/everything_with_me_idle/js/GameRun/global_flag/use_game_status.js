@@ -57,16 +57,14 @@ function get_UGS_BP_weight() {
     var BP_weight = 0;
     let P_backpack = player.get_player_backpack();
     let arr = Object.keys(P_backpack); //将拥有的物品的key转换成一个数组
-    for (let play_item_id of arr) {
-        if (items[play_item_id] === undefined) {
-            //玩家拥有的物品不在数据库中，应该清除
-            delete P_backpack[play_item_id];
-        } else {
-            let aitem_num = P_backpack[play_item_id].num;
-            BP_weight += Math.floor(aitem_num / items[play_item_id].maxStack);
-            if (aitem_num % items[play_item_id].maxStack != 0) {
-                BP_weight++;
-            }
+    for (let item_key of arr) {
+        let item_obj = P_backpack[item_key];
+        let id = item_obj.id;
+
+        let aitem_num = P_backpack[item_key].num;
+        BP_weight += Math.floor(aitem_num / items[id].maxStack);
+        if (aitem_num % items[id].maxStack != 0) {
+            BP_weight++;
         }
     }
     console.log('玩家当前背包负重%d', BP_weight);

@@ -19,6 +19,7 @@ function init_test_normal_place(places) {
     add_normal_Place(places, id, area);
     //可联通地点的id
     places[id].add_connect_normal_place('test_combat1');
+
     id = 'test_normal1';
     add_normal_Place(places, id, area);
     //可联通地点的id
@@ -42,8 +43,8 @@ function init_village_normal_place(places) {
 
     id = 'village_market'; //村庄集市
     add_normal_Place(places, id, area);
-    places[id].add_connect_normal_place('village_square');
-    places[id].add_connect_store_place('VM_smithy', 'VM_woodshop', 'VM_trade_hub');
+    places[id].add_connect_normal_place('village_square', 'VM_woodshop');
+    // places[id].add_connect_store_place('VM_smithy', 'VM_woodshop', 'VM_trade_hub');
 
     id = 'village_barracks'; //村庄兵营
     add_normal_Place(places, id, area);
@@ -55,6 +56,12 @@ function init_village_normal_place(places) {
     add_normal_Place(places, id, area);
     places[id].add_connect_normal_place('village_square');
     places[id].add_connect_store_place('VH_pharmacy');
+
+    id = 'VM_woodshop'; //村庄集市-木工坊
+    add_normal_Place(places, id, area);
+    places[id].add_connect_normal_place('village_market');
+    places[id].add_connect_store_place('VM_woodshop_showcase');
+    places[id].add_place_NPC('village_woodshop_owner');
 }
 //村外后山区域的普通地点
 function init_village_backhill_normal_place(places) {
@@ -66,7 +73,8 @@ function init_village_backhill_normal_place(places) {
     places[id].add_connect_normal_place('village_square', 'cemetery'); //测试
     // places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge'); //测试
     places[id].add_condition_connect_normal_place('logged_forest', 'unlock_foraging_logging', true); //完成了指定事件才允许进入已开荒的林区
-    places[id].add_condition_connect_normal_place('forest_edge', 'unlock_foraging_logging', true); //完成了指定事件才允许进入外层森林
+    // places[id].add_condition_connect_normal_place('forest_edge', 'unlock_foraging_logging', true); //完成了指定事件才允许进入外层森林
+    places[id].add_condition_connect_normal_place('forest_edge_road', 'unlock_foraging_logging', true); //完成了指定事件才允许进入外层森林
     places[id].add_place_NPC('village_old_woman');
     // places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge_road');
 
@@ -128,8 +136,8 @@ function init_village_backhill_normal_place(places) {
     places[id].set_foraging_item('coral_fungus', 5, false); //这个地点可采集的物品，珊瑚菌
     places[id].set_foraging_item('chanterelle', 5, false); //这个地点可采集的物品，鸡油菌
     places[id].set_fishing_data(0, 16, 1); //这个地点的钓鱼相关参数
-    // places[id].set_fishing_fish('river_mussel', 5, false); //这个地点可钓到的鱼，河蚌
-    // places[id].set_fishing_fish('river_crab', 5, false); //这个地点可钓到的鱼，河蟹
+    places[id].set_fishing_fish('river_mussel', 5, false); //这个地点可钓到的鱼，河蚌
+    places[id].set_fishing_fish('river_crab', 5, false); //这个地点可钓到的鱼，河蟹
     places[id].set_fishing_fish('creek_fish', 1, false); //这个地点可钓到的鱼，溪鱼
 
     id = 'cemetery'; //墓地
@@ -144,7 +152,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_logging_data(5); //这个地点的伐木相关参数，树的复活时间5秒
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树，灌木丛
     places[id].set_logging_tree('oak_tree', 10, false); //这个地点可刷的树，橡树
-    places[id].set_foraging_data(120); //这个地点的采集相关参数，采集防御力50点
+    places[id].set_foraging_data(120); //这个地点的采集相关参数，采集防御力120点
     places[id].set_foraging_item('decayed_wood', 50, false); //这个地点可采集的物品，朽木
     places[id].set_foraging_item('red_berry', 10, false); //这个地点可采集的物品，红浆果
     places[id].set_foraging_item('yellow_berry', 10, false); //这个地点可采集的物品，黄浆果

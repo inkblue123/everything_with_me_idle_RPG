@@ -1,0 +1,54 @@
+/* 商店总界面 */
+#Store {
+    box-sizing: border-box;
+    border: 2px solid #797691; /* 内框 */
+    user-select: none;
+}
+/* 商店n个子界面的切换按钮的div */
+#Store_switch_div {
+    display: flex;
+    flex-wrap: nowrap; /* 防止换行 */
+    height: 10%;
+    /* background-color: #ffd700; */
+}
+/* 商店n个子界面的切换按钮 */
+.Store_switch_button label {
+    /* flex: 1; */
+    /* padding: 10px 0; */
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}
+#Store_value_div {
+    height: 90%;
+}
+
+.Store_switch_sort_div {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #797691;
+}
+.Store_switch_scroll_box {
+    flex: 1;
+}
+.Store_sort_div {
+    height: auto;
+}
+
+/* 背包界面-右侧容纳具体物品的div */
+#PL_value_div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* 自动换行 */
+}
+/* 背包界面-右侧布局中具体的一个物品 */
+.PL_value {
+    /* 每行两个元素 */
+    width: 50%;
+    /* background-color: #ffffff; */
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
+}

@@ -1,22 +1,27 @@
-import { crtElement, addElement, addElement_radio, add_click_Equipment_worn_remove } from '../Function/Dom_function.js';
-import { change_PA } from '../Function/show_func.js';
+import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
 import { updata_player_name, updata_player_EQP } from '../Function/Updata_func.js';
-import { change_Player_status_div, show_dropdown_table } from '../Function/show_func.js';
+import { show_dropdown_table } from '../Function/show_func.js';
 import { player } from '../Player/Player.js';
 
-var player_status = crtElement('div', 'player_status', null, '');
-// var player_status = crtElement('div', 'player_status', null, '', '#000000');
+//创建左上角色状态界面
+function create_player_status() {
+    let player_status = crtElement('div', 'player_status', null, '');
+    make_player_status_div(player_status);
+    set_player_status_button(player_status);
+    return player_status;
+}
 
 //创建左上角，角色状态界面内的详细组件
-{
+function make_player_status_div(player_status) {
     //界面上部，区分当前展示的内容的按钮
-    var player_status_switch = crtElement('div', 'player_status_switch_div', 'page_flex', '');
+    var player_status_switch = crtElement('div', 'player_status_switch_div', null, '');
     //属性 player_attribute PAB
-    var PAB_switch_button = addElement(player_status_switch, 'button', 'PAB_switch_button', 'player_status_switch_button');
+    var PAB_switch_radio_div = addElement(player_status_switch, 'div', null, 'radio_div div_switch_button');
+    addElement_radio(PAB_switch_radio_div, 'PAB_switch_button', 'player_status_switch', 'PAB_switch', '属性');
+    PAB_switch_radio_div.children[0].checked = true; //初始激活该按钮
     //技能 player_skill PSK
-    var PSK_switch_button = addElement(player_status_switch, 'button', 'PSK_switch_button', 'player_status_switch_button');
-    PAB_switch_button.innerHTML = `属性`;
-    PSK_switch_button.innerHTML = `技能`;
+    var PSK_switch_radio_div = addElement(player_status_switch, 'div', null, 'radio_div div_switch_button');
+    addElement_radio(PSK_switch_radio_div, 'PSK_switch_button', 'player_status_switch', 'PSK_switch', '技能');
     //界面下部，具体展示内容的窗口
     var player_status_value_div = crtElement('div', 'player_status_value_div', 'page_columns_1', '');
     var PAB_div = addElement(player_status_value_div, 'div', 'PAB_div', 'PAB_div');
@@ -81,12 +86,12 @@ var player_status = crtElement('div', 'player_status', null, '');
         var Player_attr_switch_div = crtElement('div', 'Player_attr_switch_div', 'page_columns_12', '');
         var PA_switch_div = addElement(Player_attr_switch_div, 'div', 'PA_switch_div', 'page_columns_1');
         var PA_switch_button = addElement(PA_switch_div, 'button', 'PA_switch_button', 'PA_switch_button', 'none');
-        PA_switch_button.innerHTML = `属性\n展示`;
+        PA_switch_button.innerHTML = '属性\n展示';
         var EQP_switch_button = addElement(PA_switch_div, 'button', 'EQP_switch_button', 'PA_switch_button', '');
-        EQP_switch_button.innerHTML = `装备\n展示`;
-        var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', 'page_auto_columns');
+        EQP_switch_button.innerHTML = '装备\n展示';
+        var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', null);
         for (let i = 0; i < 4; i++) {
-            var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'radio_div EQP_switch_radio_div');
+            var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'EQP_switch_radio_div');
             let id = 'EQP_' + (i + 1);
             let value = 'EQP_column_' + (i + 1);
             let text = '装备栏\n' + (i + 1);
@@ -102,72 +107,80 @@ var player_status = crtElement('div', 'player_status', null, '');
     }
     //角色技能窗口
     {
-        // 左侧的分类下拉表格界面
+        // 左侧的分类排序下拉表格界面
         {
-            var PSK_scroll_box = addElement(PSK_div, 'div', 'PSK_scroll_box', 'overflow_y_div');
-            var PSK_classification_div = addElement(PSK_scroll_box, 'div', 'PSK_classification_div', 'classification_div');
+            let PSK_switch_sort_div = addElement(PSK_div, 'div', 'PSK_switch_sort_div', null);
+
+            var PSK_switch_scroll_box = addElement(PSK_switch_sort_div, 'div', 'PSK_switch_scroll_box', 'overflow_y_div');
+            var PSK_switch_div = addElement(PSK_switch_scroll_box, 'div', 'PSK_switch_div', 'in_overflow_div');
             // 全部
-            var PSK_ALL_radio_div = addElement(PSK_classification_div, 'div', null, 'radio_div switch_radio_div_1');
-            addElement_radio(PSK_ALL_radio_div, `PSK_all`, 'PSK_switch', `PSK_all`, `全部`);
+            var PSK_ALL_radio_div = addElement(PSK_switch_div, 'div', null, 'radio_div switch_radio_div_1');
+            addElement_radio(PSK_ALL_radio_div, 'PSK_all', 'PSK_switch', 'PSK_all', '全部');
             //默认激活"全部"过滤条件
             PSK_ALL_radio_div.children[0].checked = true;
 
             // 根基技能 basic B
-            var PSK_B_button = addElement(PSK_classification_div, 'button', 'PSK_B_button', 'dropdown_button_1');
-            PSK_B_button.innerHTML = `根基技能`;
-            var PSK_B_droptable = addElement(PSK_classification_div, 'div', 'PSK_B_droptable', 'dropdown_table');
-            var PSK_B_all_radio_div = addElement(PSK_B_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_B_all_radio_div, `PSK_B_all`, 'PSK_switch', `B_all`, `全部`);
+            var PSK_B_button = addElement(PSK_switch_div, 'button', 'PSK_B_button', 'dropdown_button_1');
+            PSK_B_button.innerHTML = '根基技能';
+            var PSK_B_droptable = addElement(PSK_switch_div, 'div', 'PSK_B_droptable', 'dropdown_table');
+            var PSK_B_all_radio_div = addElement(PSK_B_droptable, 'div', 'PSK_B_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_B_all_radio_div, 'PSK_B_all', 'PSK_switch', 'B_all', '全部');
 
             //战斗技能 combat C
-            var PSK_C_button = addElement(PSK_classification_div, 'button', 'PSK_C_button', 'dropdown_button_1');
-            PSK_C_button.innerHTML = `战斗技能`;
-            var PSK_C_droptable = addElement(PSK_classification_div, 'div', 'PSK_C_droptable', 'dropdown_table');
-            var PSK_C_all_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_C_all_radio_div, `PSK_C_all`, 'PSK_switch', `C_all`, `全部`);
+            var PSK_C_button = addElement(PSK_switch_div, 'button', 'PSK_C_button', 'dropdown_button_1');
+            PSK_C_button.innerHTML = '战斗技能';
+            var PSK_C_droptable = addElement(PSK_switch_div, 'div', 'PSK_C_droptable', 'dropdown_table');
+            var PSK_C_all_radio_div = addElement(PSK_C_droptable, 'div', 'PSK_C_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_C_all_radio_div, 'PSK_C_all', 'PSK_switch', 'C_all', '全部');
             var PSK_C_W_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_C_W_radio_div, `PSK_C_W`, 'PSK_switch', `C_W`, `武器精通技能`);
+            addElement_radio(PSK_C_W_radio_div, 'PSK_C_W', 'PSK_switch', 'C_W', '武器精通技能');
             var PSK_C_Env_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_C_Env_radio_div, `PSK_C_Env`, 'PSK_switch', `C_Env`, `环境适应技能`);
+            addElement_radio(PSK_C_Env_radio_div, 'PSK_C_Env', 'PSK_switch', 'C_Env', '环境适应技能');
             var PSK_C_Ene_radio_div = addElement(PSK_C_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_C_Ene_radio_div, `PSK_C_Ene`, 'PSK_switch', `C_Ene`, `对敌精通技能`);
+            addElement_radio(PSK_C_Ene_radio_div, 'PSK_C_Ene', 'PSK_switch', 'C_Ene', '对敌精通技能');
 
             //生活技能 life L
-            var PSK_L_button = addElement(PSK_classification_div, 'button', 'PSK_L_button', 'dropdown_button_1');
-            PSK_L_button.innerHTML = `生活技能`;
-            var PSK_L_droptable = addElement(PSK_classification_div, 'div', 'PSK_L_droptable', 'dropdown_table');
-            var PSK_L_all_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_L_all_radio_div, `PSK_L_all`, 'PSK_switch', `L_all`, `全部`);
+            var PSK_L_button = addElement(PSK_switch_div, 'button', 'PSK_L_button', 'dropdown_button_1');
+            PSK_L_button.innerHTML = '生活技能';
+            var PSK_L_droptable = addElement(PSK_switch_div, 'div', 'PSK_L_droptable', 'dropdown_table');
+            var PSK_L_all_radio_div = addElement(PSK_L_droptable, 'div', 'PSK_L_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_L_all_radio_div, 'PSK_L_all', 'PSK_switch', 'L_all', '全部');
             var PSK_L_Raw_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_L_Raw_radio_div, `PSK_L_Raw`, 'PSK_switch', `L_Raw`, `原料获取技能`);
+            addElement_radio(PSK_L_Raw_radio_div, 'PSK_L_Raw', 'PSK_switch', 'L_Raw', '原料获取技能');
             var PSK_L_P_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_L_P_radio_div, `PSK_L_P`, 'PSK_switch', `L_P`, `原料加工技能`);
+            addElement_radio(PSK_L_P_radio_div, 'PSK_L_P', 'PSK_switch', 'L_P', '原料加工技能');
             var PSK_L_F_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_L_F_radio_div, `PSK_L_F`, 'PSK_switch', `L_F`, `成品使用技能`);
+            addElement_radio(PSK_L_F_radio_div, 'PSK_L_F', 'PSK_switch', 'L_F', '成品使用技能');
             var PSK_L_Rec_radio_div = addElement(PSK_L_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_L_Rec_radio_div, `PSK_L_Rec`, 'PSK_switch', `L_Rec`, `回收利用技能`);
+            addElement_radio(PSK_L_Rec_radio_div, 'PSK_L_Rec', 'PSK_switch', 'L_Rec', '回收利用技能');
 
             // 主动技能 active A
-            var PSK_A_button = addElement(PSK_classification_div, 'button', 'PSK_A_button', 'dropdown_button_1');
-            PSK_A_button.innerHTML = `主动技能`;
-            var PSK_A_droptable = addElement(PSK_classification_div, 'div', 'PSK_A_droptable', 'dropdown_table');
-            var PSK_A_all_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_A_all_radio_div, `PSK_A_all`, 'PSK_switch', `A_all`, `全部`);
+            var PSK_A_button = addElement(PSK_switch_div, 'button', 'PSK_A_button', 'dropdown_button_1');
+            PSK_A_button.innerHTML = '主动技能';
+            var PSK_A_droptable = addElement(PSK_switch_div, 'div', 'PSK_A_droptable', 'dropdown_table');
+            var PSK_A_all_radio_div = addElement(PSK_A_droptable, 'div', 'PSK_A_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_A_all_radio_div, 'PSK_A_all', 'PSK_switch', 'A_all', '全部');
             var PSK_A_A_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_A_A_radio_div, `PSK_A_A`, 'PSK_switch', `A_A`, `可攻击的技能`);
+            addElement_radio(PSK_A_A_radio_div, 'PSK_A_A', 'PSK_switch', 'A_A', '可攻击的技能');
             var PSK_A_D_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_A_D_radio_div, `PSK_A_D`, 'PSK_switch', `A_D`, `可防御的技能`);
+            addElement_radio(PSK_A_D_radio_div, 'PSK_A_D', 'PSK_switch', 'A_D', '可防御的技能');
             var PSK_A_R_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_A_R_radio_div, `PSK_A_R`, 'PSK_switch', `A_R`, `可恢复的技能`);
+            addElement_radio(PSK_A_R_radio_div, 'PSK_A_R', 'PSK_switch', 'A_R', '可恢复的技能');
             var PSK_A_F_radio_div = addElement(PSK_A_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_A_F_radio_div, `PSK_A_F`, 'PSK_switch', `A_F`, `可辅助的技能`);
+            addElement_radio(PSK_A_F_radio_div, 'PSK_A_F', 'PSK_switch', 'A_F', '可辅助的技能');
 
             // 特殊功法 super S
-            var PSK_S_button = addElement(PSK_classification_div, 'button', 'PSK_S_button', 'dropdown_button_1');
-            PSK_S_button.innerHTML = `特殊功法`;
-            var PSK_S_droptable = addElement(PSK_classification_div, 'div', 'PSK_S_droptable', 'dropdown_table');
-            var PSK_S_all_radio_div = addElement(PSK_S_droptable, 'div', null, 'radio_div switch_radio_div_2');
-            addElement_radio(PSK_S_all_radio_div, `PSK_S_all`, 'PSK_switch', `S_all`, `全部`);
+            var PSK_S_button = addElement(PSK_switch_div, 'button', 'PSK_S_button', 'dropdown_button_1');
+            PSK_S_button.innerHTML = '特殊功法';
+            var PSK_S_droptable = addElement(PSK_switch_div, 'div', 'PSK_S_droptable', 'dropdown_table');
+            var PSK_S_all_radio_div = addElement(PSK_S_droptable, 'div', 'PSK_S_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(PSK_S_all_radio_div, 'PSK_S_all', 'PSK_switch', 'S_all', '全部');
+
+            //下半排序按钮
+            var PSK_sort_div = addElement(PSK_switch_sort_div, 'div', 'PSK_sort_div', null);
+            var PSK_level_radio_div = addElement(PSK_sort_div, 'div', 'PSK_level_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(PSK_level_radio_div, 'PSK_level_sort', 'PSK_sort', 'level_sort', '等级排序');
+            PSK_level_radio_div.children[0].checked = true; //默认激活"个数排序"过滤条件
         }
         //
         var PSK_value_div = addElement(PSK_div, 'div', 'PSK_value_div', null);
@@ -178,47 +191,61 @@ var player_status = crtElement('div', 'player_status', null, '');
 }
 
 // 为组件添加触发事件
-{
-    PAB_switch_button.onclick = function () {
-        change_Player_status_div(this.id);
-    };
-    PSK_switch_button.onclick = function () {
-        change_Player_status_div(this.id);
-    };
+function set_player_status_button(player_status) {
+    //切换属性界面、技能界面的按钮
+    let radios = player_status.querySelectorAll('input[type="radio"][name="player_status_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            change_Player_status_div(this.id);
+        });
+    });
+    let PSK_B_button = player_status.querySelector('#PSK_B_button');
     PSK_B_button.onclick = function () {
+        let PSK_B_all_radio_div = player_status.querySelector('#PSK_B_all_radio_div');
         PSK_B_all_radio_div.children[0].checked = true;
         let P_All_Skills = player.get_player_All_Skills();
         P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_classification_div', 'PSK_B_droptable');
+        show_dropdown_table('PSK_switch_div', 'PSK_B_droptable');
     };
+    let PSK_C_button = player_status.querySelector('#PSK_C_button');
     PSK_C_button.onclick = function () {
+        let PSK_C_all_radio_div = player_status.querySelector('#PSK_C_all_radio_div');
         PSK_C_all_radio_div.children[0].checked = true;
         let P_All_Skills = player.get_player_All_Skills();
         P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_classification_div', 'PSK_C_droptable');
+        show_dropdown_table('PSK_switch_div', 'PSK_C_droptable');
     };
+    let PSK_L_button = player_status.querySelector('#PSK_L_button');
     PSK_L_button.onclick = function () {
+        let PSK_L_all_radio_div = player_status.querySelector('#PSK_L_all_radio_div');
         PSK_L_all_radio_div.children[0].checked = true;
         let P_All_Skills = player.get_player_All_Skills();
         P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_classification_div', 'PSK_L_droptable');
+        show_dropdown_table('PSK_switch_div', 'PSK_L_droptable');
     };
+    let PSK_A_button = player_status.querySelector('#PSK_A_button');
     PSK_A_button.onclick = function () {
+        let PSK_A_all_radio_div = player_status.querySelector('#PSK_A_all_radio_div');
         PSK_A_all_radio_div.children[0].checked = true;
         let P_All_Skills = player.get_player_All_Skills();
         P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_classification_div', 'PSK_A_droptable');
+        show_dropdown_table('PSK_switch_div', 'PSK_A_droptable');
     };
+    let PSK_S_button = player_status.querySelector('#PSK_S_button');
     PSK_S_button.onclick = function () {
+        let PSK_S_all_radio_div = player_status.querySelector('#PSK_S_all_radio_div');
         PSK_S_all_radio_div.children[0].checked = true;
         let P_All_Skills = player.get_player_All_Skills();
         P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_classification_div', 'PSK_S_droptable');
+        show_dropdown_table('PSK_switch_div', 'PSK_S_droptable');
     };
 
     //角色名文本框，实时修改角色名称
+    let Player_name = player_status.querySelector('#Player_name');
     Player_name.addEventListener('change', updata_player_name);
     //角色属性和装备栏界面切换开关
+    let PA_switch_button = player_status.querySelector('#PA_switch_button');
+    let EQP_switch_button = player_status.querySelector('#EQP_switch_button');
     PA_switch_button.onclick = function () {
         change_PA();
         PA_switch_button.style.display = 'none';
@@ -230,7 +257,7 @@ var player_status = crtElement('div', 'player_status', null, '');
         PA_switch_button.style.display = '';
     };
     //角色装备栏切换开关
-    let radios = player_status.querySelectorAll('input[type="radio"][name="EQP_switch"]');
+    radios = player_status.querySelectorAll('input[type="radio"][name="EQP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
             //显示当前激活的装备栏界面
@@ -247,12 +274,41 @@ var player_status = crtElement('div', 'player_status', null, '');
         radio.addEventListener('click', function () {
             if (this.id == 'PSK_all') {
                 //针对技能展示界面最大的“全部”按钮，额外新增关闭其他下拉框的功能
-                show_dropdown_table('PSK_classification_div');
+                show_dropdown_table('PSK_switch_div');
             }
             let P_All_Skills = player.get_player_All_Skills();
             P_All_Skills.updata_PSK_value();
         });
     });
 }
+//点击“属性展示”按钮之后，显示出或者隐藏属性展示界面
+function change_PA() {
+    const attribute_show = document.getElementById('attribute_show');
+    const equipment_show = document.getElementById('equipment_show');
 
-export { player_status };
+    if (attribute_show.style.display == '') {
+        //如果显示了属性界面，则切换成装备栏
+        attribute_show.style.display = 'none';
+        equipment_show.style.display = '';
+        //切换到当前激活的装备栏
+        let P_worn = player.get_player_worn();
+        P_worn.show_active_EQP();
+    } else {
+        attribute_show.style.display = '';
+        equipment_show.style.display = 'none';
+    }
+}
+//切换角色状态界面中的角色属性、角色技能界面的按钮
+function change_Player_status_div(button_id) {
+    const PAB_div = document.getElementById('PAB_div');
+    const PSK_div = document.getElementById('PSK_div');
+    if (button_id == 'PAB_switch_button') {
+        PAB_div.style.display = '';
+        PSK_div.style.display = 'none';
+    }
+    if (button_id == 'PSK_switch_button') {
+        PAB_div.style.display = 'none';
+        PSK_div.style.display = '';
+    }
+}
+export { create_player_status };

@@ -1,5 +1,5 @@
 import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object } from '../../Function/Function.js';
+import { is_Empty_Object, get_item_id_key } from '../../Function/Function.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
 import { player } from '../../Player/Player.js';
@@ -126,8 +126,8 @@ export class Foraging_manage {
             for (let key in drop_items) {
                 let id = drop_items[key].id;
                 let num = drop_items[key].num;
-                let rarity = drop_items[key].rarity;
-                player.Player_get_item(id, num, rarity);
+                let equip_rarity = drop_items[key].equip_rarity;
+                player.Player_get_item(id, num, equip_rarity);
             }
             //将掉落物更新到可采集列表中
             let ret = this.updata_foraging_place_show_drop(drop_items);
@@ -281,29 +281,30 @@ export class Foraging_manage {
         let rare_no_cumulative_num = 0; //稀有掉落但没有积累的次数
         for (let i = 0; i < drop_times; i++) {
             //随机获得一个物品id
-            let item_id = random_manage.chance_randow_get_id(FAG_item, 'FAG_DROP', this.now_place);
+            let item_key = random_manage.chance_randow_get_id(FAG_item, 'FAG_DROP', this.now_place);
+            let data_obj = FAG_item[item_key];
             //如果随机到的物品是稀有物品，需要判断该物品在当前地点是否有积累
-            if (is_Empty_Object(FAG_item[item_id].rare_flag)) {
-                console.log('%s地点设定的%s采集对象没有定义稀有标记', this.now_place, item_id);
+            if (is_Empty_Object(FAG_item[item_key].rare_flag)) {
+                console.log('%s地点设定的%s采集对象没有定义稀有标记', this.now_place, item_key);
                 return false;
             }
-            if (FAG_item[item_id].rare_flag) {
-                if (this.FAG_place_rare_items[this.now_place][item_id].cumulative_num <= 0) {
+            if (data_obj.rare_flag) {
+                if (this.FAG_place_rare_items[this.now_place][item_key].cumulative_num <= 0) {
                     //如果该稀有物品没有积累，本次掉落作废，之后进行一次普通物品的掉落
                     rare_no_cumulative_num++;
                     continue;
                 } else {
-                    this.FAG_place_rare_items[this.now_place][item_id].cumulative_num--;
+                    this.FAG_place_rare_items[this.now_place][item_key].cumulative_num--;
                 }
             }
 
             //记录正常掉落物品的其他参数
             let item_obj = new Object();
-            item_obj.id = item_id;
+            item_obj.id = data_obj.id;
             item_obj.num = 1;
-            if (items[item_id].main_type.includes('equipment')) {
+            if (items[data_obj.id].main_type.includes('equipment')) {
                 //如果掉落的是装备，还需要记录稀有度
-                item_obj.rarity = FAG_item[item_id].equip_rarity; //掉落的装备的稀有度;
+                item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
             }
             drop_item_arry.push(item_obj);
         }
@@ -311,30 +312,27 @@ export class Foraging_manage {
         //补充rare_no_cumulative_num次非稀有物品掉落
         let norare_item = this.get_place_norare_item();
         for (let i = 0; i < rare_no_cumulative_num; i++) {
-            let item_id = random_manage.chance_randow_get_id_norare(norare_item);
+            let item_key = random_manage.chance_randow_get_id_norare(norare_item);
+            let data_obj = norare_item[item_key];
             let item_obj = new Object();
-            item_obj.id = item_id;
+            item_obj.id = data_obj.id;
             item_obj.num = 1;
             if (items[item_id].main_type.includes('equipment')) {
                 //如果掉落的是装备，还需要记录稀有度
-                item_obj.rarity = FAG_item[item_id].equip_rarity; //掉落的装备的稀有度;
+                item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
             }
             drop_item_arry.push(item_obj);
         }
 
-        //对掉落物去重
+        //对掉落物去重并进行合并
         let uniqueArr = new Object();
         for (let item_obj of drop_item_arry) {
-            let id = item_obj.id;
-            let key = id;
-            if (items[id].main_type.includes('equipment')) {
-                key = id + rarity;
-            }
+            let item_key = get_item_id_key(item_obj);
 
-            if (is_Empty_Object(uniqueArr[key])) {
-                uniqueArr[key] = item_obj;
+            if (is_Empty_Object(uniqueArr[item_key])) {
+                uniqueArr[item_key] = item_obj;
             } else {
-                uniqueArr[key].num += item_obj.num;
+                uniqueArr[item_key].num += item_obj.num;
             }
         }
         return uniqueArr;
@@ -343,9 +341,9 @@ export class Foraging_manage {
     get_place_norare_item() {
         let FAG_item = places[this.now_place].FAG_item; //当前地点可采集的物品
         let norare_item = new Object();
-        for (let id in FAG_item) {
-            if (!FAG_item[id].rare_flag) {
-                norare_item[id] = FAG_item[id];
+        for (let item_key in FAG_item) {
+            if (!FAG_item[item_key].rare_flag) {
+                norare_item[item_key] = FAG_item[item_key];
             }
         }
         return norare_item;
@@ -356,29 +354,29 @@ export class Foraging_manage {
         if (is_Empty_Object(this.FAG_place_rare_items[this.now_place])) {
             //没有当前地点的缓存，生成缓存数据
             let obj = new Object();
-            for (let id in FAG_items) {
+            for (let item_key in FAG_items) {
                 //不稀有的对象不需要记录缓存
-                if (!FAG_items[id].rare_flag) continue;
+                if (!FAG_items[item_key].rare_flag) continue;
 
                 //
-                obj[id] = new Object();
-                obj[id].cumulative_num = FAG_items[id].max_cumulative_num;
-                obj[id].last_cumulative_time = this.now_time;
+                obj[item_key] = new Object();
+                obj[item_key].cumulative_num = FAG_items[item_key].max_cumulative_num;
+                obj[item_key].last_cumulative_time = this.now_time;
             }
             this.FAG_place_rare_items[this.now_place] = obj;
         } else {
             let obj = this.FAG_place_rare_items[this.now_place];
             //当前地点已有缓存，更新一遍
-            for (let id in obj) {
-                if (obj[id].cumulative_num >= FAG_items[id].max_cumulative_num) {
+            for (let item_key in obj) {
+                if (obj[item_key].cumulative_num >= FAG_items[item_key].max_cumulative_num) {
                     //该对象堆积数量已经满了，更新时间
-                    obj[id].last_cumulative_time = this.now_time;
+                    obj[item_key].last_cumulative_time = this.now_time;
                 } else {
                     //这对象没积累满，检查是否到了积累时间
-                    let cumulative_time = (this.now_time - obj[id].last_cumulative_time) / 1000;
-                    if (cumulative_time >= FAG_items[id].cumulative_time) {
-                        obj[id].cumulative_num++;
-                        obj[id].last_cumulative_time = this.now_time;
+                    let cumulative_time = (this.now_time - obj[item_key].last_cumulative_time) / 1000;
+                    if (cumulative_time >= FAG_items[item_key].cumulative_time) {
+                        obj[item_key].cumulative_num++;
+                        obj[item_key].last_cumulative_time = this.now_time;
                     }
                 }
             }
@@ -394,8 +392,8 @@ export class Foraging_manage {
         //获取可展示物品个数
         let can_show_num = 0;
         let all_num = this.FAG_place_items_show[this.now_place].num;
-        for (let id in this.FAG_place_items_show[this.now_place].show_flag) {
-            if (this.FAG_place_items_show[this.now_place].show_flag[id]) {
+        for (let item_key in this.FAG_place_items_show[this.now_place].show_flag) {
+            if (this.FAG_place_items_show[this.now_place].show_flag[item_key]) {
                 can_show_num++;
             }
         }
@@ -410,15 +408,15 @@ export class Foraging_manage {
             FAG_no_show_value_div.innerHTML = '未知物品';
         } else if (can_show_num != 0 && all_num != 0) {
             //地点里有可采集物，也有需要展示的物品
-            for (let id in this.FAG_place_items_show[this.now_place].show_flag) {
-                if (this.FAG_place_items_show[this.now_place].show_flag[id] == false) {
+            for (let item_key in this.FAG_place_items_show[this.now_place].show_flag) {
+                if (this.FAG_place_items_show[this.now_place].show_flag[item_key] == false) {
                     continue;
                 }
-
                 let FAG_drop_value = addElement(FAG_have_show_value_div, 'div', null, 'FAG_drop_value');
+                let id = item_key.split(':')[0];
                 if (items[id].main_type.includes('equipment')) {
                     //如果掉落的是装备，改变字体颜色变成稀有度的颜色
-                    FAG_drop_value.style.color = hex2Rgba(enums[rarity].rarity_color, alpha);
+                    FAG_drop_value.style.color = hex2Rgba(enums[equip_rarity].rarity_color, alpha);
                 }
                 FAG_drop_value.innerHTML = items[id].name;
             }
@@ -452,8 +450,8 @@ export class Foraging_manage {
         let updata_flag = false;
         for (let key in drop_items) {
             let id = drop_items[key].id;
-            if (this.FAG_place_items_show[this.now_place].show_flag[id] == false) {
-                this.FAG_place_items_show[this.now_place].show_flag[id] = true;
+            if (this.FAG_place_items_show[this.now_place].show_flag[key] == false) {
+                this.FAG_place_items_show[this.now_place].show_flag[key] = true;
                 updata_flag = true;
             }
         }

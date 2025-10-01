@@ -138,6 +138,7 @@ export class Side_quest_manage {
     }
     //加载支线任务的游戏存档
     load_side_quest_manage(side_quest_save) {
+        this.Side_quest_objs = new Object();
         if (is_Empty_Object(side_quest_save)) {
             return;
         }
@@ -153,7 +154,7 @@ export class Side_quest_manage {
         let now_side_quest_id = Object.keys(this.Side_quest_objs);
         if (now_side_quest_id.includes(event_id)) {
             console.log('已经处于%s支线中，不能同时启动同一个支线', event_id);
-            return;
+            return false;
         }
         //初始化一个支线任务对象
         let new_side_quest = new Side_quest();
@@ -162,7 +163,7 @@ export class Side_quest_manage {
         this.Side_quest_objs[event_id] = new_side_quest;
 
         //将支线情况展示到脑海-重要事件界面中
-        this.init_side_quest_IE_div();
+        // this.init_side_quest_IE_div();
         //如果有事件起始地点，则移动过去
         if (game_events[event_id].place != undefined) {
             let place_manage = global.get_place_manage();
@@ -170,6 +171,7 @@ export class Side_quest_manage {
 
             place_manage.set_now_place(game_events[event_id].place);
         }
+        return true;
     }
     //更新支线任务进度
     updata_side_quest() {
@@ -178,7 +180,7 @@ export class Side_quest_manage {
             let side_quest = this.Side_quest_objs[event_id];
             let finish_flag = side_quest.judge_quest_finish();
             if (finish_flag) {
-                end_side_quest(event_id, 'finish');
+                this.end_side_quest(event_id, 'finish');
             }
         }
         //有支线任务的监控数据发生了变化，更新重要事件界面
@@ -191,6 +193,7 @@ export class Side_quest_manage {
             return;
         }
         let global_flag_manage = global.get_global_flag_manage();
+        let game_event_manage = global.get_game_event_manage();
         if (end_type == 'finish') {
             //支线正常完成，获得支线任务奖励
             let finish_reward = game_events[event_id].finish_reward;
@@ -199,31 +202,39 @@ export class Side_quest_manage {
                     //设置完成标记
                     for (let flag_name in finish_reward['game_flag']) {
                         global_flag_manage.set_flag(flag_name, finish_reward['game_flag'][flag_name]);
-                        global_flag_manage.set_game_log('finish_event', flag_name);
                     }
                 } else if (key == 'start_event') {
                     //启动下一个支线
-                    let game_event_manage = global.get_game_event_manage();
                     for (let event_id of finish_reward['start_event']) {
                         game_event_manage.start_game_event(event_id);
                     }
                 }
             }
             //记录玩家完成了一个支线
-            global_flag_manage.record_event_finish_end(event_id);
+            global_flag_manage.set_game_log('finish_event', event_id); //在脑海-流水账里生成一条日志
+            global_flag_manage.record_event_finish_end(event_id); //完成事件本身也算行为，
         } else {
             let SGS_flag_name = 'SGS_' + event_id;
             global_flag_manage.set_flag(SGS_flag_name, end_type);
         }
         //清除这个支线
         delete this.Side_quest_objs[event_id];
+        game_event_manage.delete_monitor_target_summ(event_id); //游戏事件管理类中的行为监控
+        // 将新的主线情况展示到脑海-重要事件界面中
+        // this.init_main_quest_IE_div();
+        // 统一刷新脑海-重要事件界面
+        game_event_manage.init_IE_div();
 
         //将新的支线情况展示到脑海-重要事件界面中
-        this.init_side_quest_IE_div();
+        // this.init_side_quest_IE_div();
     }
     //获取当前支线任务数量
     get_side_quest_num() {
         return Object.keys(this.Side_quest_objs).length;
+    }
+    //获取当前支线任务id列表
+    get_side_quest_id_array() {
+        return Object.keys(this.Side_quest_objs);
     }
     //触发了监控行为，更新数值
     updata_monitor_data(type, value) {
@@ -283,7 +294,7 @@ export class Side_quest_manage {
 
             let side_quest = this.Side_quest_objs[event_id]; //获取这个支线任务
             for (let monitor_value_div of IE_monitor_data_div.children) {
-                let monitor_id = monitor_value_div.dataset.id;
+                let monitor_id = monitor_value_div.dataset.monitor_id;
                 let monitor_flag_div = monitor_value_div.children[0];
                 let monitor_desc_div = monitor_value_div.children[1];
                 //获取指定监控数据是否达成
@@ -297,5 +308,10 @@ export class Side_quest_manage {
                 monitor_desc_div.innerHTML = side_quest.get_monitor_ch(monitor_id);
             }
         }
+    }
+    delete_side_quest_IE_div() {
+        //清空原有界面
+        let all_side_quest_div = document.getElementById('all_side_quest_div');
+        all_side_quest_div.replaceChildren();
     }
 }

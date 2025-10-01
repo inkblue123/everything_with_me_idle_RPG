@@ -15,6 +15,8 @@
 /* 角色状态n个子界面的切换按钮 */
 #player_status_switch_div {
     height: 10%;
+    display: flex;
+    flex-wrap: nowrap; /* 防止换行 */
 }
 /* 角色状态n个子界面的切换按钮 */
 .player_status_switch_button {
@@ -35,7 +37,7 @@
     /* 单列布局 */
     /* height: 50%; */
     box-sizing: border-box;
-    border: 2px solid #797691;
+    border-top: 1px solid #797691;
 }
 
 /* 展示角色血条的div的样式 */
@@ -73,12 +75,17 @@
 }
 /* 血条组件：血条外框的样式 */
 #HP_frame {
-    outline: 2px solid rgb(201, 16, 16); /* 外框 */
-    background-color: rgba(255, 46, 46, 0.3);
+    /* outline: 2px solid rgb(201, 16, 16);  */
+    outline: 2px solid rgb(0, 0, 0);
+    /* background-color: rgba(255, 46, 46, 0.3); */
+    background-color: rgba(255, 255, 255, 0.3);
 }
 /* 血条组件：血条中央，长度随当前血量变化的色块 */
 #HP_current {
-    background-color: rgb(255, 0, 0);
+    /* 原定颜色 */
+    /* background-color: rgb(255, 0, 0); */
+    /* 避免使用鲜艳颜色，减少上班被发现的概率 */
+    background-color: rgb(0, 0, 0);
 }
 
 /* 蓝条组件：最大的父元素 */
@@ -87,12 +94,15 @@
 }
 /* 蓝条组件：外框的样式 */
 #MP_frame {
-    outline: 2px solid rgb(0, 0, 127); /* 外框 */
-    background-color: rgba(0, 0, 255, 0.3);
+    /* outline: 2px solid rgb(0, 0, 127); */
+    /* background-color: rgba(0, 0, 255, 0.3); */
+    outline: 2px solid rgb(0, 0, 0);
+    background-color: rgba(255, 255, 255, 0.3);
 }
 /* 蓝条组件：血条中央，长度随当前血量变化的色块 */
 #MP_current {
-    background-color: rgb(15, 15, 255);
+    /* background-color: rgb(15, 15, 255); */
+    background-color: rgb(0, 0, 0);
 }
 
 /* 精力条组件：最大的父元素 */
@@ -101,12 +111,15 @@
 }
 /* 精力条组件：血条外框的样式 */
 #ENP_frame {
-    outline: 2px solid rgb(0, 127, 0); /* 外框 */
-    background-color: rgba(0, 255, 0, 0.3);
+    /* outline: 2px solid rgb(0, 127, 0); */
+    /* background-color: rgba(0, 255, 0, 0.3); */
+    outline: 2px solid rgb(0, 0, 0);
+    background-color: rgba(255, 255, 255, 0.3);
 }
 /* 精力条组件：血条中央，长度随当前血量变化的色块 */
 #ENP_current {
-    background-color: rgb(0, 196, 0);
+    /* background-color: rgb(0, 196, 0); */
+    background-color: rgb(0, 0, 0);
 }
 
 /* 展示玩家属性和装备栏的div的样式 */
@@ -220,30 +233,62 @@
     white-space: pre-wrap; /* 让文本按照换行符换行，同时保留空格 */
     border: 2px solid #797691; /* 内框 */
 }
-/* 背包物品分类单选按钮 */
-.EQP_switch_radio_div {
-    margin: auto;
-    border: 2px solid #797691; /* 内框 */
+/* 选择装备栏的大div */
+#EQP_switch_div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
 
-/* 装备栏选择多选框，和圆点绑定的文本 */
+/* 装备栏选择单选框 */
+.EQP_switch_radio_div {
+    margin: auto;
+    width: auto;
+    border: 2px solid #797691; /* 内框 */
+}
+/* 装备栏选择单选框，表示是否选中的圆点 */
+.EQP_switch_radio_div input[type='radio'] {
+    /*清楚默认样式*/
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    position: absolute;
+    opacity: 0;
+}
+
+/* 装备栏选择单选框，和圆点绑定的文本 */
 .EQP_switch_radio_div label {
+    display: flex;
     width: 50px;
     height: 50px;
     font-size: 15px; /*文本大小*/
+    justify-content: center;
+    align-items: center;
     text-align: center;
     /* border-radius: 5px; */
     /* 让文本按照换行符换行，同时保留空格 */
     white-space: pre-wrap;
     color: #000;
-    background-color: #fff;
+    /* background-color: #fff; */
 }
 /* 装备栏选择多选框，选中之后，圆点绑定的文本的样式 */
 .EQP_switch_radio_div input[type='radio']:checked + label {
     color: #fff;
-    /* background-color: #3597db; */
+    background-color: #3597db;
 }
 
+#PSK_switch_sort_div {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #797691;
+}
+#PSK_switch_scroll_box {
+    flex: 1;
+}
+#PSK_sort_div {
+    height: auto;
+}
 /* 容纳具体技能内容的div */
 /* #PSK_div {
     background-color: #ffd700;

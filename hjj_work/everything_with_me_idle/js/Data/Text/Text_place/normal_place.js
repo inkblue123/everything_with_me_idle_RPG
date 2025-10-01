@@ -39,6 +39,10 @@ function village_normal_place(texts) {
     add_text_object(texts, id);
     texts[id].place_name = '村庄诊所';
     texts[id].place_desc = '可以在此治病，可以买到药物，真希望少来这里';
+    id = 'VM_woodshop';
+    add_text_object(texts, id);
+    texts[id].place_name = '木工坊';
+    texts[id].place_desc = '村里大部分的木工产物都来自于这里';
 }
 //位于村外后山区域的普通地点
 function village_backhill_normal_place(texts) {

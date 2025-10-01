@@ -96,7 +96,6 @@ export class Time_manage {
         this.game_date.hours = 16;
         this.game_date.minutes = 0;
         this.game_date.start_time = this.now_time;
-        this.show_game_date();
     }
     //更新游戏日期
     updata_game_date(game_now_time) {

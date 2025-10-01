@@ -1,14 +1,13 @@
 import { init_game } from './LoadAndSave/load.js';
 import { state_game } from './GameRun/run_manage.js';
 import { game_data_init } from './Data/Data.js';
-import { game_dom_init } from './Dom/Dom.js';
+import { create_game_dom, init_game_dom } from './Dom/Dom.js';
 import { global } from './GameRun/global_manage.js';
 import { player } from './Player/Player.js';
-import { dom } from './Dom/Dom.js';
 
 window.addEventListener('load', () => {
     //加载游戏布局
-    game_dom_init();
+    create_game_dom();
     //部分游戏数据初始化
     game_data_init();
     //全局配置和全局对象初始化
@@ -16,7 +15,7 @@ window.addEventListener('load', () => {
     //玩家类初始化
     player.init();
     //游戏界面初始化
-    dom.init();
+    init_game_dom();
 
     //开始存档加载，解读存档数据中获取信息，初始化玩家数据、配置数据等等
     init_game();

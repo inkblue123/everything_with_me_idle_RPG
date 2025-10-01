@@ -1,6 +1,6 @@
 import { texts } from '../Text/Text.js';
 import { items } from '../Item/Item.js';
-import { is_Empty_Object } from '../../Function/Function.js';
+import { is_Empty_Object, get_item_obj, get_item_id_key } from '../../Function/Function.js';
 
 export class Place {
     constructor(place_id, area_id) {
@@ -222,7 +222,7 @@ export class P_normal extends Place {
         this.LGI_trees[id] = obj;
     }
     //设置这个地点钓鱼时可能出现的鱼
-    set_fishing_fish(id, chance, rare_flag, max_cumulative_num, cumulative_time, equip_rarity) {
+    set_fishing_fish(id, chance, rare_flag, max_cumulative_num, cumulative_time) {
         if (this.live_plan_flag[1] == false) {
             console.log('%s地点不允许钓鱼却设定了钓鱼相关参数');
         }
@@ -244,27 +244,38 @@ export class P_normal extends Place {
         this.FIS_fishs[id] = obj;
     }
     //设置这个地点采集时可能的产物
-    set_foraging_item(id, chance, rare_flag, max_cumulative_num, cumulative_time, equip_rarity) {
+    set_foraging_item(id, chance, rare_flag, max_cumulative_num, cumulative_time, ...args) {
         if (this.live_plan_flag[3] == false) {
             console.log('%s地点不允许采集却设定了采集相关参数');
         }
         if (is_Empty_Object(this.FAG_item)) {
             this.FAG_item = new Object();
         }
-        let obj = new Object();
-        obj.id = id; //物品id
-        obj.chance = chance; //物品掉落权重
-        obj.rare_flag = rare_flag; //物品是否属于稀有物品
+        let item_obj = new Object();
+        if (items[id].main_type.includes('equipment')) {
+            //物品是装备，args内参数的含义按以下顺序排列：
+            //稀有度
+            let equip_rarity = args[0];
+            item_obj = get_item_obj(id, 1, equip_rarity);
+        } else if (items[id].main_type.includes('material')) {
+            item_obj = get_item_obj(id, 1);
+            //物品是材料，没有独特属性
+        } else if (items[id].main_type.includes('consumable')) {
+            //物品是消耗品，args内参数的含义按以下顺序排列：
+            // 暂无
+            item_obj = get_item_obj(id, 1);
+        }
+        item_obj.chance = chance; //物品掉落权重
+        item_obj.rare_flag = rare_flag; //物品是否属于稀有物品
         if (rare_flag == undefined) {
             console.log('%s地点定义采集物品%s时没有设定稀有标记', this.id, id);
         }
         if (rare_flag) {
-            obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
-            obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
+            item_obj.max_cumulative_num = max_cumulative_num; //囤积最大数量
+            item_obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
         }
-        if (equip_rarity) obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
-
-        this.FAG_item[id] = obj;
+        let item_key = get_item_id_key(item_obj);
+        this.FAG_item[item_key] = item_obj;
     }
 }
 //战斗地点
@@ -381,45 +392,42 @@ export class P_store extends Place {
     constructor(place_id, area_id) {
         super(place_id, area_id);
         this.type = 'store';
-        this.goods = new Array();
+        this.use_money_type;
+        this.fixed_goods = new Object(); //固定商品
+        this.random_goods = new Object(); //随机商品
     }
-    add_goods(id, type, rise_num, rise_data, unrise_time, inventory, replenish_time, replenish_event) {
+    //设置商人使用的货币种类
+    set_use_money_type(money_type) {
+        this.use_money_type = money_type;
+    }
+    //给这个商人新增一种商品
+    add_goods(id, type, inventory, rise_num, rise_data, replenish_time, replenish_num, ...args) {
         let good_obj = new Object();
-        good_obj.id = id;
-        good_obj.base_price = items[id].price;
-        good_obj.type = type;
-        // 根据商品类型，填充其他信息
-        switch (type) {
-            case 1: //1：无限商品，没有什么特别的
-                //没有其他信息
-                break;
-            case 2: //2：无限商品，买到一定程度之后涨价，定时恢复
-                good_obj.rise_num = rise_num; //购买几个物品涨价一次
-                good_obj.rise_data = rise_data; //涨价一次的幅度
-                good_obj.unrise_time = unrise_time; //每隔多久时间恢复价格
-                break;
-            case 3: //3：有限商品，没有什么特别的，不补货
-                good_obj.inventory = inventory; //这个商品有多少存货
-                break;
-            case 4: //4：有限商品，买到一定程度之后涨价，定时恢复价格，定时补货
-                good_obj.inventory = inventory; //这个商品有多少存货
-                good_obj.rise_num = rise_num; //购买几个物品涨价一次
-                good_obj.rise_data = rise_data; //涨价一次的幅度
-                good_obj.unrise_time = unrise_time; //每隔多久时间恢复价格
-                good_obj.replenish_time = replenish_time; //每隔多久时间补货
-                break;
-            case 5: //5：有限商品，定时补货
-                good_obj.inventory = inventory; //这个商品有多少存货
-                good_obj.replenish_time = replenish_time; //每隔多久时间补货
-                break;
-            case 6: //6：有限商品，特定事件补货
-                good_obj.inventory = inventory; //这个商品有多少存货
-                good_obj.replenish_event = replenish_event; //遇到什么事件会补货
-                break;
-            default:
-                break;
+        if (items[id].main_type.includes('equipment')) {
+            //物品是装备，args内参数的含义按以下顺序排列：
+            //稀有度
+            let equip_rarity = args[0];
+            good_obj = get_item_obj(id, 1, equip_rarity);
+        } else if (items[id].main_type.includes('material')) {
+            good_obj = get_item_obj(id, 1);
+            //物品是材料，没有独特属性
+        } else if (items[id].main_type.includes('consumable')) {
+            //物品是消耗品，args内参数的含义按以下顺序排列：
+            // 暂无
+            good_obj = get_item_obj(id, 1);
         }
-        this.goods.push(good_obj);
+
+        good_obj.inventory = inventory; //这个商品最大库存
+        good_obj.rise_num = rise_num; //购买几个物品涨价一次
+        good_obj.rise_data = rise_data; //涨价一次的幅度
+        good_obj.replenish_time = replenish_time; //每隔多久时间补货
+        good_obj.replenish_num = replenish_num; //每次补货的数量
+        let item_key = get_item_id_key(good_obj);
+        if (type == 'fixed') {
+            this.fixed_goods[item_key] = good_obj;
+        } else if (type == 'random') {
+            this.random_goods[item_key] = good_obj;
+        }
     }
 }
 //资源地点

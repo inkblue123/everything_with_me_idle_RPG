@@ -22,12 +22,13 @@ export class Global_flag_manage {
 
         //重要节点标记，用于记录游戏中的重要事件或节点是否完成
         //例如主线章节是否完成，挑战是否完成
-        //分为主线章节，挑战，成就，迷你事件
+        //分为主线章节，挑战，成就，迷你事件，支线任务
         this.important_nodes = new Object();
-        this.important_nodes.main_quest = new Object();
+        this.important_nodes.main_quest = new Object(); //主线任务完成标记
         this.important_nodes.challenge = new Object(); //挑战完成标记
         this.important_nodes.achievement = new Object(); //成就完成标记
         this.important_nodes.mini_event = new Object(); //迷你事件完成标记
+        this.important_nodes.side_quest = new Object(); //支线任务完成标记
 
         //临用游戏状态，用于记录游戏某些不需要即时更新的值
         //如当前激活了哪个装备栏，只在涉及到装备栏变化的时候才用到
@@ -103,6 +104,7 @@ export class Global_flag_manage {
         if (enums['important_nodes']['challenge'].includes(id)) return 'challenge';
         if (enums['important_nodes']['achievement'].includes(id)) return 'achievement';
         if (enums['important_nodes']['mini_event'].includes(id)) return 'mini_event';
+        if (enums['important_nodes']['side_quest'].includes(id)) return 'side_quest';
         //短期游戏状态都以“SGS_”开头，不用在枚举库中定义了
         if (id.startsWith('SGS_')) return 'short_game_status';
         //临用游戏状态都以“UGS_”开头，不用在枚举库中定义了
@@ -124,12 +126,16 @@ export class Global_flag_manage {
         if (type == 'challenge') return this.important_nodes.challenge;
         if (type == 'achievement') return this.important_nodes.achievement;
         if (type == 'mini_event') return this.important_nodes.mini_event;
+        if (type == 'side_quest') return this.important_nodes.side_quest;
 
         console.log('错误的游戏状态类型 %s', type);
     }
     //设置游戏状态
     set_flag(flag_name, flag_value) {
         let flag_type = this.get_flag_type(flag_name);
+        if (flag_type == undefined) {
+            console.log('没能分辨%s游戏状态的类型');
+        }
         if (flag_type == 'game_status') {
             this.GS_status.set_game_status(flag_name, flag_value);
         } else if (flag_type == 'short_game_status') {

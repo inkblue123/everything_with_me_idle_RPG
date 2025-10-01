@@ -57,7 +57,13 @@ class CircularQueue {
         }
         return log_arr;
     }
-
+    //清空队列
+    clean() {
+        this.QueueData = new Array(this.max_size);
+        this.front = 0;
+        this.rear = -1;
+        this.size = 0;
+    }
     isFull() {
         return this.size === this.max_size;
     }
@@ -71,10 +77,12 @@ class CircularQueue {
 
 export class Game_log_status {
     constructor() {
+        //全部日志，所有种类的日志都会添加到这里
         this.all_log = new CircularQueue(10);
         this.combat_log = new CircularQueue(10);
         this.item_log = new CircularQueue(10);
         this.other_log = new CircularQueue(10);
+        //新日志，所有日志都会在这里添加，如果屏幕上激活的日志是流水账，游戏会每帧取出其中的日志，打印到屏幕上
         this.new_log = new CircularQueue(10);
     }
     set_game_log(type, value) {
@@ -129,13 +137,11 @@ export class Game_log_status {
     set_get_item_game_log(value) {
         //物品是装备，例句：获得了普通木剑
         //其他物品，例句：获得了1个普通木头
-        //需要用到的参数是物品id，数量，稀有度
+        //需要用到的参数是物品对象
         let log_obj = new Object();
         log_obj.type = 'RA_item';
         log_obj.log_type = 'get_item';
-        log_obj.id = value[0];
-        log_obj.num = value[1];
-        log_obj.equip_rarity = value[2];
+        log_obj.item_obj = value[0];
         this.item_log.enLog(log_obj);
         this.all_log.enLog(log_obj);
         this.new_log.enLog(log_obj);
@@ -183,6 +189,8 @@ export class Game_log_status {
         //清除原本日志
         let RA_value_div = document.getElementById('RA_value_div');
         RA_value_div.replaceChildren();
+        //清空新日志，避免队列打印之后下一帧把新日志里的日志重复打印一遍
+        this.new_log.clean();
 
         //获取要展示的日志的列表
         let log_arr;
@@ -309,10 +317,11 @@ export class Game_log_status {
     }
     //生成一条获取物品的游戏日志
     make_get_item_game_log(new_log_div, log_obj) {
-        let id = log_obj.id;
+        let item_obj = log_obj.item_obj;
+        let id = item_obj.id;
         let item_name = items[id].name;
-        let num = log_obj.num;
-        let equip_rarity = log_obj.equip_rarity;
+        let num = item_obj.num;
+        let equip_rarity = item_obj.equip_rarity;
         if (items[id].main_type.includes('equipment')) {
             //物品是装备，例句：获得了普通木剑
             let part1 = addElement(new_log_div, 'div', null, 'RA_log_div');

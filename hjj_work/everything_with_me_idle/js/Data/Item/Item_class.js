@@ -54,10 +54,10 @@ class Item {
         if (args.length % 2 != 0) {
             console.log('设定物品价格时的参数数量不正常，有%d个', args.length);
         }
-        for (let i = 0; i < args.length / 2; i++) {
+        for (let i = 0; i < args.length; i += 2) {
             //
-            let price_name = args[i * 2];
-            this.price[price_name] = args[i * 2 + 1];
+            let money_type = args[i];
+            this.price[money_type] = args[i + 1];
         }
     }
 }

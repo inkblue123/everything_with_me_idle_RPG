@@ -1,6 +1,6 @@
 import { add_text_object } from './Text_class.js';
 
-//游戏章节的文本
+//主线任务的文本
 function main_quest_text(texts) {
     let id = 'main_quest_1';
     add_text_object(texts, id);
@@ -106,17 +106,52 @@ function mini_event_text(texts) {
     texts[id].text18 = '无妨，老人家，你的话很有帮助，我会记得的';
     texts[id].text19 = '多谢指点，我这就去试试';
     texts[id].text20 = '（转身离开）';
+
+    id = 'VM_woodshop_study_fishing';
+    add_text_object(texts, id);
+    texts[id].event_name = '向木工坊老板询问如何钓鱼';
+    texts[id].button_name = '向木工坊老板询问如何钓鱼';
+    texts[id].text0 = '…………';
+    texts[id].text1 = '        木工坊老板：这钓鱼啊，一般人还真不如我懂，常人可能觉得钓鱼不过是丢饵下去等鱼上钩的事情，最多还要计较遛鱼时会不会脱钩，但在我眼里，钓鱼可大不一样';
+    texts[id].text2 = '哦，怎么说';
+    texts[id].text3 =
+        '        木工坊老板：我以前也是村里第一钓鱼好手，钓遍周围所有水域，要我总结，那钓鱼之道不在钓鱼本身，而是前期准备。先准备一把好钓竿，再找到一个好钓点，准备妥当之后，鱼自然会上钩的';
+    texts[id].text4 = '没有鱼饵？鱼会咬钩吗';
+    texts[id].text5 = '        木工坊老板：新手总是这样想的，有些鱼确实喜欢吃饵，但有些鱼十分谨慎，生活的环境里突然多了一块鱼饵反而不敢靠近，总之，钓鱼可以没有鱼饵，会有鱼上钩的';
+    texts[id].text6 = '…………那然后呢';
+    texts[id].text7 =
+        '        木工坊老板：然后不就是等着鱼上钩就好了，注意，在等鱼上钩的时候千万不能动，鱼一旦察觉到动静会立刻跑开，再想它放松警惕可难了<br>        木工坊老板：待到鱼上钩之后，要松鱼线，让鱼先跑一会，消磨它的体力，再徐徐拉回，不可硬拉，在拉回来的这段时间可是钓鱼过程最享受的时候了，一定要慢，这都是教训啊';
+    texts[id].text8 = '放松鱼线让鱼跑了可怎么办';
+    texts[id].text9 =
+        '        木工坊老板：你要是买我做的鱼竿，必不可能跑鱼，这也是教训，当年我的钓鱼技术太好，遇到了一条大鱼，最终它把我拉下水了鱼竿也没事。也就是这事让我觉得物极必反，技术太好也是错啊，但是做鱼竿的手艺确实没得说，我就开了这家木工坊，顺便做些其他的东西';
+    texts[id].text10 = '还有这样的故事，那你多年钓鱼一定有什么绝招吧，能否说来听听';
+    texts[id].text11 = '        木工坊老板：哪有什么绝招啊，有也不是你这种钓鱼新手能听得懂的，还是去找个水域试试店里的鱼竿吧';
+    texts[id].text12 = '（学会了生活技能-钓鱼）';
 }
+//支线任务的文本
+function side_quest_text(texts) {
+    let id;
+
+    id = 'study_fishing';
+    add_text_object(texts, id);
+    texts[id].event_name = '学习如何钓鱼';
+    id = 'study_mining';
+    add_text_object(texts, id);
+    texts[id].event_name = '学习如何挖矿';
+}
+
 //事件完成条件的文本
 function event_finish_condition_text(texts) {
     let id;
 
-    id = 'PKL_DamageType_melee';
-    add_text_object(texts, id);
-    texts[id].condition_name = '近战击杀';
-    id = 'PKL_EnemyId_Training_Dummy';
-    add_text_object(texts, id);
-    texts[id].condition_name = '击杀训练草人';
+    //部分完成条件可以通过id自动组合出文本，可以不用设置了
+    // id = 'PKL_DamageType_melee';
+    // add_text_object(texts, id);
+    // texts[id].condition_name = '近战击杀';
+    // id = 'PKL_EnemyId_Training_Dummy';
+    // add_text_object(texts, id);
+    // texts[id].condition_name = '击杀训练草人';
+
     id = 'ATD_all_armor';
     add_text_object(texts, id);
     texts[id].condition_name = '4个防具部位都有穿着的情况下受击';
@@ -126,9 +161,17 @@ function event_finish_condition_text(texts) {
     // id = '_shield_defense';
     // add_text_object(texts, id);
     // texts[id].condition_name = '在村内商店里购买鱼竿';
-    // id = 'EE_VM_woodshop_study_fishing';
+    id = 'EE_VM_woodshop_study_fishing';
+    add_text_object(texts, id);
+    texts[id].condition_name = '向木工坊老板询问如何钓鱼';
+}
+//事件完成奖励的文本
+function event_finish_reward_text(texts) {
+    let id;
+
+    // id = 'ATD_all_armor';
     // add_text_object(texts, id);
-    // texts[id].condition_name = '向木工坊老板询问如何钓鱼';
+    // texts[id].reward_name = '4个防具部位都有穿着的情况下受击';
 }
 //初始化文本数据库中与游戏事件相关的文本
 function init_Text_game_event(texts) {
@@ -138,6 +181,8 @@ function init_Text_game_event(texts) {
     Challenge_text(texts);
     //迷你事件的文本
     mini_event_text(texts);
+    //支线任务的文本
+    side_quest_text(texts);
     //事件完成条件的文本
     event_finish_condition_text(texts);
 }

@@ -5,19 +5,6 @@ import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
 
-class Player_Item {
-    constructor(id) {
-        this.id = id; //唯一id
-        this.num = 0; //玩家拥有该物品总数
-    }
-}
-class Player_Item_E extends Player_Item {
-    constructor(id) {
-        super(id);
-        this.rarity = new Object(); //稀有度
-    }
-}
-
 export class Player_worn {
     constructor() {
         this.worn_EQP = new Object();
@@ -49,28 +36,28 @@ export class Player_worn {
         this.updata_equipment_show();
     }
     //穿戴一件装备，默认目标位置没有装备
-    worn_Equipment(id, num, equip_rarity) {
+    worn_Equipment(item_obj) {
+        let id = item_obj.id;
         let wearing_position = items[id].wearing_position;
         if (wearing_position.length == 1) {
             //这件装备只能穿戴在指定位置，直接穿戴
-            this.worn_Equipment_only_position(wearing_position[0], id, num, equip_rarity);
+            this.worn_Equipment_only_position(wearing_position[0], item_obj);
         } else {
             //这件装备允许穿戴在多个位置，遍历选择一个空位
-            this.worn_Equipment_many_position(wearing_position, id, num, equip_rarity);
+            this.worn_Equipment_many_position(wearing_position, item_obj);
         }
         return;
     }
     //在指定位置穿戴一件装备
-    worn_Equipment_only_position(wp, id, num, equip_rarity) {
+    worn_Equipment_only_position(wp, item_obj) {
         let EQP_switct = get_EQP_switch();
         let ac_EQP = this.worn_EQP[EQP_switct];
         //将装备放到身上的装备栏里
-        ac_EQP[wp] = new Player_Item_E(id);
-        ac_EQP[wp].rarity[equip_rarity] = num;
-        ac_EQP[wp].num = num;
+        ac_EQP[wp] = item_obj;
     }
     //在多个位置选择空位穿戴一件装备
-    worn_Equipment_many_position(wearing_positions, id, num, equip_rarity) {
+    worn_Equipment_many_position(wearing_positions, item_obj) {
+        // worn_Equipment_many_position(wearing_positions, id, num, equip_rarity) {
         let EQP_switct = get_EQP_switch();
         let ac_EQP = this.worn_EQP[EQP_switct];
         let worn_flag = false;
@@ -95,7 +82,7 @@ export class Player_worn {
             }
             //这个可穿戴位置确实为空，直接穿上
             if (empty_flag) {
-                this.worn_Equipment_only_position(wp, id, num, equip_rarity);
+                this.worn_Equipment_only_position(wp, item_obj);
                 worn_flag = true;
                 break;
             }
@@ -106,8 +93,9 @@ export class Player_worn {
             return true;
         } else {
             //每个位置都不空，则穿戴在第一个位置
-            let wp = wearing_positions[0];
-            this.worn_Equipment_only_position(wp, num, equip_rarity);
+            console.log('穿戴装备时应该提前脱下了目标位置的装备，但穿戴时还是没有空位，异常情况');
+            // let wp = wearing_positions[0];
+            // this.worn_Equipment_only_position(wp, item_obj);
         }
     }
     //获取玩家身上指定的装备栏
@@ -306,15 +294,15 @@ function get_EQP_switch() {
 //点亮左上装备栏中的指定展示框表示玩家穿戴了指定装备，并展示装备名
 function add_aEQP_data(aBP_item, wp, alpha = 1) {
     let id = aBP_item.id;
-    let rarity = get_object_only_key(aBP_item.rarity);
-    let num = aBP_item.rarity[rarity];
+    let equip_rarity = aBP_item.equip_rarity;
+    let num = aBP_item.num;
     let EQP_div_data = get_EQP_wp_data(null, wp);
     if (num == 1) {
         EQP_div_data.innerHTML = items[id].name; //装备栏上物品的名称
     } else {
         EQP_div_data.innerHTML = items[id].name + ' x' + num; //装备栏上物品的名称x数量
     }
-    EQP_div_data.style.color = hex2Rgba(enums[rarity].rarity_color, alpha); //装备栏物品的稀有度颜色
+    EQP_div_data.style.color = hex2Rgba(enums[equip_rarity].rarity_color, alpha); //装备栏物品的稀有度颜色
     EQP_div_data.style.opacity = 1; //高亮显示表示已经装备
     add_show_Tooltip(EQP_div_data, 'item', aBP_item); //添加鼠标移动上去显示详细内容的功能
     add_click_Equipment_worn_remove(EQP_div_data, wp);

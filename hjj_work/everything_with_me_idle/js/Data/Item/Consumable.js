@@ -42,12 +42,15 @@ function init_ingredient(items) {
     id = 'red_berry'; //红浆果
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'yellow_berry'; //黄浆果
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'black_berry'; //黑浆果
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 1); //物品价值
 }
 //食品
 function init_food(items) {
@@ -57,22 +60,28 @@ function init_food(items) {
     id = 'grilled_fish'; //烤鱼串
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 10); //物品价值
     id = 'big_grilled_fish'; //大烤鱼串
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 15); //物品价值
     id = 'roasted_crab'; //烤螃蟹
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 8); //物品价值
     id = 'cooked_mussel'; //熟蚌肉
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 5); //物品价值
     id = 'cooked_animal_meat'; //熟兽肉
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 10); //物品价值
 
     id = 'termite_mushroom_soup'; //鸡枞汤
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 130); //物品价值
 }
 //干制品
 function init_dry_product(items) {
@@ -82,12 +91,15 @@ function init_dry_product(items) {
     id = 'fish_jerky'; //鱼肉干
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 30); //物品价值
     id = 'animal_jerky'; //兽肉干
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 35); //物品价值
     id = 'berry_dried_fruit'; //浆果果干
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 25); //物品价值
 }
 //药材
 function init_crude_drug(items) {
@@ -124,6 +136,7 @@ function init_arrow(items) {
     id = 'wood_arrow'; //木制箭矢
     add_Consumable_object(items, id);
     items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_price('ordinary_coin', 3); //物品价值
 }
 //弩箭
 function init_bolt(items) {
@@ -188,15 +201,19 @@ function init_ordinary_coin(items) {
     id = 'copper_coin'; //铜币
     add_Consumable_object(items, id);
     items[id].init_Item_other(500, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'greedy_copper_coin'; //贪婪的铜币
     add_Consumable_object(items, id);
     items[id].init_Item_other(1, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'sliver_coin'; //银币
     add_Consumable_object(items, id);
     items[id].init_Item_other(500, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 100); //物品价值
     id = 'gold_coin'; //金币
     add_Consumable_object(items, id);
     items[id].init_Item_other(500, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 10000); //物品价值
 }
 
 export { init_Item_Consumable };

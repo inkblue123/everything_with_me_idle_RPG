@@ -184,7 +184,7 @@ export class Data_attr_manage {
             //遍历每个部位的装备
             let EQP = worn_EQP[wp];
             let id = EQP.id;
-            let rarity = get_object_only_key(EQP.rarity);
+            let equip_rarity = EQP.equip_rarity;
             //记录每件装备的每条属性
             for (let i in items[id].equip_attr) {
                 if (items[id].equip_attr[i] == 0) continue;
@@ -196,7 +196,7 @@ export class Data_attr_manage {
                 if (wp == 'deputy' && i == 'attack_speed') continue;
                 //回旋武器的攻速单独计算
                 if (items[id].secon_type.includes('boomerang') && i == 'attack_speed') {
-                    let num = EQP.rarity[rarity];
+                    let num = EQP.num;
                     this.EQP_attr[i] += items[id].equip_attr[i] / num;
                     continue;
                 }

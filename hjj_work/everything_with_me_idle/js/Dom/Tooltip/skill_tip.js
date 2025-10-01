@@ -6,7 +6,7 @@ import { enums } from '../../Data/Enum/Enum.js';
 import { P_skills, B_skills } from '../../Data/Skill/Skill.js';
 
 import { player } from '../../Player/Player.js';
-import { Tooltip } from './Tooltip.js';
+// import { Tooltip } from './Tooltip.js';
 
 const TOOLTIP_WIDTH = 320;
 
@@ -25,6 +25,7 @@ function init_skill_tip(type, value) {
 
 //传入触发展示的玩家主动技能槽数，从玩家类身上获取该槽上的技能，展示这个主动技能的详细信息
 function init_active_skill_tip(show_slot_num) {
+    let Tooltip = document.getElementById('tooltip');
     let P_Askill = player.get_player_ASkill_Manage();
     let id = P_Askill.active_slots[show_slot_num].id; //要展示的技能的id
     let slot_num = P_Askill.active_slots[show_slot_num].slot_num; //触发本次展示的，是要展示技能的第几个槽
@@ -64,6 +65,7 @@ function init_active_skill_tip(show_slot_num) {
 }
 //传入玩家拥有的一个主动技能，展示它的详情信息
 function init_show_active_skill_tip(skill_obj) {
+    let Tooltip = document.getElementById('tooltip');
     let skill_id = skill_obj.id;
     //技能库没有相关内容，简单展示信息
     if (is_Empty_Object(P_skills[skill_id])) {
@@ -196,6 +198,7 @@ function show_active_skill_attr_correct(slot_value_div, active_skill) {
 
 //传入玩家拥有的一个被动技能对象，展示它的详细信息
 function init_show_passive_skill_tip(skill_obj) {
+    let Tooltip = document.getElementById('tooltip');
     Tooltip.style.width = TOOLTIP_WIDTH + 'px';
     //名称
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');

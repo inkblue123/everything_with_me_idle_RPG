@@ -66,18 +66,17 @@ function add_show_Tooltip(target_div, tip_type, tip_value) {
     });
 }
 //  向目标组件添加鼠标点击穿戴到身上的功能
-function add_click_Equipment_worn(target_div, tip_value) {
+function add_click_Equipment_worn(target_div, item_data) {
     target_div.addEventListener('click', () => {
         //从玩家背包中去掉要穿戴的物品
-        let keys = Object.keys(tip_value.rarity);
-        let rarity = keys[0];
-        let ret = player.Player_lose_Equipment(tip_value);
+        let ret = player.Player_lose_item(item_data);
         if (ret <= 0) return;
         //切换到当前激活的装备栏
         let P_worn = player.get_player_worn();
         P_worn.show_active_EQP();
         //将要穿戴的物品放到目前激活的装备栏的指定位置
-        player.worn_Equipment(tip_value.id, tip_value.num, rarity);
+        // let equip_rarity = item_data.equip_rarity;
+        player.worn_Equipment(item_data);
         //装备信息发生变动，更新相关界面和数据
         updata_player_EQP(); //玩家属性变化
         let now_GS = global.get_flag('GS_game_statu');
@@ -118,8 +117,8 @@ function add_click_Equipment_worn_remove(target_div, wp) {
     });
 }
 
-//  向主动技能组件添加鼠标点击设置到身上主动技能槽的功能
-function add_click_Active_skill_worn(target_div, tip_value) {
+// 向主动技能组件添加鼠标点击设置到身上主动技能槽的功能
+function add_click_Active_skill_worn(target_div, skill_id) {
     target_div.addEventListener('click', () => {
         let P_Askill = player.get_player_ASkill_Manage();
         //获取从左到右首个空闲的主动技能槽位置
@@ -129,17 +128,17 @@ function add_click_Active_skill_worn(target_div, tip_value) {
             return false;
         }
         //向空闲槽添加该技能
-        P_Askill.set_active_skill(tip_value, slot);
+        P_Askill.set_active_skill(skill_id, slot);
         updata_player_active();
     });
 }
 // 向目标组件添加 点击之后可以从玩家身上卸下指定的主动技能的功能
-function add_click_Active_skill_worn_remove(target_div, tip_value) {
-    //输入的tip_value表示要卸下玩家身上第几个槽的技能，从0开始计数
+function add_click_Active_skill_worn_remove(target_div, slot_id) {
+    //输入的slot_id表示要卸下玩家身上第几个槽的技能，从0开始计数
     target_div.addEventListener('click', () => {
         //从玩家身上卸下指定槽位的主动技能
         let P_Askill = player.get_player_ASkill_Manage();
-        P_Askill.remove_solt_active_skill(tip_value);
+        P_Askill.remove_solt_active_skill(slot_id);
         //主动技能发生变动，更新相关界面
         updata_player_active();
         //关闭提示窗
@@ -147,6 +146,7 @@ function add_click_Active_skill_worn_remove(target_div, tip_value) {
         tooltip.CloseTip(); //清空小窗口
     });
 }
+
 //隐藏指定div元素
 function hide_div(div_id) {
     //

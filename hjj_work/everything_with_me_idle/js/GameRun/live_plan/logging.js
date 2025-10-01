@@ -1,6 +1,6 @@
 import { get_random } from '../../Function/math_func.js';
 import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
+import { is_Empty_Object, get_uniqueArr, get_item_id_key, get_item_obj } from '../../Function/Function.js';
 import { enemys } from '../../Data/Enemy/Enemy.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
@@ -89,15 +89,15 @@ class Tree_manage {
             }
             for (let j = 0; j < drop_times; j++) {
                 //根据权重，获取掉落哪一个物品
-                let item_id = random_manage.get_tree_death_item_id(this.id, reward_level, i);
-                let data_obj = enemy_item_array.items[item_id];
+                let item_key = random_manage.get_tree_death_item_id(this.id, reward_level, i);
+                let data_obj = enemy_item_array.items[item_key];
 
                 let item_obj = new Object();
-                item_obj.id = item_id;
+                item_obj.id = data_obj.id;
                 item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
-                if (items[item_id].main_type.includes('equipment')) {
+                if (items[data_obj.id].main_type.includes('equipment')) {
                     //如果掉落的是装备，还需要记录稀有度
-                    item_obj.rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
+                    item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
                 }
                 //将掉落的信息存起来
                 drop_item_arry.push(item_obj);
@@ -106,16 +106,12 @@ class Tree_manage {
         //对掉落物去重
         let uniqueArr = new Object();
         for (let item_obj of drop_item_arry) {
-            let id = item_obj.id;
-            let key = id;
-            if (items[id].main_type.includes('equipment')) {
-                key = id + rarity;
-            }
+            let item_key = get_item_id_key(item_obj);
 
-            if (is_Empty_Object(uniqueArr[key])) {
-                uniqueArr[key] = item_obj;
+            if (is_Empty_Object(uniqueArr[item_key])) {
+                uniqueArr[item_key] = item_obj;
             } else {
-                uniqueArr[key].num += item_obj.num;
+                uniqueArr[item_key].num += item_obj.num;
             }
         }
         return uniqueArr;
@@ -227,10 +223,10 @@ export class Logging_manage {
         if (tree_statu) {
             //树活着，应该更新玩家攻击进度和树的血量
             let tree_head = document.getElementById('tree_head');
-            if (tree_head.dataset.statu != tree_statu) {
+            if (tree_head.dataset.statu != String(tree_statu)) {
                 //这一帧树复活，展示新树的信息
                 this.show_new_tree_div();
-                tree_head.dataset.statu = tree_statu;
+                tree_head.dataset.statu = String(tree_statu);
             }
             //树的生命进度条
             let tree_blood_bar = document.getElementById('tree_blood_bar');
@@ -255,7 +251,7 @@ export class Logging_manage {
         } else {
             //树死了，清空界面
             let tree_head = document.getElementById('tree_head');
-            if (tree_head.dataset.statu != tree_statu) {
+            if (tree_head.dataset.statu != String(tree_statu)) {
                 //这一帧树死了，清空界面
                 this.delete_logging_div('tree_death');
             }
@@ -366,12 +362,9 @@ export class Logging_manage {
 
         if (!this.tree_manage.get_tree_statu()) {
             //树死了，进入掉落物品逻辑
-            let items_obj = this.tree_manage.get_drop_reward();
-            for (let key in items_obj) {
-                let id = items_obj[key].id;
-                let num = items_obj[key].num;
-                let rarity = items_obj[key].rarity;
-                player.Player_get_item(id, num, rarity);
+            let items_arr = this.tree_manage.get_drop_reward();
+            for (let item_key in items_arr) {
+                player.Player_get_item(items_arr[item_key]);
             }
             //如果这棵树是稀有的树，需要处理积累数量
             let tree_id = this.tree_manage.get_tree_id();
@@ -523,7 +516,7 @@ export class Logging_manage {
         let tree_id = this.tree_manage.get_tree_id();
         let tree_head = document.getElementById('tree_head');
         tree_head.innerHTML = enemys[tree_id].name;
-
+        tree_head.dataset.statu = 'true';
         //树的掉落物
         let drop_item_arry = new Array();
         //遍历每一级
@@ -540,7 +533,8 @@ export class Logging_manage {
         //将掉落物展示到界面里
         let LGI_drop_table_value_div = document.getElementById('LGI_drop_table_value_div');
         LGI_drop_table_value_div.replaceChildren(); //清空现有展示的物品
-        for (let id of drop_item_arry) {
+        for (let item_key of drop_item_arry) {
+            let id = item_key.split(':')[0];
             let drop_value = addElement(LGI_drop_table_value_div, 'div', null, 'drop_value');
             drop_value.innerHTML = items[id].name;
         }
@@ -576,7 +570,7 @@ export class Logging_manage {
         }
         logging_way_bar.children[0].children[0].style.width = '0%';
 
-        tree_head.dataset.statu = false;
+        tree_head.dataset.statu = 'false';
     }
 }
 

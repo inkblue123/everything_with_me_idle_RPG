@@ -107,6 +107,11 @@
     width: 80%;
 }
 
+/* 脑海-重要事件，当前事件的所有奖励的div */
+.IE_finish_reward_div {
+    font-size: 15px;
+}
+
 /* 游戏日志界面-图鉴内容的div */
 #IB_div {
     /* display: grid;

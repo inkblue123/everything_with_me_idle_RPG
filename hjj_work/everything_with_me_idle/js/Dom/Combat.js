@@ -1,10 +1,16 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 import { is_Empty_Object } from '../Function/Function.js';
 
-var Combat = crtElement('div', 'combat', null, '');
+//创建战斗时，中上和右上的战斗界面
+function create_Combat() {
+    var Combat = crtElement('div', 'combat', null, '');
+    make_Combat_div(Combat);
+    set_Combat_button(Combat);
+    return Combat;
+}
 
 //创建右上，战斗界面内的详细组件
-{
+function make_Combat_div(Combat) {
     //上部75%，主要战斗区域
     var main_combat_div = crtElement('div', 'main_combat', null, '');
     //左侧20%，玩家所处区域
@@ -17,7 +23,7 @@ var Combat = crtElement('div', 'combat', null, '');
     //玩家区域中，玩家的各种buff的div
     var MCP_buff_div = addElement(MC_play_div, 'div', 'MCP_buff_div', null);
     var MCP_buff_scroll_box = addElement(MCP_buff_div, 'div', null, 'overflow_y_div');
-    var MCP_buff_value = addElement(MCP_buff_scroll_box, 'div', 'MCP_buff_value', 'classification_div');
+    var MCP_buff_value = addElement(MCP_buff_scroll_box, 'div', 'MCP_buff_value', 'in_overflow_div');
     // for (let i = 0; i < 20; i++) {
     //     let abuff = addElement(MCP_buff_value, 'div', null, 'buff');
     //     abuff.innerHTML = '啊';
@@ -85,7 +91,6 @@ var Combat = crtElement('div', 'combat', null, '');
 }
 
 // 为组件添加触发事件
-{
-}
+function set_Combat_button(Combat) {}
 
-export { Combat };
+export { create_Combat };

@@ -84,7 +84,7 @@ function set_equipment_type_attr_Presets(enums) {
         critical_damage: 'normal', //暴击伤害正常
         attack_speed: 'normal', //攻击速度正常
     };
-    //弩
+    //弩炮
     add_Enum_Object(enums.equipment_type_attr_Presets, 'crossbow');
     enums.equipment_type_attr_Presets.crossbow = {
         attack: 'max', //攻击最高
@@ -283,6 +283,25 @@ function init_Enum_equipment(enums) {
     id = 'no_special_rarity';
     add_Enum_Array(enums, id);
     enums[id] = ['damaged', 'ordinary', 'excellent', 'rare', 'epic'];
+    //每种装备稀有度的价值倍率
+    id = 'damaged'; //破损
+    add_Enum_Object(enums, id);
+    enums[id].price_data = '50';
+    id = 'ordinary'; //普通
+    add_Enum_Object(enums, id);
+    enums[id].price_data = '100';
+    id = 'excellent'; //优良
+    add_Enum_Object(enums, id);
+    enums[id].price_data = '120';
+    id = 'rare'; //稀有
+    add_Enum_Object(enums, id);
+    enums[id].price_data = '150';
+    id = 'epic'; //史诗
+    add_Enum_Object(enums, id);
+    enums[id].price_data = '200';
+    id = 'legendary'; //传说
+    add_Enum_Object(enums, id);
+    enums[id].price_data = '500';
     //装备可能放置的位置
     id = 'wearing_position';
     add_Enum_Array(enums, id);
@@ -302,7 +321,7 @@ function init_Enum_equipment(enums) {
         'whips', //鞭子
         //远程武器
         'bow', //弓
-        'crossbow', //弩
+        'crossbow', //弩炮
         'hand_gun', //手弩
         'spray_gun', //喷枪
         'boomerang', //回旋武器

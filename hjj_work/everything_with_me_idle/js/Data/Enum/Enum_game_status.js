@@ -56,6 +56,7 @@ function init_important_nodes(enums) {
     add_Enum_Array(enums[id], 'challenge');
     add_Enum_Array(enums[id], 'achievement');
     add_Enum_Array(enums[id], 'mini_event');
+    add_Enum_Array(enums[id], 'side_quest');
     //每种重要节点具体有哪些事件的枚举在Data.js中初始化
 }
 //初始化枚举库中与临用游戏状态参数相关的内容

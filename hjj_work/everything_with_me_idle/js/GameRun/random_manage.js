@@ -117,24 +117,24 @@ export class Random_manage {
     }
     //获取随机数管理对象的存档
     save_Random_manage() {
-        let Random_manage_save = new Object();
+        let Random_save = new Object();
         //稀有游戏内容管理对象
-        Random_manage_save.rare_manage_save = new Object();
+        Random_save.rare_manage_save = new Object();
         for (let key in this.rare_manage) {
-            Random_manage_save.rare_manage_save[key] = this.rare_manage[key];
+            Random_save.rare_manage_save[key] = this.rare_manage[key];
         }
         //暴击管理部分可以不用保存
 
-        return Random_manage_save;
+        return Random_save;
     }
     //加载随机数管理对象存档
-    load_Random_manage(Random_manage_save) {
-        if (is_Empty_Object(Random_manage_save)) {
+    load_Random_manage(Random_save) {
+        if (is_Empty_Object(Random_save)) {
             return;
         }
         //稀有游戏内容管理对象
-        for (let key in Random_manage_save.rare_manage_save) {
-            this.rare_manage[key] = Random_manage_save.rare_manage_save[key];
+        for (let key in Random_save.rare_manage_save) {
+            this.rare_manage[key] = Random_save.rare_manage_save[key];
         }
     }
     //在稀有对象管理类中初始化指定稀有对象
@@ -142,13 +142,13 @@ export class Random_manage {
     init_rare_manage(rare_arr, drop_arr, thing_flag, father_id) {
         //获取总权重
         let all_chance = 0;
-        for (let id in drop_arr) {
-            all_chance += drop_arr[id].chance;
+        for (let item_key in drop_arr) {
+            all_chance += drop_arr[item_key].chance;
         }
         //将rare_arr中的每个id都初始化到管理类中
-        for (let id of rare_arr) {
-            let key = id + '_' + thing_flag + '_' + father_id;
-            let drop_chance = drop_arr[id].chance / all_chance;
+        for (let item_key of rare_arr) {
+            let key = item_key + '_' + thing_flag + '_' + father_id;
+            let drop_chance = drop_arr[item_key].chance / all_chance;
 
             this.rare_manage.init_rare(key, drop_chance);
         }
@@ -158,13 +158,13 @@ export class Random_manage {
         let rare_arr = new Array();
         //情况1：如果有“稀有标签”成员，以标签为准
         let if_def_rare_flag = false; //是否定义了稀有标签
-        for (let id in arr) {
-            if (arr[id].rare_flag == undefined) {
+        for (let item_key in arr) {
+            if (arr[item_key].rare_flag == undefined) {
                 continue;
             }
             if_def_rare_flag = true;
-            if (arr[id].rare_flag) {
-                rare_arr.push(id);
+            if (arr[item_key].rare_flag) {
+                rare_arr.push(item_key);
             }
         }
         //检测到定义了稀有标签，
@@ -174,35 +174,35 @@ export class Random_manage {
 
         //情况2：计算每个对象的期望概率，概率小于等于5%的视作稀有对象
         let all_chance = 0;
-        for (let id in arr) {
-            all_chance += arr[id].chance;
+        for (let item_key in arr) {
+            all_chance += arr[item_key].chance;
         }
-        for (let id in arr) {
-            if (arr[id].chance / all_chance < 0.05) {
-                rare_arr.push(id);
+        for (let item_key in arr) {
+            if (arr[item_key].chance / all_chance < 0.05) {
+                rare_arr.push(item_key);
             }
         }
         return rare_arr;
     }
-    //从掉落对象里按照权重随机获得一个id
+    //从掉落对象里按照权重随机获得一个key
     chance_randow_get_id(drop_obj, thing_flag, father_id) {
         //按照权重随机，先得到一个正常随机结果
-        let id = get_obj_chance_random_id(drop_obj);
+        let item_key = get_obj_chance_random_id(drop_obj);
 
         //寻找队列里的稀有对象
         let rare_arr = this.get_rare_arr(drop_obj);
         //没有稀有对象，不需要处理保底，直接返回权重随机的结果
         if (is_Empty_Object(rare_arr)) {
-            return id;
+            return item_key;
         }
         //初始化稀有对象的保底信息
         this.init_rare_manage(rare_arr, drop_obj, thing_flag, father_id);
 
-        if (rare_arr.includes(id)) {
+        if (rare_arr.includes(item_key)) {
             //随机的结果是稀有对象，重置该对象的保底计数，更新其他对象的保底计数
             for (let rare_id of rare_arr) {
                 let key = rare_id + '_' + thing_flag + '_' + father_id;
-                if (rare_id == id) {
+                if (rare_id == item_key) {
                     this.rare_manage.reset_rare(key);
                 } else {
                     this.rare_manage.add_rare_floors(key);
@@ -221,11 +221,11 @@ export class Random_manage {
                 if (this.rare_manage.try_floors(key)) {
                     //有一个对象成功触发保底，将本次随机的结果改成这个稀有对象，并更新其他对象
                     floors_flag = true;
-                    id = rare_id;
+                    item_key = rare_id;
                 }
             }
         }
-        return id;
+        return item_key;
     }
     //从drop_arr里按照权重随机获得一个id，不涉及稀有对象和保底
     chance_randow_get_id_norare(drop_obj) {
@@ -258,34 +258,34 @@ function get_random(min, max) {
 //输入随机目标对象数组，根据每个对象的权重，随机得到某个对象的id
 function get_obj_chance_random_id(arr) {
     let all_chance = 0;
-    for (let id in arr) {
-        all_chance += arr[id].chance;
+    for (let item_key in arr) {
+        all_chance += arr[item_key].chance;
     }
     let chance = get_random(0, all_chance);
-    let id;
-    for (id in arr) {
-        if (chance > arr[id].chance) {
-            chance -= arr[id].chance;
+    let item_key;
+    for (item_key in arr) {
+        if (chance > arr[item_key].chance) {
+            chance -= arr[item_key].chance;
         } else {
             break;
         }
     }
-    return id;
+    return item_key;
 }
 //输入权重数组，根据权重随机得到数组序号
-function get_arr_chance_random_num(arr) {
-    let all_chance = 0;
-    for (let chance of arr) {
-        all_chance += chance;
-    }
-    let chance = get_random(0, all_chance);
-    let id;
-    for (id in arr) {
-        if (chance > arr[id]) {
-            chance -= arr[id];
-        } else {
-            break;
-        }
-    }
-    return id;
-}
+// function get_arr_chance_random_num(arr) {
+//     let all_chance = 0;
+//     for (let chance of arr) {
+//         all_chance += chance;
+//     }
+//     let chance = get_random(0, all_chance);
+//     let item_key;
+//     for (item_key in arr) {
+//         if (chance > arr[item_key]) {
+//             chance -= arr[item_key];
+//         } else {
+//             break;
+//         }
+//     }
+//     return item_key;
+// }

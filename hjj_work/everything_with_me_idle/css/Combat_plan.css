@@ -15,9 +15,22 @@
     font-size: 15px;
     border: 1px solid #797691; /* 内框 */
 }
-/* 容纳具体的背包、技能、图鉴内容的div */
+/* 容纳具体的背包物品、技能内容的div */
 #Combat_plan_value_div {
     height: 90%;
+    /* border-bottom: 1px solid #797691; */
+}
+
+#BP_switch_sort_div {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #797691;
+}
+#BP_switch_scroll_box {
+    flex: 1;
+}
+#BP_sort_div {
+    height: auto;
 }
 /* 背包界面-容纳背包全部内容的div */
 /* #BP_div {

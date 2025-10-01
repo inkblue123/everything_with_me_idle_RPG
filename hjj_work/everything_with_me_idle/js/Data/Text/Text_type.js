@@ -33,7 +33,7 @@ function Equipment_type(texts) {
     texts['bow'].type_name = '弓';
     texts['bow'].type_desc = '中远距离远程武器，进行远程攻击时消耗箭矢';
     add_text_object(texts, 'crossbow');
-    texts['crossbow'].type_name = '弩';
+    texts['crossbow'].type_name = '弩炮';
     texts['crossbow'].type_desc = '笨重的中远距离远程武器，进行远程攻击时消耗弩箭';
     add_text_object(texts, 'hand_gun');
     texts['hand_gun'].type_name = '手弩';
@@ -174,7 +174,7 @@ function consumable_type(texts) {
     texts[id].type_name = '宝箱';
     id = 'ordinary_coin';
     add_text_object(texts, id);
-    texts[id].type_name = '凡间钱币';
+    texts[id].type_name = '钱币';
 }
 //材料的类型名称
 function material_type(texts) {
@@ -300,6 +300,16 @@ function fish_status(texts) {
     // add_text_object(texts, id);
     texts[id].fish_status_name = '鱼跑了';
 }
+//商人使用的货币名称
+function store_use_money_type(texts) {
+    let id;
+
+    // 根基技能 basic
+    id = 'ordinary_coin';
+    // add_text_object(texts, id);//在其他地方定义过
+    texts[id].money_type_name = '钱币';
+}
+
 //初始化文本数据库中与类型相关的文本
 function init_Text_type(texts) {
     //武器装备类型描述
@@ -318,5 +328,7 @@ function init_Text_type(texts) {
     passive_switch_type(texts);
     //钓鱼技能内的状态名称
     fish_status(texts);
+    //商人使用的货币名称
+    store_use_money_type(texts);
 }
 export { init_Text_type };

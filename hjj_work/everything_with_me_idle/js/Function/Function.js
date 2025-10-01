@@ -177,6 +177,121 @@ function make_condition_name(monitor_id) {
         return event_name;
     }
 }
+//比较div中dataset里存储的key值和valueToCompare是否一致
+function compare_dataset_value(element, key, valueToCompare) {
+    const storedValue = element.dataset[key];
+
+    // 处理未存储值的情况
+    if (storedValue === undefined) {
+        return valueToCompare === undefined;
+    }
+
+    // 处理布尔值比较
+    if (typeof valueToCompare === 'boolean') {
+        return storedValue === (valueToCompare ? 'true' : 'false');
+    }
+
+    // 处理数字比较
+    if (typeof valueToCompare === 'number') {
+        const parsed = parseFloat(storedValue);
+        return !isNaN(parsed) && parsed === valueToCompare;
+    }
+
+    // 处理对象/数组比较
+    if (typeof valueToCompare === 'object' && valueToCompare !== null) {
+        try {
+            const parsed = JSON.parse(storedValue);
+            return JSON.stringify(parsed) === JSON.stringify(valueToCompare);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // 默认字符串比较
+    return storedValue === String(valueToCompare);
+}
+//在element界面的dataset里保存一个key value
+function set_dataset_value(element, key, value) {
+    if (value === undefined || value === null) {
+        delete element.dataset[key];
+        return;
+    }
+
+    // 特殊处理布尔值
+    if (typeof value === 'boolean') {
+        element.dataset[key] = value ? 'true' : 'false';
+        return;
+    }
+
+    // 处理对象和数组
+    if (typeof value === 'object') {
+        try {
+            element.dataset[key] = JSON.stringify(value);
+            return;
+        } catch (e) {
+            console.error('Failed to stringify object:', e);
+            return;
+        }
+    }
+
+    // 其他类型直接转为字符串
+    element.dataset[key] = String(value);
+}
+//将输入的参数转换成一个物品对象
+function get_item_obj(id, num, ...args) {
+    let item_obj = new Object();
+    item_obj.id = id;
+    item_obj.num = num;
+    //设置独特属性
+    if (items[id].main_type.includes('equipment')) {
+        //物品是装备，args内参数的含义按以下顺序排列：
+        //稀有度
+        item_obj.equip_rarity = args[0];
+    } else if (items[id].main_type.includes('material')) {
+        //物品是材料，没有独特属性
+    } else if (items[id].main_type.includes('consumable')) {
+        //物品是消耗品，args内参数的含义按以下顺序排列：
+        // 暂无
+    }
+
+    //设置通用参数
+    //价值
+    item_obj.price = items[id].price;
+    if (items[id].main_type.includes('equipment')) {
+        //装备物品根据稀有度变化价值
+        let equip_rarity = item_obj.equip_rarity;
+        let rarity_place_data = enums[equip_rarity].price_data;
+        for (let money_type in item_obj.price) {
+            item_obj.price[money_type] = item_obj.price[money_type] * rarity_place_data * 0.01;
+        }
+    }
+    return item_obj;
+}
+
+//获取物品对象的唯一key
+function get_item_id_key(item_obj, length = 16) {
+    let id = item_obj.id;
+    let item_value = '';
+    if (items[id].main_type.includes('equipment')) {
+        //装备的独特属性是它的稀有度
+        item_value = item_obj.equip_rarity;
+    } else if (items[id].main_type.includes('consumable')) {
+        //消耗品的独特属性有待开发
+        //目前不写，和材料一样空着
+    } else if (items[id].main_type.includes('material')) {
+        //材料应该没有独特属性，空着
+    }
+    //获取物品独特属性哈希值
+    let hash = 0;
+    for (let i = 0; i < item_value.length; i++) {
+        hash = (hash << 5) - hash + item_value.charCodeAt(i);
+        hash |= 0;
+    }
+    let hash_key = Math.abs(hash).toString(16).padStart(length, '0').substring(0, length);
+    //key由物品id+物品独特属性哈希值组成
+    let item_key = id + ':' + hash_key;
+    return item_key;
+}
 
 export {
     check_Equipment,
@@ -187,4 +302,8 @@ export {
     is_overlap,
     get_object_only_key,
     get_monitor_ch,
+    compare_dataset_value,
+    set_dataset_value,
+    get_item_id_key,
+    get_item_obj,
 };

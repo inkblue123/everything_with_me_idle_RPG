@@ -37,13 +37,14 @@ export class Mini_event {
     }
     //迷你事件结束
     end_mini_event(event_id, flag) {
-        //清空按钮记录情况
-        this.mini_event_button_flag = new Object();
         //设置事件完成标记
         let global_flag_manage = global.get_global_flag_manage();
         if (flag == 'finish') {
-            //仅设置事件本身完成
+            //设置事件本身完成
             global_flag_manage.set_flag(event_id, true);
+            //触发“完成事件”行为
+            global_flag_manage.record_event_finish_end(event_id);
+            //在脑海-流水账里生成一条日志
             if (game_events[event_id].game_log_flag == true || game_events[event_id].game_log_flag == undefined) {
                 global_flag_manage.set_game_log('finish_event', event_id);
             }
@@ -51,6 +52,8 @@ export class Mini_event {
         //迷你事件退出原因设置短期游戏参数
         let SGS_flag_name = 'SGS_' + event_id;
         global_flag_manage.set_flag(SGS_flag_name, flag);
+
+        this.mini_event_button_flag = new Object(); //清空按钮记录情况
         //迷你事件结束，回到当前地点
         let place_manage = global.get_place_manage();
         let now_place_id = place_manage.get_now_place();

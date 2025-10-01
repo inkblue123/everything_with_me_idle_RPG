@@ -1,5 +1,5 @@
 import { crtElement, addElement, addElement_radio } from '../../Function/Dom_function.js';
-import { change_LGI_way } from '../../Function/show_func.js';
+// import {  } from '../../Function/show_func.js';
 import { global } from '../../GameRun/global_manage.js';
 
 //构建伐木技能的界面内容
@@ -20,7 +20,7 @@ function make_logging_div(LGI_value_div) {
     let LGI_drop_table_head = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_head', 'LP_div', '');
     LGI_drop_table_head.innerHTML = '可能的产物';
     let drop_table_scroll_box = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_scroll_box', 'LP_div overflow_y_div', '');
-    var LGI_drop_table_value_div = addElement(drop_table_scroll_box, 'div', 'LGI_drop_table_value_div', 'classification_div');
+    var LGI_drop_table_value_div = addElement(drop_table_scroll_box, 'div', 'LGI_drop_table_value_div', 'in_overflow_div');
     var drop_value = addElement(LGI_drop_table_value_div, 'div', null, 'drop_value');
     drop_value.innerHTML = '无';
 
@@ -35,7 +35,7 @@ function make_logging_div(LGI_value_div) {
     LGI_F_way_bar.children[0].children[0].style.width = '0%';
 
     var LGI_F_way_radio_div = addElement(LGI_M_L_div, 'div', null, 'radio_div LGI_radio_div');
-    addElement_radio(LGI_F_way_radio_div, `LGI_F_way`, 'LGI_switch', `LGI_F_way`, `快速伐木`);
+    addElement_radio(LGI_F_way_radio_div, 'LGI_F_way', 'LGI_switch', 'LGI_F_way', '快速伐木');
     LGI_F_way_radio_div.children[0].checked = true; //初始激活该按钮
     //中部中侧
     let LGI_M_M_div = addElement(LGI_middle_div, 'div', null, null);
@@ -48,20 +48,20 @@ function make_logging_div(LGI_value_div) {
     LGI_M_way_bar.children[0].children[0].style.width = '0%';
 
     var LGI_M_way_radio_div = addElement(LGI_M_M_div, 'div', null, 'radio_div LGI_radio_div');
-    addElement_radio(LGI_M_way_radio_div, `LGI_M_way`, 'LGI_switch', `LGI_M_way`, `精细伐木`);
+    addElement_radio(LGI_M_way_radio_div, 'LGI_M_way', 'LGI_switch', 'LGI_M_way', '精细伐木');
 
     //中部右侧
     var LGI_R_button = addElement(LGI_middle_div, 'button', 'LGI_R_button', 'LP_button');
-    LGI_R_button.innerHTML = `更换目标`;
+    LGI_R_button.innerHTML = '更换目标';
 
     //伐木下部，开始按钮
     let LGI_down_div = addElement(LGI_value_div, 'div', 'LGI_down_div', null, '');
     var LGI_S_button = addElement(LGI_down_div, 'button', 'LGI_S_button', 'LP_button', '');
     // var LGI_S_button = addElement(LGI_down_div, 'button', 'LGI_S_button', null, '');
-    LGI_S_button.innerHTML = `开始伐木`;
+    LGI_S_button.innerHTML = '开始伐木';
     var LGI_E_button = addElement(LGI_down_div, 'button', 'LGI_E_button', 'LP_button', 'none');
     // var LGI_E_button = addElement(LGI_down_div, 'button', 'LGI_E_button', null, 'none');
-    LGI_E_button.innerHTML = `停止伐木`;
+    LGI_E_button.innerHTML = '停止伐木';
 }
 
 //为伐木界面中的按钮添加交互逻辑
@@ -112,5 +112,19 @@ function set_logging_button(LGI_value_div) {
         LGI_E_button.style.display = 'none';
         logging_manage.updata_live_plan_data();
     };
+}
+//按下伐木界面的伐木策略按钮之后，切换界面显示
+function change_LGI_way(button_id) {
+    const LGI_F_way_bar = document.getElementById('LGI_F_way_bar');
+    const LGI_M_way_bar = document.getElementById('LGI_M_way_bar');
+    if (button_id == 'LGI_F_way') {
+        //快速伐木
+        LGI_F_way_bar.style.visibility = 'visible';
+        LGI_M_way_bar.style.visibility = 'hidden';
+    }
+    if (button_id == 'LGI_M_way') {
+        LGI_F_way_bar.style.visibility = 'hidden';
+        LGI_M_way_bar.style.visibility = 'visible';
+    }
 }
 export { make_logging_div, set_logging_button };
