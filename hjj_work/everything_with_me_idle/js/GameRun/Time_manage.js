@@ -6,9 +6,10 @@ export class Time_manage {
         //真实时间，取自Date.now()
         this.FPS;
         this.FPS_ms; //帧率对应的每次运行间隔时间，毫秒
+        this.run_flag = false;
         this.now_time; //当前真实时间
         this.start_time; //一帧开始时间
-        this.last_start_time; //上一帧开始时间
+        this.last_start_time = 0; //上一帧开始时间
         this.end_time; //一帧结束时间
         this.last_run_ms; //上一帧实际上运行了多久
         this.one_second_num; //一秒内运行的次数
@@ -72,19 +73,41 @@ export class Time_manage {
             this.one_second_num = 0;
         }
     }
+    updata_FPS_start_rAF() {
+        this.now_time = Date.now();
+        if (this.now_time - this.last_start_time >= this.FPS_ms) {
+            //更新游戏时间
+            let last_run_ms = this.now_time - this.last_start_time;
+            this.game_now_time = this.last_game_now_time + last_run_ms * this.game_speed;
+            this.last_game_now_time = this.game_now_time;
+            //更新游戏日期
+            this.updata_game_date(this.game_now_time);
+            this.last_start_time = this.now_time;
+            this.run_flag = true;
+        }
+        if (this.run_flag == true) {
+        }
+    }
+    updata_FPS_end_rAF() {
+        this.run_flag = false;
+    }
+    get_run_flag() {
+        return this.run_flag;
+    }
+
     //获取当前一帧还需要睡眠多长时间
     get_sleep_ms() {
         return this.sleep_ms;
     }
-    //获取当前真实时间
+    //获取当前真实时间（毫秒级）
     get_now_time() {
         return this.now_time;
     }
-    //获取当前游戏时间
+    //获取当前游戏时间（毫秒级）
     get_game_now_time() {
         return this.game_now_time;
     }
-    //获取当前游戏时间
+    //获取当前游戏速度
     get_game_speed() {
         return this.game_speed;
     }

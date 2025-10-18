@@ -37,14 +37,19 @@
     height: auto;
 }
 
-/* 背包界面-右侧容纳具体物品的div */
+/* 商品列表界面-右侧容纳具体物品的div */
 #PL_value_div {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap; /* 自动换行 */
 }
+#IBB_value_div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* 自动换行 */
+}
 /* 背包界面-右侧布局中具体的一个物品 */
-.PL_value {
+.goods_value {
     /* 每行两个元素 */
     width: 50%;
     /* background-color: #ffffff; */

@@ -177,7 +177,10 @@ export class Combat_manage {
         end_attack_num = main_Attack.attack_num;
         // 玩家行为记录
         global_flag_manage.record_active_skill_use(main_Attack.id, end_attack_damage);
-        global_flag_manage.record_combat_behavior(end_attack_num, end_attack_damage);
+        let combat_behavior = new Object();
+        combat_behavior.attack_num = end_attack_num;
+        combat_behavior.attack_damage = end_attack_damage;
+        global_flag_manage.record_combat_behavior(combat_behavior);
     }
     //敌人攻击玩家的战斗结果
     EAP_manage() {

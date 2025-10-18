@@ -30,7 +30,7 @@ function make_player_status_div(player_status) {
     //角色属性窗口
     {
         //展示角色血条和名称的布局;
-        var bar_div = crtElement('div', 'bar_div', 'page_columns_1', '');
+        var bar_div = crtElement('div', 'bar_div', null, '');
         //角色名
         var Player_name_div = addElement(bar_div, 'div', 'Player_name_div', 'page_columns_1'); //血条中，条的外框
         var Player_name = addElement(Player_name_div, 'input', 'Player_name', null); //血条中，条的外框
@@ -39,10 +39,8 @@ function make_player_status_div(player_status) {
         //血条组件
         var HP_bar = addElement(bar_div, 'div', 'HP_bar', 'progress_bar', '');
         var HP_frame = addElement(HP_bar, 'div', 'HP_frame', 'progress_bar_frame'); //血条中，条的外框
-        // HP_frame.innerHTML = 100;
         var HP_current = addElement(HP_frame, 'div', 'HP_current', 'progress_bar_current'); //血条中央，长度随当前血量变化的色块
         var HP_number = addElement(HP_bar, 'div', 'HP_number', 'progress_bar_number'); //血条上显示的数字，表示当前血量具体数值
-        // HP_number.innerHTML = 100;
         //蓝条组件
         var MP_bar = addElement(bar_div, 'div', 'MP_bar', 'progress_bar', '');
         var MP_frame = addElement(MP_bar, 'div', 'MP_frame', 'progress_bar_frame'); //条的外框
@@ -55,7 +53,7 @@ function make_player_status_div(player_status) {
         var ENP_number = addElement(ENP_bar, 'div', 'ENP_number', 'progress_bar_number'); //显示的数字，表示当前精力具体数值
 
         //容纳玩家属性+玩家装备的布局
-        var attr_equip_div = crtElement('div', 'attr_equip_div', 'page_columns_1', '');
+        var attr_equip_div = crtElement('div', 'attr_equip_div', null, '');
         //属性展示组件
         var attribute_show = addElement(attr_equip_div, 'div', 'attribute_show', 'page_columns_11', '');
         var combat_attribute_show = addElement(attribute_show, 'div', 'combat_attribute_show', 'page_columns_111');
@@ -83,8 +81,8 @@ function make_player_status_div(player_status) {
         }
 
         //切换属性和装备栏的按钮
-        var Player_attr_switch_div = crtElement('div', 'Player_attr_switch_div', 'page_columns_12', '');
-        var PA_switch_div = addElement(Player_attr_switch_div, 'div', 'PA_switch_div', 'page_columns_1');
+        var Player_attr_switch_div = crtElement('div', 'Player_attr_switch_div', null, '');
+        var PA_switch_div = addElement(Player_attr_switch_div, 'div', 'PA_switch_div', null);
         var PA_switch_button = addElement(PA_switch_div, 'button', 'PA_switch_button', 'PA_switch_button', 'none');
         PA_switch_button.innerHTML = '属性\n展示';
         var EQP_switch_button = addElement(PA_switch_div, 'button', 'EQP_switch_button', 'PA_switch_button', '');
@@ -100,7 +98,6 @@ function make_player_status_div(player_status) {
         //默认激活第一个装备栏
         EQP_switch_div.children[0].children[0].checked = true;
         //组件放入角色属性装备界面中
-        // player_status.appendChild(player_status_switch);
         PAB_div.appendChild(bar_div);
         PAB_div.appendChild(attr_equip_div);
         PAB_div.appendChild(Player_attr_switch_div);

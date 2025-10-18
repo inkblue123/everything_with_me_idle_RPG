@@ -1,7 +1,7 @@
 import { texts } from '../Text/Text.js';
 import { add_Consumable_object } from './Item_class.js';
 
-//初始化物品数据库中与消耗品相关的文本
+//初始化物品数据库中与消耗品相关的内容
 function init_Item_Consumable(items) {
     //食材
     init_ingredient(items);
@@ -29,6 +29,9 @@ function init_Item_Consumable(items) {
 
     //鱼饵
     init_bait(items);
+    //探索消耗品
+    init_exploration_consumable(items);
+
     //宝箱
     init_treasure_chest(items);
     //凡间钱币
@@ -183,6 +186,16 @@ function init_bait(items) {
     // add_Consumable_object(items, id);
     // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
 }
+//探索消耗品
+function init_exploration_consumable(items) {
+    let id;
+    let secon_type = 'exploration_consumable'; //消耗品大类中的宝箱小类
+
+    // id = 'AAAA'; //
+    // add_Consumable_object(items, id);
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+}
+
 //宝箱
 function init_treasure_chest(items) {
     let id;

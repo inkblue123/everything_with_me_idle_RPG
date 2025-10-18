@@ -3,7 +3,7 @@ import { load_save } from '../../LoadAndSave/load.js';
 
 import { texts } from '../../Data/Text/Text.js';
 
-const TOOLTIP_WIDTH = 320;
+const TOOLTIP_WIDTH = 360;
 
 function init_game_save_tip(type, value) {
     if (type == 'load_save') {
@@ -71,15 +71,6 @@ function init_load_save_tip(value) {
         Tooltip.CloseTip(); //清空小窗口
     });
 }
-// //初始化导入存档窗口
-// function init_save_game_tip(value) {
-//     //提示框扩大到整个窗口大小
-//     Tooltip_full_windows();
-//     //添加其中布局
-//     //点击了非中央div的时候关闭这个界面
-//     //中央界面的布局
-// }
-
 //初始化“导出存档”提示框
 function init_save_game_tip(value) {
     let Tooltip = document.getElementById('tooltip');

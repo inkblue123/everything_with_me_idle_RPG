@@ -38,6 +38,7 @@ function fishing_div_text(texts) {
     add_text_object(texts, id);
     texts[id].NO_FIS_text = '';
     texts[id].WAIT_FIS_text = '开始钓鱼<br>等鱼上钩';
+    texts[id].WAIT_FIS_no_tool_text = '开始钓鱼<br>随手拿了一根树枝<br>等鱼咬枝';
     texts[id].WALK_FIS_text = '鱼已咬钩<br>正在遛鱼';
     texts[id].FINISH_FIS_text = '鱼钓上来了<br>钓到的是';
     texts[id].RUN_FIS_text = '哎呀';

@@ -1,4 +1,5 @@
 import { hide_div, Gradient_div } from '../Function/Dom_function.js';
+import { start_game_loop } from '../GameRun/run_manage.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 
@@ -16,8 +17,8 @@ function init_game() {
         console.log('%s', save_str);
         let save_obj = JSON.parse(save_str);
         //用存档对象里的内容加载游戏
-        global.load_global_manage(save_obj.global_save);
         player.load_player_class(save_obj.player_save);
+        global.load_global_manage(save_obj.global_save);
     } else {
         //没有存档文件，进行新游戏初始化
         new_game_init();
@@ -53,13 +54,14 @@ function load_save_show_tip() {
     let tooltip = document.getElementById('tooltip');
     tooltip.InitTip('load_save', null);
 }
-//导入存档功能-加载密文存档
+//导入存档功能-加载存档数据，重新开始游戏
 function load_save(save_str) {
     let save_obj;
     if (save_str.indexOf('global_save') != -1) {
         //输入内容是明文字符串存档
         //字符串->对象->字符串，去掉多于的换行和空格
         save_str = JSON.stringify(JSON.parse(save_str));
+        console.log('%s', save_str);
         //用base64加密
         let b64_save_str = utf8_to_b64(save_str);
         console.log('%s', b64_save_str);
@@ -82,14 +84,18 @@ function load_save(save_str) {
 
     //针对新游戏开场剧情的处理
     if (!global.get_flag('new_game_start')) {
-        //如果没完成开场剧情，需要将游戏恢复成普通状态
+        //如果没完成开场剧情就读档，需要将游戏恢复成普通状态
+        finish_new_game_init();
+    } else {
+        //其他情况下读档，也需要将游戏恢复到普通状态
         finish_new_game_init();
     }
-    //如果完成了开场剧情，则正常读档
 
     //用存档对象里的内容加载游戏
-    global.load_global_manage(save_obj.global_save);
     player.load_player_class(save_obj.player_save);
+    global.load_global_manage(save_obj.global_save);
+    //重新启动游戏循环
+    start_game_loop();
 }
 
 //开始新游戏，进行开场剧情的准备
@@ -98,6 +104,7 @@ function new_game_init() {
     hide_div('player_status');
     hide_div('Combat_plan');
     hide_div('Live_plan');
+    hide_div('Store');
     hide_div('map');
     hide_div('game_log');
     hide_div('control_name_left_div');
@@ -119,7 +126,9 @@ function finish_new_game_init() {
     Gradient_div('player_status');
     Gradient_div('Combat_plan');
     Gradient_div('Live_plan');
+    Gradient_div('Store');
     Gradient_div('map');
+    Gradient_div('control');
     Gradient_div('game_log');
     Gradient_div('control_name_left_div');
     Gradient_div('control_name_right_div');
@@ -129,9 +138,6 @@ function finish_new_game_init() {
     //当前地点
     let place_manage = global.get_place_manage();
     place_manage.set_now_place('village_hospital');
-    //
-    // let game_event_manage = global.get_game_event_manage();
-    // game_event_manage.start_mini_event('village_home');
 }
 //把明文字符串转换成base64编码
 function utf8_to_b64(str) {

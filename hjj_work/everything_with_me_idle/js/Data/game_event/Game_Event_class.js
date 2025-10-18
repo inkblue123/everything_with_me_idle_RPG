@@ -1,4 +1,5 @@
 import { texts } from '../Text/Text.js';
+import { items } from '../Item/Item.js';
 import { is_Empty_Object } from '../../Function/Function.js';
 
 export class Game_Event {
@@ -168,16 +169,21 @@ export class Mini_event extends Game_Event {
             thing_obj[thing_type] = new Array();
         }
         if (thing_type == 'get_item') {
-            //给予玩家物品
-            if (thing_value.length % 3 != 0) {
-                console.log('给予物品时没有给3的倍数的参数，需要确认输入是否正确');
-                return;
-            }
-            for (let i = 0; i < thing_value.length; i += 3) {
+            //给予玩家物品，虽然逻辑理论上是可以一个函数赋值几个物品的，但是感觉容易错漏，外面定义的时候还是尽量一次只传一个物品吧
+            for (let i = 0; i < thing_value.length; ) {
+                let id = thing_value[i];
+                let num = thing_value[i + 1];
                 let aitem = new Object();
-                aitem.id = thing_value[i];
-                aitem.num = thing_value[i + 1];
-                aitem.equip_rarity = thing_value[i + 2];
+                aitem.id = id;
+                aitem.num = num;
+
+                if (items[id].main_type.includes('equipment')) {
+                    aitem.equip_rarity = thing_value[i + 2];
+                    i += 3;
+                } else {
+                    i += 2;
+                }
+
                 thing_obj[thing_type].push(aitem);
             }
         } else if (thing_type == 'get_skill') {

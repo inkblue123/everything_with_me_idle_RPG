@@ -1,7 +1,25 @@
 import { add_Mini_event_obj } from './Game_Event_class.js';
 
 function init_mini_event(game_events) {
-    let id = 'new_player_teach_1'; //周一新手教学
+    let id;
+
+    id = 'find_village_home_money'; //翻找住所寻找可用资源
+    add_Mini_event_obj(game_events, id);
+    //该迷你事件出现的条件
+    game_events[id].set_conditions_appear('find_village_home_money', false); //事件没做过
+    //该迷你事件的所有流程
+    game_events[id].set_new_process('first', 'text1');
+    game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1
+    game_events[id].add_process_button_click('first', 'b1', 'next_process', 'process1'); //b1按钮点击之后进入下一流程
+    game_events[id].add_process_button_thing('first', 'b1', 'get_skill', 'lucky_finder'); //给予采集的技能经验
+    game_events[id].set_new_process('process1', 'text3');
+    game_events[id].add_process_button('process1', 'b2', 'text4');
+    game_events[id].add_process_button_click('process1', 'b2', 'next_process', 'end');
+    game_events[id].add_process_button_thing('process1', 'b2', 'get_item', 'sliver_coin', 1); //给予物品
+    game_events[id].add_process_button_thing('process1', 'b2', 'get_item', 'copper_coin', 325); //给予物品
+    game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
+
+    id = 'new_player_teach_1'; //周一新手教学
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
     game_events[id].set_conditions_appear('UGS_village_barracks_week', 1);

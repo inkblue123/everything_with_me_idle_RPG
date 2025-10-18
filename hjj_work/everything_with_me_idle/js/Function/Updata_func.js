@@ -34,23 +34,40 @@ function updata_attribute_show() {
     //战斗属性中，前5个是攻击属性
     let i = 0;
     for (let id of enums.combat_attack_attr) {
-        let ch = texts[id].attr_name + '\n' + P_attr.get_data_attr(id);
+        let ch = get_attr_ch(id, P_attr.get_data_attr(id));
         combat_attr_show.children[i].innerText = ch;
         i++;
     }
     //然后是4个是防御属性
     for (let id of enums.combat_defense_attr) {
-        let ch = texts[id].attr_name + '\n' + P_attr.get_data_attr(id);
+        let ch = get_attr_ch(id, P_attr.get_data_attr(id));
         combat_attr_show.children[i].innerText = ch;
         i++;
     }
     //7个玩家基础属性
     i = 0;
     for (let id of enums.player_base_attr) {
-        let ch = texts[id].attr_name + '\n' + P_attr.get_data_attr(id);
+        let ch = get_attr_ch(id, P_attr.get_data_attr(id));
         player_base_attr.children[i].innerText = ch;
         i++;
     }
+}
+//获取一条属性呈现到屏幕上的文本
+function get_attr_ch(attr_id, attr_data) {
+    if (is_Empty_Object(texts[attr_id])) {
+        console.log('%s属性名称未定义', attr_id);
+    }
+
+    let ch = texts[attr_id].attr_name;
+
+    if (enums['need_per_cent_attr'].includes(attr_id)) {
+        ch += '\n' + attr_data + '%';
+    } else if (enums['need_second_attr'].includes(attr_id)) {
+        ch += '\n' + attr_data + '秒';
+    } else {
+        ch += '\n' + attr_data;
+    }
+    return ch;
 }
 //玩家主动技能变动，调整相关布局的展示
 function updata_player_active_slots_num() {

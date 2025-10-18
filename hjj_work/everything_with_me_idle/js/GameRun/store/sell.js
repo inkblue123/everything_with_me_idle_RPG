@@ -28,6 +28,10 @@ export class Sell_Manage {
         //清空待出售界面
         this.updata_sell_value_div();
     }
+    //对商店管理类存档
+    save_sell_manage() {}
+    //加载商店存档
+    load_sell_manage(sell_save) {}
     //添加玩家将要出售的物品
     set_player_sell_goods(item_obj) {
         let item_key = get_item_id_key(item_obj);
@@ -68,12 +72,12 @@ export class Sell_Manage {
             let id = sell_good_obj.id;
             //物品没有定义价值，跳过处理
             if (is_Empty_Object(items[id].price)) {
-                console.log('%s物品没有定义价值');
+                // console.log('%s物品没有定义价值', id);
                 continue;
             }
             //物品没有定义当前商人使用的货币种类的价值，跳过处理
             if (is_Empty_Object(items[id].price[this.money_type])) {
-                console.log('%s物品没有定义%s类型货币的价值', id, this.money_type);
+                // console.log('%s物品没有定义%s类型货币的价值', id, this.money_type);
                 continue;
             }
             let num = sell_good_obj.num;
@@ -88,6 +92,18 @@ export class Sell_Manage {
     //获取当前所有出售物品的总价值
     get_all_sell_price() {
         return this.sell_price[this.money_type];
+    }
+    //获取玩家待出售界面中指定货币的总金额
+    get_sell_money_type_num(money_type) {
+        let money = 0;
+        let arr = Object.keys(this.player_sell_goods); //将拥有的物品的key转换成一个数组
+        for (let item_key of arr) {
+            let id = this.player_sell_goods[item_key].id;
+            if (items[id].secon_type.includes(money_type)) {
+                money += this.player_sell_goods[item_key].num * items[id].price[money_type];
+            }
+        }
+        return money;
     }
     //获取玩家出售指定物品应该得到的收入
     //num是玩家要出售的物品的指定数量
@@ -115,7 +131,7 @@ export class Sell_Manage {
         //针对装备的稀有度，重算价值和堆叠数
         if (items[id].main_type.includes('equipment')) {
             let equip_rarity = item_obj.equip_rarity;
-            let rarity_place_data = enums[equip_rarity].price_data;
+            let rarity_place_data = enums[equip_rarity].price_rate;
             base_price = base_price * rarity_place_data * 0.01;
             maxStack = maxStack * 5;
         }
@@ -230,5 +246,28 @@ export class Sell_Manage {
                 tooltip.CloseTip(); //清空小窗口
             }
         });
+    }
+    //达成交易，待出售物品放入当前商店的回购列表
+    complete_trade() {
+        let store_manage = global.get_store_manage();
+        let buyback_manage = store_manage.get_buyback_manage();
+        for (let item_key in this.player_sell_goods) {
+            if (this.player_sell_goods.num <= 0) {
+                continue;
+            }
+            //从玩家背包中去掉这个物品
+            player.Player_lose_item(this.player_sell_goods[item_key]);
+            //放入回购列表
+            buyback_manage.add_store_Item_buy_back_goods(this.player_sell_goods[item_key]);
+        }
+        //刷新商店的回购列表
+        buyback_manage.updata_store_IBB_value_div();
+        //清空待出售物品
+        this.player_sell_goods = new Object();
+        //重置价值
+        this.sell_price = new Object();
+        this.sell_price[this.money_type] = 0;
+        //清空待出售界面
+        this.updata_sell_value_div();
     }
 }

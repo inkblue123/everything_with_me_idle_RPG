@@ -1,5 +1,6 @@
 import { texts } from '../Text/Text.js';
 import { enums } from '../Enum/Enum.js';
+import { get_uniqueArr, is_Empty_Object } from '../../Function/Function.js';
 
 //物品通用属性
 class Item {
@@ -73,13 +74,13 @@ class Equipment extends Item {
         this.equip_min_threshold = new Object(); //装备的最低使用属性
         this.equip_max_threshold = new Object(); //装备的最高使用属性
         this.equip_attr = new Object(); //装备后能提供的属性
-        this.equip_effect = new Object(); //装备后能提供的被动
     }
     //为这个物品填写装备特有的属性
     //e_type：武器装备分支下的小类型
     //maxStack：装备的堆叠数量，默认1
-    //special是否属于特制武器，默认否
-    init_Equipment(e_type, maxStack = 1, special = false) {
+    //special：是否属于特制武器，默认否
+    //attack_interval：攻击间隔，默认2
+    init_Equipment(e_type, maxStack = 1, special = false, attack_interval = 2) {
         //装备小类
         if (e_type) {
             if (typeof e_type == 'object') {
@@ -111,59 +112,72 @@ class Equipment extends Item {
             } else {
                 console.log('该装备的小分类%s不明，需要重新定义', e_type);
             }
+            //手弩可以同时放在主手和副手
+            if (ee_type == 'hand_gun') {
+                this.wearing_position.push('deputy');
+            }
         }
-
-        //手弩可以同时放在主手和副手
-        if (e_type == 'hand_gun') {
-            this.wearing_position.push('deputy');
+        // 去重
+        this.wearing_position = get_uniqueArr(this.wearing_position);
+        if (this.wearing_position.includes('main_hand') && this.wearing_position.includes('main_hand_two')) {
+            console.log('装备不可以同时属于主手和双手，%s装备异常', this.id);
         }
         //堆叠数量
-        if (maxStack) {
-            this.maxStack = maxStack;
-        }
+        this.maxStack = maxStack;
         //制式武器或者特制武器的标记
         if (special) {
+            //特制武器，稀有度设置到传说
             this.special = special;
+            for (let rarity of enums['special_rarity']) {
+                this.equip_attr[rarity] = new Object();
+            }
+        } else {
+            //制式武器，稀有度设置到史诗
+            for (let rarity of enums['no_special_rarity']) {
+                this.equip_attr[rarity] = new Object();
+            }
         }
+        //攻击间隔
+        this.equip_attr['ordinary']['attack_interval'] = attack_interval;
     }
     //为这个物品填写穿戴之后可以获得的攻击属性
-    //攻击，精准，暴击率，暴击伤害，攻击速度
-    init_Equipment_attack_attr(attack, precision, critical_chance, critical_damage, attack_speed) {
-        this.equip_attr['attack'] = attack;
-        this.equip_attr['precision'] = precision;
-        this.equip_attr['critical_chance'] = critical_chance;
-        this.equip_attr['critical_damage'] = critical_damage;
-        this.equip_attr['attack_speed'] = attack_speed;
+    //攻击，精准，暴击率，暴击伤害，攻击速度加成
+    init_Equipment_attack_attr(rarity, attack, precision, critical_chance, critical_damage, attack_speed) {
+        this.equip_attr[rarity]['attack'] = attack;
+        this.equip_attr[rarity]['precision'] = precision;
+        this.equip_attr[rarity]['critical_chance'] = critical_chance;
+        this.equip_attr[rarity]['critical_damage'] = critical_damage;
+        this.equip_attr[rarity]['attack_speed'] = attack_speed;
     }
     //为这个物品填写穿戴之后可以获得的防御属性
     //防御，闪避，抵抗力，移动速度
-    init_Equipment_defense_attr(defense, evade, resistance_point, move_speed) {
-        this.equip_attr['defense'] = defense;
-        this.equip_attr['evade'] = evade;
-        this.equip_attr['resistance_point'] = resistance_point;
-        this.equip_attr['move_speed'] = move_speed;
+    init_Equipment_defense_attr(rarity, defense, evade, resistance_point, move_speed) {
+        this.equip_attr[rarity]['defense'] = defense;
+        this.equip_attr[rarity]['evade'] = evade;
+        this.equip_attr[rarity]['resistance_point'] = resistance_point;
+        this.equip_attr[rarity]['move_speed'] = move_speed;
     }
     //为这个物品填写穿戴之后可以获得的生存属性
     //最大血量上限，最大魔力上限，最大精力上限
-    init_Equipment_survival_attr(health_max, magic_max, energy_max) {
-        this.equip_attr['health_max'] = health_max;
-        this.equip_attr['magic_max'] = magic_max;
-        this.equip_attr['energy_max'] = energy_max;
+    init_Equipment_survival_attr(rarity, health_max, magic_max, energy_max) {
+        this.equip_attr[rarity]['health_max'] = health_max;
+        this.equip_attr[rarity]['magic_max'] = magic_max;
+        this.equip_attr[rarity]['energy_max'] = energy_max;
     }
     //为这个物品填写穿戴之后可以获得的玩家基础属性
     //体格，经脉，魂魄，力量，敏捷，智力，技巧
-    init_Equipment_player_base_attr(physique, Meridians, soul, power, agile, intelligence, technique) {
-        this.equip_attr['physique'] = physique;
-        this.equip_attr['Meridians'] = Meridians;
-        this.equip_attr['soul'] = soul;
-        this.equip_attr['power'] = power;
-        this.equip_attr['agile'] = agile;
-        this.equip_attr['intelligence'] = intelligence;
-        this.equip_attr['technique'] = technique;
+    init_Equipment_player_base_attr(rarity, physique, Meridians, soul, power, agile, intelligence, technique) {
+        this.equip_attr[rarity]['physique'] = physique;
+        this.equip_attr[rarity]['Meridians'] = Meridians;
+        this.equip_attr[rarity]['soul'] = soul;
+        this.equip_attr[rarity]['power'] = power;
+        this.equip_attr[rarity]['agile'] = agile;
+        this.equip_attr[rarity]['intelligence'] = intelligence;
+        this.equip_attr[rarity]['technique'] = technique;
     }
     //为这个物品设置属性级别,自动填充对应类型的属性
     //可能会给某些不应该填的属性填上数值
-    set_attr_level(level, attr_type) {
+    set_attr_level(level, attr_type, secon_type = null) {
         //枚举库中没有该等级的预设，直接结束
         if (enums.equipment_attr_level[level] == undefined) {
             console.log('预设装备属性时，枚举库没有%s等级的预设', level);
@@ -174,13 +188,18 @@ class Equipment extends Item {
             console.log('预设装备属性时，枚举库没有%s类型的预设', attr_type);
             return;
         }
-        //复合类型装备或者未定义类型的装备，不支持属性预设，直接结束
-        if (this.secon_type.length != 1) {
-            console.log('预设装备属性时，复合类型装备或者未定义类型的装备不支持属性预设');
-            return;
+        let e_type;
+        if (is_Empty_Object(secon_type)) {
+            //复合类型装备或者未定义类型的装备，不支持属性预设，直接结束
+            if (this.secon_type.length != 1) {
+                console.log('预设装备属性时，复合类型装备或者未定义类型的装备不支持属性预设');
+                return;
+            }
+            e_type = this.secon_type[0];
+        } else {
+            //调用指定的装备小类
+            e_type = secon_type;
         }
-        //获取装备小类
-        let e_type = this.secon_type[0];
         //枚举库中没有对该装备类型设置属性倾向，直接结束
         if (enums.equipment_type_attr_Presets[e_type] == undefined) {
             console.log('预设装备属性时，枚举库中没有对该装备类型设置属性倾向');
@@ -198,13 +217,15 @@ class Equipment extends Item {
             }
             Level_attr = Level_attr[damage_type];
         }
+
         //获取属性倾向
         let attr_Presets = enums.equipment_type_attr_Presets[e_type];
 
         //获取需要填的属性名称，例如攻击攻速暴击
         let need_attr_name;
         if (attr_type == 'attack') {
-            need_attr_name = enums['combat_attack_attr'];
+            // need_attr_name = enums['combat_attack_attr'];
+            need_attr_name = ['attack', 'precision', 'critical_chance', 'critical_damage'];
         }
         if (attr_type == 'defense') {
             need_attr_name = enums['combat_defense_attr'];
@@ -226,7 +247,22 @@ class Equipment extends Item {
             //获取level等级下，属性倾向的具体数值
             let num = Level_attr[attr_name][Presets];
             //赋值
-            this.equip_attr[attr_name] = num;
+            this.equip_attr['ordinary'][attr_name] = num;
+        }
+    }
+    //自动设置所有稀有度的最基本的属性值
+    auto_set_all_rarity_attr() {
+        for (let rarity in this.equip_attr) {
+            let attr_rate = enums[rarity].attr_rate;
+            for (let attr_name in this.equip_attr['ordinary']) {
+                if (attr_name == 'attack_interval') {
+                    //不同稀有度的攻击间隔一致，如果需要自定义需要手动设置
+                    this.equip_attr[rarity][attr_name] = this.equip_attr['ordinary'][attr_name];
+                } else {
+                    //其他属性正常
+                    this.equip_attr[rarity][attr_name] = this.equip_attr['ordinary'][attr_name] * attr_rate * 0.01;
+                }
+            }
         }
     }
 }

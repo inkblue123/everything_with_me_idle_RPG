@@ -16,7 +16,8 @@ export class Place {
         this.connect_store_place = new Array(); //可以联通的商店
         this.connect_other_place = new Array(); //可以联通的其他地点
         this.place_NPC = new Array(); //位于此处的NPC
-        this.condition_event = new Array();
+        this.condition_event = new Array(); //条件可执行事件
+        this.condition_behaviors = new Array(); //条件可执行行动
         this.live_plan_flag = new Array(); //这个地点可以执行的生活技能标记
         this.init_Place_name_desc(place_id);
         this.set_area(area_id); //设置这个地点的所属区域
@@ -108,7 +109,8 @@ export class Place {
             }
         }
     }
-    //添加在这个地点有条件触发的事件
+    //添加在这个地点满足条件自动触发的事件
+    //这个条件保存在地点库中
     add_condition_trigger_event(...value) {
         if (value.length < 3 || value.length % 2 != 1) {
             console.log('参数数量错误，至少输入3个参数，且应该是奇数个参数');
@@ -125,6 +127,13 @@ export class Place {
             condition_event_obj.status.push(status_obj);
         }
         this.condition_event.push(condition_event_obj);
+    }
+    //添加在这个地点满足条件时才在控制界面添加按钮才可以做的行动
+    //这个条件与事件绑定，地点库中不保存条件
+    add_condition_behavior(...value) {
+        for (let event_id of value) {
+            this.condition_behaviors.push(event_id);
+        }
     }
 }
 //普通地点
@@ -345,7 +354,7 @@ export class P_NPC extends Place {
         super(place_id, area_id);
         this.type = 'NPC';
         this.behaviors = new Array(); //常态可执行行动
-        this.condition_behaviors = new Array(); //条件可执行行动
+
         this.condition_meet_chat = new Array(); //条件见面对话
         if (is_Empty_Object(texts[place_id])) {
             console.log('未定义NPC地点%s的文本信息', place_id);
@@ -357,13 +366,6 @@ export class P_NPC extends Place {
     add_behavior(...args) {
         for (let id of args) {
             this.behaviors.push(id);
-        }
-    }
-    //添加在这个npc面前满足条件才可以做的行动，满足条件时才在控制界面添加按钮
-    //条件与事件绑定，地点库中不保存条件
-    add_condition_behavior(...value) {
-        for (let event_id of value) {
-            this.condition_behaviors.push(event_id);
         }
     }
     //初始化见面时满足条件才说的话
@@ -407,6 +409,9 @@ export class P_store extends Place {
             //物品是装备，args内参数的含义按以下顺序排列：
             //稀有度
             let equip_rarity = args[0];
+            if (equip_rarity === undefined) {
+                console.log('装备商品没有定义稀有度');
+            }
             good_obj = get_item_obj(id, 1, equip_rarity);
         } else if (items[id].main_type.includes('material')) {
             good_obj = get_item_obj(id, 1);
@@ -428,6 +433,11 @@ export class P_store extends Place {
         } else if (type == 'random') {
             this.random_goods[item_key] = good_obj;
         }
+    }
+    //设置商人清理回购商品列表的参数
+    set_clearance_data(clearance_time, clearance_num) {
+        this.clearance_time = clearance_time; //清理回购商品时间间隔
+        this.clearance_num = clearance_num; //清理回购商品的数量
     }
 }
 //资源地点

@@ -40,7 +40,7 @@ export class Enemy {
         this.attack_attr['precision'] = precision; //精准
         this.attack_attr['critical_chance'] = critical_chance; //暴击率，百分制，具体计算时会除以100
         this.attack_attr['critical_damage'] = critical_damage; //暴击伤害，百分制，具体计算时会除以100
-        this.attack_attr['attack_speed'] = attack_speed; //攻速
+        this.attack_attr['attack_speed'] = attack_speed; //攻速加成
     }
     init_defense_attr(defense, evade, resistance_point, move_speed) {
         this.defense_attr['defense'] = defense; //防御

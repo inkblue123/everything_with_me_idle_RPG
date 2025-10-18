@@ -10,7 +10,6 @@
 /* 生活规划n个子界面的切换按钮的div */
 #Live_plan_switch_div {
     height: 10%;
-    background-color: #ffd700;
 }
 /* 生活规划n个子界面的切换按钮 */
 .Live_plan_switch_button {
@@ -27,9 +26,9 @@
     background-color: rgb(255, 0, 0);
 } */
 
-/* 合成制造界面-容纳战斗规划全部内容的div */
+/* 合成制造界面-容纳全部内容的div */
 #SM_div {
-    background-color: rgb(72, 255, 0);
+    /* background-color: rgb(72, 255, 0); */
 }
 
 .LP_div {
@@ -46,13 +45,8 @@
 
 /* 未解锁任何生活技能时的填充页 */
 #lock_all_Live_plan_div {
-    /* position: absolute; */
-    /* top: 0; */
-    /* left: 0; */
     width: 100%;
     height: 100%;
-    /* background-color: rgba(0, 0, 0, 0.5); */
-    /* z-index: 1; */
     /* 字体居中 */
     display: flex;
     justify-content: center;

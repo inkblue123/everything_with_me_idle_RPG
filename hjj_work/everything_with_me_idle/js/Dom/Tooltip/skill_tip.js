@@ -8,7 +8,7 @@ import { P_skills, B_skills } from '../../Data/Skill/Skill.js';
 import { player } from '../../Player/Player.js';
 // import { Tooltip } from './Tooltip.js';
 
-const TOOLTIP_WIDTH = 320;
+const TOOLTIP_WIDTH = 360;
 
 function init_skill_tip(type, value) {
     if (type == 'active_skill') {
@@ -204,8 +204,8 @@ function init_show_passive_skill_tip(skill_obj) {
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
     name_lable.innerHTML = skill_obj.name; //技能名
     //描述
-    // let desc_lable = addElement(Tooltip, 'div', null, 'lable_down');
-    // desc_lable.innerHTML = skill_obj.desc; //技能描述
+    let desc_lable = addElement(Tooltip, 'div', null, 'lable_down');
+    desc_lable.innerHTML = skill_obj.desc; //技能描述
     //被动技能类型和等级
     show_passive_skill_type(Tooltip, skill_obj);
     //追加展示技能等级相关
@@ -296,17 +296,13 @@ function show_passive_skill_rewards(div, rewards) {
         //如果常态等级的加成只有一条属性，就直接居中显示
         let rewards_div = addElement(div, 'div', null, 'lable_down');
         let attr_id = rewards[0].attr;
-        let attr_name = get_attr_name(attr_id);
-        let ch;
-        if (enums['need_per_cent_attr'].includes(attr_id)) {
-            ch = attr_name + '：' + rewards[0].data + '%';
-        } else {
-            ch = attr_name + '：' + rewards[0].data;
-        }
-        rewards_div.innerHTML = ch;
+        let attr_data = rewards[0].data;
+        let attr_ch = get_attr_ch(attr_id, attr_data); //呈现到屏幕的属性文本
+        rewards_div.innerHTML = attr_ch;
     } else {
         //如果有多条属性，就每行两个依次往下排列
-        let rewards_div = addElement(div, 'div', null, 'page_columns_11');
+        let rewards_div = addElement(div, 'div', null, 'lable_end');
+        // let rewards_div = addElement(div, 'div', null, 'page_columns_11');
         for (let reward_obj of rewards) {
             let attr_div = addElement(rewards_div, 'div', null, 'table_2_value');
 
@@ -329,26 +325,30 @@ function show_passive_skill_milepost(div, skill_obj) {
     if (is_Empty_Object(P_skills[skill_id].milepost)) {
         return true;
     }
-    let milepost_div = addElement(div, 'div', null, 'lable_end');
 
     for (let milepost_level in P_skills[skill_id].milepost) {
         if (skill_obj.level >= milepost_level) {
             //玩家达到了的关键节点，显示对应数值
-            let ch = '等级' + milepost_level + '奖励：';
+            let a_milepost_div = addElement(div, 'div', null, 'TLV_space_evenly_div');
+            let L_div = addElement(a_milepost_div, 'div', null, 'TLV_left');
+            let R_div = addElement(a_milepost_div, 'div', null, 'TLV_left');
+
+            L_div.innerHTML = '等级' + milepost_level + '奖励：';
+
+            let ch = '';
             let milepost_array = P_skills[skill_id].milepost[milepost_level];
             for (let i in milepost_array) {
                 let obj = milepost_array[i];
                 let attr_id = obj.attr;
-                let attr_name = get_attr_name(attr_id); //属性名
                 let attr_data = obj.data; //属性数值
+                let attr_ch = get_attr_ch(attr_id, attr_data); //属性名
                 if (i == 0) {
-                    ch = ch + attr_name + '：' + attr_data;
+                    ch = ch + attr_ch;
                 } else {
-                    ch = ch + '，' + attr_name + '：' + attr_data;
+                    ch = ch + '<br>' + attr_ch;
                 }
             }
-            let a_milepost_div = addElement(milepost_div, 'div', null, 'lable_down');
-            a_milepost_div.innerHTML = ch;
+            R_div.innerHTML = ch;
         } else {
             //玩家没达到的关键节点，用问号显示，且只显示一条
             let a_milepost_div = addElement(milepost_div, 'div', null, 'lable_down');
@@ -370,6 +370,33 @@ function get_attr_name(attr_id) {
     attr_name = texts[attr_id].attr_name;
     // }
     return attr_name;
+}
+//获取一条属性呈现到屏幕上的文本
+function get_attr_ch(attr_id, attr_data) {
+    if (is_Empty_Object(texts[attr_id])) {
+        console.log('%s属性名称未定义', attr_id);
+        return '未定义属性名：' + attr_data;
+    }
+    if (is_Empty_Object(texts[attr_id].attr_name)) {
+        console.log('%s属性名称未定义', attr_id);
+        return '未定义属性名：' + attr_data;
+    }
+
+    let ch = texts[attr_id].attr_name + '：';
+
+    if (attr_data > 0) {
+        ch += '+' + attr_data;
+    } else {
+        ch += '-' + attr_data;
+    }
+
+    if (enums['need_per_cent_attr'].includes(attr_id)) {
+        ch += '%';
+    } else if (enums['need_second_attr'].includes(attr_id)) {
+        ch += '秒';
+    }
+
+    return ch;
 }
 
 export { init_skill_tip };

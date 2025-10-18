@@ -1,5 +1,5 @@
 import { init_game } from './LoadAndSave/load.js';
-import { state_game } from './GameRun/run_manage.js';
+import { start_game_loop } from './GameRun/run_manage.js';
 import { game_data_init } from './Data/Data.js';
 import { create_game_dom, init_game_dom } from './Dom/Dom.js';
 import { global } from './GameRun/global_manage.js';
@@ -22,5 +22,5 @@ window.addEventListener('load', () => {
 
     //启动第四个类，游戏运行类，
     //负责按帧计算游戏内的数据，每帧更新一次游戏各个界面
-    state_game();
+    start_game_loop();
 });

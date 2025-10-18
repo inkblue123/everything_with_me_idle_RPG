@@ -206,16 +206,21 @@ export class Global_flag_manage {
         game_event_manage.record_defense_skill_effect(id);
     }
     //玩家行为-战斗数据记录
-    record_combat_behavior(attack_num, attack_damage) {
+    record_combat_behavior(combat_behavior) {
         // let game_event_manage = global.get_game_event_manage();
         // game_event_manage.record_active_skill_use(id);
         let exp_manage = global.get_exp_manage();
-        exp_manage.set_combat_leveling_behavior(attack_num, attack_damage);
+        exp_manage.set_combat_leveling_behavior(combat_behavior);
     }
     //玩家行为-伐木行为记录
-    record_logging_behavior(LGI_damage) {
+    record_logging_behavior(logging_behavior) {
         let exp_manage = global.get_exp_manage();
-        exp_manage.set_logging_leveling_behavior(LGI_damage);
+        exp_manage.set_logging_leveling_behavior(logging_behavior);
+    }
+    //玩家行为-钓鱼行为记录
+    record_fishing_behavior(fishing_behavior) {
+        let exp_manage = global.get_exp_manage();
+        exp_manage.set_fishing_leveling_behavior(fishing_behavior);
     }
     //玩家行为-正常完成了某个事件
     record_event_finish_end(id) {

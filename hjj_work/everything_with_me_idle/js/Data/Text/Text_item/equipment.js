@@ -25,6 +25,14 @@ function init_Text_equipment(texts) {
     init_Text_shield(texts); //盾牌
 
     //饰品
+    //工具
+    init_Text_logging_tool(texts); //伐木工具
+    init_Text_fishing_tool(texts); //钓鱼工具
+    init_Text_mining_tool(texts); //挖矿工具
+    init_Text_foraging_tool(texts); //采集工具
+    init_Text_diving_tool(texts); //潜水工具
+    init_Text_archaeology_tool(texts); //考古工具
+    init_Text_exploration_tool(texts); //探索工具
 }
 //剑
 function init_Text_sword(texts) {
@@ -159,6 +167,69 @@ function init_Text_shield(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '木制盾牌';
     texts[id].item_desc = '木制的简易盾牌，可防御敌人的攻击';
+}
+//伐木工具
+function init_Text_logging_tool(texts) {
+    let id;
+
+    id = 'hatchet';
+    add_text_object(texts, id);
+    texts[id].item_name = '柴刀';
+    texts[id].item_desc = '简易的伐木工具，可以有效的完成割草、砍断枝条等任务';
+}
+//钓鱼工具
+function init_Text_fishing_tool(texts) {
+    let id;
+
+    id = 'Bamboo_fishing_rod';
+    add_text_object(texts, id);
+    texts[id].item_name = '竹鱼竿';
+    texts[id].item_desc = '使用竹子制作的鱼竿，适合新手钓鱼';
+}
+//挖矿工具
+function init_Text_mining_tool(texts) {
+    let id;
+
+    // id = 'AAA';
+    // add_text_object(texts, id);
+    // texts[id].item_name = '物品名称';
+    // texts[id].item_desc = '物品描述';
+}
+//采集工具
+function init_Text_foraging_tool(texts) {
+    let id;
+
+    id = 'mowing_sickle';
+    add_text_object(texts, id);
+    texts[id].item_name = '割草镰刀';
+    texts[id].item_desc = '简单小巧的采集工具，适合从精确的位置切断草茎而不伤害到草';
+}
+//潜水工具
+function init_Text_diving_tool(texts) {
+    let id;
+
+    // id = 'AAA';
+    // add_text_object(texts, id);
+    // texts[id].item_name = '物品名称';
+    // texts[id].item_desc = '物品描述';
+}
+//考古工具
+function init_Text_archaeology_tool(texts) {
+    let id;
+
+    // id = 'AAA';
+    // add_text_object(texts, id);
+    // texts[id].item_name = '物品名称';
+    // texts[id].item_desc = '物品描述';
+}
+//探索工具
+function init_Text_exploration_tool(texts) {
+    let id;
+
+    // id = 'AAA';
+    // add_text_object(texts, id);
+    // texts[id].item_name = '物品名称';
+    // texts[id].item_desc = '物品描述';
 }
 
 export { init_Text_equipment };

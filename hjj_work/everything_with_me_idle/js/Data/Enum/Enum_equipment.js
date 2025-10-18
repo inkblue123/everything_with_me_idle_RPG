@@ -1,7 +1,7 @@
 import { add_Enum_Array, add_Enum_Object } from './Enum_class.js';
 //设置每种装备类型的属性倾向
 function set_equipment_type_attr_Presets(enums) {
-    //预设匕首的属性
+    let id;
     add_Enum_Object(enums, 'equipment_type_attr_Presets');
     //匕首
     add_Enum_Object(enums.equipment_type_attr_Presets, 'dagger');
@@ -10,7 +10,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'more', //暴击率较高
         critical_damage: 'more', //暴击伤害较高
-        attack_speed: 'max', //攻击速度最快
+        // attack_speed: 'max', //攻击速度最快
     };
     //拳套
     add_Enum_Object(enums.equipment_type_attr_Presets, 'gloves');
@@ -19,7 +19,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'more', //暴击率较高
         critical_damage: 'more', //暴击伤害较高
-        attack_speed: 'max', //攻击速度最快
+        // attack_speed: 'max', //攻击速度最快
     };
     //剑
     add_Enum_Object(enums.equipment_type_attr_Presets, 'sword');
@@ -28,7 +28,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'normal', //暴击率正常
         critical_damage: 'normal', //暴击伤害正常
-        attack_speed: 'normal', //攻击速度正常
+        // attack_speed: 'normal', //攻击速度正常
     };
     //棍棒
     add_Enum_Object(enums.equipment_type_attr_Presets, 'sticks');
@@ -37,7 +37,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'normal', //暴击率正常
         critical_damage: 'normal', //暴击伤害正常
-        attack_speed: 'normal', //攻击速度正常
+        // attack_speed: 'normal', //攻击速度正常
     };
     //战斧
     add_Enum_Object(enums.equipment_type_attr_Presets, 'battle_axe');
@@ -46,7 +46,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'min', //暴击率最低
         critical_damage: 'min', //暴击伤害最低
-        attack_speed: 'min', //攻击速度最慢
+        // attack_speed: 'min', //攻击速度最慢
     };
     //大锤
     add_Enum_Object(enums.equipment_type_attr_Presets, 'hammers');
@@ -55,7 +55,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'min', //暴击率最低
         critical_damage: 'min', //暴击伤害最低
-        attack_speed: 'min', //攻击速度最慢
+        // attack_speed: 'min', //攻击速度最慢
     };
     //长柄武器
     add_Enum_Object(enums.equipment_type_attr_Presets, 'long_handled');
@@ -64,7 +64,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'less', //暴击率较低
         critical_damage: 'less', //暴击伤害较低
-        attack_speed: 'less', //攻击速度较低
+        // attack_speed: 'less', //攻击速度较低
     };
     //鞭子
     add_Enum_Object(enums.equipment_type_attr_Presets, 'whips');
@@ -73,7 +73,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'less', //暴击率较低
         critical_damage: 'less', //暴击伤害较低
-        attack_speed: 'less', //攻击速度较低
+        // attack_speed: 'less', //攻击速度较低
     };
     //弓
     add_Enum_Object(enums.equipment_type_attr_Presets, 'bow');
@@ -82,7 +82,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'normal', //暴击率正常
         critical_damage: 'normal', //暴击伤害正常
-        attack_speed: 'normal', //攻击速度正常
+        // attack_speed: 'normal', //攻击速度正常
     };
     //弩炮
     add_Enum_Object(enums.equipment_type_attr_Presets, 'crossbow');
@@ -91,7 +91,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'min', //暴击率最低
         critical_damage: 'min', //暴击伤害最低
-        attack_speed: 'min', //攻击速度最慢
+        // attack_speed: 'min', //攻击速度最慢
     };
     //手弩
     add_Enum_Object(enums.equipment_type_attr_Presets, 'hand_gun');
@@ -100,7 +100,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'more', //暴击率较高
         critical_damage: 'more', //暴击伤害较高
-        attack_speed: 'less', //攻击速度较低
+        // attack_speed: 'less', //攻击速度较低
     };
     //喷枪
     add_Enum_Object(enums.equipment_type_attr_Presets, 'spray_gun');
@@ -109,7 +109,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'min', //暴击率最低
         critical_damage: 'min', //暴击伤害最低
-        attack_speed: 'max', //攻击速度最快
+        // attack_speed: 'max', //攻击速度最快
     };
     //回旋武器
     add_Enum_Object(enums.equipment_type_attr_Presets, 'boomerang');
@@ -118,7 +118,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'more', //暴击率较高
         critical_damage: 'more', //暴击伤害较高
-        attack_speed: 'min', //攻击速度最低
+        // attack_speed: 'min', //攻击速度最低
     };
     //投掷工具
     add_Enum_Object(enums.equipment_type_attr_Presets, 'throw');
@@ -127,7 +127,7 @@ function set_equipment_type_attr_Presets(enums) {
         precision: 'normal', //精准正常
         critical_chance: 'less', //暴击率较高
         critical_damage: 'less', //暴击伤害较高
-        attack_speed: 'normal', //攻击速度正常
+        // attack_speed: 'normal', //攻击速度正常
     };
     // //魔法武器
     // 'putmagic_core', //施法核心
@@ -178,11 +178,136 @@ function set_equipment_type_attr_Presets(enums) {
         resistance_point: 'normal', //抵抗力正常
         move_speed: 'min', //移动速度最低
     };
+    //伐木工具，该工具的战斗属性预设与战斧一致
+    id = 'logging_tool';
+    add_Enum_Object(enums.equipment_type_attr_Presets, id);
+    enums.equipment_type_attr_Presets[id] = {
+        attack: 'max', //攻击最高
+        precision: 'normal', //精准正常
+        critical_chance: 'min', //暴击率最低
+        critical_damage: 'min', //暴击伤害最低
+        // attack_speed: 'min', //攻击速度最慢
+    };
+    //钓鱼工具，该工具的战斗属性预设与鞭子一致
+    id = 'fishing_tool';
+    add_Enum_Object(enums.equipment_type_attr_Presets, id);
+    enums.equipment_type_attr_Presets[id] = {
+        attack: 'normal', //攻击正常
+        precision: 'normal', //精准正常
+        critical_chance: 'less', //暴击率较低
+        critical_damage: 'less', //暴击伤害较低
+        // attack_speed: 'less', //攻击速度较低
+    };
+    //挖矿工具，该工具的战斗属性预设与大锤一致
+    id = 'mining_tool';
+    add_Enum_Object(enums.equipment_type_attr_Presets, id);
+    enums.equipment_type_attr_Presets[id] = {
+        attack: 'max', //攻击最高
+        precision: 'normal', //精准正常
+        critical_chance: 'min', //暴击率最低
+        critical_damage: 'min', //暴击伤害最低
+        // attack_speed: 'min', //攻击速度最慢
+    };
+    //采集工具，该工具的战斗属性预设与拳套一致
+    id = 'foraging_tool';
+    add_Enum_Object(enums.equipment_type_attr_Presets, id);
+    enums.equipment_type_attr_Presets[id] = {
+        attack: 'less', //攻击较低
+        precision: 'normal', //精准正常
+        critical_chance: 'more', //暴击率较高
+        critical_damage: 'more', //暴击伤害较高
+        // attack_speed: 'max', //攻击速度最快
+    };
+    //潜水工具，该工具的战斗属性预设与长柄武器一致
+    id = 'diving_tool';
+    add_Enum_Object(enums.equipment_type_attr_Presets, id);
+    enums.equipment_type_attr_Presets[id] = {
+        attack: 'normal', //攻击正常
+        precision: 'normal', //精准正常
+        critical_chance: 'less', //暴击率较低
+        critical_damage: 'less', //暴击伤害较低
+        // attack_speed: 'less', //攻击速度较低
+    };
+    //考古工具，该工具的战斗属性预设与匕首一致
+    id = 'archaeology_tool';
+    add_Enum_Object(enums.equipment_type_attr_Presets, id);
+    enums.equipment_type_attr_Presets[id] = {
+        attack: 'less', //攻击较低
+        precision: 'normal', //精准正常
+        critical_chance: 'more', //暴击率较高
+        critical_damage: 'more', //暴击伤害较高
+        // attack_speed: 'max', //攻击速度最快
+    };
+    //探索工具，该工具的战斗属性预设与剑/棍棒一致
+    id = 'exploration_tool';
+    add_Enum_Object(enums.equipment_type_attr_Presets, id);
+    enums.equipment_type_attr_Presets[id] = {
+        attack: 'normal', //攻击正常
+        precision: 'normal', //精准正常
+        critical_chance: 'normal', //暴击率正常
+        critical_damage: 'normal', //暴击伤害正常
+        // attack_speed: 'normal', //攻击速度正常
+    };
+}
+//设置L0的属性预设
+function set_L0_attr_Presets(enums) {
+    //装备的预设属性
+    enums.equipment_attr_level.L0 = new Object();
+    enums.equipment_attr_level.L0.attack = new Object();
+    enums.equipment_attr_level.L0.defense = new Object();
+    enums.equipment_attr_level.L0.survival = new Object();
+    enums.equipment_attr_level.L0.player_base = new Object();
+    //近战武器，
+    enums.equipment_attr_level.L0.attack.melee = {
+        attack: { max: 4, more: 3, normal: 2, less: 1, min: 1 }, //攻击
+        precision: { max: 7, more: 6, normal: 5, less: 4, min: 3 }, //精准
+        critical_chance: { max: 5, more: 4, normal: 3, less: 2, min: 0 }, //暴击率
+        critical_damage: { max: 20, more: 15, normal: 10, less: 5, min: 0 }, //暴击伤害
+        attack_speed: { max: 0, more: 1, normal: 2, less: 3, min: 4 }, //攻击速度，数值越小在战斗中优势越大
+    };
+    //远程武器，一次攻击需要走两个攻速时间，所以会有补偿
+    enums.equipment_attr_level.L0.attack.ranged = {
+        attack: { max: 7, more: 6, normal: 4, less: 3, min: 1 },
+        precision: { max: 7, more: 6, normal: 5, less: 4, min: 3 },
+        critical_chance: { max: 5, more: 4, normal: 3, less: 2, min: 0 },
+        critical_damage: { max: 7, more: 6, normal: 5, less: 4, min: 0 },
+        attack_speed: { max: 0, more: 0, normal: 1, less: 3, min: 5 },
+    };
+    //魔法武器，一次攻击需要走三个攻速时间
+    enums.equipment_attr_level.L0.attack.magic = {
+        attack: { max: 12, more: 9, normal: 7, less: 5, min: 3 },
+        precision: { max: 7, more: 6, normal: 5, less: 4, min: 3 },
+        critical_chance: { max: 5, more: 4, normal: 3, less: 2, min: 0 },
+        critical_damage: { max: 7, more: 6, normal: 5, less: 4, min: 3 },
+        attack_speed: { max: 0, more: 0, normal: 0, less: 1, min: 2 },
+    };
+    //防御属性预设
+    enums.equipment_attr_level.L0.defense = {
+        defense: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //防御
+        evade: { max: 2, more: 1, normal: 0, less: 0, min: 0 }, //闪避
+        resistance_point: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //抵抗力
+        move_speed: { max: 2, more: 1, normal: 0, less: 0, min: 0 }, //移动速度
+    };
+    //生存属性预设
+    enums.equipment_attr_level.L0.survival = {
+        health_max: { max: 15, more: 12, normal: 9, less: 6, min: 3 }, //最大血量上限
+        magic_max: { max: 15, more: 12, normal: 9, less: 6, min: 3 }, //最大魔力上限
+        energy_max: { max: 15, more: 12, normal: 9, less: 6, min: 3 }, //最大精力上限
+    };
+    //玩家基础属性预设
+    enums.equipment_attr_level.L0.player_base = {
+        physique: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //体格
+        Meridians: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //经脉
+        soul: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //魂魄
+        power: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //力量
+        agile: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //敏捷
+        intelligence: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //智力
+        technique: { max: 3, more: 2, normal: 1, less: 0, min: 0 }, //技巧
+    };
 }
 //设置L1的属性预设
 function set_L1_attr_Presets(enums) {
     //装备的预设属性
-    add_Enum_Object(enums, 'equipment_attr_level');
     enums.equipment_attr_level.L1 = new Object();
     enums.equipment_attr_level.L1.attack = new Object();
     enums.equipment_attr_level.L1.defense = new Object();
@@ -238,6 +363,8 @@ function set_L1_attr_Presets(enums) {
 }
 //设置每种等级的属性预设
 function set_level_attr_Presets(enums) {
+    add_Enum_Object(enums, 'equipment_attr_level');
+    set_L0_attr_Presets(enums);
     set_L1_attr_Presets(enums);
 }
 //初始化枚举库中与装备相关的内容
@@ -246,11 +373,23 @@ function init_Enum_equipment(enums) {
     //如果已经有过内容则应该考虑换个名字
     let id;
 
-    //哪些武器类型属于双手武器
+    //哪些装备小类型属于双手武器
     id = 'both_hand';
     add_Enum_Array(enums, id);
-    enums[id] = ['battle_axe', 'long_handled', 'hammers', 'gloves', 'bow', 'crossbow', 'spray_gun'];
-    //哪些武器类型属于单手武器
+    enums[id] = [
+        'battle_axe', //
+        'long_handled',
+        'hammers',
+        'gloves',
+        'bow',
+        'crossbow',
+        'spray_gun',
+        'logging_tool', //伐木工具
+        'mining_tool', //挖矿工具
+        'foraging_tool', //采集工具
+        'diving_tool', //潜水工具
+    ];
+    //哪些装备小类型属于单手装备
     id = 'single_hand';
     add_Enum_Array(enums, id);
     enums[id] = [
@@ -266,6 +405,9 @@ function init_Enum_equipment(enums) {
         'magic_core',
         'spread_core',
         'summon_core',
+        'fishing_tool', //钓鱼工具
+        'archaeology_tool', //考古工具
+        'exploration_tool', //探索工具
     ];
     //特制武器可能的稀有度
     id = 'special_rarity';
@@ -283,25 +425,31 @@ function init_Enum_equipment(enums) {
     id = 'no_special_rarity';
     add_Enum_Array(enums, id);
     enums[id] = ['damaged', 'ordinary', 'excellent', 'rare', 'epic'];
-    //每种装备稀有度的价值倍率
+    //每种装备稀有度的参数的倍率
     id = 'damaged'; //破损
     add_Enum_Object(enums, id);
-    enums[id].price_data = '50';
+    enums[id].price_rate = 50; //价值倍率
+    enums[id].attr_rate = 0; //属性倍率
     id = 'ordinary'; //普通
     add_Enum_Object(enums, id);
-    enums[id].price_data = '100';
+    enums[id].price_rate = 100; //价值倍率
+    enums[id].attr_rate = 100; //属性倍率
     id = 'excellent'; //优良
     add_Enum_Object(enums, id);
-    enums[id].price_data = '120';
+    enums[id].price_rate = 120;
+    enums[id].attr_rate = 110; //属性倍率
     id = 'rare'; //稀有
     add_Enum_Object(enums, id);
-    enums[id].price_data = '150';
+    enums[id].price_rate = 150;
+    enums[id].attr_rate = 130; //属性倍率
     id = 'epic'; //史诗
     add_Enum_Object(enums, id);
-    enums[id].price_data = '200';
+    enums[id].price_rate = 200;
+    enums[id].attr_rate = 160; //属性倍率
     id = 'legendary'; //传说
     add_Enum_Object(enums, id);
-    enums[id].price_data = '500';
+    enums[id].price_rate = 500;
+    enums[id].attr_rate = 200; //属性倍率
     //装备可能放置的位置
     id = 'wearing_position';
     add_Enum_Array(enums, id);
@@ -332,6 +480,26 @@ function init_Enum_equipment(enums) {
         'magic_core', //法术核心
         'spread_core', //扩散核心
         'summon_core', //召唤核心
+        //工具
+        'logging_tool', //伐木工具
+        'fishing_tool', //钓鱼工具
+        'mining_tool', //挖矿工具
+        'foraging_tool', //采集工具
+        'diving_tool', //潜水工具
+        'archaeology_tool', //考古工具
+        'exploration_tool', //探索工具
+    ];
+    //装备大类中，属于“工具”的可能的小类型
+    id = 'tool_equipment_type';
+    add_Enum_Array(enums, id);
+    enums[id] = [
+        'logging_tool', //伐木工具
+        'fishing_tool', //钓鱼工具
+        'mining_tool', //挖矿工具
+        'foraging_tool', //采集工具
+        'diving_tool', //潜水工具
+        'archaeology_tool', //考古工具
+        'exploration_tool', //探索工具
     ];
 
     //装备类型及其对应的伤害类型
@@ -347,6 +515,13 @@ function init_Enum_equipment(enums) {
         sticks: 'melee',
         hammers: 'melee',
         whips: 'melee',
+        logging_tool: 'melee',
+        fishing_tool: 'melee',
+        mining_tool: 'melee',
+        foraging_tool: 'melee',
+        diving_tool: 'melee',
+        archaeology_tool: 'melee',
+        exploration_tool: 'melee',
         //远程
         bow: 'ranged',
         crossbow: 'ranged',

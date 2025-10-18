@@ -20,11 +20,13 @@ function init_Text_material(texts) {
     init_Text_raw_meat(texts); //生肉
     //石头与矿石系列
     init_Text_rock(texts); //石头
-    //货币系列
-    init_Text_ordinary_coin(texts); //凡间钱币
     //加工零件系列
     init_Text_wood_parts(texts); //木制零件
     init_Text_iron_parts(texts); //铁制零件
+    //精制调味料
+    init_Text_refined_seasoning(texts);
+    //丹药精华
+    init_Text_elixir_essence(texts);
 }
 //凡木的文本
 function init_Text_ordinary_wood(texts) {
@@ -245,31 +247,10 @@ function init_Text_rock(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '含铁岩石';
     texts[id].item_desc = '一块暗沉厚重的岩石，断面可见锈红色的细密纹路，偶尔闪过金属光泽';
-    id = '​​highFe_rock';
+    id = 'highFe_rock';
     add_text_object(texts, id);
     texts[id].item_name = '富铁矿石';
     texts[id].item_desc = '高纯度含铁矿石，断裂面呈银灰色，重量比普通岩石更大，';
-}
-//凡间钱币的文本
-function init_Text_ordinary_coin(texts) {
-    let id;
-
-    id = 'copper_coin';
-    add_text_object(texts, id);
-    texts[id].item_name = '铜币';
-    texts[id].item_desc = '王国内流通的货币，100铜币相当于1银币';
-    id = 'greedy_copper_coin';
-    add_text_object(texts, id);
-    texts[id].item_name = '贪婪的铜币';
-    texts[id].item_desc = '被附上“贪婪”诅咒的铜币，会排斥其他钱币。<br>“你永远无法拥有更多”';
-    id = 'sliver_coin';
-    add_text_object(texts, id);
-    texts[id].item_name = '银币';
-    texts[id].item_desc = '王国内流通的货币，1银币相当于100铜币，100银币相当于1金币';
-    id = 'gold_coin';
-    add_text_object(texts, id);
-    texts[id].item_name = '金币';
-    texts[id].item_desc = '王国内流通的货币，1金币相当于100银币';
 }
 //木制零件的文本
 function init_Text_wood_parts(texts) {
@@ -300,6 +281,34 @@ function init_Text_iron_parts(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '铁锭';
     texts[id].item_desc = '铁质标准金属锭，延展性与硬度平衡，适合绝大多数铁器制作';
+}
+//精制调味料的文本
+function init_Text_refined_seasoning(texts) {
+    let id;
+
+    id = 'fish_meat_floss';
+    add_text_object(texts, id);
+    texts[id].item_name = '鱼肉松';
+    texts[id].item_desc = '使用鱼为原料制成的调味品，可以在其他菜品烹饪时加入';
+
+    id = 'animal_meat_floss';
+    add_text_object(texts, id);
+    texts[id].item_name = '兽肉松';
+    texts[id].item_desc = '使用兽肉为原料制成的调味品，可以在其他菜品烹饪时加入';
+
+    id = 'berry_jam';
+    add_text_object(texts, id);
+    texts[id].item_name = '浆果果酱';
+    texts[id].item_desc = '使用浆果为原料制成的调味品，可以在其他菜品烹饪时加入';
+}
+//丹药精华的文本
+function init_Text_elixir_essence(texts) {
+    let id;
+
+    // id = 'AAAA';
+    // add_text_object(texts, id);
+    // texts[id].item_name = '物品名称';
+    // texts[id].item_desc = '物品描述';
 }
 
 export { init_Text_material };

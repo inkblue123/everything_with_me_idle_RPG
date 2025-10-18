@@ -132,7 +132,7 @@ export class Logging_manage {
         this.now_round_time = 0; //当前回合运行了多久的时间
 
         this.player_end_attr; //玩家最终属性拷贝，方便调用
-        this.true_LGI_speed; //实际用于计算的伐木攻速
+        this.true_LGI_interval; //实际用于计算的伐木攻速
         this.true_LGI_attack; //实际用于计算的伐木攻击
         this.true_LGI_critical_chance; //实际用于计算的伐木暴击率
         this.true_LGI_critical_damage; //实际用于计算的伐木暴击伤害
@@ -319,15 +319,27 @@ export class Logging_manage {
     }
     //更新伐木时的玩家参数
     updata_true_LGI_data() {
-        //伐木速度
-        this.true_LGI_speed = this.player_end_attr['LGI_speed'];
-        //武器类型的伐木速度增幅
+        //伐木伤害计算需要比较精细，在伐木进度条完成时才即时读取计算
+
+        //伐木攻速加成
+        let LGI_speed = this.player_end_attr['LGI_speed'];
+        if (LGI_speed === undefined) {
+            LGI_speed = 0;
+        }
+        //武器类型的伐木攻速加成
         for (let weapon_type of this.player_end_attr['weapon_type']) {
-            let speed_attr_name = weapon_type + '_LGI_speed';
+            let speed_attr_name = 'LGI_speed_' + weapon_type;
             if (!is_Empty_Object(this.player_end_attr[speed_attr_name])) {
-                this.true_LGI_speed += this.player_end_attr[speed_attr_name];
+                LGI_speed += this.player_end_attr[speed_attr_name];
             }
         }
+        //伐木间隔
+        let base_LGI_interval = this.player_end_attr['LGI_interval'];
+        this.true_LGI_interval = base_LGI_interval / ((100 + LGI_speed) * 0.01);
+        if (this.true_LGI_interval < 0.25) {
+            this.true_LGI_interval = 0.25;
+        }
+
         //伐木暴击率
         this.true_LGI_critical_chance = this.player_end_attr['LGI_critical_chance'];
         //伐木暴击伤害
@@ -335,7 +347,7 @@ export class Logging_manage {
 
         if (this.now_LGI_way == 'LGI_M_way') {
             //精细伐木有数值补正
-            this.true_LGI_speed = this.player_end_attr['LGI_speed'] * 1.5;
+            this.true_LGI_interval = this.true_LGI_interval * 1.5;
             this.true_LGI_critical_chance = this.player_end_attr['LGI_critical_chance'] + 30;
             this.true_LGI_critical_damage = this.player_end_attr['LGI_critical_damage'] + 50;
         } else if (this.now_LGI_way == 'LGI_F_way') {
@@ -346,7 +358,7 @@ export class Logging_manage {
     tree_live_logging() {
         this.now_round_time = this.now_time - this.round_start_time;
 
-        if (this.now_round_time < this.true_LGI_speed * 1000) {
+        if (this.now_round_time < this.true_LGI_interval * 1000) {
             //当前没有跑完攻速，不做处理
             return;
         }
@@ -358,7 +370,9 @@ export class Logging_manage {
 
         //记录砍了多少伤害，用于结算伐木技能的经验
         let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.record_logging_behavior(LGI_damage);
+        let logging_behavior = new Object();
+        logging_behavior.LGI_damage = LGI_damage;
+        global_flag_manage.record_logging_behavior(logging_behavior);
 
         if (!this.tree_manage.get_tree_statu()) {
             //树死了，进入掉落物品逻辑
@@ -414,9 +428,10 @@ export class Logging_manage {
             let obj = new Object();
             for (let id in LGI_trees) {
                 //不稀有的树不需要记录缓存
-                if (!LGI_trees[id].rare_flag) continue;
+                if (!LGI_trees[id].rare_flag) {
+                    continue;
+                }
 
-                //
                 obj[id] = new Object();
                 obj[id].cumulative_num = LGI_trees[id].max_cumulative_num;
                 obj[id].last_cumulative_time = this.now_time;
@@ -484,7 +499,7 @@ export class Logging_manage {
     }
     //获取伐木攻击进度比例
     get_attack_ratio() {
-        return (this.now_round_time / (this.true_LGI_speed * 1000)) * 100 + '%';
+        return (this.now_round_time / (this.true_LGI_interval * 1000)) * 100 + '%';
     }
     //获取最终伐木伤害
     get_LGI_damage() {
@@ -496,7 +511,7 @@ export class Logging_manage {
         let damage_add = 0;
         //武器类型伤害增幅
         for (let weapon_type of this.player_end_attr['weapon_type']) {
-            let damage_attr_name = weapon_type + '_LGI_damage';
+            let damage_attr_name = 'LGI_damage_' + weapon_type;
             if (!is_Empty_Object(this.player_end_attr[damage_attr_name])) {
                 damage_add += this.player_end_attr[damage_attr_name];
             }

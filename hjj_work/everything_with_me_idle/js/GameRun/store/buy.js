@@ -7,12 +7,25 @@ import { enums } from '../../Data/Enum/Enum.js';
 import { texts } from '../../Data/Text/Text.js';
 import { global } from '../global_manage.js';
 import { player } from '../../Player/Player.js';
+//交易过程中的一个物品
+class Goods_Item {
+    constructor(id) {
+        this.id = id; //物品id
+        //当前数量
+        //在当前商店的商品列表对象中，则是商店内的库存数量
+        this.num = 0;
+        //仅在商店货物积累与购买数量情况中记录，表示这个商品在过去被购买了多少个
+        this.buy_num = 0;
+        //上一次补货的时间
+        this.last_replenish_time;
+    }
+}
 
 //常规购买管理类
 export class Buy_Manage {
     constructor() {
         this.store_product_list_goods = new Object(); //当前商店的商品列表
-        this.store_buy_goods_cumulative = new Object(); //各个商店货物积累与购买数量情况
+        this.store_buy_goods_cumulative = new Object(); //各个商店货物的购买数量情况
 
         this.player_buy_goods = new Object(); //玩家待购买物品
         this.buy_price = new Object(); //玩家待购买的物品的总价值
@@ -35,8 +48,20 @@ export class Buy_Manage {
         //清空待购买界面
         this.updata_buy_value_div;
     }
+    //对商店管理类存档
+    save_buy_manage() {
+        let buy_save = new Object();
+        //所有商店的物品购买情况，用于计算商品库存和涨价
+        buy_save.store_buy_goods_cumulative = this.store_buy_goods_cumulative;
+        return buy_save;
+    }
+    //加载商店存档
+    load_buy_manage(buy_save) {
+        this.store_buy_goods_cumulative = buy_save.store_buy_goods_cumulative;
+    }
     //更新当前地点的商品积累与购买情况
     updata_store_goods_cumulative() {
+        let game_now_time = global.get_game_now_time();
         //如果没有当前地点的情况缓存，则初始化
         if (is_Empty_Object(this.store_buy_goods_cumulative[this.now_place])) {
             let fixed_goods = places[this.now_place].fixed_goods;
@@ -50,10 +75,35 @@ export class Buy_Manage {
                 }
                 //补货时间
                 if (fixed_goods[item_key].replenish_time != null) {
-                    goods_cumulative[item_key].last_replenish_time = global.get_now_time();
+                    goods_cumulative[item_key].last_replenish_time = game_now_time;
                 }
             }
             this.store_buy_goods_cumulative[this.now_place] = goods_cumulative;
+        } else {
+            //当前地点已有购买情况缓存，根据时间计算补货情况
+            let fixed_goods = places[this.now_place].fixed_goods;
+            for (let item_key in this.store_buy_goods_cumulative[this.now_place]) {
+                let goods_cumulative = this.store_buy_goods_cumulative[this.now_place][item_key];
+                if (fixed_goods[item_key].replenish_time == null) {
+                    //这个商品没有补货时间，永远不会补货，不处理
+                    continue;
+                }
+                let replenish_time = fixed_goods[item_key].replenish_time; //这个商品的补货间隔
+                let replenish_num = fixed_goods[item_key].replenish_num; //这个商品每次补货的数量
+                let last_replenish_time = goods_cumulative.last_replenish_time; //这个商品上次补货的时间
+                if ((game_now_time - last_replenish_time) / 1000 < replenish_time) {
+                    //没到补货时间，不处理
+                    continue;
+                }
+                //商品库存具体是由总库存-已购买数量，所以补货只需要清理已购买数量即可
+                if (goods_cumulative.buy_num >= replenish_num) {
+                    goods_cumulative.buy_num -= replenish_num;
+                } else {
+                    goods_cumulative.buy_num = 0;
+                }
+                //重置上次补货时间
+                goods_cumulative.last_replenish_time = game_now_time;
+            }
         }
     }
     //初始化当前地点的商品列表
@@ -68,8 +118,12 @@ export class Buy_Manage {
             let good_obj = JSON.parse(JSON.stringify(fixed_goods[item_key]));
             //商品库存
             if (fixed_goods[item_key].inventory != 'infinite') {
+                let buy_num = 0;
+                if (!is_Empty_Object(goods_cumulative[item_key])) {
+                    buy_num = goods_cumulative[item_key].buy_num;
+                }
                 //有限库存商品，需要读取地点内的购买情况，得到当前真正的库存数量
-                good_obj.num -= goods_cumulative[item_key].buy_num;
+                good_obj.inventory = fixed_goods[item_key].inventory - buy_num;
             }
 
             this.store_product_list_goods[item_key] = good_obj;
@@ -78,32 +132,6 @@ export class Buy_Manage {
     //获取当前地点商品列表
     get_store_product_list_goods() {
         return this.store_product_list_goods;
-    }
-    // 向目标组件添加 点击之后放入待购买物品界面中的功能
-    add_click_buy_item(target_div, item_data) {
-        target_div.addEventListener('click', () => {
-            //获取当前购买数量设定
-            let buy_quantity_button = document.getElementById('buy_quantity_button');
-            let quantity_num = buy_quantity_button.dataset.quantity_num;
-
-            let store_manage = global.get_store_manage();
-            //将待购买的物品的数量设定成规定数量
-            let all_flag = store_manage.set_quantity_num(quantity_num, item_data, 'buy');
-            //向商店管理类添加待购买物品信息
-            this.set_player_buy_goods(item_data);
-            //更新控制界面中待购买物品界面
-            this.updata_buy_value_div();
-            //更新控制界面中交易结果界面
-            store_manage.updata_trade_result_div();
-            //商店中的商品列表变化，更新界面
-            store_manage.updata_store_PL_value_div();
-
-            //关闭提示窗
-            if (all_flag) {
-                let tooltip = document.getElementById('tooltip');
-                tooltip.CloseTip(); //清空小窗口
-            }
-        });
     }
     //添加玩家将要购买的物品
     set_player_buy_goods(item_obj) {
@@ -166,7 +194,7 @@ export class Buy_Manage {
         //针对装备的稀有度，重算价值
         if (items[id].main_type.includes('equipment')) {
             let equip_rarity = item_obj.equip_rarity;
-            let rarity_place_data = enums[equip_rarity].price_data;
+            let rarity_place_data = enums[equip_rarity].price_rate;
             base_price = base_price * rarity_place_data * 0.01;
         }
         //判断物品是否保值，保值的物品可以直接得到结果
@@ -249,6 +277,9 @@ export class Buy_Manage {
     }
     //指定货币数购买指定物品，最大能买到多少个
     get_money_buy_item_max_num(item_obj, money_num) {
+        if (money_num <= 0) {
+            return 0;
+        }
         let id = item_obj.id;
         let base_price; //物品基础价值
         if (is_Empty_Object(items[id].price[this.money_type])) {
@@ -261,7 +292,7 @@ export class Buy_Manage {
         //针对装备的稀有度，重算价值
         if (items[id].main_type.includes('equipment')) {
             let equip_rarity = item_obj.equip_rarity;
-            let rarity_place_data = enums[equip_rarity].price_data;
+            let rarity_place_data = enums[equip_rarity].price_rate;
             base_price = base_price * rarity_place_data * 0.01;
         }
         //判断物品是否保值，保值的物品可以直接得到结果
@@ -378,4 +409,107 @@ export class Buy_Manage {
         //计算删除后的待购买物品价值
         this.count_player_buy_price();
     }
+    //补齐货币，用商人库存的指定货币尝试补齐指定数量
+    supplement_money(money_type, need_money, type) {
+        // 初始化商人指定货币的可用数量;
+        let money_value = JSON.parse(JSON.stringify(enums[money_type].money_value));
+        for (let item_key in money_value) {
+            money_value[item_key].num = 0;
+            if (this.store_product_list_goods[item_key] === undefined) {
+                continue;
+            }
+            if (this.store_product_list_goods[item_key].inventory == 'infinite') {
+                money_value[item_key].num = 'infinite';
+            } else {
+                let buy_num = this.get_buy_goods_num(item_key); //这种物品打算出售的数量
+                money_value[item_key].num = this.store_product_list_goods[item_key].inventory - buy_num;
+            }
+        }
+        //计算需要补齐的货币的数量
+        let need_money_obj = calculateCurrencyCombination(need_money, money_value);
+        if (type == 'for_buy') {
+            //将这些数量的货币放入待购买界面
+            for (let item_key in need_money_obj.combination) {
+                if (need_money_obj.combination[item_key] <= 0) {
+                    continue;
+                }
+                let aitem_data = JSON.parse(JSON.stringify(this.store_product_list_goods[item_key]));
+                aitem_data.num = need_money_obj.combination[item_key];
+                this.set_player_buy_goods(aitem_data);
+            }
+            //刷新待购买界面
+            this.updata_buy_value_div();
+        } else if (type == 'for_backpack') {
+            //将这些数量的货币放入玩家背包
+            for (let item_key in need_money_obj.combination) {
+                if (need_money_obj.combination[item_key] <= 0) {
+                    continue;
+                }
+                let aitem_data = JSON.parse(JSON.stringify(this.store_product_list_goods[item_key]));
+                aitem_data.num = need_money_obj.combination[item_key];
+                player.Player_get_item(aitem_data);
+            }
+        }
+    }
+    //达成交易，待购买物品放入玩家背包
+    complete_trade() {
+        for (let item_key in this.player_buy_goods) {
+            if (this.player_buy_goods[item_key].num <= 0) {
+                continue;
+            }
+            //给予玩家物品
+            player.Player_get_item(this.player_buy_goods[item_key]);
+            //记录购买数量
+            if (!is_Empty_Object(this.store_buy_goods_cumulative[this.now_place][item_key])) {
+                this.store_buy_goods_cumulative[this.now_place][item_key].buy_num += this.player_buy_goods[item_key].num;
+            }
+        }
+        //清空待购买物品
+        this.player_buy_goods = new Object();
+        //重置价值
+        this.buy_price = new Object();
+        this.buy_price[this.money_type] = 0;
+        //清空待购买界面
+        this.updata_buy_value_div();
+    }
+}
+
+//找零货币价值计算器
+function calculateCurrencyCombination(targetValue, currencies) {
+    // 1. 按价值从高到低排序货币
+    let sortedCurrencies = new Array();
+    for (let item_key in currencies) {
+        sortedCurrencies.push(currencies[item_key]);
+    }
+
+    // 2. 初始化结果对象
+    const result = {
+        combination: {},
+        totalValue: 0,
+        excess: 0,
+        isExact: false,
+    };
+
+    // 3. 尝试精确匹配
+    let remaining = targetValue;
+    for (const currency of sortedCurrencies) {
+        let maxPossible;
+        if (currency.num == 'infinite') {
+            maxPossible = Math.floor(remaining / currency.price);
+        } else {
+            maxPossible = Math.min(Math.floor(remaining / currency.price), currency.num);
+        }
+        result.combination[currency.key] = maxPossible;
+        remaining -= maxPossible * currency.price;
+    }
+
+    // 4. 如果精确匹配成功
+    if (remaining === 0) {
+        result.totalValue = targetValue;
+        result.isExact = true;
+        return result;
+    }
+
+    // 5. 商店找零不会超额，精确匹配结果就是计算结果
+    return result;
 }

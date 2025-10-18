@@ -2,6 +2,7 @@ import { crtElement, addElement } from '../Function/Dom_function.js';
 import { get_item_obj } from '../Function/Function.js';
 import { save_game, delete_save, load_save, load_save_show_tip } from '../LoadAndSave/load.js';
 import { player } from '../Player/Player.js';
+import { P_skills } from '../Data/Skill/Skill.js';
 import { global } from '../GameRun/global_manage.js';
 
 //创建处于整个游戏下发的设置界面
@@ -81,6 +82,11 @@ function make_option_page_test_div(option_page) {
     button_div.innerHTML = '物品测试';
     button_div.onclick = function () {
         give_player_item();
+    };
+    button_div = addElement(option_page, 'button');
+    button_div.innerHTML = '解锁全部技能';
+    button_div.onclick = function () {
+        give_player_every_skill();
     };
 }
 //完成3天的新手教学
@@ -182,6 +188,17 @@ function give_player_item() {
     player.Player_get_item('wood_sword', 6, 'excellent');
     player.Player_get_item('wood_sword', 6, 'rare');
     player.Player_get_item('wood_sword', 6, 'epic');
+    player.Player_get_item('test_boomerang', 1, 'ordinary');
+    player.Player_get_item('test_boomerang', 3, 'excellent');
+    player.Player_get_item('test_boomerang', 5, 'rare');
+    player.Player_get_item('hatchet', 1, 'ordinary');
+    player.Player_get_item('mowing_sickle', 1, 'ordinary');
+}
+function give_player_every_skill() {
+    let P_All_Skills = player.get_player_All_Skills();
+    for (let id in P_skills) {
+        P_All_Skills.player_unlock_skill(id);
+    }
 }
 
 export { create_Option };

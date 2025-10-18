@@ -50,8 +50,8 @@ function add_show_Tooltip(target_div, tip_type, tip_value) {
     let tooltip = document.getElementById('tooltip');
 
     // 鼠标移入目标元素时显示小窗口
-    target_div.addEventListener('mouseenter', () => {
-        tooltip.InitTip(tip_type, tip_value); // 初始化小窗口内容并显示小窗口
+    target_div.addEventListener('mouseenter', (event) => {
+        tooltip.InitTip(tip_type, tip_value, event); // 初始化小窗口内容并显示小窗口
     });
 
     // 鼠标移动时更新小窗口位置

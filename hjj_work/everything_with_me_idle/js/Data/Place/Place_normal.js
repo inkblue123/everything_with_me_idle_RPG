@@ -34,6 +34,7 @@ function init_village_normal_place(places) {
     add_normal_Place(places, id, area);
     places[id].add_connect_normal_place('village_square');
     places[id].add_connect_other_place('village_home_bed');
+    places[id].add_condition_behavior('find_village_home_money');
 
     id = 'village_square'; //村庄大广场
     add_normal_Place(places, id, area);
@@ -108,6 +109,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_foraging_item('copper_coin', 1, false); //这个地点可采集的物品，铜币
     places[id].set_foraging_item('wood_sticks', 1, false, null, null, 'ordinary'); //这个地点可采集的物品，木制棍棒
     places[id].set_foraging_item('termite_mushroom', 1, true, 2, 2880); //这个地点可采集的物品，鸡枞
+    places[id].set_foraging_item('viresilver_stem', 1, true, 1, 1440); //这个地点可采集的物品，绿银草茎
 
     id = 'LF_woodland'; //已开荒的林区-林地
     add_normal_Place(places, id, area);
@@ -187,9 +189,10 @@ function init_village_backhill_normal_place(places) {
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树，灌木丛
     places[id].set_logging_tree('Willow_tree', 10, false); //这个地点可刷的树，柳树
     places[id].set_foraging_data(200); //这个地点的采集相关参数，采集防御力200点
-    places[id].set_foraging_item('coral_fungus', 5, false); //这个地点可采集的物品，珊瑚菌
-    places[id].set_foraging_item('chanterelle', 5, false); //这个地点可采集的物品，鸡油菌
-    places[id].set_foraging_item('viresilver_stem', 1, true, 1440); //这个地点可采集的物品，绿银草茎
+    places[id].set_foraging_item('river_crab', 35, false); //这个地点可采集的物品，河蟹
+    places[id].set_foraging_item('coral_fungus', 15, false); //这个地点可采集的物品，珊瑚菌
+    places[id].set_foraging_item('chanterelle', 15, false); //这个地点可采集的物品，鸡油菌
+    places[id].set_foraging_item('viresilver_stem', 1, true, 1, 1440); //这个地点可采集的物品，绿银草茎
     places[id].set_fishing_data(0, 48, 2); //这个地点的钓鱼相关参数
     places[id].set_fishing_fish('river_crab', 3, false); //这个地点可钓到的鱼，河蟹
     places[id].set_fishing_fish('iron_bone_fish', 3, false); //这个地点可钓到的鱼，铁骨鱼

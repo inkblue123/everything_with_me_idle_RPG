@@ -140,7 +140,7 @@
     display: flex;
 }
 /* 鱼杆ui */
-#fishing_rod {
+#fishing_rod_div {
     display: flex;
     margin-left: 2%;
     font-size: 20px;

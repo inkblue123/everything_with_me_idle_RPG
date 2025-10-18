@@ -33,8 +33,6 @@ html {
     align-items: center;
     color: white;
     flex: 0 1 5%;
-    /* width: 100vw;
-    height: 5vh; */
 }
 
 /* 每行1列的布局 */
@@ -55,14 +53,11 @@ html {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     height: 100%;
-    /* grid-gap: 0; */
 }
 /* 每行1列的布局 */
 .page_columns_1 {
     display: grid;
     grid-template-columns: 1fr;
-    /* grid-template-rows: 1fr 1fr; */
-    /* grid-gap: 0; */
 }
 
 /* 每行2列的布局，两列宽度比例1：1 */
@@ -91,10 +86,6 @@ html {
 .page_grid_9 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr; */
-    /* width: 100vw;
-    height: 100vh; */
 }
 /* 单行无限填充的布局 */
 .page_flex {
@@ -108,15 +99,12 @@ html {
     justify-content: center;
     align-items: center;
     color: white;
-    /* font-size: 24px; */
     box-sizing: border-box;
     border: 2px solid #797691;
 }
 
 /* 单选框 */
 .radio_div {
-    /* display: inline-block; */
-    /* margin: auto; */
     position: relative;
     height: auto;
     width: 100%;

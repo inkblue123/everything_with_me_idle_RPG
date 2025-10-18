@@ -12,7 +12,7 @@ const skill_levelup_exp_func = {
 const skill_rewards_func = {
     1: skill_rewards_1,
     2: skill_rewards_2,
-    // 3: skill_rewards_3,
+    3: skill_rewards_3,
 };
 
 //简单生成一个随机数
@@ -180,23 +180,6 @@ function skill_levelup_exp_algorithm(id, base_exp, now_level) {
         console.log('技能升级经验需求计算函数没有定义 %d', id);
     }
     return func(base_exp, now_level);
-
-    // let levelup_exp;
-    // switch (id) {
-    //     case 1: //1号函数
-    //         levelup_exp = skill_levelup_exp_1(base_exp, now_level);
-    //         break;
-    //     case 2: //2号函数
-    //         levelup_exp = skill_levelup_exp_2(base_exp, now_level);
-    //         break;
-    //     case 3: //3号函数
-    //         levelup_exp = skill_levelup_exp_3(base_exp, now_level);
-    //         break;
-
-    //     default:
-    //         break;
-    // }
-    // return levelup_exp;
 }
 //技能升级经验需求计算函数1号，系数为1.5的指数函数
 function skill_levelup_exp_1(base_exp, now_level) {
@@ -260,6 +243,16 @@ function skill_rewards_2(now_level) {
         return 0;
     } else {
         return now_level * 5;
+    }
+}
+//技能的常态等级加成计算函数3号
+function skill_rewards_3(now_level) {
+    //等级  0  1  2  3  4  5  6  7  8  9  10
+    //加成  0  1  2  3  4  5  6  7  8  9  10
+    if (now_level <= 0) {
+        return 0;
+    } else {
+        return now_level;
     }
 }
 export {

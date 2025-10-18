@@ -158,27 +158,25 @@ function set_Control_func(Control) {
         let now_quantity_num = this.dataset.quantity_num;
         let next_quantity_num = get_store_next_quantity_num(now_quantity_num);
         if (next_quantity_num == 'half') {
-            this.innerHTML = '出售批量选择-> 一半';
+            this.innerHTML = '购买批量选择-> 一半';
         } else if (next_quantity_num == 'all') {
-            this.innerHTML = '出售批量选择-> 全部';
+            this.innerHTML = '购买批量选择-> 全部';
         } else {
-            this.innerHTML = '出售批量选择-> X' + next_quantity_num;
+            this.innerHTML = '购买批量选择-> X' + next_quantity_num;
         }
         this.dataset.quantity_num = next_quantity_num;
+    });
+    //商店交易情况界面的补齐货币按钮，点击之后尝试将背包中的货币放入待出售界面
+    let supplement_money_button = Control.querySelector('#supplement_money_button');
+    supplement_money_button.addEventListener('click', function () {
+        let store_manage = global.get_store_manage();
+        store_manage.supplement_money();
     });
     //商店交易情况界面的确认交易按钮，点击之后完成交易
     let trade_button = Control.querySelector('#trade_button');
     trade_button.addEventListener('click', function () {
-        // let now_quantity_num = this.dataset.quantity_num;
-        // let next_quantity_num = get_store_next_quantity_num(now_quantity_num);
-        // if (next_quantity_num == 'half') {
-        //     this.innerHTML = '出售批量选择-> 一半';
-        // } else if (next_quantity_num == 'all') {
-        //     this.innerHTML = '出售批量选择-> 全部';
-        // } else {
-        //     this.innerHTML = '出售批量选择-> X' + next_quantity_num;
-        // }
-        // this.dataset.quantity_num = next_quantity_num;
+        let store_manage = global.get_store_manage();
+        store_manage.complete_trade();
     });
 }
 
@@ -233,6 +231,15 @@ function show_new_place(new_place) {
     if (!is_Empty_Object(new_place.connect_other_place)) {
         for (let next_place_id of new_place.connect_other_place) {
             add_control_button_move(next_place_id, '前往', null);
+        }
+    }
+    //有条件出现的事件
+    if (!is_Empty_Object(new_place.condition_behaviors)) {
+        for (let event_id of new_place.condition_behaviors) {
+            //对每个事件的出现条件进行判断，满足条件才在界面中添加按钮
+            if (check_condition_appear_behaviors(event_id)) {
+                add_control_button_start_event(event_id);
+            }
         }
     }
 }

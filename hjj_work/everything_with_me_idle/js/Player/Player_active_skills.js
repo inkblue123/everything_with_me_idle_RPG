@@ -223,29 +223,31 @@ export class Player_active_skills_Manage {
         for (let i = 0; i < this.active_slot_num; i++) {
             //如果i槽没有主动技能
             if (is_Empty_Object(this.active_slots[i])) {
-                this.any_slot_time[i] = this.player_end_attr.attack_speed * 1000;
+                this.any_slot_time[i] = this.player_end_attr.true_attack_interval * 1000;
                 continue;
             }
-            //如果i槽的主动技能有设定攻速的属性补正
-            if (this.active_slots[i].attr_correct['attack_speed']) {
+            //判断i槽的主动技能有没有影响攻速
+            if (is_Empty_Object(this.active_slots[i].attr_correct['attack_speed'])) {
+                //没有影响因素，槽的运行时间就等于攻击间隔
+                this.any_slot_time[i] = this.player_end_attr.true_attack_interval * 1000;
+            } else {
+                //有影响因素，根据主动技能内容修改攻击间隔
                 let atk_speed_correct = this.active_slots[i].attr_correct['attack_speed'];
-                let base_atk_speed = this.player_end_attr.attack_speed * 1000;
                 if ((atk_speed_correct.type = 'fixed')) {
-                    //固定攻速
-                    this.any_slot_time[i] = atk_speed_correct.value;
+                    //固定攻击间隔
+                    this.any_slot_time[i] = atk_speed_correct.value * 1000;
                 } else if ((atk_speed_correct.type = 'ride')) {
-                    //影响攻速的乘区
-                    this.any_slot_time[i] = base_atk_speed * atk_speed_correct.value;
+                    //攻速加成
+                    let base_attack_interval = this.player_end_attr['attack_interval'];
+                    let attack_speed = this.player_end_attr['attack_speed'] + atk_speed_correct.value;
+                    let true_attack_interval = base_attack_interval / ((100 + attack_speed) * 0.01);
+                    if (true_attack_interval < 0.25) {
+                        true_attack_interval = 0.25;
+                    }
+                    this.any_slot_time[i] = true_attack_interval * 1000;
                 }
-                continue;
             }
-            //没有影响因素，槽的运行时间就等于攻速
-            this.any_slot_time[i] = this.player_end_attr.attack_speed * 1000;
         }
-        // //是否需要重置当前回合
-        // if (reset_flag) {
-        //     this.reset_round();
-        // }
     }
     //重置当前回合，重置相关参数
     reset_round() {
@@ -394,15 +396,16 @@ export class Player_active_skills_Manage {
         let algorithm = start_skill.algorithm;
         Attack_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);
 
+        let damage_add = 0;
         //玩家属性里如果有伤害增幅的属性，现在就结算
-        if (!is_Empty_Object(this.player_end_attr['sword_damage'])) {
-            //剑造成的伤害增加
-
-            if (this.player_end_attr['weapon_type'].includes('sword')) {
-                //玩家手里用剑的时候，增加攻击的伤害
-                this.main_Attack.base_damage = this.main_Attack.base_damage * this.player_end_attr['sword_damage'];
+        //武器类型伤害加成
+        for (let weapon_type of this.player_end_attr['weapon_type']) {
+            let damage_attr_name = 'damage' + weapon_type;
+            if (!is_Empty_Object(this.player_end_attr[damage_attr_name])) {
+                damage_add += this.player_end_attr[damage_attr_name];
             }
         }
+        this.main_Attack.base_damage = this.main_Attack.base_damage * damage_add;
         //计算玩家装备的额外效果
 
         //格式化数值

@@ -1,4 +1,6 @@
 import { enums } from './Enum/Enum.js';
+import { texts } from './Text/Text.js';
+import { add_text_object } from './Text/Text_class.js';
 import { items } from './Item/Item.js';
 import { game_events } from './Game_event/Game_Event.js';
 import { get_uniqueArr } from '../Function/Function.js';
@@ -13,6 +15,10 @@ function game_data_init() {
     Enum_game_status_init();
     //枚举数据库-物品部分的枚举更新
     Enum_item_init();
+    //枚举数据库-属性部分的枚举更新
+    Enum_attr_init();
+    //文本数据库-属性部分的更新
+    Text_attr_init();
 }
 //
 function Enum_game_status_init() {
@@ -55,6 +61,143 @@ function Enum_item_init() {
     enums.Equipment_secon_type = get_uniqueArr(enums.Equipment_secon_type);
     enums.Consumable_secon_type = get_uniqueArr(enums.Consumable_secon_type);
     enums.Material_secon_type = get_uniqueArr(enums.Material_secon_type);
+}
+
+function Enum_attr_init() {
+    //游戏中有很多属性，攻击、防御、伤害加成、攻击速度、伐木伤害、伐木工具伐木伤害、伐木工具伐木攻速等等
+    //其中有些属性，例如伐木工具伐木伤害、战斧伐木伤害、空手伐木伤害、以及所有武器小类后面都加个伐木伤害
+    //不止伐木，7种生活技能各自有各自的一些属性，会和举例的一样，其实就是几个词语的组合，由于几个词语种类很多，最终总数就很多
+    //这些属性，理论上来说，数据库里应该定义一下，这种属性的id，属性的名称，属性用百分比展示或者秒展示或者直接展示
+    //数据库里理论上应该都要有，问题在于手动复制粘贴很麻烦，且容易错漏
+    //在这里写一个函数自动全部定义出来
+    //这个函数负责枚举库里的，即哪些属性用百分比展示或者秒展示或者直接展示
+
+    //需要用百分号表示的属性
+    //前缀是暴击率、暴击伤害、伤害加成、攻速加成、伐木暴率、伐木暴伤、伐木伤害、伐木速度、挖矿暴率、挖矿暴伤、挖矿伤害、挖矿速度
+    //后缀是所有武器工具子类和空手
+    //组合效果就是伐木工具伐木伤害、伐木工具伐木攻速这样
+    let front = [
+        'critical_chance',
+        'critical_damage',
+        'damage',
+        'attack_speed',
+        'LGI_critical_chance',
+        'LGI_critical_damage',
+        'LGI_damage',
+        'LGI_speed',
+        'MIN_critical_chance',
+        'MIN_critical_damage',
+        'MIN_damage',
+        'MIN_speed',
+    ];
+    let after = JSON.parse(JSON.stringify(enums['weapon_equipment_type']));
+    after.push('emptyhanded');
+    for (let front_text of front) {
+        for (let after_text of after) {
+            let attr_id = front_text + '_' + after_text;
+            enums['need_per_cent_attr'].push(attr_id);
+        }
+    }
+    //前缀是采集概率
+    //后缀是所有物品子类和一些子类集合
+    //组合效果就是采集时获得凡木的概率、采集时获得蘑菇的概率，采集时获得任意木头的概率这样
+    front = ['FAG_chance'];
+    after = JSON.parse(JSON.stringify(enums['Item_secon_type']));
+    after.push('all_wood');
+    after.push('all_grass');
+    after.push('all_mushroom');
+    for (let front_text of front) {
+        for (let after_text of after) {
+            let attr_id = front_text + '_' + after_text;
+            enums['need_per_cent_attr'].push(attr_id);
+        }
+    }
+    //去重
+    enums['need_per_cent_attr'] = get_uniqueArr(enums['need_per_cent_attr']);
+
+    //需要用秒表示的属性
+    //前缀是攻击间隔、伐木间隔、挖矿间隔
+    //后缀是所有武器工具子类和空手
+    //组合效果就是剑攻击间隔、战斧伐木间隔，镐子挖矿间隔这样
+    front = ['attack_interval', 'LGI_interval', 'MIN_interval'];
+    after = JSON.parse(JSON.stringify(enums['weapon_equipment_type']));
+    after.push('emptyhanded');
+    for (let front_text of front) {
+        for (let after_text of after) {
+            let attr_id = front_text + '_' + after_text;
+            enums['need_second_attr'].push(attr_id);
+        }
+    }
+    //去重
+    enums['need_second_attr'] = get_uniqueArr(enums['need_second_attr']);
+}
+function Text_attr_init() {
+    //游戏中有很多属性，攻击、防御、伤害加成、攻击速度、伐木伤害、伐木工具伐木伤害、伐木工具伐木攻速等等
+    //其中有些属性，例如伐木工具伐木伤害、战斧伐木伤害、空手伐木伤害、以及所有武器小类后面都加个伐木伤害
+    //不止伐木，7种生活技能各自有各自的一些属性，会和举例的一样，其实就是几个词语的组合，由于几个词语种类很多，最终总数就很多
+    //这些属性，理论上来说，数据库里应该定义一下，这种属性的id，属性的名称，属性用百分比展示或者秒展示或者直接展示
+    //数据库里理论上应该都要有，问题在于手动复制粘贴很麻烦，且容易错漏
+    //在这里写一个函数自动全部定义出来
+    //这个函数负责文本库里的，即这些自动设定的属性的属性名称
+
+    //前缀是暴击率、暴击伤害、伤害加成、攻速加成、伐木暴率、伐木暴伤、伐木伤害、伐木速度、挖矿暴率、挖矿暴伤、挖矿伤害、挖矿速度
+    //后缀是所有武器工具子类和空手
+    //组合效果就是伐木工具伐木伤害、伐木工具伐木攻速这样
+    let front = {
+        critical_chance: '暴击率',
+        critical_damage: '暴击伤害',
+        damage: '伤害',
+        attack_speed: '攻击速度',
+        LGI_critical_chance: '伐木暴率',
+        LGI_critical_damage: '伐木暴伤',
+        LGI_damage: '伐木伤害',
+        LGI_speed: '伐木速度',
+        MIN_critical_chance: '挖矿暴率',
+        MIN_critical_damage: '挖矿暴伤',
+        MIN_damage: '挖矿伤害',
+        MIN_speed: '挖矿速度',
+    };
+    let after = JSON.parse(JSON.stringify(enums['weapon_equipment_type']));
+    after.push('emptyhanded');
+    for (let front_id in front) {
+        for (let after_id of after) {
+            let attr_id = front_id + '_' + after_id;
+            let attr_name = texts[after_id].type_name + front[front_id];
+            add_text_object(texts, attr_id);
+            texts[attr_id].attr_name = attr_name;
+        }
+    }
+    //前缀是采集概率
+    //后缀是所有物品子类和一些子类集合
+    //组合效果就是采集时获得凡木的概率、采集时获得蘑菇的概率，采集时获得任意木头的概率这样
+    front = { FAG_chance: '采集时获得' };
+    after = JSON.parse(JSON.stringify(enums['Item_secon_type']));
+    after.push('all_wood');
+    after.push('all_grass');
+    after.push('all_mushroom');
+    for (let front_id in front) {
+        for (let after_id of after) {
+            let attr_id = front_id + '_' + after_id;
+            let attr_name = front[front_id] + texts[after_id].type_name + '的概率';
+            add_text_object(texts, attr_id);
+            texts[attr_id].attr_name = attr_name;
+        }
+    }
+
+    //前缀是攻击间隔、伐木间隔、挖矿间隔
+    //后缀是所有武器工具子类和空手
+    //组合效果就是剑攻击间隔、战斧伐木间隔，镐子挖矿间隔这样
+    front = { attack_interval: '攻击间隔', LGI_interval: '伐木间隔', MIN_interval: '挖矿间隔' };
+    after = JSON.parse(JSON.stringify(enums['weapon_equipment_type']));
+    after.push('emptyhanded');
+    for (let front_id in front) {
+        for (let after_id of after) {
+            let attr_id = front_id + '_' + after_id;
+            let attr_name = texts[after_id].type_name + front[front_id];
+            add_text_object(texts, attr_id);
+            texts[attr_id].attr_name = attr_name;
+        }
+    }
 }
 
 export { game_data_init };

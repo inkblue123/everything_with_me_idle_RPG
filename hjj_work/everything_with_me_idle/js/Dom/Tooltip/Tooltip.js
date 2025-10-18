@@ -4,7 +4,7 @@ import { init_item_tip } from './item_tip.js';
 import { init_skill_tip } from './skill_tip.js';
 import { init_game_save_tip } from './game_save_tip.js';
 
-const TOOLTIP_WIDTH = 320;
+const TOOLTIP_WIDTH = 360;
 
 //创建游离于游戏布局之上，跟随鼠标的小窗口
 function create_Tooltip() {
@@ -18,16 +18,15 @@ function create_Tooltip() {
 function make_Tooltip_div(Tooltip) {
     //提示窗口没有需要预设的布局
 }
-// var Tooltip = crtElement('div', 'tooltip', null, 'none');
 //给提示窗口添加函数
 function set_Tooltip_func(Tooltip) {
     // 初始化小窗口内容并显示小窗口
-    Tooltip.InitTip = function (type, value) {
+    Tooltip.InitTip = function (type, value, event) {
         this.CloseTip();
         this.type = type;
 
         this.style.display = 'block';
-        if (type == 'item' || type == 'sell_good' || type == 'buy_good') {
+        if (type == 'item' || type == 'sell_good' || type == 'buy_good' || type == 'buyback_good') {
             //初始化物品介绍内容
             init_item_tip(type, value);
         } else if (type == 'active_skill' || type == 'show_active_skill' || type == 'show_passive_skill') {
@@ -35,6 +34,8 @@ function set_Tooltip_func(Tooltip) {
         } else if (type == 'load_save' || type == 'save_game') {
             init_game_save_tip(type, value);
         }
+        //初始化后移动一次小窗口，避免直接初始化在游戏窗口外
+        this.MoveTip(event);
     };
     //移动小窗口
     Tooltip.MoveTip = function (event) {

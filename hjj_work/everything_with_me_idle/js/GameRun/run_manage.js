@@ -3,7 +3,19 @@ import { player } from '../Player/Player.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_manage.js';
 
-function state_game() {
+let gameLoopTimeoutId = null;
+
+function start_game_loop() {
+    // 先取消可能存在的上一个循环
+    if (gameLoopTimeoutId) {
+        clearTimeout(gameLoopTimeoutId); //setTimeout模式配套
+        // cancelAnimationFrame(animationFrameId);//requestAnimationFrame模式配套
+    }
+    // 启动新循环
+    game_loop();
+}
+//使用setTimeout实现循环
+function game_loop() {
     let Time_manage = global.get_time_manage();
     Time_manage.updata_FPS_start();
 
@@ -15,8 +27,26 @@ function state_game() {
     Time_manage.updata_FPS_end();
     //一帧运行完毕，睡眠一段时间，保证游戏一秒运行帧数次
     let sleep_ms = global.get_sleep_ms();
-    setTimeout(state_game, sleep_ms);
+    gameLoopTimeoutId = setTimeout(game_loop, sleep_ms);
 }
+//使用requestAnimationFrame实现循环，如果焦点离开浏览器界面，整个游戏会立刻停止
+//这个不算弊端，有接口可以读到焦点回到浏览器时的时候，可以在这个接口里加载离开时间的数据，不过现在没有开发，就先不用了
+// function game_loop() {
+//     let Time_manage = global.get_time_manage();
+//     Time_manage.updata_FPS_start_rAF();
+
+//     let run_flag = Time_manage.get_run_flag();
+//     if (run_flag) {
+//         console.log('aaa');
+//         //更新一帧内的数据变化
+//         updata_game_data();
+//         //更新这一帧的新的游戏画面
+//         updata_game_div();
+//     }
+
+//     Time_manage.updata_FPS_end_rAF();
+//     gameLoopTimeoutId = requestAnimationFrame(game_loop);
+// }
 
 //更新一帧内的数据变化
 function updata_game_data() {
@@ -80,4 +110,4 @@ function updata_game_div() {
     updata_attribute_show();
 }
 
-export { updata_game_data, state_game };
+export { updata_game_data, start_game_loop };

@@ -18,24 +18,18 @@ import { global } from '../GameRun/global_manage.js';
 // }
 
 export class Player_backpack {
-    constructor() {}
+    constructor() {
+        this.backpack_items = new Object(); //玩家背包所有物品对象
+    }
     //获取玩家背包部分的游戏存档
     save_Player_backpack() {
         let Player_backpack_save = new Object();
-        for (let id in this) {
-            Player_backpack_save[id] = this[id];
-        }
+        Player_backpack_save.backpack_items = this.backpack_items;
         return Player_backpack_save;
     }
     //加载玩家背包部分的游戏存档
     load_Player_backpack(Player_backpack_save) {
-        if (is_Empty_Object(Player_backpack_save)) {
-            this.updata_BP_value();
-            return;
-        }
-        for (let id in Player_backpack_save) {
-            this[id] = Player_backpack_save[id];
-        }
+        this.backpack_items = Player_backpack_save.backpack_items;
         this.updata_BP_value();
     }
     //给玩家背包添加物品
@@ -47,14 +41,14 @@ export class Player_backpack {
             return -1;
         }
         let item_key = get_item_id_key(item_obj);
-        if (this[item_key] === undefined) {
+        if (this.backpack_items[item_key] === undefined) {
             //背包没有同key物品，初始化该物品
-            this[item_key] = item_obj;
+            this.backpack_items[item_key] = item_obj;
             return item_obj.num;
         }
 
         //背包已有同key物品，只需要增加数量
-        this[item_key].num += item_obj.num;
+        this.backpack_items[item_key].num += item_obj.num;
         return item_obj.num;
     }
     //从玩家背包中去掉物品
@@ -66,18 +60,18 @@ export class Player_backpack {
             return -1;
         }
         let item_key = get_item_id_key(item_obj);
-        if (this[item_key] === undefined) {
+        if (this.backpack_items[item_key] === undefined) {
             //背包没有同key物品，结束
             return 0;
         }
 
         //背包已有同key物品，减少数量
-        if (this[item_key].num >= item_obj.num) {
-            this[item_key].num -= item_obj.num;
+        if (this.backpack_items[item_key].num >= item_obj.num) {
+            this.backpack_items[item_key].num -= item_obj.num;
             return item_obj.num;
         } else {
-            let num = this[item_key].num;
-            this[item_key].num = 0;
+            let num = this.backpack_items[item_key].num;
+            this.backpack_items[item_key].num = 0;
             return num;
         }
     }
@@ -89,7 +83,7 @@ export class Player_backpack {
         //清空左下角背包界面的所有元素
         delete_BP_div();
         //获取这次需要展示的物品的所有小类
-        let all_BP_secon_type = get_all_BP_secon_type(this);
+        let all_BP_secon_type = get_all_BP_secon_type(this.backpack_items);
         //获取这次更新后应该激活的分类条件
         let now_BP_switch_type = check_BP_switch_type(last_BP_switch_type, all_BP_secon_type);
         //重新生成背包界面的分类条件按钮
@@ -105,7 +99,7 @@ export class Player_backpack {
 
         //遍历玩家的每个物品，按照物品的最大堆叠数量，显示到左下的背包中
         for (let play_item_key of sort_item_array) {
-            let item_obj = this[play_item_key];
+            let item_obj = this.backpack_items[play_item_key];
             let id = item_obj.id;
             if (Item_type_handle(type_switch, id)) {
                 if (click_use_type == 'store') {
@@ -128,30 +122,62 @@ export class Player_backpack {
     //获取当前背包物品里数量最多的一种物品的数量
     get_BP_aitem_max_num() {
         let max_num = 0;
-        let arr = Object.keys(this); //将拥有的物品的key转换成一个数组
+        let arr = Object.keys(this.backpack_items); //将拥有的物品的key转换成一个数组
         for (let item_key of arr) {
-            if (max_num < this[item_key].num) {
-                max_num = this[item_key].num;
+            if (max_num < this.backpack_items[item_key].num) {
+                max_num = this.backpack_items[item_key].num;
             }
         }
         return max_num;
     }
-    //获取玩家仓库中指定货币的数量
+    //获取玩家仓库中指定货币的总金额
     get_BP_money_type_num(money_type) {
         let money = 0;
-        let arr = Object.keys(this); //将拥有的物品的key转换成一个数组
+        let arr = Object.keys(this.backpack_items); //将拥有的物品的key转换成一个数组
         for (let item_key of arr) {
-            let id = this[item_key].id;
+            let id = this.backpack_items[item_key].id;
             if (items[id].secon_type.includes(money_type)) {
-                money += this[item_key].num * this[item_key].price[money_type];
+                money += this.backpack_items[item_key].num * this.backpack_items[item_key].price[money_type];
             }
         }
         return money;
     }
+    //补齐货币，用背包中的指定货币尝试补齐指定数量
+    supplement_money(money_type, need_money) {
+        let store_manage = global.get_store_manage();
+        let sell_manage = store_manage.get_sell_manage();
+        //初始化背包中指定货币的可用数量
+        let money_value = JSON.parse(JSON.stringify(enums[money_type].money_value));
+        for (let item_key in money_value) {
+            money_value[item_key].num = 0;
+            if (this.backpack_items[item_key] === undefined) {
+                continue;
+            }
+            let sell_num = sell_manage.get_sell_goods_num(item_key); //这种物品打算出售的数量
+            money_value[item_key].num = this.backpack_items[item_key].num - sell_num;
+        }
+        //计算需要补齐的货币的数量
+        // let need_money_obj = calculateCurrencyCombination(130, money_value);
+        let need_money_obj = calculateCurrencyCombination(need_money, money_value);
+        //将这些数量的货币放入待出售界面
+        for (let item_key in need_money_obj.combination) {
+            if (need_money_obj.combination[item_key] <= 0) {
+                continue;
+            }
+            let aitem_data = JSON.parse(JSON.stringify(this.backpack_items[item_key]));
+            aitem_data.num = need_money_obj.combination[item_key];
+            sell_manage.set_player_sell_goods(aitem_data);
+        }
+        //刷新待出售界面
+        sell_manage.updata_sell_value_div();
+        //刷新背包界面
+        this.updata_BP_value();
+        return need_money_obj;
+    }
     //获取排序后的玩家所有物品的key集合
     get_BP_all_item_id_array_sort(BP_sort_type) {
         let sortData = new Object();
-        let arr = Object.keys(this); //将拥有的物品的key转换成一个数组
+        let arr = Object.keys(this.backpack_items); //将拥有的物品的key转换成一个数组
         let money_type;
         if (BP_sort_type == 'price_sort') {
             let store_manage = global.get_store_manage();
@@ -168,9 +194,9 @@ export class Player_backpack {
         for (let item_key of arr) {
             if (BP_sort_type == 'num_sort') {
                 //个数排序
-                sortData[item_key] = this[item_key].num;
+                sortData[item_key] = this.backpack_items[item_key].num;
             } else if (BP_sort_type == 'price_sort') {
-                let id = this[item_key].id;
+                let id = this.backpack_items[item_key].id;
                 //价值排序
                 if (is_Empty_Object(items[id].price)) {
                     //价值未定义
@@ -182,8 +208,13 @@ export class Player_backpack {
                     sortData[item_key] = 0;
                     continue;
                 }
-
-                sortData[item_key] = this[item_key].price[money_type];
+                if (items[id].main_type.includes('equipment')) {
+                    let equip_rarity = this.backpack_items[item_key].equip_rarity;
+                    let rarity_place_data = enums[equip_rarity].price_rate;
+                    sortData[item_key] = items[id].price[money_type] * rarity_place_data * 0.01;
+                } else {
+                    sortData[item_key] = items[id].price[money_type];
+                }
             }
         }
         //对关键数据进行排序
@@ -247,6 +278,7 @@ function get_all_BP_secon_type(player_items) {
         all_BP_secon_type = all_BP_secon_type.concat(items[item_id].secon_type);
     }
     all_BP_secon_type = get_uniqueArr(all_BP_secon_type);
+    all_BP_secon_type = all_BP_secon_type.sort((a, b) => enums['secon_type_sort'][a] - enums['secon_type_sort'][b]);
     return all_BP_secon_type;
 }
 //将物品类型转义成能适应的全部类型，方便判断物品类型
@@ -506,5 +538,92 @@ function get_BP_sort_type() {
         }
     }
 }
+//货币价值计算器
+function calculateCurrencyCombination(targetValue, currencies) {
+    // 1. 按价值从高到低排序货币
+    let sortedCurrencies = new Array();
+    for (let item_key in currencies) {
+        sortedCurrencies.push(currencies[item_key]);
+    }
 
+    // 2. 初始化结果对象
+    const result = {
+        combination: {},
+        totalValue: 0,
+        excess: 0,
+        isExact: false,
+    };
+
+    // 3. 尝试精确匹配
+    let remaining = targetValue;
+    for (const currency of sortedCurrencies) {
+        const maxPossible = Math.min(Math.floor(remaining / currency.price), currency.num);
+        result.combination[currency.key] = maxPossible;
+        remaining -= maxPossible * currency.price;
+    }
+
+    // 4. 如果精确匹配成功
+    if (remaining === 0) {
+        result.totalValue = targetValue;
+        result.isExact = true;
+        return result;
+    }
+
+    // 5. 寻找最小超额组合（回溯算法）
+    result.combination = {};
+    let minExcess = Infinity;
+    let bestCombination = null;
+
+    function backtrack(index, currentCombination, currentValue) {
+        if (currentValue >= targetValue) {
+            const excess = currentValue - targetValue;
+            if (excess < minExcess) {
+                minExcess = excess;
+                bestCombination = { ...currentCombination };
+            }
+            return;
+        }
+
+        if (index >= sortedCurrencies.length) {
+            return;
+        }
+
+        const currency = sortedCurrencies[index];
+        const maxPossible = Math.min(Math.ceil((targetValue - currentValue) / currency.price), currency.num);
+
+        // 尝试从0到最大可能数量的所有组合
+        for (let i = 0; i <= maxPossible; i++) {
+            currentCombination[currency.key] = i;
+            backtrack(index + 1, currentCombination, currentValue + i * currency.price);
+        }
+
+        currentCombination[currency.key] = 0; // 回溯
+    }
+
+    backtrack(0, {}, 0);
+
+    // 6. 返回最佳组合
+    if (bestCombination) {
+        result.combination = bestCombination;
+        result.totalValue = Object.entries(bestCombination).reduce((sum, [key, num]) => {
+            const currency = sortedCurrencies.find((c) => c.key === key);
+            return sum + num * currency.price;
+        }, 0);
+        result.excess = result.totalValue - targetValue;
+    } else {
+        // 7. 如果所有货币加起来都不够，返回最大可能组合
+        const maxCombination = {};
+        let maxTotal = 0;
+        for (const currency of sortedCurrencies) {
+            maxCombination[currency.key] = currency.num;
+            maxTotal += currency.num * currency.price;
+        }
+
+        result.combination = maxCombination;
+        result.totalValue = maxTotal;
+        result.excess = maxTotal - targetValue;
+    }
+
+    return result;
+}
 export {};

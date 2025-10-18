@@ -122,7 +122,7 @@ class Global_manage {
         //随机数管理类
         global_save.random_save = this.random_manage.save_Random_manage();
         //交易和商店管理类
-        // global_save.store_save = this.store_manage.save_Store_manage();
+        global_save.store_save = this.store_manage.save_Store_manage();
 
         //目前战斗管理类只是负责记录参数进行运算的平台，并没有需要保存的信息
         // this.combat_manage; //战斗管理类
@@ -142,7 +142,7 @@ class Global_manage {
         this.enemy_manage.load_enemy_manage(global_save.enemy_save);
         this.live_plan_manage.load_Live_plan_manage(global_save.live_plan_save);
         this.random_manage.load_Random_manage(global_save.random_save);
-        // this.store_manage.load_Store_manage(global_save.store_save);
+        this.store_manage.load_Store_manage(global_save.store_save);
         // 其他的游戏部分内容展示有很多依赖于地点的切换，所以地点存档最后更新
         this.place_manage.load_place_manage(global_save.place_save);
     }

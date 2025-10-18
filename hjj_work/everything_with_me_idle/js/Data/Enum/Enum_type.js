@@ -98,6 +98,15 @@ function init_money_type(enums) {
     enums[id] = [
         'ordinary_coin', //钱币
     ];
+    //属于凡间钱币的物品参数
+    id = 'ordinary_coin';
+    add_Enum_Object(enums, id);
+    enums[id].money_value = {
+        'gold_coin:0000000000000000': { key: 'gold_coin:0000000000000000', price: 10000 }, //金币
+        'sliver_coin:0000000000000000': { key: 'sliver_coin:0000000000000000', price: 100 }, //银币
+        'greedy_copper_coin:0000000000000000': { key: 'greedy_copper_coin:0000000000000000', price: 1 }, //贪婪的铜币
+        'copper_coin:0000000000000000': { key: 'copper_coin:0000000000000000', price: 1 }, //铜币
+    };
 }
 
 function init_Enum_type(enums) {

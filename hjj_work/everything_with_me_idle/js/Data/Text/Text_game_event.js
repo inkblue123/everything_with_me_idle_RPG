@@ -15,7 +15,19 @@ function Challenge_text(texts) {
 }
 //迷你事件的文本
 function mini_event_text(texts) {
-    let id = 'new_player_teach_1';
+    let id;
+
+    id = 'find_village_home_money';
+    add_text_object(texts, id);
+    texts[id].event_name = '翻找住所寻找可用资源';
+    texts[id].button_name = '翻找住所寻找可用资源';
+    texts[id].text1 = '        你仔细找遍住所每个角落，洗劫一空的家里确实没发现有用的东西，杂物间里破损的桌椅，厨房里腐烂的食物残渣，这些东西有什么用呢';
+    texts[id].text2 = '再仔细找找';
+    texts[id].text3 =
+        '        来搬东西的人应该只会像刚刚你搜的那样寻找明面上的储藏空间，不会掘地三尺不会搜查每个夹层，想到这里你再寻找了一遍住所，终于在床垫里、在柜子背后找到了一些钱币<br>        有些钱币看起来放了很久很久，应该是生活时遗漏的，有些钱币用纸巾包起来了，应该是特意保存的，无论如何，这就是你现在拥有的全部了';
+    texts[id].text4 = '获得“1银币”和“325铜币”';
+
+    id = 'new_player_teach_1';
     add_text_object(texts, id);
     texts[id].event_name = '周一新手教学';
     texts[id].button_name = '进行周一新手教学';

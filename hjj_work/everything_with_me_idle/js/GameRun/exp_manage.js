@@ -1,5 +1,6 @@
 import { is_Empty_Object, is_overlap } from '../Function/Function.js';
 import { P_skills } from '../Data/Skill/Skill.js';
+import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
 
@@ -25,10 +26,11 @@ export class Leveling_Behavior {
         // this.combat_place_type = new Object();//战斗场地类型
         // this.armor_flag = [0,0,0,0,0];//护甲穿着标记
         //战斗中即时获取的参数
-        this.attack_num = 0; //攻击次数
-        this.attack_damage = 0; //攻击伤害
-        //伐木技能需要的参数
-        this.LGI_damage = 0; //伐木伤害
+        this.combat_behavior = new Object();
+        //伐木过程中发生的行为的参数
+        this.logging_behavior = new Object();
+        //钓鱼过程中发生的行为的参数
+        this.fishing_behavior = new Object();
     }
 }
 
@@ -55,13 +57,31 @@ export class Exp_manage {
         this.Active_skill_exp[id] += damage;
     }
     //记录战斗时发生的练级行为
-    set_combat_leveling_behavior(attack_num, attack_damage) {
-        this.leveling_behavior.attack_num += attack_num;
-        this.leveling_behavior.attack_damage += attack_damage;
+    set_combat_leveling_behavior(combat_behavior) {
+        for (let id in combat_behavior) {
+            if (is_Empty_Object(this.leveling_behavior.combat_behavior[id])) {
+                this.leveling_behavior.combat_behavior[id] = 0;
+            }
+            this.leveling_behavior.combat_behavior[id] += combat_behavior[id];
+        }
     }
-    //记录战斗时发生的练级行为
-    set_logging_leveling_behavior(LGI_damage) {
-        this.leveling_behavior.LGI_damage += LGI_damage;
+    //记录伐木时发生的练级行为
+    set_logging_leveling_behavior(logging_behavior) {
+        for (let id in logging_behavior) {
+            if (is_Empty_Object(this.leveling_behavior.logging_behavior[id])) {
+                this.leveling_behavior.logging_behavior[id] = 0;
+            }
+            this.leveling_behavior.logging_behavior[id] += logging_behavior[id];
+        }
+    }
+    //记录钓鱼时发生的练级行为
+    set_fishing_leveling_behavior(fishing_behavior) {
+        for (let id in fishing_behavior) {
+            if (is_Empty_Object(this.leveling_behavior.fishing_behavior[id])) {
+                this.leveling_behavior.fishing_behavior[id] = 0;
+            }
+            this.leveling_behavior.fishing_behavior[id] += fishing_behavior[id];
+        }
     }
     //记录其他练级行为
     set_leveling_behavior() {
@@ -98,13 +118,12 @@ export class Exp_manage {
                 continue;
             }
             //遍历找到可以获得经验的技能
-
             let exp_source = P_skills[id].exp_source; //这个技能加经验的依据
-            let exp = this.leveling_behavior[exp_source]; //这个技能要加的经验值
+            let exp = this.get_exp_source(exp_source); //从练级行为中寻找指定依据的数值
             if (exp == undefined || exp == 0) {
                 continue;
             }
-            P_All_Skills.get_skill_exp(id, this.leveling_behavior[exp_source]);
+            P_All_Skills.get_skill_exp(id, exp);
         }
 
         this.reset_leveling_behavior();
@@ -129,6 +148,24 @@ export class Exp_manage {
             }
         }
         return true;
+    }
+    //从玩家行为中寻找指定经验依据的数值
+    get_exp_source(exp_source) {
+        if (enums['exp_source_for_Leveling_Behavior'][exp_source] === undefined) {
+            console.log('%s经验依据没有定义它归属于哪种升级行为');
+            return 0;
+        }
+        let son_behavior = enums['exp_source_for_Leveling_Behavior'][exp_source];
+        if (is_Empty_Object(this.leveling_behavior[son_behavior])) {
+            //子行为结构体是空的，正常情况，返回0
+            return 0;
+        }
+        if (is_Empty_Object(this.leveling_behavior[son_behavior][exp_source])) {
+            //子行为结构体中指定经验依据是空的，正常情况，返回0
+            return 0;
+        }
+
+        return this.leveling_behavior[son_behavior][exp_source];
     }
 }
 

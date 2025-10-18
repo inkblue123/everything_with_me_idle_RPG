@@ -48,7 +48,8 @@ export class Data_attr_manage {
         this.combat_attack_attr['precision'] = 10; //精准
         this.combat_attack_attr['critical_chance'] = 5; //暴击率，百分制，具体计算时会除以100
         this.combat_attack_attr['critical_damage'] = 150; //暴击伤害，百分制，具体计算时会除以100
-        this.combat_attack_attr['attack_speed'] = 3; //玩家基础攻击速度
+        this.combat_attack_attr['attack_speed'] = 0; //玩家攻击速度加成
+        this.combat_attack_attr['attack_interval'] = 3; //玩家基础攻击间隔
         //战斗防御属性初始化
         this.combat_defense_attr['defense'] = 10; //防御
         this.combat_defense_attr['evade'] = 10; //闪避
@@ -67,12 +68,12 @@ export class Data_attr_manage {
         this.player_base_attr['intelligence'] = 10; //智力
         this.player_base_attr['technique'] = 10; //技巧
         //角色生活技能属性初始化
-        this.live_plan_attr['LGI_speed'] = 3; //伐木攻速
+        this.live_plan_attr['LGI_interval'] = 3; //伐木基础间隔
         this.live_plan_attr['LGI_attack'] = 3; //伐木力
         this.live_plan_attr['LGI_critical_chance'] = 5; //伐木暴击率
         this.live_plan_attr['LGI_critical_damage'] = 150; //伐木暴击伤害
-        this.live_plan_attr['FIS_takebait_attack'] = 500; //钓鱼上钩力
-        this.live_plan_attr['FIS_walkfish_attack'] = 5; //钓鱼遛鱼力
+        this.live_plan_attr['FIS_takebait_attack'] = 1; //钓鱼上钩力
+        this.live_plan_attr['FIS_walkfish_attack'] = 3; //钓鱼遛鱼力
         this.live_plan_attr['FAG_attack'] = 5; //采集力
         this.live_plan_attr['FAG_speed'] = 5; //采集速度
 
@@ -186,22 +187,22 @@ export class Data_attr_manage {
             let id = EQP.id;
             let equip_rarity = EQP.equip_rarity;
             //记录每件装备的每条属性
-            for (let i in items[id].equip_attr) {
-                if (items[id].equip_attr[i] == 0) continue;
-                //将数据库中记载的属性存入玩家身上
-                if (is_Empty_Object(this.EQP_attr[i])) {
-                    this.EQP_attr[i] = 0;
+            for (let attr in items[id].equip_attr[equip_rarity]) {
+                if (items[id].equip_attr[equip_rarity][attr] == 0) {
+                    continue;
                 }
-                //副手武器的攻速不计算
-                if (wp == 'deputy' && i == 'attack_speed') continue;
-                //回旋武器的攻速单独计算
-                if (items[id].secon_type.includes('boomerang') && i == 'attack_speed') {
+                //将数据库中记载的属性存入玩家身上
+                if (is_Empty_Object(this.EQP_attr[attr])) {
+                    this.EQP_attr[attr] = 0;
+                }
+                //回旋武器的攻击间隔单独计算
+                if (items[id].secon_type.includes('boomerang') && attr == 'attack_interval') {
                     let num = EQP.num;
-                    this.EQP_attr[i] += items[id].equip_attr[i] / num;
+                    this.EQP_attr[attr] += items[id].equip_attr[equip_rarity][attr] / num;
                     continue;
                 }
                 //其他属性正常计算
-                this.EQP_attr[i] += items[id].equip_attr[i];
+                this.EQP_attr[attr] += items[id].equip_attr[equip_rarity][attr];
             }
         }
     }
@@ -221,6 +222,7 @@ export class Data_attr_manage {
             this.EQP_attr['weapon_type'] = this.EQP_attr['weapon_type'].concat(item_eqt);
         } else {
             //没有带武器，空手
+            this.EQP_attr['weapon_type'].push('emptyhanded'); //空手
             this.EQP_attr['weapon_type'].push('gloves'); //视作拥有拳套
             //解锁之后空手也可以视作投掷工具
             // this.EQP_attr['weapon_type'].push('throw');
@@ -375,7 +377,6 @@ export class Data_attr_manage {
             }
         }
         //累加新属性
-
         for (const [key, value] of Object.entries(new_obj)) {
             if (key == 'weapon_type') {
                 if (is_Empty_Object(this.end_data_attr[key])) {
@@ -386,6 +387,15 @@ export class Data_attr_manage {
                 this.end_data_attr[key] = (this.end_data_attr[key] || 0) + value;
             }
         }
+        //重新计算部分属性
+        let base_attack_interval = this.end_data_attr['attack_interval'];
+        let attack_speed = this.end_data_attr['attack_speed'];
+        let true_attack_interval = base_attack_interval / ((100 + attack_speed) * 0.01);
+        if (true_attack_interval < 0.25) {
+            true_attack_interval = 0.25;
+        }
+        this.end_data_attr['true_attack_interval'] = true_attack_interval;
+
         //更新缓存
         this.prevObjects[index] = JSON.parse(JSON.stringify(new_obj));
     }

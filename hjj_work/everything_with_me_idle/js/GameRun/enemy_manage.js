@@ -39,7 +39,7 @@ class place_enemy {
             this.health_point = this.combat_survival_attr['health_max']; //设置满血
             this.attack_point = 0;
             this.distance = 0;
-            this.last_attack_time = global.get_now_time();
+            this.last_attack_time = global.get_game_now_time();
             this.set_next_active();
 
             this.now_skill_attack_speed = this.get_active_skill_attack_speed();
@@ -62,7 +62,7 @@ class place_enemy {
         this.now_active_id = save_enemy.now_active_id;
         this.now_active_stage = 0;
 
-        let save_now_time = global.get_now_time();
+        let save_now_time = global.get_game_now_time();
         this.last_attack_time = save_enemy.last_attack_time + save_now_time - save_enemy.now_time;
         this.now_time = save_now_time;
     }

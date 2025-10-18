@@ -51,8 +51,8 @@ function make_fishing_div(FIS_value_div) {
     let FIS_walk_middle_div = addElement(FIS_value_div, 'div', 'FIS_walk_middle_div', '', 'none');
     //鱼头像ui的div
     let fish_ui_div = addElement(FIS_walk_middle_div, 'div', 'fish_ui_div', ' ', '');
-    let fishing_rod = addElement(fish_ui_div, 'div', 'fishing_rod', ' ', '');
-    fishing_rod.innerHTML = '🎣';
+    let fishing_rod_div = addElement(fish_ui_div, 'div', 'fishing_rod_div', ' ', '');
+    fishing_rod_div.innerHTML = '🎣';
     let fish_head = addElement(fish_ui_div, 'div', 'fish_head', ' ', '');
     fish_head.innerHTML = '🐟';
     // fish_head.style.marginLeft = '20px'; // 20像素间距

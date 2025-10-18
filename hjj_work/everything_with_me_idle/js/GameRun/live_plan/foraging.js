@@ -1,7 +1,8 @@
 import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object, get_item_id_key } from '../../Function/Function.js';
+import { is_Empty_Object, get_item_id_key, is_overlap } from '../../Function/Function.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
+import { enums } from '../../Data/Enum/Enum.js';
 import { player } from '../../Player/Player.js';
 import { global } from '../global_manage.js';
 
@@ -274,7 +275,9 @@ export class Foraging_manage {
     }
     //从当前地点随机获得采集物品
     get_foraging_item(drop_times) {
-        let FAG_item = places[this.now_place].FAG_item; //当前地点可采集的物品
+        //获取当前地点经过属性加成后的可采集物品列表
+        let FAG_item = this.get_true_FAG_item();
+
         let random_manage = global.get_random_manage(); //随机数管理类
         //常规尝试drop_times次掉落
         let drop_item_arry = new Array();
@@ -468,6 +471,49 @@ export class Foraging_manage {
         }
         let FAG_show_chance_div = document.getElementById('FAG_show_chance_div');
         FAG_show_chance_div.innerHTML = ch;
+    }
+    //获取当前地点经过加成后的可采集物品的权重
+    get_true_FAG_item() {
+        let FAG_item = JSON.parse(JSON.stringify(places[this.now_place].FAG_item));
+
+        for (let attr_id in this.player_end_attr) {
+            //寻找玩家属性中关于改变采集产物权重的属性
+
+            let index = attr_id.indexOf('FAG_chance_');
+            if (index != 0) {
+                continue;
+            }
+            //获取这条属性要改变的产物类型
+            let type_switch = this.FAG_chance_type_handle(attr_id);
+            for (let item_key in FAG_item) {
+                let id = FAG_item[item_key].id;
+                if (!is_overlap(type_switch, items[id].secon_type)) {
+                    continue;
+                }
+                //指定产物类型和物品小类有重叠，在权重上得到属性加成
+                let attr_data = this.player_end_attr[attr_id];
+                FAG_item[item_key].chance = FAG_item[item_key].chance * (100 + attr_data) * 0.01;
+            }
+        }
+        return FAG_item;
+    }
+    //将改变采集产物权重的属性名转义成需要处理的子类集合
+    FAG_chance_type_handle(attr_id) {
+        let type_switch = [];
+        const prefix = 'FAG_chance_';
+        let FAG_chance_type = attr_id.slice(prefix.length);
+        if (enums.Item_secon_type.includes(FAG_chance_type)) {
+            //属性针对某个具体的小类
+            type_switch.push(FAG_chance_type);
+        } else {
+            //属性针对的是几种小类
+            if (is_Empty_Object(enums[attr_id])) {
+                console.log('%s属性没有在枚举库中定义', attr_id);
+                return type_switch;
+            }
+            type_switch = enums[attr_id];
+        }
+        return type_switch;
     }
 }
 

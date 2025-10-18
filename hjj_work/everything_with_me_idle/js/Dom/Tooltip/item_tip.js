@@ -1,5 +1,5 @@
 import { addElement } from '../../Function/Dom_function.js';
-import { get_object_only_key } from '../../Function/Function.js';
+import { get_object_only_key, is_Empty_Object } from '../../Function/Function.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { items } from '../../Data/Item/Item.js';
 import { texts } from '../../Data/Text/Text.js';
@@ -88,22 +88,34 @@ function show_equipment_type(item_obj) {
     }
 
     let type_ch = '';
-    //武器类型获取，类型描述展示
+    //装备类型获取，类型描述展示
     let type_num = items[item_obj.id].secon_type.length;
     if (type_num == 0) {
-        type_ch = '错误武器类型';
+        type_ch = '错误装备类型';
     } else if (type_num == 1) {
-        //单种类武器
-        let e_type = items[item_obj.id].secon_type[0]; //获取这唯一的武器类型
+        //单种类装备
+        let e_type = items[item_obj.id].secon_type[0]; //获取这唯一的装备类型
         type_ch = texts[e_type].type_name; //获取类型名称
-        type_describe.innerHTML = texts[e_type].type_desc; //展示武器类型的描述
+        type_describe.innerHTML = texts[e_type].type_desc; //展示装备类型的描述
     } else if (type_num > 1) {
-        //复合类型武器
-        for (let e_type of items[item_obj.id].secon_type) {
-            type_ch = type_ch + texts[e_type].type_name + '，';
+        //复合类型装备
+        if (enums['tool_equipment_type'].includes(items[item_obj.id].secon_type[0])) {
+            //复合的是工具
+            let skill_ch = '';
+            for (let e_type of items[item_obj.id].secon_type) {
+                type_ch = type_ch + texts[e_type].type_name + '，';
+                skill_ch = skill_ch + texts[e_type].help_skill + '，';
+            }
+            type_ch = type_ch.substring(0, type_ch.length - 1);
+            skill_ch = skill_ch.substring(0, skill_ch.length - 1);
+            type_describe.innerHTML = '帮助' + skill_ch + '的装备';
+        } else {
+            for (let e_type of items[item_obj.id].secon_type) {
+                type_ch = type_ch + texts[e_type].type_name + '，';
+            }
+            type_ch = type_ch.substring(0, type_ch.length - 1);
+            type_describe.innerHTML = '同时拥有' + type_ch + '的特性';
         }
-        type_ch = type_ch.substring(0, type_ch.length - 1);
-        type_describe.innerHTML = '同时拥有' + type_ch + '的特性';
     }
     T_value.innerHTML = type_ch;
     return true;
@@ -130,36 +142,108 @@ function show_equipment_wearing_position(item_obj) {
 function show_equipment_attr(item_obj) {
     let Tooltip = document.getElementById('tooltip');
     let id = item_obj.id;
+    let rarity = item_obj.equip_rarity;
     let attr_div = addElement(Tooltip, 'div', null, 'page_columns_111');
-    for (let attr in items[id].equip_attr) {
-        if (items[id].equip_attr[attr] != 0) {
+    let no_normal_attr_flag = false;
+    let no_normal_attr_ch = '';
+    for (let attr in items[id].equip_attr[rarity]) {
+        if (items[id].equip_attr[rarity][attr] == 0) {
+            //0数值的属性不用展示
+            continue;
+        }
+        if (enums['normal_attr'].includes(attr)) {
+            //常规属性，需要用表格显示
             let TLV_div = addElement(attr_div, 'div', null, 'table_3_value');
             // 属性名称
             let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
+
             if (texts[attr].attr_name.length > 3) {
-                T_name.innerHTML = texts[attr].min_attr_name; //完整名称太长,选用简称
+                //完整名称太长，有简称就用简称
+                if (is_Empty_Object(texts[attr].min_attr_name)) {
+                    T_name.innerHTML = texts[attr].attr_name;
+                } else {
+                    T_name.innerHTML = texts[attr].min_attr_name;
+                }
             } else {
                 T_name.innerHTML = texts[attr].attr_name;
             }
             //属性数值
             let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
-            if (enums.need_per_cent_attr.includes(attr)) {
-                //这是需要用百分号表示的属性
-                T_value.innerHTML = '+' + items[id].equip_attr[attr] + '%';
-            } else if (attr == 'attack_speed') {
-                //回旋武器的攻击速度单独处理
-                if (items[id].secon_type.includes('boomerang')) {
-                    // this.EQP_attr[i] += items[id].equip_attr[i] / num;
-                    T_value.innerHTML = '+(' + items[id].equip_attr[attr] + '/' + item_obj.num + ')秒';
-                } else {
-                    T_value.innerHTML = '+' + items[id].equip_attr[attr] + '秒';
-                }
-            } else {
-                //其他属性
-                T_value.innerHTML = '+' + items[id].equip_attr[attr];
+            T_value.innerHTML = get_table_attr_value_ch(attr, items[id].equip_attr[rarity][attr], item_obj);
+        } else {
+            //相对特殊的属性，使用一个文本框集中直接显示
+            if (is_Empty_Object(texts[attr])) {
+                console.log('装备属性%s没有定义属性名称', attr);
+                continue;
             }
+            let attr_ch = get_attr_ch(attr, items[id].equip_attr[rarity][attr]);
+            if (no_normal_attr_flag == false) {
+                no_normal_attr_ch += attr_ch;
+            } else {
+                no_normal_attr_ch += '<br>' + attr_ch;
+            }
+            no_normal_attr_flag = true;
         }
     }
+    if (no_normal_attr_flag) {
+        let no_normal_attr_div = addElement(Tooltip, 'div', null, 'lable_down');
+        no_normal_attr_div.innerHTML = no_normal_attr_ch;
+    }
+}
+//获取一条属性直接呈现到屏幕上的文本
+function get_attr_ch(attr_id, attr_data) {
+    if (is_Empty_Object(texts[attr_id])) {
+        console.log('%s属性名称未定义', attr_id);
+        return '未定义属性名：' + attr_data;
+    }
+    if (is_Empty_Object(texts[attr_id].attr_name)) {
+        console.log('%s属性名称未定义', attr_id);
+        return '未定义属性名：' + attr_data;
+    }
+    //属性名称
+    let ch = texts[attr_id].attr_name + '：';
+    //正负号
+    if (attr_data > 0) {
+        ch += '+' + attr_data;
+    } else {
+        ch += '-' + attr_data;
+    }
+    //后缀
+    if (enums['need_per_cent_attr'].includes(attr_id)) {
+        ch += '%';
+    } else if (enums['need_second_attr'].includes(attr_id)) {
+        ch += '秒';
+    }
+
+    return ch;
+}
+//获取一条属性呈现到表格上的文本，这里是属性的数值部分
+function get_table_attr_value_ch(attr_id, attr_data, item_obj) {
+    let ch = '';
+    let id = item_obj.id;
+    //正负号
+    if (attr_data > 0) {
+        ch += '+';
+    } else {
+        ch += '-';
+    }
+    //属性数值
+    if (items[id].secon_type.includes('boomerang') && attr_id == 'attack_interval') {
+        //回旋武器的攻击间隔数值单独处理
+        attr_data = '(' + Math.abs(attr_data) + '/' + item_obj.num + ')';
+    } else {
+        attr_data = Math.abs(attr_data);
+    }
+    ch += attr_data;
+    //后缀
+    if (enums['need_per_cent_attr'].includes(attr_id)) {
+        //这是需要用百分号表示的属性
+        ch += '%';
+    } else if (enums['need_second_attr'].includes(attr_id)) {
+        ch += '秒';
+    }
+
+    return ch;
 }
 
 //针对消耗品，追加展示类型
@@ -278,8 +362,24 @@ function show_item_price(tip_type, item_obj) {
                 label.innerHTML = '购买' + num + '个，价值' + item_trade_price + money_type_name;
             } else {
                 label.innerHTML = '免费';
-                // label.style.fontWeight = 'bold';
-                // label.style.color = '#ff0000';
+            }
+        } else if (tip_type == 'buyback_good') {
+            //获取当前购买数量设定
+            let buy_quantity_button = document.getElementById('buy_quantity_button');
+            let quantity_num = buy_quantity_button.dataset.quantity_num;
+            //调整要购买的数量
+            if (item_obj.num >= quantity_num) {
+                num = quantity_num;
+            } else {
+                num = item_obj.num;
+            }
+            //计算回购这些物品的价格是多少
+            let buyback_manage = store_manage.get_buyback_manage();
+            item_trade_price = buyback_manage.get_buyback_item_price(item_obj, num);
+            if (item_trade_price > 0) {
+                label.innerHTML = '购买' + num + '个，价值' + item_trade_price + money_type_name;
+            } else {
+                label.innerHTML = '免费';
             }
         }
     }

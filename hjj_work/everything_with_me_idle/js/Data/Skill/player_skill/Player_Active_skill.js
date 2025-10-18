@@ -7,7 +7,6 @@ function init_Player_Active_skill(P_skills) {
     let id = 'normal_attack_Melee';
     add_P_Active_skill(P_skills, id);
     P_skills[id].need_slot_num = 1; //需要几个技能槽
-
     //每个槽中使用的基础技能
     P_skills[id].need_slot_id = ['normal_attack_Melee'];
     P_skills[id].levelup_type = 'unlevelup';
@@ -29,12 +28,12 @@ function init_Player_Active_skill(P_skills) {
     P_skills[id].levelup_type = 'unlevelup';
 
     //测试4槽技能
-    id = 'test_4_slot_skill';
-    add_P_Active_skill(P_skills, id);
-    P_skills[id].need_slot_num = 4; //需要几个技能槽
-    //这个技能的每个槽使用哪个基础技能
-    P_skills[id].need_slot_id = ['normal_attack_Melee', 'normal_attack_Melee', 'normal_attack_Melee', 'normal_attack_Melee'];
-    P_skills[id].levelup_type = 'unlevelup';
+    // id = 'test_4_slot_skill';
+    // add_P_Active_skill(P_skills, id);
+    // P_skills[id].need_slot_num = 4; //需要几个技能槽
+    // //这个技能的每个槽使用哪个基础技能
+    // P_skills[id].need_slot_id = ['normal_attack_Melee', 'normal_attack_Melee', 'normal_attack_Melee', 'normal_attack_Melee'];
+    // P_skills[id].levelup_type = 'unlevelup';
 
     //盾牌防御
     id = 'shield_defense';

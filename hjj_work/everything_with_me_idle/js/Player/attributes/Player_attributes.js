@@ -1,12 +1,15 @@
 'use strict';
 import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
+import { enums } from '../../Data/Enum/Enum.js';
 import { Data_attr_manage } from './data_attr.js';
 import { Buff_attr_manage } from './buff_attr.js';
+import { Player_energy_manage } from './player_energy.js';
 
 export class Player_attributes {
     constructor() {
         this.data_attr = new Data_attr_manage(); //玩家的数值属性
         this.buff_attr = new Buff_attr_manage(); //玩家的数值属性
+        this.player_energy = new Player_energy_manage(); //玩家精力管理类
     }
     //初始化玩家属性
     init() {

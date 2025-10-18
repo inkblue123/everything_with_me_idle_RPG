@@ -87,6 +87,7 @@ function get_object_only_key(obj) {
     }
     return keys[0];
 }
+//获取监控行为的文本
 function get_monitor_ch(id, monitor_data, monitor_target) {
     if (is_Empty_Object(monitor_target[id]) || is_Empty_Object(monitor_data[id])) {
         console.log('错误，输入参数中没有%s监控行为', id);
@@ -254,17 +255,6 @@ function get_item_obj(id, num, ...args) {
         // 暂无
     }
 
-    //设置通用参数
-    //价值
-    item_obj.price = items[id].price;
-    if (items[id].main_type.includes('equipment')) {
-        //装备物品根据稀有度变化价值
-        let equip_rarity = item_obj.equip_rarity;
-        let rarity_place_data = enums[equip_rarity].price_data;
-        for (let money_type in item_obj.price) {
-            item_obj.price[money_type] = item_obj.price[money_type] * rarity_place_data * 0.01;
-        }
-    }
     return item_obj;
 }
 

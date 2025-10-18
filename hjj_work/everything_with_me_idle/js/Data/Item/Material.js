@@ -281,7 +281,7 @@ function init_rock(items) {
     add_Material_object(items, id);
     items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 8); //物品价值
-    id = '​​highFe_rock'; //富铁矿石
+    id = 'highFe_rock'; //富铁矿石
     add_Material_object(items, id);
     items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 16); //物品价值

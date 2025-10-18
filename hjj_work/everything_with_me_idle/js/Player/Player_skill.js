@@ -11,6 +11,9 @@ import { player } from '../Player/Player.js';
 class Player_skill {
     constructor(id) {
         this.id = id; //唯一id
+        // if (is_Empty_Object(P_skills[id])) {
+        //     console.log('%s,error', id);
+        // }
         this.type = P_skills[id].type; //主动或被动类型
         this.name = P_skills[id].name; //技能名
         this.desc = P_skills[id].desc; //技能描述
@@ -67,7 +70,7 @@ class Player_A_skill extends Player_skill {
     }
     init_A_skill_aslot(active_slots, id, i) {
         let B_id = P_skills[id].need_slot_id[i];
-        this.active_slots[i].id = id; //技能id
+        this.active_slots[i].id = B_id; //技能id
         this.active_slots[i].slot_num = i; //所处槽数
         this.active_slots[i].active_condition = B_skills[B_id].active_condition; //限制条件
         this.active_slots[i].active_type = B_skills[B_id].active_type; //辅助类型
@@ -163,6 +166,10 @@ export class Player_skills {
                 let base_exp = P_skills[id].levelup_data[skill_obj.level_stage].base_exp;
                 let now_level = skill_obj.level - P_skills[id].levelup_data[skill_obj.level_stage].start_level;
                 skill_obj.next_level_need_exp = skill_levelup_exp_algorithm(algorithm, base_exp, now_level);
+            } else if (P_skills[id].levelup_type == 'unlevelup') {
+                skill_obj.level = skill_save.level; //当前等级
+                skill_obj.level_stage = skill_save.level_stage; //当前等级阶段
+                skill_obj.levelmax_flag = skill_save.levelmax_flag; //满级标记
             }
             //技能的常态等级加成
             skill_obj.update_skill_rewards();
@@ -198,7 +205,12 @@ export class Player_skills {
         if (P_skills[id].type == 'Passive') {
             //被动技能
             if (!is_Empty_Object(this.passive_skills[id])) {
-                //该被动技能已拥有，不重复解锁
+                if (this.passive_skills[id].level == 0) {
+                    //该被动是0级的，相当于没有解锁，给予这个技能1级让它呈现出来
+                    this.skill_levelup(id);
+                } else {
+                    //该被动技能已拥有，不重复解锁
+                }
                 return;
             }
             //新的被动技能
@@ -206,8 +218,8 @@ export class Player_skills {
             //除了初始解锁的技能，后续获得的技能都是1级
             this.skill_levelup(id);
             //记录日志
-            let global_flag_manage = global.get_global_flag_manage();
-            global_flag_manage.set_game_log('unluck_skill', id);
+            // let global_flag_manage = global.get_global_flag_manage();
+            // global_flag_manage.set_game_log('unluck_skill', id);
         } else if (P_skills[id].type == 'Active') {
             //主动技能
             if (!is_Empty_Object(this.active_skills[id])) {

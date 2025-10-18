@@ -9,35 +9,43 @@ import { global } from '../global_manage.js';
 import { player } from '../../Player/Player.js';
 import { Sell_Manage } from './sell.js';
 import { Buy_Manage } from './buy.js';
-
-//交易过程中的一个物品
-class Goods_Item {
-    constructor(id) {
-        this.id = id; //物品id
-        //当前数量
-        //在待出售物品对象中，则是玩家打算出售的数量
-        //在待购买物品对象中，则是玩家打算购买的数量
-        //在当前商店的商品列表对象中，则是商店内的库存数量
-        this.num = 0;
-        //仅在商店货物积累与购买数量情况中记录，表示这个商品在过去被购买了多少个
-        this.buy_num = 0;
-        //上一次补货的时间
-        this.last_replenish_time;
-    }
-}
+import { BuyBack_Manage } from './buyback.js';
 
 export class Store_manage {
     constructor() {
-        this.store_buyback_goods = new Object(); //各个商店可回购物品
-
         //出售管理类
         this.sell_manage = new Sell_Manage();
         //购买管理类
         this.buy_manage = new Buy_Manage();
+        //回购管理类
+        this.buyback_manage = new BuyBack_Manage();
 
         this.now_place; //商店地点id
         this.money_type = 'ordinary_coin'; //这个商店使用的货币类型
         this.last_normal_money_type = 'ordinary_coin'; //最近一次用过的正常的货币类型
+    }
+    //对商店管理类存档
+    save_Store_manage() {
+        let store_save = new Object();
+        //出售类没有需要保存的数据
+        // store_save.sell_save = this.sell_manage.save_sell_manage();
+        store_save.buy_save = this.buy_manage.save_buy_manage();
+        store_save.buyback_save = this.buyback_manage.save_buyback_manage();
+        return store_save;
+    }
+    //加载商店存档
+    load_Store_manage(store_save) {
+        if (is_Empty_Object(store_save)) {
+            return;
+        }
+        //出售类没有需要保存的数据
+        // this.sell_manage.load_sell_manage(store_save.sell_save);
+        if (!is_Empty_Object(store_save.buy_save)) {
+            this.buy_manage.load_buy_manage(store_save.buy_save);
+        }
+        if (!is_Empty_Object(store_save.buyback_save)) {
+            this.buyback_manage.load_buyback_manage(store_save.buyback_save);
+        }
     }
     //地点更新，初始化商店管理类
     set_new_place(next_place) {
@@ -48,6 +56,7 @@ export class Store_manage {
         //初始化商店管理类
         this.sell_manage.init(this.money_type);
         this.buy_manage.init(this.money_type, this.now_place);
+        this.buyback_manage.init(this.money_type, this.now_place);
 
         //刷新交易结果界面
         this.updata_trade_result_div();
@@ -60,11 +69,14 @@ export class Store_manage {
     get_buy_manage() {
         return this.buy_manage;
     }
+    get_buyback_manage() {
+        return this.buyback_manage;
+    }
 
     //根据设定的批量选择数，修改单格物品数据中的数量
     set_quantity_num(quantity_num, item_data, type) {
         let all_flag = false;
-        if (type == 'sell' || type == 'no_sell' || type == 'no_buy') {
+        if (type == 'sell' || type == 'no_sell' || type == 'no_buy' || type == 'buyback' || type == 'no_buyback') {
             //最大值基于单格物品存储的数量
             if (quantity_num == 'half') {
                 //选择一半的物品
@@ -96,8 +108,9 @@ export class Store_manage {
                 //获取当前玩家背包里的总货币
                 let P_backpack = player.get_player_backpack();
                 let money = P_backpack.get_BP_money_type_num(this.money_type); //玩家背包总货币
-                let use_money = this.buy_manage.get_all_buy_price(); //当前待购买物品要支出的货币
-                let can_use_money = money - use_money; //当前还能用的货币
+                let buy_price = this.buy_manage.get_all_buy_price(); //当前待购买物品要支出的货币
+                buy_price += this.buyback_manage.get_all_buyback_price();
+                let can_use_money = money - buy_price; //当前还能用的货币
                 let buy_max_num = this.buy_manage.get_money_buy_item_max_num(item_data, can_use_money); //理论最大可购买数量
                 if (item_data.inventory == 'infinite') {
                     item_data.num = Math.ceil(buy_max_num / 2);
@@ -116,8 +129,9 @@ export class Store_manage {
                 //选择全部物品
                 let P_backpack = player.get_player_backpack();
                 let money = P_backpack.get_BP_money_type_num(this.money_type); //玩家背包总货币
-                let use_money = this.buy_manage.get_all_buy_price(); //当前待购买物品要支出的货币
-                let can_use_money = money - use_money; //当前还能用的货币
+                let buy_price = this.buy_manage.get_all_buy_price(); //当前待购买物品要支出的货币
+                buy_price += this.buyback_manage.get_all_buyback_price();
+                let can_use_money = money - buy_price; //当前还能用的货币
                 let buy_max_num = this.buy_manage.get_money_buy_item_max_num(item_data, can_use_money); //理论最大可购买数量
                 if (item_data.inventory == 'infinite') {
                     //库存是无限的，全部物品就等于最大可购买数
@@ -163,7 +177,7 @@ export class Store_manage {
         let sell_price = this.sell_manage.get_all_sell_price();
         //购买物品总支出
         let buy_price = this.buy_manage.get_all_buy_price();
-        // buy_price += this.buyback_manage.get_all_buyback_price();
+        buy_price += this.buyback_manage.get_all_buyback_price();
         let ch = '交易结果<br>';
         ch += '收入：' + sell_price + money_type_name + '<br>';
         ch += '支出：' + buy_price + money_type_name + '<br>';
@@ -240,9 +254,69 @@ export class Store_manage {
             }
         }
     }
+    //尝试使用背包中的货币补齐交易所需
+    supplement_money() {
+        //出售物品总收入
+        let sell_price = this.sell_manage.get_all_sell_price();
+        //购买物品总支出
+        let buy_price = this.buy_manage.get_all_buy_price();
+        buy_price += this.buyback_manage.get_all_buyback_price();
+
+        if (sell_price >= buy_price) {
+            //可以交易，尝试让商人找零
+            let need_money = sell_price - buy_price;
+            this.buy_manage.supplement_money(this.money_type, need_money, 'for_buy');
+            // 更新商店货物界面
+            this.updata_store_PL_value_div();
+        } else {
+            //计算需要补充的货币数
+            let P_backpack = player.get_player_backpack();
+            let need_money = buy_price - sell_price; //当前为了达成交易还需要补齐的货币
+
+            //根据需要的货币，自动补齐数量，放入待出售界面
+            let result = P_backpack.supplement_money(this.money_type, need_money);
+            if (!result.isExact) {
+                // 如果自动补齐时是超额补齐，则尝试从商店中补齐差额货币，简单来说，让商人找零
+                this.buy_manage.supplement_money(this.money_type, result.excess, 'for_buy');
+                // 更新商店货物界面
+                this.updata_store_PL_value_div();
+            }
+        }
+        //刷新交易结果界面
+        this.updata_trade_result_div();
+    }
     // 根据当前待购买和待出售物品，完成交易
     complete_trade() {
-        //
+        //出售物品总收入
+        let sell_price = this.sell_manage.get_all_sell_price();
+        //购买物品总支出
+        let buy_price = this.buy_manage.get_all_buy_price();
+        buy_price += this.buyback_manage.get_all_buyback_price();
+
+        if (sell_price < buy_price) {
+            //不可交易，理论上不能执行这个函数
+            console.log('支出与收入不符合，不可交易，不应该调用交易函数');
+            return;
+        }
+        //可以交易
+        //商人补给玩家差价
+        let need_money = sell_price - buy_price;
+        if (need_money > 0) {
+            this.buy_manage.supplement_money(this.money_type, need_money, 'for_backpack');
+        }
+
+        //玩家待出售的物品放入这个商人的回购列表
+        this.sell_manage.complete_trade();
+
+        //玩家待购买的物品放入背包
+        this.buy_manage.complete_trade();
+        this.buyback_manage.complete_trade();
+
+        //刷新背包界面
+        let P_backpack = player.get_player_backpack();
+        P_backpack.updata_BP_value();
+        //刷新交易结果界面
+        this.updata_trade_result_div();
     }
 }
 
@@ -278,12 +352,16 @@ function get_all_secon_type(store_product_list) {
         let id = store_product_list[item_key].id;
         all_secon_type = all_secon_type.concat(items[id].secon_type);
     }
+    //去重
     all_secon_type = get_uniqueArr(all_secon_type);
+    //排序
+    all_secon_type = all_secon_type.sort((a, b) => enums['secon_type_sort'][a] - enums['secon_type_sort'][b]);
+
     return all_secon_type;
 }
 //检查之前屏幕上激活的过滤条件在更新后是否适用，返回更新后适用的当前激活过滤条件
 function check_item_switch_type(last_switch_type, all_secon_type) {
-    if (last_switch_type == 'all' || last_switch_type == 'equipment_all' || last_switch_type == 'consumable_all' || last_BP_switch_type == 'material_all') {
+    if (last_switch_type == 'all' || last_switch_type == 'equipment_all' || last_switch_type == 'consumable_all' || last_switch_type == 'material_all') {
         //之前激活的过滤条件是所有物品或者三大分类的“全部”过滤条件，可以继续使用
         return last_switch_type;
     }
@@ -472,24 +550,26 @@ function add_click_updata_PL_value(target_div) {
 }
 //向商店界面的商品列表里添加一个物品，并且点击之后进入待购买窗口
 function add_store_div_goods(good_item) {
-    let PL_value_div = document.getElementById('PL_value_div');
-
-    if (good_item.num <= 0) {
-        return;
-    }
-
-    let aitem_div = addElement(PL_value_div, 'div', null, 'BP_value');
-    if (items[good_item.id].main_type.includes('equipment')) {
-        //根据装备稀有度调整文字颜色
-        aitem_div.style.color = enums[good_item.equip_rarity].rarity_color;
-    }
     //调整显示出来的数量
     let can_show_num;
     if (good_item.inventory == 'infinite') {
         can_show_num = '∞';
     } else {
-        can_show_num = good_item.inventory;
+        let store_manage = global.get_store_manage();
+        let buy_manage = store_manage.get_buy_manage();
+        let buy_num = buy_manage.get_buy_goods_num(good_item); //这种物品玩家当前打算购买的数量
+        can_show_num = good_item.inventory - buy_num;
+        if (can_show_num <= 0) {
+            return;
+        }
     }
+    let PL_value_div = document.getElementById('PL_value_div');
+    let aitem_div = addElement(PL_value_div, 'div', null, 'goods_value');
+    if (items[good_item.id].main_type.includes('equipment')) {
+        //根据装备稀有度调整文字颜色
+        aitem_div.style.color = enums[good_item.equip_rarity].rarity_color;
+    }
+
     //物品名称
     let name = items[good_item.id].name;
     aitem_div.innerHTML = name + ' x ' + can_show_num;
@@ -499,9 +579,34 @@ function add_store_div_goods(good_item) {
     aitem_data = JSON.parse(JSON.stringify(good_item));
     add_show_Tooltip(aitem_div, 'buy_good', aitem_data);
     //添加鼠标点击可以购买的效果
-    let store_manage = global.get_store_manage();
-    let buy_manage = store_manage.get_buy_manage();
-    buy_manage.add_click_buy_item(aitem_div, aitem_data);
+    add_click_buy_item(aitem_div, aitem_data);
+}
+// 向目标组件添加 点击之后放入待购买物品界面中的功能
+function add_click_buy_item(target_div, item_data) {
+    target_div.addEventListener('click', () => {
+        //获取当前购买数量设定
+        let buy_quantity_button = document.getElementById('buy_quantity_button');
+        let quantity_num = buy_quantity_button.dataset.quantity_num;
+
+        let store_manage = global.get_store_manage();
+        let buy_manage = store_manage.get_buy_manage();
+        //将待购买的物品的数量设定成规定数量
+        let all_flag = store_manage.set_quantity_num(quantity_num, item_data, 'buy');
+        //向商店管理类添加待购买物品信息
+        buy_manage.set_player_buy_goods(item_data);
+        //更新控制界面中待购买物品界面
+        buy_manage.updata_buy_value_div();
+        //更新控制界面中交易结果界面
+        store_manage.updata_trade_result_div();
+        //商店中的商品列表变化，更新界面
+        store_manage.updata_store_PL_value_div();
+
+        //关闭提示窗
+        if (all_flag) {
+            let tooltip = document.getElementById('tooltip');
+            tooltip.CloseTip(); //清空小窗口
+        }
+    });
 }
 //判断物品类型中是否在指定过滤条件内
 function Item_type_handle(type_switch, id) {

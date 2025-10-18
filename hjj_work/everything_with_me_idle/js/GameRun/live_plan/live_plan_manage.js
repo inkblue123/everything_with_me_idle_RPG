@@ -86,10 +86,11 @@ export class Live_plan_manage {
         // 将生活技能规划界面切换到存档中保存的技能上
         change_Live_plan_div(Live_plan_save.LP_type); //切换到大类
         if (Live_plan_save.LP_type == 'EC_switch_button') {
-            //合成制造部分还没开发，暂时不能跳转，只处理搜索采集类型的子技能
             change_Explore_collection_div(Live_plan_save.EX_LP_name);
             let radio_div = document.getElementById(Live_plan_save.EX_LP_name);
             radio_div.checked = true;
+        } else {
+            //合成制造部分还没开发，暂时不能跳转，只处理搜索采集类型的子技能
         }
     }
     //获取探索采集类生活技能的管理对象

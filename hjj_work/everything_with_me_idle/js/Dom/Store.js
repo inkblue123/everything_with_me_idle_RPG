@@ -1,5 +1,6 @@
 import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
 import { show_dropdown_table } from '../Function/show_func.js';
+import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 
 //创建左下的物品回购界面
@@ -117,14 +118,15 @@ function set_Store_button(Store) {
             change_store_div(this.id);
         });
     });
-    //展开隐藏的分类按钮
+    //商店界面展开隐藏的分类按钮
     let PL_EQP_button = Store.querySelector('#PL_EQP_button');
     PL_EQP_button.onclick = function () {
         //点击就激活武器装备分类下的“全部”过滤条件
         let PL_EQP_all_radio_div = document.getElementById('PL_EQP_all_radio_div');
         PL_EQP_all_radio_div.children[0].checked = true;
-        let P_backpack = player.get_player_backpack();
-        P_backpack.updata_PL_value();
+
+        let store_manage = global.get_store_manage();
+        store_manage.updata_store_PL_value_div();
         show_dropdown_table('PL_switch_div', 'PL_EQP_droptable');
     };
     let PL_CSB_button = Store.querySelector('#PL_CSB_button');
@@ -132,8 +134,8 @@ function set_Store_button(Store) {
         //点击就激活消耗品分类下的“全部”过滤条件
         let PL_CSB_all_radio_div = document.getElementById('PL_CSB_all_radio_div');
         PL_CSB_all_radio_div.children[0].checked = true;
-        let P_backpack = player.get_player_backpack();
-        P_backpack.updata_PL_value();
+        let store_manage = global.get_store_manage();
+        store_manage.updata_store_PL_value_div();
         show_dropdown_table('PL_switch_div', 'PL_CSB_droptable');
     };
     let PL_MTR_button = Store.querySelector('#PL_MTR_button');
@@ -141,15 +143,10 @@ function set_Store_button(Store) {
         //点击就激活材料分类下的“全部”过滤条件
         let PL_MTR_all_radio_div = document.getElementById('PL_MTR_all_radio_div');
         PL_MTR_all_radio_div.children[0].checked = true;
-        let P_backpack = player.get_player_backpack();
-        P_backpack.updata_PL_value();
+        let store_manage = global.get_store_manage();
+        store_manage.updata_store_PL_value_div();
         show_dropdown_table('PL_switch_div', 'PL_MTR_droptable');
     };
-    // let ASP_N_button = Store.querySelector('#ASP_N_button');
-    // ASP_N_button.onclick = function () {
-    //     ASP_N_1_radio_div.children[0].checked = true;
-    //     show_dropdown_table('ASP_droptable', 'ASP_N_droptable');
-    // };
     //商品列表过滤
     radios = Store.querySelectorAll('input[type="radio"][name="PL_switch"]');
     radios.forEach((radio) => {
@@ -158,8 +155,53 @@ function set_Store_button(Store) {
                 //针对背包界面的“全部”按钮，额外新增关闭其他下拉框的功能
                 show_dropdown_table('PL_switch_div');
             }
-            let P_backpack = player.get_player_backpack();
-            P_backpack.updata_PL_value();
+            let store_manage = global.get_store_manage();
+            store_manage.updata_store_PL_value_div();
+        });
+    });
+    //商品回购界面展开隐藏的分类按钮
+    let IBB_EQP_button = Store.querySelector('#IBB_EQP_button');
+    IBB_EQP_button.onclick = function () {
+        //点击就激活武器装备分类下的“全部”过滤条件
+        let IBB_EQP_all_radio_div = document.getElementById('IBB_EQP_all_radio_div');
+        IBB_EQP_all_radio_div.children[0].checked = true;
+
+        let store_manage = global.get_store_manage();
+        let buyback_manage = store_manage.get_buyback_manage();
+        buyback_manage.updata_store_IBB_value_div();
+        show_dropdown_table('IBB_switch_div', 'IBB_EQP_droptable');
+    };
+    let IBB_CSB_button = Store.querySelector('#IBB_CSB_button');
+    IBB_CSB_button.onclick = function () {
+        //点击就激活消耗品分类下的“全部”过滤条件
+        let IBB_CSB_all_radio_div = document.getElementById('IBB_CSB_all_radio_div');
+        IBB_CSB_all_radio_div.children[0].checked = true;
+        let store_manage = global.get_store_manage();
+        let buyback_manage = store_manage.get_buyback_manage();
+        buyback_manage.updata_store_IBB_value_div();
+        show_dropdown_table('IBB_switch_div', 'IBB_CSB_droptable');
+    };
+    let IBB_MTR_button = Store.querySelector('#IBB_MTR_button');
+    IBB_MTR_button.onclick = function () {
+        //点击就激活材料分类下的“全部”过滤条件
+        let IBB_MTR_all_radio_div = document.getElementById('IBB_MTR_all_radio_div');
+        IBB_MTR_all_radio_div.children[0].checked = true;
+        let store_manage = global.get_store_manage();
+        let buyback_manage = store_manage.get_buyback_manage();
+        buyback_manage.updata_store_IBB_value_div();
+        show_dropdown_table('IBB_switch_div', 'IBB_MTR_droptable');
+    };
+    //商品回购列表过滤
+    radios = Store.querySelectorAll('input[type="radio"][name="IBB_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            if (this.id == 'IBB_all') {
+                //针对背包界面的“全部”按钮，额外新增关闭其他下拉框的功能
+                show_dropdown_table('IBB_switch_div');
+            }
+            let store_manage = global.get_store_manage();
+            let buyback_manage = store_manage.get_buyback_manage();
+            buyback_manage.updata_store_IBB_value_div();
         });
     });
 }

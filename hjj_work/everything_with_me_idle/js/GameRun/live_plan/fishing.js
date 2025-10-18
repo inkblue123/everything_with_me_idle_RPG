@@ -1,6 +1,6 @@
 import { get_random } from '../../Function/math_func.js';
 import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object, compare_dataset_value, set_dataset_value } from '../../Function/Function.js';
+import { is_Empty_Object, compare_dataset_value, set_dataset_value, get_item_id_key } from '../../Function/Function.js';
 import { enemys } from '../../Data/Enemy/Enemy.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
@@ -52,7 +52,7 @@ class Fish_manage {
         this.health_max = (4 * A * C - B * B) / (4 * A);
         // 鱼的生命达到理论最大时，游戏界面里的进度条看起来就像是鱼跑了
         // 所以给最大值额外增加一段，防止看起来鱼跑掉
-        this.health_max += this.health_point * 0.1;
+        this.health_max += this.health_point * 0.2;
 
         this.all_time = 0;
     }
@@ -431,12 +431,21 @@ export class Fishing_manage {
         this.updata_FIS_place_rare_fishs();
         //判断当前是否有鱼可以上钩
         let can_bait_flag = this.judge_have_fish_can_bait();
+        if (!can_bait_flag) {
+            //没有鱼可以咬钩，重置上钩阶段
+            this.reset_round();
+            return;
+        }
         // 判断鱼是否上钩
         let bait_flag = this.get_wait_bait_flag();
-
-        if (can_bait_flag && bait_flag) {
+        if (bait_flag) {
             //上钩成功，进入遛鱼阶段
             this.now_FIS_status = FIS_status.WALK_FIS;
+            //记录上钩了一条鱼，用于结算钓鱼技能的经验
+            let global_flag_manage = global.get_global_flag_manage();
+            let fishing_behavior = new Object();
+            fishing_behavior.bait_fish_num = 1;
+            global_flag_manage.record_fishing_behavior(fishing_behavior);
         } else {
             //上钩失败，重置上钩阶段
             this.reset_round();
@@ -514,8 +523,6 @@ export class Fishing_manage {
             for (let id in FIS_fishs) {
                 //不稀有的鱼不需要记录缓存
                 if (!FIS_fishs[id].rare_flag) continue;
-
-                //
                 obj[id] = new Object();
                 obj[id].cumulative_num = FIS_fishs[id].max_cumulative_num;
                 obj[id].last_cumulative_time = this.now_time;
@@ -580,7 +587,7 @@ export class Fishing_manage {
             //获取钓鱼物品
             let items_arr = this.get_fish_death_item(fish_id);
             for (let item_key in items_arr) {
-                player.Player_get_item(item_key[item_key]);
+                player.Player_get_item(items_arr[item_key]);
             }
 
             //结算钓鱼经验
@@ -637,7 +644,7 @@ export class Fishing_manage {
                 let item_obj = new Object();
                 item_obj.id = data_obj.id;
                 item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
-                if (items[item_id].main_type.includes('equipment')) {
+                if (items[item_obj.id].main_type.includes('equipment')) {
                     //如果掉落的是装备，还需要记录稀有度
                     item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
                 }
@@ -676,9 +683,21 @@ export class Fishing_manage {
 
             if (this.now_FIS_status == FIS_status.NO_FIS) {
                 //当前没有钓鱼
+                let now_GS = global.get_flag('GS_game_statu');
+                if (now_GS == 'fishing') {
+                    //开始钓鱼后不应该运行这个逻辑
+                    console.log('开始钓鱼后不应该运行到这个逻辑，错误情况');
+                } else {
+                    //停止钓鱼时会运行到这里，逻辑是正常的，为了避免后续判空报错，在这里给ch填一个符号
+                    ch = ' ';
+                }
             } else if (this.now_FIS_status == FIS_status.WAIT_FIS) {
                 //当前处于等鱼上钩阶段
-                ch = texts['FIS_status_change']['WAIT_FIS_text'];
+                if (this.player_end_attr['weapon_type'].includes('fishing_tool')) {
+                    ch = texts['FIS_status_change']['WAIT_FIS_text'];
+                } else {
+                    ch = texts['FIS_status_change']['WAIT_FIS_no_tool_text'];
+                }
             } else if (this.now_FIS_status == FIS_status.WALK_FIS) {
                 //当前处于遛鱼阶段，
                 ch = texts['FIS_status_change']['WALK_FIS_text'];
