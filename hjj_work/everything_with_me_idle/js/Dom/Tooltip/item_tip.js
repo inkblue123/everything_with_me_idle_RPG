@@ -4,6 +4,7 @@ import { enums } from '../../Data/Enum/Enum.js';
 import { items } from '../../Data/Item/Item.js';
 import { texts } from '../../Data/Text/Text.js';
 import { global } from '../../GameRun/global_manage.js';
+import { TOOLTIP_WIDTH } from './Tooltip.js';
 
 //传入玩家的一个物品拷贝对象，展示这个物品的详细信息
 function init_item_tip(tip_type, item_obj) {

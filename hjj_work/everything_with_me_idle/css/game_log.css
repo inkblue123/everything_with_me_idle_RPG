@@ -1,13 +1,18 @@
-/* 玩家控制界面的样式 */
+/* 游戏日志界面的样式 */
 #game_log {
     box-sizing: border-box;
     user-select: none;
-    border: 2px solid #797691; /* 内框 */
+    border-top: 1px solid #797691; /* 内框 */
+    border-left: 1px solid #797691; /* 内框 */
+    border-right: 2px solid #797691; /* 内框 */
+    border-bottom: 2px solid #797691; /* 内框 */
 }
-/* 容纳切换战斗规划、生活技能、创造合成三个按钮的div */
+/* 游戏日志界面上方过滤按钮的div */
 #Game_log_switch_div {
     height: 10%;
     background-color: #ffd700;
+    box-sizing: border-box;
+    /* border-bottom: 1px solid #797691;  */
 }
 .GL_switch_button {
     flex: 1;
@@ -16,55 +21,42 @@
     box-sizing: border-box;
     border: 1px solid #797691; /* 内框 */
 }
-/* 容纳具体的战斗规划、生活技能、创造合成内容的div */
+/* 游戏日志界面下方容纳具体内容的div */
 #Game_log_value_div {
     height: 90%;
 }
+/* 脑海-左侧过滤按钮的div */
+#MD_scroll_box {
+    box-sizing: border-box;
+    border-right: 2px solid #797691; /* 内框 */
+}
 
-/* 容纳脑海内容的div */
-/* #MD_div {
-} */
-/* 游戏日志界面-脑海-流水账内容的div */
+/* 脑海-流水账内容的div */
 #RA_value_div {
     background-color: #ffffff;
 }
-/* 游戏日志界面-脑海-流水账中一条具体日志的div */
 .RA_log_div {
     display: flex;
-    /* color: rgb(145, 145, 145); */
+    flex-wrap: wrap;
     padding: 5px 0;
-    word-wrap: break-word;
-    user-select: none;
-    position: relative;
+    box-sizing: border-box;
+    border-right: 2px solid #797691;
+    border-bottom: 2px solid #797691;
 }
-/* 第一个div不设置特殊外观 */
-/* .RA_log_div:first-of-type {
-    border-bottom: none;
-} */
-/* 为其余的div设置上边框 */
-.RA_log_div_br {
-    /* .RA_log_div:not(:first-of-type)::after { */
-    content: '';
-    position: absolute;
-    top: 0px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    z-index: 1;
-    background-color: rgb(148, 148, 148);
+.RA_log_value_div {
+    display: flex;
 }
-
-/* 游戏日志界面-脑海-重要事件内容的div */
+/* 脑海-重要事件内容的div */
 #IE_value_div {
     display: flex;
     flex-direction: column; /* 垂直排列 */
 }
-/* 游戏日志界面-脑海-重要事件-主线任务的div */
+/* 脑海-重要事件-主线任务的div */
 #main_quest_div {
     width: 100%;
     height: auto;
 }
-/* 游戏日志界面-脑海-重要事件-支线任务的div */
+/* 脑海-重要事件-支线任务的div */
 #all_side_quest_div {
     width: 100%;
     height: auto;
@@ -112,7 +104,7 @@
     font-size: 15px;
 }
 
-/* 游戏日志界面-图鉴内容的div */
+/* 图鉴内容的div */
 #IB_div {
     /* display: grid;
     grid-template-columns: 1fr 2fr; */
@@ -121,4 +113,73 @@
     /* 测试颜色 */
     background-color: #1100ff;
     /* height: 90%; */
+}
+
+/* 脑海-设置内容的div */
+#OP_value_scroll_box {
+    /* overflow_y_div元素如果父布局是flex，元素本身要启动flex1 */
+    /* 如果父布局是grid，元素本身就可以不管 */
+    flex: 1;
+}
+/* 脑海-设置-上部内容的div */
+#OP_up_div {
+    display: flex;
+    /* 测试颜色 */
+    height: 90%;
+    box-sizing: border-box;
+    border-bottom: 2px solid #797691; /* 内框 */
+}
+/* 脑海-设置-下部内容的div */
+#OP_down_div {
+    /* 测试颜色 */
+    height: 10%;
+}
+/* 脑海-设置-一条设置的父布局 */
+.OP_TLV_div {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 50px;
+}
+/* 脑海-设置-一条设置左侧的文本描述，80%长度版本 */
+.OP_T1_div {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    width: 80%;
+    height: 100%;
+    box-sizing: border-box;
+}
+/* 脑海-设置-一条设置左侧的文本描述，50%长度版本 */
+.OP_T2_div {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
+}
+/* 脑海-设置-一条设置左侧的文本描述，20%长度版本 */
+.OP_T3_div {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    width: 20%;
+    height: 100%;
+    box-sizing: border-box;
+}
+/* 脑海-设置-一条设置右侧的交互ui */
+.OP_V_div {
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+/* 脑海-设置-一个按钮的ui */
+.OP_button {
+    width: 80px;
+    height: 45px;
+    /* font-size: 15px; */
 }

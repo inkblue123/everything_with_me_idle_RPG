@@ -5,6 +5,7 @@ import { Player_backpack } from './Player_backpack.js';
 import { Player_worn } from './Player_worn.js';
 import { Player_active_skills_Manage } from './Player_active_skills.js';
 import { Player_skills } from './Player_skill.js';
+import { Player_Buff_Manage } from './Player_buff.js';
 import { global } from '../GameRun/global_manage.js';
 import { items } from '../Data/Item/Item.js';
 
@@ -12,6 +13,9 @@ export class Player_Object {
     constructor() {
         //角色属性
         this.player_attributes = new Object();
+        //角色buff
+        this.player_buff = new Object();
+
         //背包物品
         this.player_backpack = new Object();
         //穿戴的装备
@@ -26,8 +30,12 @@ export class Player_Object {
         //初始化玩家属性
         this.player_attributes = new Player_attributes();
         this.player_attributes.init();
+        //玩家buff
+        this.player_buff = new Player_Buff_Manage();
+        this.player_buff.init();
         //玩家背包
         this.player_backpack = new Player_backpack();
+        this.player_backpack.init();
         //初始化身上穿戴的装备
         this.player_worn = new Player_worn();
         this.player_worn.init();
@@ -43,11 +51,14 @@ export class Player_Object {
     get_player_attributes() {
         return this.player_attributes;
     }
-    get_player_attributes_buff_attr() {
-        return this.player_attributes.buff_attr;
-    }
     get_player_attributes_data_attr() {
         return this.player_attributes.data_attr;
+    }
+    get_player_attributes_player_energy() {
+        return this.player_attributes.player_energy;
+    }
+    get_player_buff() {
+        return this.player_buff;
     }
     get_player_backpack() {
         return this.player_backpack;
@@ -192,24 +203,11 @@ export class Player_Object {
         //背包物品变动，刷新背包界面
         this.player_backpack.updata_BP_value();
     }
-    //更新玩家当前的最终属性
-    updata_end_attr() {
+    //更新玩家当前的最终属性，输入的type为更新指定部分的属性，不输入type为更新全部属性
+    updata_end_attr(type) {
         //更新最终属性
-        let P_data_attr = this.get_player_attributes_data_attr();
-        P_data_attr.updata_end_attr();
+        this.player_attributes.updata_end_attr(type);
         //将最终数值属性更新到其他会用的地方
-        let end_data_attr = this.player_attributes.get_end_data_attr();
-        this.player_ASkills_manage.updata_player_data(end_data_attr); //战斗方面属性更新
-        let live_plan_manage = global.get_live_plan_manage();
-        live_plan_manage.updata_player_data(end_data_attr); //生活技能属性更新
-    }
-    //根据玩家当前的加成更新属性
-    updata_EQP_attr() {
-        //获取当前穿戴的装备
-        let player_worn = this.player_worn.get_worn_EQP();
-        //更新装备的属性
-        this.player_attributes.updata_EQP_attr(player_worn);
-        //将更新后的最终数值属性更新到其他会用的地方
         let end_data_attr = this.player_attributes.get_end_data_attr();
         this.player_ASkills_manage.updata_player_data(end_data_attr); //战斗方面属性更新
         let live_plan_manage = global.get_live_plan_manage();
@@ -217,10 +215,12 @@ export class Player_Object {
     }
     //游戏运行一帧，计算玩家常态数值变化内容
     run_player_normal() {
+        //玩家自然恢复血量魔力精力
+        this.player_attributes.recover_HP_MP_ENP();
         //玩家被动技能
 
         //玩家buff
-        this.player_attributes.run_player_buff();
+        this.player_buff.run_player_buff();
     }
     //游戏运行一帧，计算玩家的战斗相关内容
     run_player_combat() {
@@ -234,6 +234,8 @@ export class Player_Object {
         //获取每个子对象的存档
         //玩家属性
         player_save.Player_attr_save = this.player_attributes.save_Player_attributes();
+        //玩家buff
+        player_save.Player_buff_save = this.player_buff.save_Player_Buff_attr();
         //玩家背包物品
         player_save.Player_backpack_save = this.player_backpack.save_Player_backpack();
         //玩家装备栏
@@ -248,6 +250,7 @@ export class Player_Object {
     //加载玩家对象存档
     load_player_class(player_save) {
         this.player_attributes.load_Player_attributes(player_save.Player_attr_save);
+        this.player_buff.load_Player_Buff_attr(player_save.Player_buff_save);
         this.player_backpack.load_Player_backpack(player_save.Player_backpack_save);
         this.player_worn.load_Player_worn(player_save.Player_worn_save);
         this.player_skills.load_Player_skills(player_save.Player_skills_save);

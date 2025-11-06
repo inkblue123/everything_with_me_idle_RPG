@@ -2,24 +2,23 @@
 import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { Data_attr_manage } from './data_attr.js';
-import { Buff_attr_manage } from './buff_attr.js';
 import { Player_energy_manage } from './player_energy.js';
 
 export class Player_attributes {
     constructor() {
         this.data_attr = new Data_attr_manage(); //玩家的数值属性
-        this.buff_attr = new Buff_attr_manage(); //玩家的数值属性
         this.player_energy = new Player_energy_manage(); //玩家精力管理类
     }
     //初始化玩家属性
     init() {
         this.data_attr.init();
+        this.player_energy.init();
     }
     //获取玩家属性部分的游戏存档
     save_Player_attributes() {
         let Player_attr_save = new Object();
         Player_attr_save.data_attr_save = this.data_attr.save_Data_attr();
-        Player_attr_save.buff_attr_save = this.buff_attr.save_Buff_attr();
+        Player_attr_save.player_energy_save = this.player_energy.save_Player_energy();
         return Player_attr_save;
     }
     //加载玩家属性部分的游戏存档
@@ -28,55 +27,63 @@ export class Player_attributes {
             return;
         }
         this.data_attr.load_Data_attr(Player_attr_save.data_attr_save);
-        this.buff_attr.load_Buff_attr(Player_attr_save.buff_attr_save);
+        this.player_energy.load_Player_energy(Player_attr_save.player_energy_save);
     }
     //根据id设置玩家的属性，只能设置玩家的属性，不会修改装备上、技能上的属性，
     set_data_attr(id, value) {
-        return this.data_attr.set_data_attr(id, value);
+        if (enums['energy_attr'].includes(id)) {
+            this.player_energy.set_energy_attr(id, value);
+        } else {
+            this.data_attr.set_data_attr(id, value);
+        }
     }
+    //根据id改变玩家的属性，改变量是value
     change_data_attr(id, value) {
-        return this.data_attr.change_data_attr(id, value);
+        if (enums['energy_attr'].includes(id)) {
+            this.player_energy.change_energy_attr(id, value);
+        } else {
+            this.data_attr.change_data_attr(id, value);
+        }
     }
+    //尝试使用value点精力
+    use_energy_point(value) {
+        return this.player_energy.use_energy_point(value);
+    }
+    //判断精力是否满了
+    //判断表层精力是否满了
+    judge_surface_energy_max() {
+        return this.player_energy.judge_surface_energy_max();
+    }
+
     //根据id获取数值属性
     get_data_attr(id) {
-        return this.data_attr.get_data_attr(id);
+        if (enums['energy_attr'].includes(id)) {
+            return this.player_energy.get_energy_attr(id);
+        } else {
+            return this.data_attr.get_data_attr(id);
+        }
     }
     //获取最终属性
     get_end_data_attr() {
         return this.data_attr.get_end_data_attr();
     }
-    //更新穿戴的装备上的属性加成
-    updata_EQP_attr() {
-        this.data_attr.updata_EQP_attr();
-    }
-    //更新被动技能上的属性加成
-    updata_passive_skill_attr() {
-        this.data_attr.updata_passive_skill_attr();
-    }
-    //更新装备了的主动技能上的属性加成
-    updata_active_skill_attr() {
-        this.data_attr.updata_active_skill_attr();
-    }
     //更新最终属性
-    updata_end_attr() {
-        this.data_attr.updata_end_attr();
+    updata_end_attr(type) {
+        this.data_attr.updata_end_attr(type);
+    }
+    //玩家自然恢复血量魔力精力
+    recover_HP_MP_ENP() {
+        // this.player_health.recover_health_point();//血量
+        // this.player_magic.recover_magic_point();//魔力
+        this.player_energy.recover_energy_point(); //精力
+    }
+    //更新玩家红蓝绿资源的界面呈现
+    updata_HP_MP_ENP_div() {
+        this.updata_HP_bar_div();
+        this.updata_MP_bar_div();
+        this.player_energy.updata_ENP_bar_div();
     }
 
-    //根据id让玩家获得一个buff
-    set_buff_attr(id) {
-        return this.buff_attr.set_buff_attr(id);
-    }
-    //获取最终buff
-    get_end_buff_attr() {
-        return this.buff_attr.get_end_buff_attr();
-    }
-    run_player_buff() {
-        this.buff_attr.run_player_buff();
-    }
-    //根据id让玩家失去一个buff
-    delete_buff_attr(id) {
-        return this.buff_attr.delete_buff_attr(id);
-    }
     //更新血条上的数值
     updata_HP_bar_div() {
         let health_point = this.get_data_attr('health_point');
@@ -103,20 +110,6 @@ export class Player_attributes {
             MP_bar.children[0].children[0].style.width = bar_ratio;
             MP_bar.children[1].innerText = Math.floor(magic_point) + '/' + Math.ceil(magic_max) + '魔力';
             MP_bar.dataset.bar_ratio = bar_ratio;
-        }
-    }
-    //更新精力条上的数值
-    updata_ENP_bar_div() {
-        let energy_point = this.get_data_attr('energy_point');
-        let energy_max = this.get_data_attr('energy_max');
-        let bar_ratio = (energy_point / energy_max) * 100;
-        bar_ratio = bar_ratio.toFixed(2);
-        bar_ratio = bar_ratio + '%';
-        const ENP_bar = document.getElementById('ENP_bar');
-        if (ENP_bar.dataset.bar_ratio != bar_ratio) {
-            ENP_bar.children[0].children[0].style.width = bar_ratio;
-            ENP_bar.children[1].innerText = Math.floor(energy_point) + '/' + Math.ceil(energy_max) + '精力';
-            ENP_bar.dataset.bar_ratio = bar_ratio;
         }
     }
 }

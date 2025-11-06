@@ -87,6 +87,7 @@ function set_logging_button(LGI_value_div) {
         //开启一轮伐木，重置伐木的参数
         let live_plan_manage = global.get_live_plan_manage();
         let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
+        logging_manage.player_start_logging();
         logging_manage.reset_round();
         //开始伐木按钮切换成停止伐木
         LGI_S_button.style.display = 'none';
@@ -107,10 +108,7 @@ function set_logging_button(LGI_value_div) {
         //更换当前伐木目标
         logging_manage.reborn_tree();
         //停止当前伐木动作
-        global.set_flag('GS_game_statu', 'NULL');
-        LGI_S_button.style.display = '';
-        LGI_E_button.style.display = 'none';
-        logging_manage.updata_live_plan_data();
+        logging_manage.stop_game_statu();
     };
 }
 //按下伐木界面的伐木策略按钮之后，切换界面显示

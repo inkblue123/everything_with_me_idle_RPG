@@ -227,11 +227,20 @@ export class Mini_event extends Game_Event {
                 thing_obj[thing_type].push(attr_obj);
             }
         } else if (thing_type == 'get_side_quest') {
-            //设置全局游戏状态
+            //获得支线任务
             for (let i = 0; i < thing_value.length; i++) {
                 let event_id = thing_value[i];
                 thing_obj[thing_type].push(event_id);
             }
+        } else if (thing_type == 'delete_buff') {
+            //清除指定buff
+            for (let i = 0; i < thing_value.length; i++) {
+                let buff_id = thing_value[i];
+                thing_obj[thing_type].push(buff_id);
+            }
+        } else if (thing_type == 'save_game') {
+            //保存游戏
+            thing_obj[thing_type] = true;
         } else {
             console.log('未知的迷你事件中要做的事：%s，没有开发对应的处理逻辑', thing_type);
         }

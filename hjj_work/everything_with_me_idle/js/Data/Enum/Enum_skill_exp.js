@@ -1,5 +1,5 @@
 import { add_Enum_Array, add_Enum_Object } from './Enum_class.js';
-//初始化枚举库中与技能和经验相关的内容（目前弃用）
+//初始化枚举库中与技能和经验相关的内容
 function init_Enum_skill_exp(enums) {
     let id;
     //每个升级行为参数归属于哪一种行为

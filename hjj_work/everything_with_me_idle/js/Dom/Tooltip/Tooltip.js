@@ -1,10 +1,13 @@
 import { crtElement, addElement, empty_dom } from '../../Function/Dom_function.js';
+import { enums } from '../../Data/Enum/Enum.js';
 
 import { init_item_tip } from './item_tip.js';
 import { init_skill_tip } from './skill_tip.js';
 import { init_game_save_tip } from './game_save_tip.js';
+import { init_Hp_Mp_Enp_tip } from './HpMpEnp_bar_tip.js';
+import { init_buff_tip } from './buff_tip.js';
 
-const TOOLTIP_WIDTH = 360;
+export const TOOLTIP_WIDTH = 360;
 
 //创建游离于游戏布局之上，跟随鼠标的小窗口
 function create_Tooltip() {
@@ -24,23 +27,33 @@ function set_Tooltip_func(Tooltip) {
     Tooltip.InitTip = function (type, value, event) {
         this.CloseTip();
         this.type = type;
+        let Tooltip_type = enums['Tooltip_type'][type];
 
         this.style.display = 'block';
-        if (type == 'item' || type == 'sell_good' || type == 'buy_good' || type == 'buyback_good') {
+        if (Tooltip_type == 'item') {
             //初始化物品介绍内容
             init_item_tip(type, value);
-        } else if (type == 'active_skill' || type == 'show_active_skill' || type == 'show_passive_skill') {
+        } else if (Tooltip_type == 'skill') {
+            //技能详情
             init_skill_tip(type, value);
-        } else if (type == 'load_save' || type == 'save_game') {
+        } else if (Tooltip_type == 'load_save') {
+            //存档导入导出窗口
             init_game_save_tip(type, value);
+        } else if (Tooltip_type == 'HME_bar') {
+            //血条蓝条精力条详情
+            init_Hp_Mp_Enp_tip(type, value);
+        } else if (Tooltip_type == 'buff') {
+            //buff详情
+            init_buff_tip(type, value);
         }
-        //初始化后移动一次小窗口，避免直接初始化在游戏窗口外
+        //初始化后移动一次小窗口，避免直接初始化在浏览器窗口外
         this.MoveTip(event);
     };
     //移动小窗口
     Tooltip.MoveTip = function (event) {
+        let Tooltip_type = enums['Tooltip_type'][this.type];
         //存档和读档时的弹窗借用了提示小窗口，但是不需要移动
-        if (this.type == 'load_save' || this.type == 'save_game') {
+        if (Tooltip_type == 'load_save') {
             return;
         }
         const mouseX = event.pageX; // 鼠标横坐标
@@ -86,6 +99,7 @@ function set_Tooltip_func(Tooltip) {
     Tooltip.CloseTip = function () {
         // 隐藏小窗口
         this.style.display = 'none';
+        this.type = null;
         // 恢复宽度
         this.style.width = TOOLTIP_WIDTH + 'px';
         this.style.height = 'auto';

@@ -12,9 +12,11 @@ export class Place_manage {
         this.last_place; //上次地点
         this.next_place; //接下来要移动到的地点
         this.last_normal_place; //上一个安全的地点
-        this.limited_combat_data = new Object(); //有限刷怪区域的数据缓存
     }
-    init() {}
+    init() {
+        this.now_place = 'game_statr';
+        this.set_now_place('village_home');
+    }
     //移动到新地点，更新相关参数
     set_now_place(next_place, goto_flag) {
         this.next_place = next_place;
@@ -24,15 +26,15 @@ export class Place_manage {
             this.set_now_place(true_next_place, goto_flag);
             return;
         }
-        //移动时，如果涉及整体游戏界面布局的变化，则更新游戏界面
-        change_game_div(next_place);
-
         if (this.now_place != next_place) {
-            //进入新地点会获得一些效果，在进入时获得
-            goto_new_place_get(next_place);
             //如果旧地点有效果，离开时应该失去
             leave_old_place_delete(this.now_place);
+            //进入新地点会获得一些效果，在进入时获得
+            goto_new_place_get(next_place);
         }
+
+        //移动时，如果涉及整体游戏界面布局的变化，则更新游戏界面
+        change_game_div(next_place);
 
         //更新新旧地点参数
         this.updata_new_place_data();
@@ -97,9 +99,6 @@ export class Place_manage {
         }
         return places[this.now_place].type;
     }
-    get_limited_combat_data() {
-        return this.limited_combat_data;
-    }
     //获取上一个普通地点
     get_last_normal_place() {
         return this.last_normal_place;
@@ -138,7 +137,7 @@ export class Place_manage {
         }
 
         //进入新地点会获得一些效果，在进入时获得
-        goto_new_place_get(next_place);
+        // goto_new_place_get(next_place);
 
         //更新存档地点参数
         this.now_place = place_save.now_place;
@@ -297,12 +296,12 @@ function show_store_div() {
 function goto_new_place_get(next_place) {
     //新地点有buff
     if (!is_Empty_Object(places[next_place].buff)) {
-        let P_attr = player.get_player_attributes();
+        let P_buff = player.get_player_buff();
         for (let id of places[next_place].buff) {
             if (is_Empty_Object(buffs[id])) {
                 console.log('%s地点有未知buff：%s', next_place, id);
             } else {
-                P_attr.set_buff_attr(id);
+                P_buff.set_buff_attr(id);
             }
         }
     }
@@ -314,12 +313,12 @@ function leave_old_place_delete(old_place) {
     }
     if (!is_Empty_Object(places[old_place].buff)) {
         //旧地点有buff
-        let P_attr = player.get_player_attributes();
+        let P_buff = player.get_player_buff();
         for (let id of places[old_place].buff) {
             if (is_Empty_Object(buffs[id])) {
                 console.log('%s地点有未知buff：%s', old_place, id);
             } else {
-                P_attr.delete_buff_attr(id);
+                P_buff.delete_buff_attr(id);
             }
         }
     }
@@ -443,8 +442,13 @@ function show_unlock_live_plan_div() {
         }
     }
     if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == 'false') {
-        //没有解锁生活技能，但是生活规划界面处于非初始状态，属于异常情况
-        console.log('错误情况');
+        //没有解锁生活技能，但是生活规划界面处于非初始状态，可能是清除存档时需要恢复
+        let Live_plan_switch_div = document.getElementById('Live_plan_switch_div');
+        let Live_plan_value_div = document.getElementById('Live_plan_value_div');
+        Live_plan_switch_div.style.display = 'none';
+        Live_plan_value_div.style.display = 'none';
+        lock_all_Live_plan_div.style.display = '';
+        lock_all_Live_plan_div.dataset.flag = 'true';
         return;
     }
 }

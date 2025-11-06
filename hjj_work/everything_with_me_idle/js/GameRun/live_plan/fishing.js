@@ -14,6 +14,7 @@ const FIS_status = Object.freeze({
     WALK_FIS: 3, //开始钓鱼的第二阶段，遛鱼
     FINISH_FIS: 4, //开始钓鱼的第三阶段，钓鱼完成，结算物品
     RUN_FIS: 5, //钓鱼的特殊阶段，鱼跑了
+    REST_FIS: 6, //钓鱼休息阶段
 });
 
 //钓鱼目标对象
@@ -24,12 +25,12 @@ class Fish_manage {
         this.init_flee_point; //鱼的初始逃跑力
         this.now_flee_point; //鱼的当前逃跑力
         this.last_flee_point; //上一帧鱼的逃跑力
+        this.FIS_energy; //遛鱼时需要消耗的每秒精力
 
         this.health_max; //理论最大生命
         this.health_point; //当前生命
 
         this.all_time = 0; //遛鱼阶段经过的总时长
-
         this.tip_time_flag; //遛鱼阶段的时间点触发标记
     }
     //初始化为id鱼
@@ -40,6 +41,7 @@ class Fish_manage {
         this.init_flee_point = enemys[id].flee_point;
         this.now_flee_point = enemys[id].flee_point;
         this.last_flee_point = enemys[id].flee_point;
+        this.FIS_energy = enemys[id].FIS_energy;
         this.tip_time_flag = 0;
 
         //玩家遛鱼力为 a，鱼的逃跑力为 b，鱼的初始生命为 c，
@@ -76,13 +78,13 @@ class Fish_manage {
     updata_fish_health(round_time, player_walkfish_attack) {
         // round_time = 500;
         this.all_time += round_time;
-        let time_radio = round_time / 1000;
-        let player_attack = player_walkfish_attack * time_radio;
+        let time_ratio = round_time / 1000;
+        let player_attack = player_walkfish_attack * time_ratio;
         //鱼的逃跑力每次降低
         this.last_flee_point = this.now_flee_point;
         this.now_flee_point -= player_attack;
         //将鱼的逃跑力加到生命上
-        let flee_point = this.now_flee_point * time_radio;
+        let flee_point = this.now_flee_point * time_ratio;
         this.health_point += flee_point;
         // console.log('生命=%s，逃跑力=%s', this.health_point, this.now_flee_point);
         // console.log('遛鱼总时长%s，当前帧时长=%s，逃跑力变化=%s', this.all_time, round_time, player_attack);
@@ -116,6 +118,11 @@ class Fish_manage {
         }
         return 0;
     }
+    //获取遛鱼阶段一帧的精力消耗
+    get_walk_need_energy(round_time) {
+        let need_energy = (round_time / 1000) * this.FIS_energy;
+        return need_energy;
+    }
 }
 //钓鱼技能管理类
 export class Fishing_manage {
@@ -130,6 +137,7 @@ export class Fishing_manage {
         this.wait_FIS_time; //上钩阶段的随机上钩时间
         this.FIS_tip_change_time; //钓鱼提示文本更新时间
         this.FIS_tip_break_order_time; //钓鱼提示文本随机破序时间
+        this.walk_FIS_no_energy_time; //遛鱼阶段没有精力的时间
 
         this.player_end_attr; //玩家最终属性拷贝，方便调用
         this.FIS_point_data; //钓点的数值补正
@@ -268,6 +276,9 @@ export class Fishing_manage {
         } else if (this.now_FIS_status == FIS_status.RUN_FIS) {
             //当前处于鱼跑了的阶段
             this.updata_run_FIS_data();
+        } else if (this.now_FIS_status == FIS_status.REST_FIS) {
+            //当前处于钓鱼休息阶段
+            this.updata_rest_FIS_data();
         }
         return;
     }
@@ -316,12 +327,14 @@ export class Fishing_manage {
             //当前处于钓鱼完成的结算阶段
         } else if (this.now_FIS_status == FIS_status.RUN_FIS) {
             //当前处于鱼跑了的阶段
+        } else if (this.now_FIS_status == FIS_status.REST_FIS) {
+            //当前处于钓鱼休息阶段
         }
     }
     //重置一轮钓鱼的参数
     // 上层管理类会调用，必须定义，必须使用这个名称
     reset_round() {
-        this.round_start_time = global.get_game_now_time();
+        this.round_start_time = this.now_time;
         this.now_round_time = 0;
 
         if (this.now_FIS_status == FIS_status.NO_FIS) {
@@ -378,7 +391,7 @@ export class Fishing_manage {
 
     //每个阶段初始化钓鱼参数
     init_FIS_data() {
-        this.round_start_time = global.get_game_now_time();
+        this.round_start_time = this.now_time;
         this.now_round_time = 0;
 
         if (this.now_FIS_status == FIS_status.NO_FIS) {
@@ -393,10 +406,13 @@ export class Fishing_manage {
             //当前处于遛鱼阶段，初始化上钩的鱼对象
             let fish_id = this.get_random_chance_fish_id();
             this.fish_manage.init_fish(fish_id, this.true_walkfish_attack);
+            this.walk_FIS_no_energy_time = 0;
         } else if (this.now_FIS_status == FIS_status.FINISH_FIS) {
             //当前处于钓鱼完成的结算阶段
             this.finish_fish_flag = false;
         } else if (this.now_FIS_status == FIS_status.RUN_FIS) {
+            //当前处于鱼跑了的结算阶段
+        } else if (this.now_FIS_status == FIS_status.REST_FIS) {
             //当前处于鱼跑了的结算阶段
         }
         return;
@@ -406,6 +422,9 @@ export class Fishing_manage {
         this.now_FIS_status = FIS_status.WAIT_FIS; //将钓鱼状态切换到等鱼上钩
         //重置一轮钓鱼的参数
         // this.reset_round();
+        //写日志
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.set_game_log('live_skill_run', 'start', 'fishing');
     }
     //将钓鱼界面切换到新钓鱼状态的界面
     show_now_FIS_status_div() {
@@ -566,12 +585,34 @@ export class Fishing_manage {
     }
     //更新遛鱼阶段的数值
     updata_walk_FIS_data() {
-        // 实时更新鱼的生命数值
-        this.fish_manage.updata_fish_health(this.now_round_time, this.true_walkfish_attack);
-
-        if (!this.fish_manage.get_fish_statu()) {
-            //鱼死了，进入第三阶段，钓鱼完成，结算物品
-            this.now_FIS_status = FIS_status.FINISH_FIS;
+        //获取这一帧需要消耗的精力
+        let need_energy = this.fish_manage.get_walk_need_energy(this.now_round_time);
+        let P_attr = player.get_player_attributes();
+        if (P_attr.use_energy_point(need_energy)) {
+            //精力足够，实时更新鱼的生命数值
+            this.fish_manage.updata_fish_health(this.now_round_time, this.true_walkfish_attack);
+            if (!this.fish_manage.get_fish_statu()) {
+                //鱼死了，进入第三阶段，钓鱼完成，结算物品
+                this.now_FIS_status = FIS_status.FINISH_FIS;
+            }
+        } else {
+            //精力不足，进入倒计时
+            if (this.walk_FIS_no_energy_time == 0) {
+                this.walk_FIS_no_energy_time = this.now_time;
+                const FIS_tip_div = document.getElementById('FIS_tip_div');
+                FIS_tip_div.innerHTML = '可恶，没有体力了，难道说……';
+                this.FIS_tip_change_time = global.get_game_now_time();
+                this.FIS_tip_break_order_time = global.get_game_now_time();
+            }
+            //倒计时期间继续实时更新鱼的生命数值
+            this.fish_manage.updata_fish_health(this.now_round_time, this.true_walkfish_attack);
+            if (!this.fish_manage.get_fish_statu()) {
+                //鱼死了，进入第三阶段，钓鱼完成，结算物品
+                this.now_FIS_status = FIS_status.FINISH_FIS;
+            } else if (this.now_time - this.walk_FIS_no_energy_time >= 3000) {
+                //倒计时结束还没钓上来，算作这条鱼跑了
+                this.now_FIS_status = FIS_status.RUN_FIS;
+            }
         }
 
         //遛鱼阶段，每一帧都视作一个回合，重置时间
@@ -603,16 +644,59 @@ export class Fishing_manage {
             this.finish_fish_flag = true;
         }
 
-        if (this.now_round_time >= 2000) {
-            //钓鱼完成阶段持续1秒，之后切换到等鱼上钩阶段
+        //钓鱼完成阶段持续2秒不操作
+        if (this.now_round_time < 2000) {
+        }
+        // 之后根据玩家精力切换到其他状态
+        let P_attr = player.get_player_attributes();
+        let surface_energy_ratio = P_attr.get_data_attr('surface_energy_ratio');
+        if (surface_energy_ratio >= 50) {
+            //精力充足，切换到等鱼上钩，进入下一个循环
             this.now_FIS_status = FIS_status.WAIT_FIS;
+        } else {
+            //精力不足，切换到休息状态
+            this.now_FIS_status = FIS_status.REST_FIS;
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('live_skill_run', 'no_energy_1', 'fishing');
         }
     }
     //更新鱼跑了阶段的数值
     updata_run_FIS_data() {
-        if (this.now_round_time >= 2000) {
-            //钓鱼完成阶段持续1秒，之后切换到等鱼上钩阶段
+        //鱼跑了阶段持续2秒不操作
+        if (this.now_round_time < 2000) {
+            return;
+        }
+        //之后根据玩家精力切换到其他状态
+        let P_attr = player.get_player_attributes();
+        let surface_energy_ratio = P_attr.get_data_attr('surface_energy_ratio');
+        if (surface_energy_ratio >= 50) {
+            //精力充足，切换到等鱼上钩，进入下一个循环
             this.now_FIS_status = FIS_status.WAIT_FIS;
+        } else {
+            //精力不足，切换到休息状态
+            this.now_FIS_status = FIS_status.REST_FIS;
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('live_skill_run', 'no_energy_2', 'fishing');
+        }
+    }
+    //更新钓鱼休息阶段的数值
+    updata_rest_FIS_data() {
+        let P_attr = player.get_player_attributes();
+        if (!P_attr.judge_surface_energy_max()) {
+            return;
+        }
+        //精力回满时，切换到其他状态
+        let surface_energy_ratio = P_attr.get_data_attr('surface_energy_ratio');
+        if (surface_energy_ratio >= 25) {
+            //精力充足，切换到等鱼上钩，进入下一个循环
+            this.now_FIS_status = FIS_status.WAIT_FIS;
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('live_skill_run', 'max_energy_1', 'fishing');
+        } else if (surface_energy_ratio < 25) {
+            //精力不足，不能钓鱼，停止
+            this.stop_game_statu();
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('live_skill_run', 'max_energy_2', 'fishing');
         }
     }
     //获取鱼成功钓上时的物品
@@ -672,53 +756,58 @@ export class Fishing_manage {
         // this.true_takebait_attack += this.FIS_point_data; //添加钓点补正
         // this.true_takebait_attack += this.FIS_food_data; //添加鱼饵补正
         //玩家遛鱼力
-        this.true_walkfish_attack = this.player_end_attr['FIS_walkfish_attack'];
+        this.true_walkfish_attack = this.get_true_walkfish_attack();
+        // this.true_walkfish_attack = this.player_end_attr['FIS_walkfish_attack'];
     }
     //更新切换钓鱼状态时的固定提示信息
     updata_FIS_status_change_tip() {
-        //这一帧钓鱼状态切换，必须更新提示信息
-        if (this.FIS_status_flag) {
-            const FIS_tip_div = document.getElementById('FIS_tip_div');
-            let ch = '';
-
-            if (this.now_FIS_status == FIS_status.NO_FIS) {
-                //当前没有钓鱼
-                let now_GS = global.get_flag('GS_game_statu');
-                if (now_GS == 'fishing') {
-                    //开始钓鱼后不应该运行这个逻辑
-                    console.log('开始钓鱼后不应该运行到这个逻辑，错误情况');
-                } else {
-                    //停止钓鱼时会运行到这里，逻辑是正常的，为了避免后续判空报错，在这里给ch填一个符号
-                    ch = ' ';
-                }
-            } else if (this.now_FIS_status == FIS_status.WAIT_FIS) {
-                //当前处于等鱼上钩阶段
-                if (this.player_end_attr['weapon_type'].includes('fishing_tool')) {
-                    ch = texts['FIS_status_change']['WAIT_FIS_text'];
-                } else {
-                    ch = texts['FIS_status_change']['WAIT_FIS_no_tool_text'];
-                }
-            } else if (this.now_FIS_status == FIS_status.WALK_FIS) {
-                //当前处于遛鱼阶段，
-                ch = texts['FIS_status_change']['WALK_FIS_text'];
-            } else if (this.now_FIS_status == FIS_status.FINISH_FIS) {
-                //当前处于钓鱼完成的结算阶段
-                ch = texts['FIS_status_change']['FINISH_FIS_text'];
-                let fish_name = this.fish_manage.get_fish_name();
-                ch = ch + '<br>' + fish_name;
-            } else if (this.now_FIS_status == FIS_status.RUN_FIS) {
-                //当前处于鱼跑了的阶段
-                ch = texts['FIS_status_change']['RUN_FIS_text'];
-            }
-            if (ch == '' || is_Empty_Object(ch)) {
-                console.log('error2');
-            }
-            FIS_tip_div.innerHTML = ch;
-            //更新时间
-            this.FIS_tip_change_time = global.get_game_now_time();
-            this.FIS_tip_break_order_time = global.get_game_now_time();
+        //只有钓鱼状态切换时才更新提示信息
+        if (!this.FIS_status_flag) {
             return;
         }
+        const FIS_tip_div = document.getElementById('FIS_tip_div');
+        let ch = '';
+
+        if (this.now_FIS_status == FIS_status.NO_FIS) {
+            //当前没有钓鱼
+            let now_GS = global.get_flag('GS_game_statu');
+            if (now_GS == 'fishing') {
+                //开始钓鱼后不应该运行这个逻辑
+                console.log('开始钓鱼后不应该运行到这个逻辑，错误情况');
+            } else {
+                //停止钓鱼时会运行到这里，逻辑是正常的，为了避免后续判空报错，在这里给ch填一个符号
+                ch = ' ';
+            }
+        } else if (this.now_FIS_status == FIS_status.WAIT_FIS) {
+            //当前处于等鱼上钩阶段
+            if (this.player_end_attr['weapon_type'].includes('fishing_tool')) {
+                ch = texts['FIS_status_change']['WAIT_FIS_text'];
+            } else {
+                ch = texts['FIS_status_change']['WAIT_FIS_no_tool_text'];
+            }
+        } else if (this.now_FIS_status == FIS_status.WALK_FIS) {
+            //当前处于遛鱼阶段，
+            ch = texts['FIS_status_change']['WALK_FIS_text'];
+        } else if (this.now_FIS_status == FIS_status.FINISH_FIS) {
+            //当前处于钓鱼完成的结算阶段
+            ch = texts['FIS_status_change']['FINISH_FIS_text'];
+            let fish_name = this.fish_manage.get_fish_name();
+            ch = ch + '<br>' + fish_name;
+        } else if (this.now_FIS_status == FIS_status.RUN_FIS) {
+            //当前处于鱼跑了的阶段
+            ch = texts['FIS_status_change']['RUN_FIS_text'];
+        } else if (this.now_FIS_status == FIS_status.REST_FIS) {
+            //当前处于钓鱼休息阶段
+            ch = texts['FIS_status_change']['REST_FIS_text'];
+        }
+        if (ch == '' || is_Empty_Object(ch)) {
+            console.log('error2');
+        }
+        FIS_tip_div.innerHTML = ch;
+        //更新时间
+        this.FIS_tip_change_time = global.get_game_now_time();
+        this.FIS_tip_break_order_time = global.get_game_now_time();
+        return;
     }
     //更新不定时钓鱼提示信息
     updata_not_fixed_FIS_tip() {
@@ -877,6 +966,42 @@ export class Fishing_manage {
             updata_flag = true;
         }
         return updata_flag;
+    }
+    //获取最终遛鱼力
+    get_true_walkfish_attack() {
+        //基础遛鱼力
+        let base_FIS_walkfish_attack = this.player_end_attr['FIS_walkfish_attack'];
+
+        //累加所有直接乘算遛鱼力加成
+        let FIS_walkfish = 0;
+        // let FIS_walkfish = this.player_end_attr['FIS_walkfish'];
+        // if (FIS_walkfish === undefined) {
+        //     FIS_walkfish = 0;
+        // }
+
+        //最终乘算遛鱼力
+        let end_FIS_walkfish_attack = this.player_end_attr['end_FIS_walkfish_attack'];
+        if (end_FIS_walkfish_attack === undefined) {
+            end_FIS_walkfish_attack = 0;
+        }
+
+        //结算遛鱼力
+        let true_walkfish_attack = 0;
+        if (FIS_walkfish >= 0) {
+            true_walkfish_attack = base_FIS_walkfish_attack * ((100 + FIS_walkfish) * 0.01);
+        } else {
+            true_walkfish_attack = base_FIS_walkfish_attack * (100 / (100 - FIS_walkfish));
+        }
+        if (end_FIS_walkfish_attack >= 0) {
+            true_walkfish_attack = true_walkfish_attack * ((100 + end_FIS_walkfish_attack) * 0.01);
+        } else {
+            true_walkfish_attack = true_walkfish_attack * (100 / (100 - end_FIS_walkfish_attack));
+        }
+
+        return true_walkfish_attack;
+    }
+    get_now_FIS_status() {
+        return this.now_FIS_status;
     }
 }
 

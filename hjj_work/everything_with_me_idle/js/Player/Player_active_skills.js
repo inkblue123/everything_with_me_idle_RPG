@@ -1,5 +1,5 @@
 'use strict';
-import { get_Askill_base_attr, Attack_effect_algorithm, Defense_effect_algorithm, format_numbers } from '../Function/math_func.js';
+import { get_Askill_base_attr, Attack_effect_algorithm, Defense_effect_algorithm, format_numbers, calculate_speed_attr } from '../Function/math_func.js';
 import { is_Empty_Object, is_overlap } from '../Function/Function.js';
 import { updata_player_active } from '../Function/Updata_func.js';
 import { Attack_effect, Defense_effect } from '../GameRun/combat_manage.js';
@@ -12,14 +12,14 @@ const MIN_slot_num = 3;
 
 class Player_active_skill {
     constructor(id = 0) {
-        this.id = id; //唯一技能id
+        this.skill_id = id; //唯一技能id
         this.slot_num = 0; //这一个槽属于技能的第几个部分
         // this.level;
         // this.unlock_flag; //这个技能的解禁情况
     }
     //读取技能数据库，将详细参数拷贝到当前类中
     init_active_skill_data() {
-        let id = this.id;
+        let id = this.skill_id;
         let slot_num = this.slot_num;
         this.set_raw_skill_data(id, slot_num);
     }
@@ -27,6 +27,7 @@ class Player_active_skill {
     set_raw_skill_data(id, slot_num) {
         //
         let B_id = P_skills[id].need_slot_id[slot_num];
+        this.id = B_id; //当前槽的技能id
         this.active_condition = B_skills[B_id].active_condition; //限制条件
         this.active_type = B_skills[B_id].active_type; //辅助类型
         this.attr_correct = B_skills[B_id].attr_correct; //哪些属性作为基础数值进行计算
@@ -69,6 +70,8 @@ export class Player_active_skills_Manage {
         }
         this.now_time = global.get_game_now_time();
         this.reset_round();
+        //重置左下角的战斗规划界面
+        updata_player_active();
     }
     //获取玩家主动技能部分的游戏存档
     save_Player_ASkills_manage() {
@@ -223,28 +226,26 @@ export class Player_active_skills_Manage {
         for (let i = 0; i < this.active_slot_num; i++) {
             //如果i槽没有主动技能
             if (is_Empty_Object(this.active_slots[i])) {
-                this.any_slot_time[i] = this.player_end_attr.true_attack_interval * 1000;
+                this.any_slot_time[i] = this.player_end_attr['true_attack_interval'] * 1000;
                 continue;
             }
             //判断i槽的主动技能有没有影响攻速
             if (is_Empty_Object(this.active_slots[i].attr_correct['attack_speed'])) {
                 //没有影响因素，槽的运行时间就等于攻击间隔
-                this.any_slot_time[i] = this.player_end_attr.true_attack_interval * 1000;
+                this.any_slot_time[i] = this.player_end_attr['true_attack_interval'] * 1000;
             } else {
                 //有影响因素，根据主动技能内容修改攻击间隔
                 let atk_speed_correct = this.active_slots[i].attr_correct['attack_speed'];
                 if ((atk_speed_correct.type = 'fixed')) {
                     //固定攻击间隔
                     this.any_slot_time[i] = atk_speed_correct.value * 1000;
-                } else if ((atk_speed_correct.type = 'ride')) {
+                } else if ((atk_speed_correct.type = 'ratio')) {
                     //攻速加成
                     let base_attack_interval = this.player_end_attr['attack_interval'];
                     let attack_speed = this.player_end_attr['attack_speed'] + atk_speed_correct.value;
-                    let true_attack_interval = base_attack_interval / ((100 + attack_speed) * 0.01);
-                    if (true_attack_interval < 0.25) {
-                        true_attack_interval = 0.25;
-                    }
-                    this.any_slot_time[i] = true_attack_interval * 1000;
+                    let attack_interval_ratio = this.end_data_attr['attack_interval_ratio']; //攻速影响倍率
+
+                    this.any_slot_time[i] = calculate_speed_attr(base_attack_interval, 0, attack_speed, 0, attack_interval_ratio);
                 }
             }
         }
@@ -265,18 +266,18 @@ export class Player_active_skills_Manage {
         this.deputy_Attack = new Attack_effect();
         this.deputy_Attack = new Attack_effect();
         if (!is_Empty_Object(this.player_end_attr)) {
-            this.main_Attack.base_damage = this.player_end_attr['attack'];
-            this.main_Attack.precision = this.player_end_attr['precision'];
+            this.main_Attack.base_damage = this.player_end_attr['true_attack'];
+            this.main_Attack.precision = this.player_end_attr['true_precision'];
             this.main_Attack.critical_chance = this.player_end_attr['critical_chance'];
             this.main_Attack.critical_damage = this.player_end_attr['critical_damage'];
 
-            this.deputy_Attack.base_damage = this.player_end_attr['attack'];
-            this.deputy_Attack.precision = this.player_end_attr['precision'];
+            this.deputy_Attack.base_damage = this.player_end_attr['true_attack'];
+            this.deputy_Attack.precision = this.player_end_attr['true_precision'];
             this.deputy_Attack.critical_chance = this.player_end_attr['critical_chance'];
             this.deputy_Attack.critical_damage = this.player_end_attr['critical_damage'];
 
-            this.other_Attack.base_damage = this.player_end_attr['attack'];
-            this.other_Attack.precision = this.player_end_attr['precision'];
+            this.other_Attack.base_damage = this.player_end_attr['true_attack'];
+            this.other_Attack.precision = this.player_end_attr['true_precision'];
             this.other_Attack.critical_chance = this.player_end_attr['critical_chance'];
             this.other_Attack.critical_damage = this.player_end_attr['critical_damage'];
         }
@@ -372,6 +373,7 @@ export class Player_active_skills_Manage {
         }
         this.reset_active_skill_effect();
     }
+    //激活攻击类型的主动技能，攻击效果存入战斗管理类
     start_player_attack_type_skill(start_skill) {
         //记录使用了哪个技能
         this.main_Attack.id = start_skill.id;
@@ -385,19 +387,24 @@ export class Player_active_skills_Manage {
         } else if (effect.attack_num.type == 'fixed') {
             this.main_Attack.attack_num = effect.attack_num.num;
         }
+
+        //基础攻击力
+        let base_attack = this.player_end_attr['true_attack'];
+
         //结算技能补正
-
-        //基础数值等于攻击力+属性补正
-        //计算属性补正
         let askill_base_attr = get_Askill_base_attr(start_skill.attr_correct, this.player_end_attr);
-        askill_base_attr = this.player_end_attr['attack'] * (1 + askill_base_attr * 0.01);
+        if (askill_base_attr >= 0) {
+            askill_base_attr = base_attack * (100 + askill_base_attr) * 0.01;
+        } else {
+            askill_base_attr = base_attack * (100 / (100 - askill_base_attr));
+        }
 
-        //计算攻击效果
+        //计算技能伤害
         let algorithm = start_skill.algorithm;
         Attack_effect_algorithm(algorithm, askill_base_attr, this.main_Attack);
 
+        //结算伤害增幅
         let damage_add = 0;
-        //玩家属性里如果有伤害增幅的属性，现在就结算
         //武器类型伤害加成
         for (let weapon_type of this.player_end_attr['weapon_type']) {
             let damage_attr_name = 'damage' + weapon_type;
@@ -405,8 +412,14 @@ export class Player_active_skills_Manage {
                 damage_add += this.player_end_attr[damage_attr_name];
             }
         }
-        this.main_Attack.base_damage = this.main_Attack.base_damage * damage_add;
+        if (damage_add >= 0) {
+            this.main_Attack.base_damage = this.main_Attack.base_damage * (100 + damage_add) * 0.01;
+        } else {
+            this.main_Attack.base_damage = this.main_Attack.base_damage * (100 / (100 - damage_add));
+        }
         //计算玩家装备的额外效果
+
+        //处理玩家buff里的额外效果
 
         //格式化数值
         this.main_Attack.base_damage = format_numbers(this.main_Attack.base_damage);
@@ -435,7 +448,7 @@ export class Player_active_skills_Manage {
         if (is_Empty_Object(this.active_slots[slot_id])) {
             return;
         }
-        let skill_id = this.active_slots[slot_id].id;
+        let skill_id = this.active_slots[slot_id].skill_id;
         let skill_slot_num = this.active_slots[slot_id].slot_num;
         for (let i = 0; i < P_skills[skill_id].need_slot_num; i++) {
             this.active_slots[slot_id + i - skill_slot_num] = new Object();

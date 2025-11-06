@@ -2,7 +2,8 @@ import { is_Empty_Object } from '../../Function/Function.js';
 import { Gradient_div } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
 import { global } from '../global_manage.js';
-import { player } from '../../Player/Player.js'; //启动迷你事件
+import { player } from '../../Player/Player.js';
+import { save_game } from '../../LoadAndSave/load.js';
 //迷你事件对象
 export class Mini_event {
     constructor() {
@@ -108,9 +109,9 @@ export class Mini_event {
                 //在迷你时间中移动到新地点时设置额外参数，防止新地点的按钮覆盖迷你事件的流程按钮
                 place_manage.set_now_place(place_id, 'mini_event');
             } else if (thing_type == 'reset_time') {
-                //刷新游戏日期
+                //重置游戏日期
                 let time_manage = global.get_time_manage();
-                time_manage.reset_game_date();
+                time_manage.set_init_game_date();
             } else if (thing_type == 'set_player_attr') {
                 //设置玩家属性
                 let P_attr = player.get_player_attributes();
@@ -133,6 +134,15 @@ export class Mini_event {
                 for (let event_id of thing_obj[thing_type]) {
                     game_event_manage.start_game_event(event_id);
                 }
+            } else if (thing_type == 'delete_buff') {
+                //清除指定buff
+                let P_buff = player.get_player_buff();
+                for (let buff_id of thing_obj[thing_type]) {
+                    P_buff.delete_buff_attr(buff_id);
+                }
+            } else if (thing_type == 'save_game') {
+                //保存游戏
+                save_game();
             } else {
                 console.log('未知的迷你事件中要做的事：%s，没有开发对应的处理逻辑', thing_type);
             }

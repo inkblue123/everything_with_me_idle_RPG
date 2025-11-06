@@ -6,20 +6,14 @@ import { enums } from '../Data/Enum/Enum.js';
 import { texts } from '../Data/Text/Text.js';
 import { player } from './Player.js';
 import { global } from '../GameRun/global_manage.js';
-//玩家背包中的一个物品
-// class Player_Item {
-//     constructor(id) {
-//         this.id = id; //唯一id
-//         this.num = 0; //玩家拥有该物品总数
-//         //装备特有的属性
-//         this.equip_rarity;
-//         //消耗品特有的属性
-//     }
-// }
 
 export class Player_backpack {
     constructor() {
         this.backpack_items = new Object(); //玩家背包所有物品对象
+    }
+    init() {
+        //重置背包界面
+        this.updata_BP_value();
     }
     //获取玩家背包部分的游戏存档
     save_Player_backpack() {

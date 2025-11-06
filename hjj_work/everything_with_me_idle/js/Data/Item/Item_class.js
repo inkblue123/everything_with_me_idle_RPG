@@ -224,7 +224,7 @@ class Equipment extends Item {
         //获取需要填的属性名称，例如攻击攻速暴击
         let need_attr_name;
         if (attr_type == 'attack') {
-            // need_attr_name = enums['combat_attack_attr'];
+            // need_attr_name = enums['show_combat_attack_attr'];
             need_attr_name = ['attack', 'precision', 'critical_chance', 'critical_damage'];
         }
         if (attr_type == 'defense') {

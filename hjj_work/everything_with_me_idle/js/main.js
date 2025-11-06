@@ -11,9 +11,9 @@ window.addEventListener('load', () => {
     //部分游戏数据初始化
     game_data_init();
     //全局配置和全局对象初始化
-    global.init();
-    //玩家类初始化
-    player.init();
+    // global.init();
+    // //玩家类初始化
+    // player.init();
     //游戏界面初始化
     init_game_dom();
 

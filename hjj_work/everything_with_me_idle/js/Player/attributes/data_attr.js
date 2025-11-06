@@ -1,5 +1,6 @@
 'use strict';
 import { is_Empty_Object, get_uniqueArr, get_object_only_key } from '../../Function/Function.js';
+import { calculate_num_attr, calculate_speed_attr } from '../../Function/math_func.js';
 import { player } from '../Player.js';
 
 import { items } from '../../Data/Item/Item.js';
@@ -33,6 +34,8 @@ export class Data_attr_manage {
         this.active_skill_attr = new Object();
         //当前地点提供的属性汇总
         this.place_attr = new Object();
+        //当前拥有的buff的属性汇总
+        this.buff_attr = new Object();
 
         //上一次属性汇总的缓存
         this.prevObjects = new Object();
@@ -75,7 +78,7 @@ export class Data_attr_manage {
         this.live_plan_attr['FIS_takebait_attack'] = 1; //钓鱼上钩力
         this.live_plan_attr['FIS_walkfish_attack'] = 3; //钓鱼遛鱼力
         this.live_plan_attr['FAG_attack'] = 5; //采集力
-        this.live_plan_attr['FAG_speed'] = 5; //采集速度
+        this.live_plan_attr['FAG_interval'] = 5; //采集速度
 
         //汇总
         this.prevObjects['player_attr'] = JSON.parse(JSON.stringify(this.player_attr));
@@ -83,6 +86,7 @@ export class Data_attr_manage {
         this.prevObjects['passive_skill_attr'] = JSON.parse(JSON.stringify(this.passive_skill_attr));
         this.prevObjects['active_skill_attr'] = JSON.parse(JSON.stringify(this.active_skill_attr));
         this.prevObjects['place_attr'] = JSON.parse(JSON.stringify(this.place_attr));
+        this.prevObjects['buff_attr'] = JSON.parse(JSON.stringify(this.buff_attr));
         this.updata_Player_attr();
     }
     //获取玩家属性部分的游戏存档
@@ -134,6 +138,13 @@ export class Data_attr_manage {
         this.Summary_active_skill_attr();
         //将最终属性中的玩家属性部分更新
         this.partial_update_end_attr('active_skill_attr');
+    }
+    //玩家buff属性变化，更新到最终属性里
+    updata_buff_attr() {
+        //获得新的玩家属性汇总
+        this.Summary_buff_attr();
+        //将最终属性中的玩家属性部分更新
+        this.partial_update_end_attr('buff_attr');
     }
     //更新汇总玩家的最基础的属性
     Summary_Player_attr() {
@@ -284,6 +295,13 @@ export class Data_attr_manage {
         //有些主动技能装备上之后也有加成，也要汇总
         this.active_skill_attr = new Object();
     }
+    //汇总玩家身上所有可用主动技能提供的属性
+    Summary_buff_attr() {
+        this.buff_attr = new Object();
+        let P_buff = player.get_player_buff();
+        let buff_end_data_attr = P_buff.get_end_data_attr();
+        this.buff_attr = JSON.parse(JSON.stringify(buff_end_data_attr));
+    }
     //根据id设置玩家的属性，只能设置玩家的属性，不会修改装备上、技能上的属性，
     set_data_attr(id, value) {
         if (id == 'health_point') {
@@ -350,12 +368,27 @@ export class Data_attr_manage {
         return this.end_data_attr;
     }
     //更新最终属性
-    updata_end_attr() {
-        //把每个属性部分都更新一遍
-        this.updata_Player_attr(); //玩家基础属性
-        this.updata_EQP_attr(); //玩家装备属性
-        this.updata_passive_skill_attr(); //玩家被动技能属性
-        this.updata_active_skill_attr(); //玩家主动技能属性
+    updata_end_attr(type) {
+        if (type == 'equipment') {
+            //指定更新装备属性
+            this.updata_EQP_attr(); //玩家装备属性
+        } else if (type == 'passive_skill') {
+            //指定更新被动技能属性
+            this.updata_passive_skill_attr(); //玩家被动技能属性
+        } else if (type == 'active_skill') {
+            //指定更新主动技能属性
+            this.updata_active_skill_attr(); //玩家主动技能属性
+        } else if (type == 'buff') {
+            //指定更新buff属性
+            this.updata_buff_attr(); //玩家buff属性
+        } else if (type == undefined) {
+            //没有指定，把每个属性部分都更新一遍
+            this.updata_Player_attr(); //玩家基础属性
+            this.updata_EQP_attr(); //玩家装备属性
+            this.updata_passive_skill_attr(); //玩家被动技能属性
+            this.updata_active_skill_attr(); //玩家主动技能属性
+            this.updata_buff_attr(); //玩家buff属性
+        }
     }
     //增量更新最终属性，只修改变更了的指定部分属性
     partial_update_end_attr(index) {
@@ -388,15 +421,50 @@ export class Data_attr_manage {
             }
         }
         //重新计算部分属性
-        let base_attack_interval = this.end_data_attr['attack_interval'];
-        let attack_speed = this.end_data_attr['attack_speed'];
-        let true_attack_interval = base_attack_interval / ((100 + attack_speed) * 0.01);
-        if (true_attack_interval < 0.25) {
-            true_attack_interval = 0.25;
-        }
-        this.end_data_attr['true_attack_interval'] = true_attack_interval;
+        this.updata_need_calculate_end_attr();
 
         //更新缓存
         this.prevObjects[index] = JSON.parse(JSON.stringify(new_obj));
+    }
+    //计算部分属性，获得真正使用的数值
+    updata_need_calculate_end_attr() {
+        //true_attack 攻击力
+        let base_attack = this.end_data_attr['attack']; //基本攻击力
+        let attack_ratio = this.end_data_attr['attack_ratio']; //攻击力加成
+        this.end_data_attr['true_attack'] = calculate_num_attr(base_attack, 0, attack_ratio, 0, 0);
+        //true_precision 精准
+        let base_precision = this.end_data_attr['precision']; //基本精准
+        let precision_ratio = this.end_data_attr['precision_ratio']; //精准加成
+        this.end_data_attr['true_precision'] = calculate_num_attr(base_precision, 0, precision_ratio, 0, 0);
+        //true_critical_chance 暴击率
+        let base_critical_chance = this.end_data_attr['critical_chance']; //基本暴击率
+        let critical_chance_ratio = this.end_data_attr['critical_chance_ratio']; //暴击率加成
+        this.end_data_attr['true_critical_chance'] = calculate_num_attr(base_critical_chance, 0, critical_chance_ratio, 0, 0);
+        //true_critical_damage 暴击伤害
+        let base_critical_damage = this.end_data_attr['critical_damage']; //基本暴击伤害
+        let critical_damage_ratio = this.end_data_attr['critical_damage_ratio']; //暴击伤害加成
+        this.end_data_attr['true_critical_damage'] = calculate_num_attr(base_critical_damage, 0, critical_damage_ratio, 0, 0);
+        //true_attack_interval 攻击间隔
+        let base_attack_interval = this.end_data_attr['attack_interval']; //基础攻击间隔
+        let attack_speed = this.end_data_attr['attack_speed']; //攻速加成
+        let attack_interval_ratio = this.end_data_attr['attack_interval_ratio']; //攻速影响倍率
+        this.end_data_attr['true_attack_interval'] = calculate_speed_attr(base_attack_interval, 0, attack_speed, 0, attack_interval_ratio);
+
+        //true_defense 防御
+        let base_defense = this.end_data_attr['defense']; //基本防御
+        let defense_ratio = this.end_data_attr['defense_ratio']; //防御加成
+        this.end_data_attr['true_defense'] = calculate_num_attr(base_defense, 0, defense_ratio, 0, 0);
+        //true_evade 闪避
+        let base_evade = this.end_data_attr['evade']; //基本闪避
+        let evade_ratio = this.end_data_attr['evade_ratio']; //闪避加成
+        this.end_data_attr['true_evade'] = calculate_num_attr(base_evade, 0, evade_ratio, 0, 0);
+        //true_resistance_point 抵抗力
+        let base_resistance_point = this.end_data_attr['resistance_point']; //基本抵抗力
+        let resistance_point_ratio = this.end_data_attr['resistance_point_ratio']; //抵抗力加成
+        this.end_data_attr['true_resistance_point'] = calculate_num_attr(base_resistance_point, 0, resistance_point_ratio, 0, 0);
+        //true_move_speed 移动速度
+        let base_move_speed = this.end_data_attr['move_speed']; //基本移动速度
+        let move_speed_ratio = this.end_data_attr['move_speed_ratio']; //移动速度加成
+        this.end_data_attr['true_move_speed'] = calculate_num_attr(base_move_speed, 0, move_speed_ratio, 0, 0);
     }
 }

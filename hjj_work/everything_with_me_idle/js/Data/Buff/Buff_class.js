@@ -5,6 +5,7 @@ export class Buff {
         this.id = id; //唯一id
         this.name; //buff名称
         this.desc; //buff描述
+        this.buff_value = new Array(); //buff的具体效果
         this.init_Buff_name_desc(id);
     }
 
@@ -33,22 +34,25 @@ export class Buff {
         this.time_value = time_value; //在这个计算方式下的有效时间
     }
     //添加一条buff的效果
-    add_buff_value(buff_type, ...value) {
+    add_buff_value(buff_type, data_type, data_value) {
         if (is_Empty_Object(this.buff_value)) {
             this.buff_value = new Array();
         }
         //buff效果的类型
         let buff_value = new Object();
         buff_value.buff_type = buff_type;
-        if (buff_type == 'get_data_attr') {
-            //给予属性的buff
-            buff_value.data_attr = value[0]; //给予哪种属性
-            buff_value.data = value[1]; //每次buff生效获得多少数值
-        }
-        if (buff_type == 'change_game_speed') {
-            //改变游戏速度的buff
-            buff_value.data = value[0]; //buff生效期间改变多少
-        }
+        buff_value.data_type = data_type;
+        buff_value.data_value = data_value;
+
+        // if (buff_type == 'get_data_attr') {
+        //     //给予属性的buff
+        //     buff_value.data_attr = value[0]; //给予哪种属性
+        //     buff_value.data = value[1]; //每次buff生效获得多少数值
+        // }
+        // if (buff_type == 'change_game_speed') {
+        //     //改变游戏速度的buff
+        //     buff_value.data = value[0]; //buff生效期间改变多少
+        // }
         this.buff_value.push(buff_value);
     }
 }

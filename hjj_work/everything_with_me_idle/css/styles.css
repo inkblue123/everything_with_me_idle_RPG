@@ -93,16 +93,6 @@ html {
     flex-wrap: nowrap; /* 防止换行 */
 }
 
-/* 临时设置每个区域的样式 */
-.section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    box-sizing: border-box;
-    border: 2px solid #797691;
-}
-
 /* 单选框 */
 .radio_div {
     position: relative;

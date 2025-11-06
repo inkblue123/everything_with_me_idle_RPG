@@ -33,22 +33,34 @@ function updata_attribute_show() {
     //表格排序，从左到右，从上到下，右半边表示玩家基础属性
     //战斗属性中，前5个是攻击属性
     let i = 0;
-    for (let id of enums.combat_attack_attr) {
-        let ch = get_attr_ch(id, P_attr.get_data_attr(id));
-        combat_attr_show.children[i].innerText = ch;
+    for (let id of enums.show_combat_attack_attr) {
+        let attr_data = P_attr.get_data_attr(id);
+        if (combat_attr_show.children[i].dataset.attr_data != attr_data) {
+            let ch = get_attr_ch(id, attr_data);
+            combat_attr_show.children[i].innerHTML = ch;
+            combat_attr_show.children[i].dataset.attr_data = attr_data;
+        }
         i++;
     }
     //然后是4个是防御属性
-    for (let id of enums.combat_defense_attr) {
-        let ch = get_attr_ch(id, P_attr.get_data_attr(id));
-        combat_attr_show.children[i].innerText = ch;
+    for (let id of enums.show_combat_defense_attr) {
+        let attr_data = P_attr.get_data_attr(id);
+        if (combat_attr_show.children[i].dataset.attr_data != attr_data) {
+            let ch = get_attr_ch(id, attr_data);
+            combat_attr_show.children[i].innerHTML = ch;
+            combat_attr_show.children[i].dataset.attr_data = attr_data;
+        }
         i++;
     }
     //7个玩家基础属性
     i = 0;
     for (let id of enums.player_base_attr) {
-        let ch = get_attr_ch(id, P_attr.get_data_attr(id));
-        player_base_attr.children[i].innerText = ch;
+        let attr_data = P_attr.get_data_attr(id);
+        if (player_base_attr.children[i].dataset.attr_data != attr_data) {
+            let ch = get_attr_ch(id, attr_data);
+            player_base_attr.children[i].innerHTML = ch;
+            player_base_attr.children[i].dataset.attr_data = attr_data;
+        }
         i++;
     }
 }
@@ -56,16 +68,20 @@ function updata_attribute_show() {
 function get_attr_ch(attr_id, attr_data) {
     if (is_Empty_Object(texts[attr_id])) {
         console.log('%s属性名称未定义', attr_id);
+        return;
     }
 
     let ch = texts[attr_id].attr_name;
 
     if (enums['need_per_cent_attr'].includes(attr_id)) {
-        ch += '\n' + attr_data + '%';
+        attr_data = Math.floor(attr_data);
+        ch += '<br>' + attr_data + '%';
     } else if (enums['need_second_attr'].includes(attr_id)) {
-        ch += '\n' + attr_data + '秒';
+        attr_data = attr_data.toFixed(1);
+        ch += '<br>' + attr_data + '秒';
     } else {
-        ch += '\n' + attr_data;
+        attr_data = Math.floor(attr_data);
+        ch += '<br>' + attr_data;
     }
     return ch;
 }
@@ -150,7 +166,7 @@ function updata_player_active_show() {
     for (let i = 0; i < num; i++) {
         //
         if (!is_Empty_Object(active_slots[i])) {
-            let skill_id = active_slots[i].id;
+            let skill_id = active_slots[i].skill_id;
             //战斗界面，玩家主动技能展示框
             if (texts[skill_id].skill_name.length >= 10) {
                 player_active_div.children[i].children[0].innerHTML = texts[skill_id].mini_skill_name;
@@ -193,7 +209,7 @@ function updata_player_active_time_bar() {
 //玩家装备信息发生变动，更新相关界面
 function updata_player_EQP() {
     //更新玩家装备属性
-    player.updata_EQP_attr(true);
+    player.updata_end_attr('equipment');
     //更新装备栏
     let P_worn = player.get_player_worn();
     P_worn.updata_equipment_show();

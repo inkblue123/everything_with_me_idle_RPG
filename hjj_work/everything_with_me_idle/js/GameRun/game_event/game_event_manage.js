@@ -17,7 +17,9 @@ export class Game_event_manage {
         this.mini_event_manage = new Mini_event();
         this.monitor_target_summ = new Object(); //当前所有事件的需要监控行为汇总
     }
-    init() {}
+    init() {
+        this.init_IE_div();
+    }
 
     //启动一个游戏事件，激活相关接口
     start_game_event(event_id) {

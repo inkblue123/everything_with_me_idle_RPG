@@ -99,6 +99,8 @@ export class Player_skills {
     }
     init() {
         this.player_get_initial_skil();
+        this.updata_ASP_value();
+        this.updata_PSK_value();
     }
     //获取玩家技能部分的游戏存档
     save_Player_skills() {
@@ -341,14 +343,7 @@ export class Player_skills {
 
         //被动技能的属性可以直接更新到玩家身上
         if (skill_obj.type == 'Passive') {
-            let P_attr = player.get_player_attributes();
-            P_attr.updata_passive_skill_attr();
-            //将更新后的最终数值属性更新到其他会用的地方
-            let end_data_attr = P_attr.get_end_data_attr();
-            let P_Askill = player.get_player_ASkill_Manage();
-            P_Askill.updata_player_data(end_data_attr); //战斗方面属性更新
-            let live_plan_manage = global.get_live_plan_manage();
-            live_plan_manage.updata_player_data(end_data_attr); //生活技能属性更新
+            player.updata_end_attr('passive_skill');
         }
         //更新这个技能在左上角界面的展示效果
         this.updata_PSK_value();
@@ -395,14 +390,7 @@ export class Player_skills {
         skill_obj.update_skill_rewards();
         //被动技能的属性可以直接更新到玩家身上
         if (skill_obj.type == 'Passive') {
-            let P_attr = player.get_player_attributes();
-            P_attr.updata_passive_skill_attr();
-            //将更新后的最终数值属性更新到其他会用的地方
-            let end_data_attr = P_attr.get_end_data_attr();
-            let P_Askill = player.get_player_ASkill_Manage();
-            P_Askill.updata_player_data(end_data_attr);
-            let live_plan_manage = global.get_live_plan_manage();
-            live_plan_manage.updata_player_data(end_data_attr); //生活技能属性更新
+            player.updata_end_attr('passive_skill');
         }
         //更新这个技能在左上角界面的展示效果
         this.updata_PSK_value();

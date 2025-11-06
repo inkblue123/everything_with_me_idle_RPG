@@ -230,6 +230,7 @@ export class Enemy_manage {
         this.last_little_add_enemy_time = 0; //上次触发同场少怪时刷怪的时间
         this.now_place_enemy_cumulative = 0; //当前地点积累的怪物数量
         this.kill_enemy_num = 0; //当前地点积累的怪物数量
+        this.last_combat_place_data = new Object(); //清空曾经的战斗地点内参数
     }
     //重置刷怪参数
     reset_enemy_data() {

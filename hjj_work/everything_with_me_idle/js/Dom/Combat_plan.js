@@ -15,11 +15,11 @@ function make_Combat_plan_div(Combat_plan) {
     //界面上部，区分当前展示的内容的按钮
     var Combat_plan_switch_div = crtElement('div', 'Combat_plan_switch_div', 'page_flex', '');
     //背包物品 Backpack BP
-    var BP_switch_radio_div = addElement(Combat_plan_switch_div, 'div', null, 'radio_div div_switch_button');
+    var BP_switch_radio_div = addElement(Combat_plan_switch_div, 'div', 'BP_switch_radio_div', 'radio_div div_switch_button');
     addElement_radio(BP_switch_radio_div, 'BP_switch_button', 'Combat_plan_switch', 'BP_switch', '背包物品');
     BP_switch_radio_div.children[0].checked = true; //初始激活该按钮
     //战斗规划 combat_plan CBP
-    var CBP_switch_radio_div = addElement(Combat_plan_switch_div, 'div', null, 'radio_div div_switch_button');
+    var CBP_switch_radio_div = addElement(Combat_plan_switch_div, 'div', 'CBP_switch_radio_div', 'radio_div div_switch_button');
     addElement_radio(CBP_switch_radio_div, 'CBP_switch_button', 'Combat_plan_switch', 'CBP_switch', '战斗规划');
 
     //界面下部，具体展示内容的窗口
@@ -71,7 +71,7 @@ function make_Combat_plan_div(Combat_plan) {
             var CBP_scroll_box = addElement(CBP_div, 'div', 'CBP_scroll_box', 'overflow_y_div');
             var CBP_switch_div = addElement(CBP_scroll_box, 'div', 'CBP_switch_div', 'in_overflow_div');
             // 主动技能规划 Active_skill_plan ASP
-            var ASP_radio_div = addElement(CBP_switch_div, 'div', null, 'radio_div switch_radio_div_1');
+            var ASP_radio_div = addElement(CBP_switch_div, 'div', 'ASP_radio_div', 'radio_div switch_radio_div_1');
             addElement_radio(ASP_radio_div, 'ASP_button', 'CBP_switch', 'ASP_button', '主动技能规划');
             ASP_radio_div.children[0].checked = true; //初始激活该按钮
             var ASP_droptable = addElement(CBP_switch_div, 'div', 'ASP_droptable', 'dropdown_table');

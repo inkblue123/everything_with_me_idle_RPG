@@ -132,8 +132,8 @@ function set_Control_func(Control) {
         //这个流程中会获得buff
         if (!is_Empty_Object(process.buff)) {
             for (let buff_id of process.buff) {
-                let P_attr = player.get_player_attributes();
-                P_attr.set_buff_attr(buff_id);
+                let P_buff = player.get_player_buff();
+                P_buff.set_buff_attr(buff_id);
             }
         }
     };

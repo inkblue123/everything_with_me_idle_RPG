@@ -1,4 +1,4 @@
-import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
+import { crtElement, addElement, addElement_radio, add_show_Tooltip } from '../Function/Dom_function.js';
 import { updata_player_name, updata_player_EQP } from '../Function/Updata_func.js';
 import { show_dropdown_table } from '../Function/show_func.js';
 import { player } from '../Player/Player.js';
@@ -16,11 +16,11 @@ function make_player_status_div(player_status) {
     //界面上部，区分当前展示的内容的按钮
     var player_status_switch = crtElement('div', 'player_status_switch_div', null, '');
     //属性 player_attribute PAB
-    var PAB_switch_radio_div = addElement(player_status_switch, 'div', null, 'radio_div div_switch_button');
+    var PAB_switch_radio_div = addElement(player_status_switch, 'div', 'PAB_switch_radio_div', 'radio_div div_switch_button');
     addElement_radio(PAB_switch_radio_div, 'PAB_switch_button', 'player_status_switch', 'PAB_switch', '属性');
     PAB_switch_radio_div.children[0].checked = true; //初始激活该按钮
     //技能 player_skill PSK
-    var PSK_switch_radio_div = addElement(player_status_switch, 'div', null, 'radio_div div_switch_button');
+    var PSK_switch_radio_div = addElement(player_status_switch, 'div', 'PSK_switch_radio_div', 'radio_div div_switch_button');
     addElement_radio(PSK_switch_radio_div, 'PSK_switch_button', 'player_status_switch', 'PSK_switch', '技能');
     //界面下部，具体展示内容的窗口
     var player_status_value_div = crtElement('div', 'player_status_value_div', 'page_columns_1', '');
@@ -32,7 +32,7 @@ function make_player_status_div(player_status) {
         //展示角色血条和名称的布局;
         var bar_div = crtElement('div', 'bar_div', null, '');
         //角色名
-        var Player_name_div = addElement(bar_div, 'div', 'Player_name_div', 'page_columns_1'); //血条中，条的外框
+        var Player_name_div = addElement(bar_div, 'div', 'Player_name_div', null); //血条中，条的外框
         var Player_name = addElement(Player_name_div, 'input', 'Player_name', null); //血条中，条的外框
         Player_name.type = 'text';
         Player_name.value = '玩家';
@@ -47,24 +47,50 @@ function make_player_status_div(player_status) {
         var MP_current = addElement(MP_frame, 'div', 'MP_current', 'progress_bar_current'); //长度随当前蓝量变化的色块
         var MP_number = addElement(MP_bar, 'div', 'MP_number', 'progress_bar_number'); //显示的数字，表示当前蓝量具体数值
         //精力组件
-        var ENP_bar = addElement(bar_div, 'div', 'ENP_bar', 'progress_bar', '');
-        var ENP_frame = addElement(ENP_bar, 'div', 'ENP_frame', 'progress_bar_frame'); //条的外框
-        var ENP_current = addElement(ENP_frame, 'div', 'ENP_current', 'progress_bar_current'); //长度随当前精力变化的色块
-        var ENP_number = addElement(ENP_bar, 'div', 'ENP_number', 'progress_bar_number'); //显示的数字，表示当前精力具体数值
+        var ENP_ui_div = addElement(bar_div, 'div', 'ENP_ui_div', null, '');
+        var ENP_number = addElement(ENP_ui_div, 'div', 'ENP_number', null); //显示的数字，表示当前精力具体数值
+        ENP_number.innerHTML = '精力：100%';
+        var ENP_bar = addElement(ENP_ui_div, 'div', 'ENP_bar', null); //显示的数字，表示当前精力具体数值
+        var deep_ENP_current = addElement(ENP_bar, 'div', 'deep_ENP_current', null); //深层精力条
+        var surface_ENP_current = addElement(ENP_bar, 'div', 'surface_ENP_current', null); //表层精力条
+        var ENP_threshold_25 = addElement(ENP_bar, 'div', 'ENP_threshold_25', 'threshold'); //25%精力阈值
+        ENP_threshold_25.style.left = '25%';
+        var ENP_threshold_50 = addElement(ENP_bar, 'div', 'ENP_threshold_50', 'threshold'); //50%精力阈值
+        ENP_threshold_50.style.left = '50%';
+        var ENP_threshold_100 = addElement(ENP_bar, 'div', 'ENP_threshold_100', 'threshold'); //100%精力阈值
+        ENP_threshold_100.style.left = '99%';
 
-        //容纳玩家属性+玩家装备的布局
-        var attr_equip_div = crtElement('div', 'attr_equip_div', null, '');
+        //容纳玩家属性、玩家buff、玩家装备的布局
+        var player_status_div = crtElement('div', 'player_status_div', null, '');
         //属性展示组件
-        var attribute_show = addElement(attr_equip_div, 'div', 'attribute_show', 'page_columns_11', '');
-        var combat_attribute_show = addElement(attribute_show, 'div', 'combat_attribute_show', 'page_columns_111');
-        var Player_attribute_show = addElement(attribute_show, 'div', 'Player_attribute_show', 'page_columns_111');
-        for (let i = 0; i < 9; i++) {
-            addElement(combat_attribute_show, 'div', null, 'state_show'); //条的外框
-            let test = addElement(Player_attribute_show, 'div', null, 'state_show'); //条的外框
-            // if (i == 9) test.innerHTML = '测试';
+        var attribute_show = addElement(player_status_div, 'div', 'attribute_show', null, '');
+        var combat_attribute_show = addElement(attribute_show, 'div', 'combat_attribute_show', null);
+        var Player_attribute_show = addElement(attribute_show, 'div', 'Player_attribute_show', null);
+        for (let i = 0; i < 10; i++) {
+            let test1 = addElement(combat_attribute_show, 'div', null, 'state_show'); //条的外框
+            let test2 = addElement(Player_attribute_show, 'div', null, 'state_show'); //条的外框
+            if (i >= 9) {
+                test1.innerText = '测试\n测试';
+                test2.innerText = '测试\n测试';
+                // test.innerHTML = '测试\n测试';
+            }
         }
+        //buff展示组件
+        var buff_show_scroll_box = addElement(player_status_div, 'div', 'buff_show_scroll_box', 'overflow_y_div');
+        var buff_show_div = addElement(buff_show_scroll_box, 'div', null, 'in_overflow_div', '');
+        var game_time_buff_show_div = addElement(buff_show_div, 'div', 'game_time_buff_show_div', '', '');
+        // for (let i = 0; i < 31; i++) {
+        //     var test_buff = addElement(game_time_buff_show_div, 'div', null, 'buff_show');
+        //     test_buff.innerHTML = '测试测试测试<br>测试';
+        // }
+        var combat_round_buff_show_div = addElement(buff_show_div, 'div', 'combat_round_buff_show_div', '', '');
+        // for (let i = 0; i < 32; i++) {
+        //     var test_buff = addElement(combat_round_buff_show_div, 'div', null, 'buff_show');
+        //     test_buff.innerHTML = '测试测试测试<br>测试';
+        // }
+
         //角色装备栏
-        var equipment_show = addElement(attr_equip_div, 'div', 'equipment_show', 'page_columns_1', 'none');
+        var equipment_show = addElement(player_status_div, 'div', 'equipment_show', 'page_columns_1', 'none');
         for (let i = 0; i < 4; i++) {
             let column_id = 'EQP_column_' + (i + 1);
             var EQP_i = addElement(equipment_show, 'div', column_id, 'page_columns_11', '');
@@ -80,16 +106,20 @@ function make_player_status_div(player_status) {
             var EQP_right = addElement(EQP_i, 'div', null, 'page_columns_11', ''); //装备栏右侧，饰品和饰品槽
         }
 
-        //切换属性和装备栏的按钮
+        //切换属性、buff、装备栏的按钮
         var Player_attr_switch_div = crtElement('div', 'Player_attr_switch_div', null, '');
         var PA_switch_div = addElement(Player_attr_switch_div, 'div', 'PA_switch_div', null);
-        var PA_switch_button = addElement(PA_switch_div, 'button', 'PA_switch_button', 'PA_switch_button', 'none');
-        PA_switch_button.innerHTML = '属性\n展示';
-        var EQP_switch_button = addElement(PA_switch_div, 'button', 'EQP_switch_button', 'PA_switch_button', '');
-        EQP_switch_button.innerHTML = '装备\n展示';
+        var player_attr_switch_radio_div = addElement(PA_switch_div, 'div', 'player_attr_switch_radio_div', 'PA_switch_radio_div');
+        addElement_radio(player_attr_switch_radio_div, 'player_attr', 'PA_switch', 'player_attr', '属性\n展示');
+        player_attr_switch_radio_div.children[0].checked = true;
+        var buff_switch_radio_div = addElement(PA_switch_div, 'div', 'buff_switch_radio_div', 'PA_switch_radio_div');
+        addElement_radio(buff_switch_radio_div, 'player_buff', 'PA_switch', 'player_buff', 'buff\n展示');
+        var EQP_switch_radio_div = addElement(PA_switch_div, 'div', 'EQP_switch_radio_div', 'PA_switch_radio_div');
+        addElement_radio(EQP_switch_radio_div, 'player_EQP', 'PA_switch', 'player_EQP', '装备\n展示');
+        //多个装备栏选择按钮
         var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', null);
         for (let i = 0; i < 4; i++) {
-            var EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'EQP_switch_radio_div');
+            let EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'PA_switch_radio_div');
             let id = 'EQP_' + (i + 1);
             let value = 'EQP_column_' + (i + 1);
             let text = '装备栏\n' + (i + 1);
@@ -99,7 +129,7 @@ function make_player_status_div(player_status) {
         EQP_switch_div.children[0].children[0].checked = true;
         //组件放入角色属性装备界面中
         PAB_div.appendChild(bar_div);
-        PAB_div.appendChild(attr_equip_div);
+        PAB_div.appendChild(player_status_div);
         PAB_div.appendChild(Player_attr_switch_div);
     }
     //角色技能窗口
@@ -111,7 +141,7 @@ function make_player_status_div(player_status) {
             var PSK_switch_scroll_box = addElement(PSK_switch_sort_div, 'div', 'PSK_switch_scroll_box', 'overflow_y_div');
             var PSK_switch_div = addElement(PSK_switch_scroll_box, 'div', 'PSK_switch_div', 'in_overflow_div');
             // 全部
-            var PSK_ALL_radio_div = addElement(PSK_switch_div, 'div', null, 'radio_div switch_radio_div_1');
+            var PSK_ALL_radio_div = addElement(PSK_switch_div, 'div', 'PSK_ALL_radio_div', 'radio_div switch_radio_div_1');
             addElement_radio(PSK_ALL_radio_div, 'PSK_all', 'PSK_switch', 'PSK_all', '全部');
             //默认激活"全部"过滤条件
             PSK_ALL_radio_div.children[0].checked = true;
@@ -240,19 +270,13 @@ function set_player_status_button(player_status) {
     //角色名文本框，实时修改角色名称
     let Player_name = player_status.querySelector('#Player_name');
     Player_name.addEventListener('change', updata_player_name);
-    //角色属性和装备栏界面切换开关
-    let PA_switch_button = player_status.querySelector('#PA_switch_button');
-    let EQP_switch_button = player_status.querySelector('#EQP_switch_button');
-    PA_switch_button.onclick = function () {
-        change_PA();
-        PA_switch_button.style.display = 'none';
-        EQP_switch_button.style.display = '';
-    };
-    EQP_switch_button.onclick = function () {
-        change_PA();
-        EQP_switch_button.style.display = 'none';
-        PA_switch_button.style.display = '';
-    };
+    //角色属性、buff栏、装备栏界面切换开关
+    radios = player_status.querySelectorAll('input[type="radio"][name="PA_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            change_PA(this.value);
+        });
+    });
     //角色装备栏切换开关
     radios = player_status.querySelectorAll('input[type="radio"][name="EQP_switch"]');
     radios.forEach((radio) => {
@@ -277,21 +301,31 @@ function set_player_status_button(player_status) {
             P_All_Skills.updata_PSK_value();
         });
     });
+    //精力条移动上去显示提示
+    let ENP_bar = player_status.querySelector('#ENP_bar');
+    add_show_Tooltip(ENP_bar, 'ENP_bar', 1);
 }
 //点击“属性展示”按钮之后，显示出或者隐藏属性展示界面
-function change_PA() {
+function change_PA(radio_value) {
     const attribute_show = document.getElementById('attribute_show');
     const equipment_show = document.getElementById('equipment_show');
+    const buff_show_scroll_box = document.getElementById('buff_show_scroll_box');
 
-    if (attribute_show.style.display == '') {
-        //如果显示了属性界面，则切换成装备栏
+    if (radio_value == 'player_attr') {
+        //切换到属性栏
+        attribute_show.style.display = '';
+        buff_show_scroll_box.style.display = 'none';
+        equipment_show.style.display = 'none';
+    } else if (radio_value == 'player_EQP') {
         attribute_show.style.display = 'none';
+        buff_show_scroll_box.style.display = 'none';
         equipment_show.style.display = '';
         //切换到当前激活的装备栏
         let P_worn = player.get_player_worn();
         P_worn.show_active_EQP();
-    } else {
-        attribute_show.style.display = '';
+    } else if (radio_value == 'player_buff') {
+        attribute_show.style.display = 'none';
+        buff_show_scroll_box.style.display = '';
         equipment_show.style.display = 'none';
     }
 }

@@ -84,7 +84,7 @@ function init_live_skill_foraging(P_skills) {
     P_skills[id].initial_flag = false; //这是玩家一开始就应该有的初始技能
     P_skills[id].switch_type = 'material_acquisition'; //被动技能类型，原料获取
     P_skills[id].levelup_type = 'exp_up'; //累计经验可升级，只有一个等级上限，可升级到等级上限
-    P_skills[id].set_levelup_data(500, 0, 1, 3); //设置一个等级阶段
+    P_skills[id].set_levelup_data(500, 0, 2, 3); //设置一个等级阶段
     //常态等级加成
     P_skills[id].add_rewards('FAG_attack', 2); //采集力
 }

@@ -1,7 +1,17 @@
 import { add_Enum_Array } from './Enum_class.js';
-//初始化枚举库中与物品相关的内容
+//初始化枚举库中与属性相关的内容
 function init_Enum_attr(enums) {
     let id;
+    //左上属性展示-战斗-进攻相关属性
+    id = 'show_combat_attack_attr';
+    add_Enum_Array(enums, id);
+    enums[id] = [
+        'true_attack', //攻击力
+        'true_precision', //精准
+        'true_critical_chance', //暴击率，百分制，具体计算时会除以100
+        'true_critical_damage', //暴击伤害，百分制，具体计算时会除以100
+        'true_attack_interval', //攻击间隔
+    ];
     //战斗-进攻相关属性
     id = 'combat_attack_attr';
     add_Enum_Array(enums, id);
@@ -10,8 +20,17 @@ function init_Enum_attr(enums) {
         'precision', //精准
         'critical_chance', //暴击率，百分制，具体计算时会除以100
         'critical_damage', //暴击伤害，百分制，具体计算时会除以100
-        // 'attack_speed', //攻击速度加成
-        'true_attack_interval', //攻击间隔
+        'attack_speed', //攻击速度加成
+        'attack_interval', //攻击间隔
+    ];
+    //战斗-防御相关属性
+    id = 'show_combat_defense_attr';
+    add_Enum_Array(enums, id);
+    enums[id] = [
+        'true_defense', //防御
+        'true_evade', //闪避
+        'true_resistance_point', //抵抗力
+        'true_move_speed', //移动速度
     ];
     //战斗-防御相关属性
     id = 'combat_defense_attr';
@@ -35,11 +54,10 @@ function init_Enum_attr(enums) {
     add_Enum_Array(enums, id);
     enums[id] = [
         'surface_energy_point', //表层精力当前值
-        'surface_energy_max', //表层精力最大值
         'surface_energy_recover', //表层精力恢复速度
+        'surface_energy_ratio', //表层精力拥有量比例
         'deep_energy_point', //深层精力当前值
         'deep_energy_max', //深层精力最大值
-        'canuse_deep_energy_max', //深层精力当前可用最大值
         'deep_energy_use_ratio', //深层精力消耗比例
         'deep_energy_recover', //深层精力恢复速度
     ];
@@ -60,7 +78,9 @@ function init_Enum_attr(enums) {
     add_Enum_Array(enums, id);
     enums[id] = [
         'critical_chance', //暴击率
+        'true_critical_chance', //暴击率
         'critical_damage', //暴击伤害
+        'true_critical_damage', //暴击伤害
         'attack_speed', //攻击速度
         //前缀是暴击率、暴击伤害、伤害加成、攻速加成、伐木暴率、伐木暴伤、伐木伤害、伐木攻速、挖矿暴率、挖矿暴伤、挖矿伤害、挖矿攻速
         //后缀是所有武器工具子类和空手

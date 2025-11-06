@@ -74,12 +74,9 @@ function get_UGS_BP_weight() {
 function get_UGS_get_up_time_flag() {
     let time_manage = global.get_time_manage();
     let game_date = time_manage.get_game_date();
-
-    //时间在6：55-7：05之间都算数
-    if (game_date.hours == 7 && game_date.minutes <= 5) {
-        return true;
-    }
-    if (game_date.hours == 6 && game_date.minutes >= 55) {
+    let last_game_now_time = time_manage.get_last_game_now_time();
+    let last_date = time_manage.judge_game_date(last_game_now_time);
+    if (game_date.hours >= 7 && last_date.hours <= 6) {
         return true;
     }
 

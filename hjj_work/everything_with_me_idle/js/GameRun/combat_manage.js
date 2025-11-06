@@ -217,9 +217,10 @@ export class Combat_manage {
                     if (main_Defense.defense_type == 'damage_reduction') {
                         if (main_Defense.DR_math_type == 'num') {
                             e_damage -= main_Defense.DR_num;
-                        } else if (main_Defense.DR_math_type == 'ratio') {
-                            e_damage = e_damage * (1 - main_Defense.DR_num * 0.01);
                         }
+                        // else if (main_Defense.DR_math_type == 'ratio') {
+                        //     e_damage = e_damage * (1 - main_Defense.DR_num * 0.01);
+                        // }
                     }
                     global_flag_manage.record_defense_skill_effect(main_Defense.id);
                 }
@@ -231,7 +232,7 @@ export class Combat_manage {
                 //没有启动防御技能，不改变伤害，继续结算
             }
             //结算玩家防御数值
-            let defense = P_attr.get_data_attr('defense');
+            let defense = P_attr.get_data_attr('true_defense');
             if (defense * 0.1 > e_damage) {
                 e_damage = 0;
             } else {
@@ -241,9 +242,6 @@ export class Combat_manage {
             e_damage = e_damage * -1;
 
             //计算完毕，攻击打到玩家身上
-            // let health_point = P_attr.get_data_attr('health_point');
-            // health_point -= e_damage;
-            // P_attr.set_data_attr('health_point', health_point);
             P_attr.change_data_attr('health_point', e_damage);
 
             //添加一条敌人攻击的游戏日志

@@ -8,6 +8,8 @@ import { init_Text_game_event } from './Text_game_event.js';
 import { init_Text_div } from './Text_div.js';
 import { init_Text_buff } from './Text_buff.js';
 import { init_Text_attr } from './Text_attr.js';
+import { init_Text_game_flag } from './Text_game_flag.js';
+import { init_Text_other } from './Text_other.js';
 
 var texts = new Object();
 
@@ -35,5 +37,9 @@ init_Text_div(texts);
 init_Text_buff(texts);
 //初始化文本数据库中与属性名称相关的文本
 init_Text_attr(texts);
+//初始化文本数据库中属于游戏状态相关的文本
+init_Text_game_flag(texts);
+//初始化文本数据库中剩余没有分类的文本
+init_Text_other(texts);
 
 export { texts };

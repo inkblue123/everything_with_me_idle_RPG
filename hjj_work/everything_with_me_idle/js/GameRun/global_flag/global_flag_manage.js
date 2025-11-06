@@ -6,6 +6,7 @@ import { Game_status } from './game_status.js';
 import { get_use_game_status } from './use_game_status.js';
 import { Short_game_status } from './short_game_status.js';
 import { Game_log_status } from './game_log_status.js';
+import { Game_Option } from './game_option.js';
 
 //记录游戏发生了什么的相关标记的对象
 export class Global_flag_manage {
@@ -49,6 +50,11 @@ export class Global_flag_manage {
         //此处只负责调用接口，并不会记录下每种行为的数据
         //也就是说实际上这个对象啥都没存
         this.game_behavior_status = new Object();
+
+        //游戏设置记录，记录一些全局设置
+        //比如音量，帧率，分辨率，
+        //保存了这些设置的具体数值
+        this.game_option = new Game_Option();
     }
     init() {}
     //获取游戏标记类的游戏存档
@@ -61,6 +67,11 @@ export class Global_flag_manage {
         }
         //重要节点标记
         global_flag_save.important_nodes = this.important_nodes;
+        //游戏设置
+        global_flag_save.game_option = new Object();
+        for (let flag_name in this.game_option) {
+            global_flag_save.game_option[flag_name] = this.game_option[flag_name];
+        }
         return global_flag_save;
     }
     //加载游戏标记类的游戏存档
@@ -76,6 +87,11 @@ export class Global_flag_manage {
         //清除原本日志
         let RA_value_div = document.getElementById('RA_value_div');
         RA_value_div.replaceChildren();
+        //游戏设置
+        this.game_option.load_game_option(global_flag_save.game_option);
+    }
+    get_game_log_manage() {
+        return this.GL_status;
     }
     get_flag(flag_name) {
         let flag_type = this.get_flag_type(flag_name);
@@ -86,6 +102,8 @@ export class Global_flag_manage {
             flag_value = this.SGS_status.get_short_game_status(flag_name);
         } else if (flag_type == 'use_game_status') {
             flag_value = get_use_game_status(flag_name);
+        } else if (flag_type == 'game_option') {
+            flag_value = this.game_option.get_game_option(flag_name);
         } else {
             let flag_obj = this.get_flag_obj(flag_type);
             flag_value = flag_obj[flag_name];
@@ -109,9 +127,12 @@ export class Global_flag_manage {
         if (id.startsWith('SGS_')) return 'short_game_status';
         //临用游戏状态都以“UGS_”开头，不用在枚举库中定义了
         if (id.startsWith('UGS_')) return 'use_game_status';
+        //游戏设置以“OP_”开头
+        if (id.startsWith('OP_')) return 'game_option';
 
         console.log('获取%s的游戏状态类型错误，未在枚举库中定义归属', id);
     }
+    //获取游戏状态
     get_flag_obj(type) {
         if (type == 'short_game_status') {
             console.log('短期游戏状态不能直接读成员');
@@ -119,6 +140,10 @@ export class Global_flag_manage {
         }
         if (type == 'use_game_status') {
             console.log('临用游戏状态不能直接读成员');
+            return;
+        }
+        if (type == 'game_option') {
+            console.log('游戏设置不能直接读成员'); //其实好像可以直接读（）
             return;
         }
         if (type == 'game_status') return this.GS_status;
@@ -140,6 +165,8 @@ export class Global_flag_manage {
             this.GS_status.set_game_status(flag_name, flag_value);
         } else if (flag_type == 'short_game_status') {
             this.SGS_status.set_short_game_status(flag_name, flag_value);
+        } else if (flag_type == 'game_option') {
+            this.game_option.set_game_option(flag_name, flag_value);
         } else if (flag_type == 'use_game_status') {
             console.log('临用游戏状态不能写入');
         } else {

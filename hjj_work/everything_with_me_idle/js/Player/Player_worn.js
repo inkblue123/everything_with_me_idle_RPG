@@ -219,14 +219,14 @@ export class Player_worn {
     show_active_EQP() {
         const attribute_show = document.getElementById('attribute_show');
         const equipment_show = document.getElementById('equipment_show');
-        //如果当前显示了属性界面，则切换成装备栏
-        if (attribute_show.style.display == '') {
+        const buff_show_scroll_box = document.getElementById('buff_show_scroll_box');
+        if (attribute_show.style.display == '' || buff_show_scroll_box.style.display == '') {
+            //如果当前显示了属性界面或者buff界面，则切换成装备栏
             attribute_show.style.display = 'none';
+            buff_show_scroll_box.style.display = 'none';
             equipment_show.style.display = '';
-            const PA_switch_button = document.getElementById('PA_switch_button');
-            const EQP_switch_button = document.getElementById('EQP_switch_button');
-            EQP_switch_button.style.display = 'none';
-            PA_switch_button.style.display = '';
+            const EQP_switch_radio_div = document.getElementById('EQP_switch_radio_div');
+            EQP_switch_radio_div.children[0].checked = true;
         }
         //切换到当前激活的的装备栏上
         for (let EQP_column of equipment_show.children) {

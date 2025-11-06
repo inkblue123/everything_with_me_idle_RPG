@@ -108,6 +108,33 @@ function init_money_type(enums) {
         'copper_coin:0000000000000000': { key: 'copper_coin:0000000000000000', price: 1 }, //铜币
     };
 }
+//悬浮提示框初始化时的类型
+function init_Tooltip_type(enums) {
+    let id;
+    id = 'Tooltip_type';
+    add_Enum_Object(enums, id);
+    enums[id] = {
+        //需要展示物品的详情
+        item: 'item',
+        sell_good: 'item',
+        buy_good: 'item',
+        buyback_good: 'item',
+        //需要展示技能的详情
+        active_skill: 'skill',
+        show_active_skill: 'skill',
+        show_passive_skill: 'skill',
+        //存档时借用了提示框
+        load_save: 'load_save',
+        save_game: 'load_save',
+        delete_save: 'load_save',
+        //血条蓝条精力条详情
+        HP_bar: 'HME_bar',
+        MP_bar: 'HME_bar',
+        ENP_bar: 'HME_bar',
+        //buff详情
+        buff: 'buff',
+    };
+}
 
 function init_Enum_type(enums) {
     //每种装备稀有度对应的颜色
@@ -120,6 +147,8 @@ function init_Enum_type(enums) {
     init_monitor_type(enums);
     //游戏中的货币类型
     init_money_type(enums);
+    //悬浮提示框初始化时的类型
+    init_Tooltip_type(enums);
 }
 
 export { init_Enum_type };

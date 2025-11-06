@@ -16,7 +16,7 @@ export class Foraging_manage {
         this.now_round_time = 0; //当前回合运行了多久的时间
 
         this.player_end_attr; //玩家最终属性拷贝，方便调用
-        this.true_FAG_speed; //实际用于计算的采集攻速
+        this.true_FAG_interval; //实际用于计算的采集攻速
         this.true_FAG_attack; //实际用于计算的采集攻击
         this.true_FAG_critical_chance; //实际用于计算的采集暴击率
         this.true_FAG_critical_damage; //实际用于计算的采集暴击伤害
@@ -112,7 +112,7 @@ export class Foraging_manage {
         //读条开始采集
         this.now_round_time = this.now_time - this.round_start_time;
 
-        if (this.now_round_time < this.true_FAG_speed * 1000) {
+        if (this.now_round_time < this.true_FAG_interval * 1000) {
             //当前没有跑完攻速，不做处理
             return;
         }
@@ -196,20 +196,22 @@ export class Foraging_manage {
     updata_player_data(player_end_attr) {
         if (player_end_attr) this.player_end_attr = player_end_attr;
         //更新采集时的玩家参数
-        //采集速度
-        this.true_FAG_speed = this.player_end_attr['FAG_speed'];
-        //武器类型的采集速度增幅
-        for (let weapon_type of this.player_end_attr['weapon_type']) {
-            let speed_attr_name = weapon_type + '_FAG_speed';
-            if (!is_Empty_Object(this.player_end_attr[speed_attr_name])) {
-                this.true_FAG_speed += this.player_end_attr[speed_attr_name];
-            }
-        }
+        this.true_FAG_attack = this.get_true_FAG_attack();
+        //采集间隔
+        this.true_FAG_interval = this.get_true_FAG_interval();
+        // this.true_FAG_interval = this.player_end_attr['FAG_interval'];
+        // //武器类型的采集速度增幅
+        // for (let weapon_type of this.player_end_attr['weapon_type']) {
+        //     let speed_attr_name = weapon_type + '_FAG_speed';
+        //     if (!is_Empty_Object(this.player_end_attr[speed_attr_name])) {
+        //         this.true_FAG_interval += this.player_end_attr[speed_attr_name];
+        //     }
+        // }
     }
 
     //获取采集攻击进度比例
     get_foraging_ratio() {
-        return (this.now_round_time / (this.true_FAG_speed * 1000)) * 100 + '%';
+        return (this.now_round_time / (this.true_FAG_interval * 1000)) * 100 + '%';
     }
     //获取最终采集力
     get_FAG_damage() {
@@ -226,7 +228,12 @@ export class Foraging_manage {
                 damage_add += this.player_end_attr[damage_attr_name];
             }
         }
-        let FAG_damage = FAG_attack * (1 + damage_add * 0.01);
+        let FAG_damage;
+        if (damage_add >= 0) {
+            FAG_damage = FAG_attack * (100 + damage_add) * 0.01;
+        } else {
+            FAG_damage = FAG_attack * (100 / (100 - damage_add));
+        }
         return FAG_damage;
     }
     //获取当前地点最大采集概率
@@ -246,7 +253,7 @@ export class Foraging_manage {
             console.log('%s地点未定义采集防御');
             return 0;
         }
-        let FAG_damage = this.get_FAG_damage(); //玩家采集力
+        let FAG_damage = this.true_FAG_attack; //玩家采集力
         let FAG_defense = places[this.now_place].FAG_defense; //地点采集防御力
 
         let FAG_chance = parseInt((FAG_damage / FAG_defense) * 100);
@@ -492,7 +499,11 @@ export class Foraging_manage {
                 }
                 //指定产物类型和物品小类有重叠，在权重上得到属性加成
                 let attr_data = this.player_end_attr[attr_id];
-                FAG_item[item_key].chance = FAG_item[item_key].chance * (100 + attr_data) * 0.01;
+                if (attr_data >= 0) {
+                    FAG_item[item_key].chance = FAG_item[item_key].chance * (100 + attr_data) * 0.01;
+                } else {
+                    FAG_item[item_key].chance = FAG_item[item_key].chance * (100 / (100 - attr_data));
+                }
             }
         }
         return FAG_item;
@@ -514,6 +525,82 @@ export class Foraging_manage {
             type_switch = enums[attr_id];
         }
         return type_switch;
+    }
+    //获取最终采集力
+    get_true_FAG_attack() {
+        //基础采集力
+        let FAG_attack = this.player_end_attr['FAG_attack'];
+
+        //获取所有直接乘算增幅
+        let damage_add = 0;
+        //武器类型伤害增幅
+        for (let weapon_type of this.player_end_attr['weapon_type']) {
+            let damage_attr_name = weapon_type + '_FAG_damage';
+            if (!is_Empty_Object(this.player_end_attr[damage_attr_name])) {
+                damage_add += this.player_end_attr[damage_attr_name];
+            }
+        }
+
+        //获取所有最终乘算增幅
+        let end_FAG_attack = this.player_end_attr['end_FAG_attack'];
+        if (end_FAG_attack === undefined) {
+            end_FAG_attack = 0;
+        }
+
+        let true_FAG_attack;
+        if (damage_add >= 0) {
+            true_FAG_attack = FAG_attack * (100 + damage_add) * 0.01;
+        } else {
+            true_FAG_attack = FAG_attack * (100 / (100 - damage_add));
+        }
+        if (end_FAG_attack >= 0) {
+            true_FAG_attack = true_FAG_attack * (100 + end_FAG_attack) * 0.01;
+        } else {
+            true_FAG_attack = true_FAG_attack * (100 / (100 - end_FAG_attack));
+        }
+        return true_FAG_attack;
+    }
+    //获取最终采集间隔
+    get_true_FAG_interval() {
+        //基础采集间隔
+        let FAG_interval = this.player_end_attr['FAG_interval'];
+
+        //累加所有采集速度加成
+        let FAG_speed = this.player_end_attr['FAG_speed']; //结算完的常态伐木攻速
+        if (FAG_speed === undefined) {
+            FAG_speed = 0;
+        }
+        //武器类型的采集速度增幅
+        for (let weapon_type of this.player_end_attr['weapon_type']) {
+            let speed_attr_name = weapon_type + '_FAG_speed';
+            if (!is_Empty_Object(this.player_end_attr[speed_attr_name])) {
+                FAG_speed += this.player_end_attr[speed_attr_name];
+            }
+        }
+        //最终伐木攻速加成
+        let end_FAG_speed = this.player_end_attr['end_FAG_speed']; //结算完的常态伐木攻速
+        if (end_FAG_speed === undefined) {
+            end_FAG_speed = 0;
+        }
+
+        //结算伐木间隔
+        let true_FAG_interval = 0;
+        if (FAG_speed >= 0) {
+            true_FAG_interval = FAG_interval / ((100 + FAG_speed) * 0.01);
+        } else {
+            true_FAG_interval = FAG_interval * ((100 - FAG_speed) * 0.01);
+        }
+        if (end_FAG_speed >= 0) {
+            true_FAG_interval = true_FAG_interval / ((100 + end_FAG_speed) * 0.01);
+        } else {
+            true_FAG_interval = true_FAG_interval * ((100 - end_FAG_speed) * 0.01);
+        }
+
+        if (true_FAG_interval < 0.25) {
+            return 0.25;
+        } else {
+            return true_FAG_interval;
+        }
     }
 }
 

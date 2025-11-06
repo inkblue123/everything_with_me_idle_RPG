@@ -37,6 +37,25 @@ function addElement_radio(parent_element, id, name, value, textContent) {
     parent_element.appendChild(newlabel);
     return newradio;
 }
+//向parent_element中添加一个select
+function addElement_select(parent_element, id, name, title, ...option_name) {
+    let newselect = document.createElement('select');
+    if (id) newselect.id = id;
+    if (name) newselect.name = name;
+    if (title) {
+        newselect.title = title;
+    } else {
+        newselect.title = 'select_title';
+    }
+    parent_element.appendChild(newselect);
+    for (let index in option_name) {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = option_name[index];
+        newselect.appendChild(option);
+    }
+    return newselect;
+}
 //删除一个div中所有元素
 function empty_dom(dom) {
     while (dom.lastChild) {
@@ -46,22 +65,22 @@ function empty_dom(dom) {
 
 // 向目标组件添加鼠标移动显示小窗口的功能
 function add_show_Tooltip(target_div, tip_type, tip_value) {
-    // 获取目标元素和小窗口
-    let tooltip = document.getElementById('tooltip');
-
     // 鼠标移入目标元素时显示小窗口
     target_div.addEventListener('mouseenter', (event) => {
+        let tooltip = document.getElementById('tooltip');
         tooltip.InitTip(tip_type, tip_value, event); // 初始化小窗口内容并显示小窗口
     });
 
     // 鼠标移动时更新小窗口位置
     target_div.addEventListener('mousemove', (event) => {
+        let tooltip = document.getElementById('tooltip');
         requestAnimationFrame(() => tooltip.MoveTip(event));
         // tooltip.MoveTip(event); //移动小窗口
     });
 
     // 鼠标移出目标元素时隐藏小窗口
     target_div.addEventListener('mouseleave', () => {
+        let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口
     });
 }
@@ -201,6 +220,7 @@ export {
     crtElement,
     addElement,
     addElement_radio,
+    addElement_select,
     empty_dom,
     add_show_Tooltip,
     add_click_Equipment_worn,

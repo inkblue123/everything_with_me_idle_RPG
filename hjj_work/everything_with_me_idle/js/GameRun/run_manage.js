@@ -98,12 +98,8 @@ function updata_game_div() {
         live_plan_manage.updata_live_plan_game_div(now_GS);
     }
     let P_attr = player.get_player_attributes();
-    //血条显示更新
-    P_attr.updata_HP_bar_div();
-    //魔力条显示更新
-    P_attr.updata_MP_bar_div();
-    //精力条显示更新
-    P_attr.updata_ENP_bar_div();
+    //更新玩家红蓝绿资源
+    P_attr.updata_HP_MP_ENP_div();
     //玩家名称显示更新
     // updata_player_name();
     //玩家属性显示更新

@@ -1,10 +1,18 @@
 import { hide_div, Gradient_div } from '../Function/Dom_function.js';
+import { init_game_dom } from '../Dom/Dom.js';
 import { start_game_loop } from '../GameRun/run_manage.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 
 //新游戏读档加载
 function init_game() {
+    //全局配置和全局对象初始化
+    global.init();
+    //玩家类初始化
+    player.init();
+    //初始化游戏界面
+    init_game_dom();
+
     let save_str;
     //从浏览器内存中获取存档
     save_str = window.localStorage.getItem('v0.1');
@@ -42,13 +50,26 @@ function save_game() {
     window.localStorage.setItem('v0.1', save_str);
 
     //将存档输出到提示框中，弹窗显示出来
+    // let tooltip = document.getElementById('tooltip');
+    // tooltip.InitTip('save_game', save_str);
+}
+//删除当前存档-弹窗提示玩家删除存档
+function save_game_show_tip() {
+    let save_str = window.localStorage.getItem('v0.1');
     let tooltip = document.getElementById('tooltip');
     tooltip.InitTip('save_game', save_str);
+}
+//删除当前存档-弹窗提示玩家删除存档
+function delete_save_show_tip() {
+    let tooltip = document.getElementById('tooltip');
+    tooltip.InitTip('delete_save', null);
+    // window.localStorage.setItem('v0.1', '');
 }
 //删除当前存档
 function delete_save() {
     window.localStorage.setItem('v0.1', '');
 }
+
 //导入存档功能-弹窗接收玩家输入存档文件
 function load_save_show_tip() {
     let tooltip = document.getElementById('tooltip');
@@ -114,6 +135,7 @@ function new_game_init() {
     P_attr.set_data_attr('health_point', 20);
     //开场剧情在村庄诊所
     let place_manage = global.get_place_manage();
+    // place_manage.set_now_place('village_home');
     place_manage.set_now_place('village_hospital');
     //启动开场剧情
     let game_event_manage = global.get_game_event_manage();
@@ -180,7 +202,9 @@ function b64_to_utf8(str) {
 export {
     init_game, //
     save_game,
+    save_game_show_tip,
     delete_save,
+    delete_save_show_tip,
     load_save,
     load_save_show_tip,
 };

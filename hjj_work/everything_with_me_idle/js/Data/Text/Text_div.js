@@ -2,21 +2,24 @@ import { add_text_object } from './Text_class.js';
 
 //界面布局中普通的文本
 function lable_text(texts) {
-    let id = 'save_tip_title';
+    let id;
+
+    id = 'save_tip_text';
     add_text_object(texts, id);
-    texts[id].lable_text = '导出存档';
-    id = 'load_tip_title';
+    texts[id].lable_text1 = '导出存档';
+    texts[id].lable_text2 = '你的存档位于下方的方框中';
+    texts[id].lable_text3 = '请务必全部复制，否则无法生效';
+    id = 'load_tip_text';
     add_text_object(texts, id);
-    texts[id].lable_text = '导入存档';
-    id = 'save_tip_text1';
+    texts[id].lable_text1 = '导入存档';
+    texts[id].lable_text2 = '将你的原始存档粘贴至下方的方框中';
+
+    id = 'delete_tip_text';
     add_text_object(texts, id);
-    texts[id].lable_text = '你的存档位于下方的方框中';
-    id = 'save_tip_text2';
-    add_text_object(texts, id);
-    texts[id].lable_text = '请务必全部复制，否则无法生效';
-    id = 'load_tip_text1';
-    add_text_object(texts, id);
-    texts[id].lable_text = '将你的原始存档粘贴至下方的方框中';
+    texts[id].lable_text1 = '删除存档';
+    texts[id].lable_text2 = '将删除当前存档，并且重置到新游戏开始界面';
+    texts[id].lable_text3 = '此操作不可逆，确定吗';
+    texts[id].lable_text4 = '已完成';
 }
 //界面布局中按钮元素上的文本
 function button_text(texts) {
@@ -27,6 +30,12 @@ function button_text(texts) {
     add_text_object(texts, id);
     texts[id].button_text = '导入';
     id = 'load_tip_exit_button';
+    add_text_object(texts, id);
+    texts[id].button_text = '取消';
+    id = 'delete_tip_ok_button';
+    add_text_object(texts, id);
+    texts[id].button_text = '确认删除';
+    id = 'delete_tip_exit_button';
     add_text_object(texts, id);
     texts[id].button_text = '取消';
 }
@@ -42,6 +51,7 @@ function fishing_div_text(texts) {
     texts[id].WALK_FIS_text = '鱼已咬钩<br>正在遛鱼';
     texts[id].FINISH_FIS_text = '鱼钓上来了<br>钓到的是';
     texts[id].RUN_FIS_text = '哎呀';
+    texts[id].REST_FIS_text = '感到疲劳<br>休息好了再继续';
     //等鱼上钩阶段的不定时提示文本
     id = 'wail_FIS_tip_text';
     add_text_object(texts, id);

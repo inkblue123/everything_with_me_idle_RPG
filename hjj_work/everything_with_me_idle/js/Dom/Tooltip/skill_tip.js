@@ -6,9 +6,8 @@ import { enums } from '../../Data/Enum/Enum.js';
 import { P_skills, B_skills } from '../../Data/Skill/Skill.js';
 
 import { player } from '../../Player/Player.js';
-// import { Tooltip } from './Tooltip.js';
+import { TOOLTIP_WIDTH } from './Tooltip.js';
 
-const TOOLTIP_WIDTH = 360;
 
 function init_skill_tip(type, value) {
     if (type == 'active_skill') {
@@ -27,22 +26,22 @@ function init_skill_tip(type, value) {
 function init_active_skill_tip(show_slot_num) {
     let Tooltip = document.getElementById('tooltip');
     let P_Askill = player.get_player_ASkill_Manage();
-    let id = P_Askill.active_slots[show_slot_num].id; //要展示的技能的id
+    let skill_id = P_Askill.active_slots[show_slot_num].skill_id; //要展示的技能的id
     let slot_num = P_Askill.active_slots[show_slot_num].slot_num; //触发本次展示的，是要展示技能的第几个槽
-    if (is_Empty_Object(P_skills[id])) {
+    if (is_Empty_Object(P_skills[skill_id])) {
         //技能库没有相关内容，简单展示信息
         let name = addElement(Tooltip, 'div', null, 'lable_down');
         name.innerHTML = '未定义技能';
         let desc = addElement(Tooltip, 'div', null, 'lable_down');
-        desc.innerHTML = '技能id为 : ' + id;
+        desc.innerHTML = '技能id为 : ' + skill_id;
         return false;
     }
     //创造主动技能展示的布局
-    Tooltip.style.width = P_skills[id].need_slot_num * TOOLTIP_WIDTH + 'px';
+    Tooltip.style.width = P_skills[skill_id].need_slot_num * TOOLTIP_WIDTH + 'px';
     let name_lable = addElement(Tooltip, 'div', null, 'lable_down');
-    name_lable.innerHTML = P_skills[id].name; //技能名
+    name_lable.innerHTML = P_skills[skill_id].name; //技能名
     let slot_div = addElement(Tooltip, 'div', null, 'slot_div');
-    for (let i = 0; i < P_skills[id].need_slot_num; i++) {
+    for (let i = 0; i < P_skills[skill_id].need_slot_num; i++) {
         let slot_value_div = addElement(slot_div, 'div', null, 'slot_value_div');
 
         let i_slot_num = show_slot_num - slot_num + i; //从要展示的技能的第一个槽开始

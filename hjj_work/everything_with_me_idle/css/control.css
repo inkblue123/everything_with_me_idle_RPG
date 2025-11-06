@@ -1,9 +1,12 @@
-/* 玩家控制界面的样式 */
+/* 中下-玩家控制界面的样式 */
 #control {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    border: 2px solid #797691; /* 内框 */
+    border-top: 1px solid #797691; /* 内框 */
+    border-left: 1px solid #797691; /* 内框 */
+    border-right: 1px solid #797691; /* 内框 */
+    border-bottom: 2px solid #797691; /* 内框 */
     user-select: none;
 }
 

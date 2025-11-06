@@ -1,6 +1,6 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 import { get_item_obj } from '../Function/Function.js';
-import { save_game, delete_save, load_save, load_save_show_tip } from '../LoadAndSave/load.js';
+import { save_game, save_game_show_tip, delete_save, load_save, load_save_show_tip } from '../LoadAndSave/load.js';
 import { player } from '../Player/Player.js';
 import { P_skills } from '../Data/Skill/Skill.js';
 import { global } from '../GameRun/global_manage.js';
@@ -16,62 +16,70 @@ function create_Option() {
 //生成测试用的按钮
 function make_option_page_test_div(option_page) {
     let button_div;
-    button_div = addElement(option_page, 'button');
-    button_div.innerHTML = '完成3天的新手教学';
-    button_div.onclick = function () {
-        finish_new_player_teach_123();
-    };
 
-    button_div = addElement(option_page, 'button');
-    button_div.innerHTML = '完成当前挑战';
-    button_div.onclick = function () {
-        finish_now_challenge();
-    };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '完成3天的新手教学';
+    // button_div.onclick = function () {
+    //     finish_new_player_teach_123();
+    // };
 
-    button_div = addElement(option_page, 'button');
-    button_div.innerHTML = '逐渐解锁生活技能';
-    button_div.onclick = function () {
-        unlock_live_plan_skill();
-    };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '完成当前挑战';
+    // button_div.onclick = function () {
+    //     finish_now_challenge();
+    // };
 
-    // let button3 = addElement(option_page, 'button');
-    // button3.innerHTML = '暂停游戏';
-    // button3.onclick = function () {
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '逐渐解锁生活技能';
+    // button_div.onclick = function () {
+    //     unlock_live_plan_skill();
+    // };
+
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '暂停游戏';
+    // button_div.onclick = function () {
     //     stop_game_speed();
     // };
 
-    // let button4 = addElement(option_page, 'button');
-    // button4.innerHTML = '恢复游戏';
-    // button4.onclick = function () {
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '恢复游戏';
+    // button_div.onclick = function () {
     //     start_game_speed();
     // };
-    button_div = addElement(option_page, 'button');
-    button_div.innerHTML = '导出存档';
-    button_div.onclick = function () {
-        save_game();
-    };
-    button_div = addElement(option_page, 'button');
-    button_div.innerHTML = '清空存档';
-    button_div.onclick = function () {
-        delete_save();
-    };
-    button_div = addElement(option_page, 'button');
-    button_div.innerHTML = '导入存档';
-    button_div.onclick = function () {
-        load_save_show_tip();
-    };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '导出存档';
+    // button_div.onclick = function () {
+    //     save_game();
+    //     save_game_show_tip();
+    // };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '清空存档';
+    // button_div.onclick = function () {
+    //     delete_save();
+    // };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '导入存档';
+    // button_div.onclick = function () {
+    //     load_save_show_tip();
+    // };
     //  button_div = addElement(option_page, 'button');
     // button_div.innerHTML = '进入测试战斗地点';
     // button_div.onclick = function () {
     //     let place_manage = global.get_place_manage();
     //     place_manage.set_now_place('test_combat1');
     // };
-    button_div = addElement(option_page, 'button');
-    button_div.innerHTML = '血量设0';
-    button_div.onclick = function () {
-        let P_attr = player.get_player_attributes();
-        P_attr.set_data_attr('health_point', 0);
-    };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '血量设0';
+    // button_div.onclick = function () {
+    //     let P_attr = player.get_player_attributes();
+    //     P_attr.set_data_attr('health_point', 0);
+    // };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '精力设0';
+    // button_div.onclick = function () {
+    //     let P_attr = player.get_player_attributes();
+    //     P_attr.set_data_attr('surface_energy_point', 0);
+    // };
     //  button_div = addElement(option_page, 'button');
     // button_div0.innerHTML = '杀光通道的敌人';
     // button_div0.onclick = function () {
@@ -83,11 +91,31 @@ function make_option_page_test_div(option_page) {
     button_div.onclick = function () {
         give_player_item();
     };
-    button_div = addElement(option_page, 'button');
-    button_div.innerHTML = '解锁全部技能';
-    button_div.onclick = function () {
-        give_player_every_skill();
-    };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '游戏速度X1';
+    // button_div.onclick = function () {
+    //     x1_game_speed();
+    // };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '游戏速度X2';
+    // button_div.onclick = function () {
+    //     x2_game_speed();
+    // };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '游戏速度X5';
+    // button_div.onclick = function () {
+    //     x5_game_speed();
+    // };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '解锁全部技能';
+    // button_div.onclick = function () {
+    //     give_player_every_skill();
+    // };
+    // button_div = addElement(option_page, 'button');
+    // button_div.innerHTML = '技能测试';
+    // button_div.onclick = function () {
+    //     player_skill_test();
+    // };
 }
 //完成3天的新手教学
 function finish_new_player_teach_123() {
@@ -140,13 +168,29 @@ function unlock_live_plan_skill() {
 //暂停游戏
 function stop_game_speed() {
     let time_manage = global.get_time_manage();
-    time_manage.set_game_speed(0);
+    time_manage.set_game_speed_num('global', 0);
 }
 //恢复游戏
 function start_game_speed() {
     let time_manage = global.get_time_manage();
-    time_manage.set_game_speed(1);
+    time_manage.set_game_speed_num('global', 1);
 }
+//五倍速运行游戏
+function x5_game_speed() {
+    let time_manage = global.get_time_manage();
+    time_manage.set_game_speed_ratio('option', 400);
+}
+//二倍速运行游戏
+function x2_game_speed() {
+    let time_manage = global.get_time_manage();
+    time_manage.set_game_speed_ratio('option', 100);
+}
+//一倍速运行游戏
+function x1_game_speed() {
+    let time_manage = global.get_time_manage();
+    time_manage.set_game_speed_ratio('option', 0);
+}
+
 //切换商店界面和生活规划界面
 function change_store_liveplan_div() {
     const Live_plan_div = document.getElementById('Live_plan');
@@ -162,43 +206,49 @@ function change_store_liveplan_div() {
 }
 // 物品测试
 function give_player_item() {
-    player.Player_get_item('Oak_logs', 10);
-    player.Player_get_item('birch_logs', 10);
-    player.Player_get_item('fir_logs', 10);
-    player.Player_get_item('lightning_bark', 10);
-    player.Player_get_item('frost_marrow_resin', 10);
-    player.Player_get_item('viresilver_stem', 10);
-    player.Player_get_item('porcini', 10);
-    player.Player_get_item('chanterelle', 10);
-    player.Player_get_item('termite_mushroom', 10);
-    player.Player_get_item('river_mussel', 10);
-    player.Player_get_item('creek_fish', 10);
-    player.Player_get_item('animal_raw_meat', 10);
-    player.Player_get_item('red_berry', 10);
-    player.Player_get_item('yellow_berry', 10);
-    player.Player_get_item('grilled_fish', 10);
-    player.Player_get_item('termite_mushroom_soup', 10);
-    player.Player_get_item('fish_jerky', 10);
-    player.Player_get_item('wood_arrow', 10);
-    player.Player_get_item('copper_coin', 10);
-    player.Player_get_item('greedy_copper_coin', 10);
+    // player.Player_get_item('Oak_logs', 10);
+    // player.Player_get_item('birch_logs', 10);
+    // player.Player_get_item('fir_logs', 10);
+    // player.Player_get_item('lightning_bark', 10);
+    // player.Player_get_item('frost_marrow_resin', 10);
+    // player.Player_get_item('viresilver_stem', 10);
+    // player.Player_get_item('porcini', 10);
+    // player.Player_get_item('chanterelle', 10);
+    // player.Player_get_item('termite_mushroom', 10);
+    // player.Player_get_item('river_mussel', 10);
+    // player.Player_get_item('creek_fish', 10);
+    // player.Player_get_item('animal_raw_meat', 10);
+    // player.Player_get_item('red_berry', 10);
+    // player.Player_get_item('yellow_berry', 10);
+    // player.Player_get_item('grilled_fish', 10);
+    // player.Player_get_item('termite_mushroom_soup', 10);
+    // player.Player_get_item('fish_jerky', 10);
+    // player.Player_get_item('wood_arrow', 10);
+    player.Player_get_item('copper_coin', 1);
+    // player.Player_get_item('greedy_copper_coin', 10);
 
-    player.Player_get_item('wood_sword', 6, 'damaged');
-    player.Player_get_item('wood_sword', 6, 'ordinary');
-    player.Player_get_item('wood_sword', 6, 'excellent');
-    player.Player_get_item('wood_sword', 6, 'rare');
-    player.Player_get_item('wood_sword', 6, 'epic');
-    player.Player_get_item('test_boomerang', 1, 'ordinary');
-    player.Player_get_item('test_boomerang', 3, 'excellent');
-    player.Player_get_item('test_boomerang', 5, 'rare');
-    player.Player_get_item('hatchet', 1, 'ordinary');
-    player.Player_get_item('mowing_sickle', 1, 'ordinary');
+    // player.Player_get_item('wood_sword', 6, 'damaged');
+    // player.Player_get_item('wood_sword', 6, 'ordinary');
+    // player.Player_get_item('wood_sword', 6, 'excellent');
+    // player.Player_get_item('wood_sword', 6, 'rare');
+    // player.Player_get_item('wood_sword', 6, 'epic');
+    // player.Player_get_item('test_boomerang', 1, 'ordinary');
+    // player.Player_get_item('test_boomerang', 3, 'excellent');
+    // player.Player_get_item('test_boomerang', 5, 'rare');
+    // player.Player_get_item('hatchet', 1, 'ordinary');
+    // player.Player_get_item('mowing_sickle', 1, 'ordinary');
 }
+//给予玩家所有技能
 function give_player_every_skill() {
     let P_All_Skills = player.get_player_All_Skills();
     for (let id in P_skills) {
         P_All_Skills.player_unlock_skill(id);
     }
+}
+//技能测试
+function player_skill_test() {
+    let P_All_Skills = player.get_player_All_Skills();
+    P_All_Skills.skill_levelup('lucky_finder');
 }
 
 export { create_Option };

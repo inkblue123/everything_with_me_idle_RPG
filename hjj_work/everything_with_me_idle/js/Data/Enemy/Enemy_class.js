@@ -114,8 +114,12 @@ export class E_tree extends Enemy {
         this.reward_level_item = new Array();
         //次要奖励
         this.second_reward_array = new Array();
+        this.LGI_energy; //每次砍伐的精力需求
     }
-
+    //设置属于树的属性
+    init_tree_attr(LGI_energy) {
+        this.LGI_energy = LGI_energy; //每次砍伐的精力需求
+    }
     //设置掉落物奖励层级的时间
     set_reward_level_time(...time) {
         this.reward_level_time = time;
@@ -163,10 +167,12 @@ export class E_fish extends Enemy {
         super(enemy_id);
         this.type = 'fish';
         this.flee_point; //逃跑力
+        this.FIS_energy; //遛鱼时每秒精力消耗
     }
     //设置属于鱼的属性
-    init_fish_attr(flee_point) {
+    init_fish_attr(flee_point, FIS_energy) {
         this.flee_point = flee_point;
+        this.FIS_energy = FIS_energy;
     }
 }
 function add_Enemy_object(enemys, newid) {

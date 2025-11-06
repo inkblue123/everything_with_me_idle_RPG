@@ -6,6 +6,13 @@ import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
 import { player } from '../../Player/Player.js';
 import { global } from '../../GameRun/global_manage.js';
+//伐木状态
+const LGI_status = Object.freeze({
+    NO_LGI: 1, //没有伐木
+    ENERGY_LGI: 2, //精力充足并且正在伐木
+    NO_ENERGY_LGI: 3, //精力不足并且正在伐木
+    REST_LGI: 4, //精力不足且停止伐木，进入休息状态
+});
 //伐木目标对象
 class Tree_manage {
     constructor() {
@@ -16,6 +23,8 @@ class Tree_manage {
         this.reborn_time; //重生时间点
         this.health_max; //最大生命
         this.health_point; //当前生命
+
+        this.LGI_energy; //每次砍伐的精力需求
     }
     //重生成id树
     reborn_tree(id) {
@@ -24,6 +33,7 @@ class Tree_manage {
         this.reborn_time = global.get_game_now_time(); //重生时间点
         this.health_max = enemys[id].survival_attr['health_max']; //最大生命
         this.health_point = this.health_max;
+        this.LGI_energy = enemys[id].LGI_energy;
     }
     //用LGI_attack伤害砍一下树
     attack_tree(LGI_attack) {
@@ -41,6 +51,10 @@ class Tree_manage {
     //获取树的id
     get_tree_id() {
         return this.id;
+    }
+    //获取砍伐这棵树需要花费多少精力
+    get_LGI_energy() {
+        return this.LGI_energy;
     }
     //获得奖励层次
     get_reward_level() {
@@ -130,6 +144,7 @@ export class Logging_manage {
 
         this.round_start_time; //当前回合开始时间
         this.now_round_time = 0; //当前回合运行了多久的时间
+        this.now_LGI_status; //当前伐木状态
 
         this.player_end_attr; //玩家最终属性拷贝，方便调用
         this.true_LGI_interval; //实际用于计算的伐木攻速
@@ -148,6 +163,7 @@ export class Logging_manage {
         //伐木管理对象
         logging_save.now_time = this.now_time;
         logging_save.LGI_place_rare_trees = this.LGI_place_rare_trees;
+        logging_save.now_LGI_status = this.now_LGI_status;
 
         return logging_save;
     }
@@ -168,6 +184,7 @@ export class Logging_manage {
                 manage_obj[tree_id].last_cumulative_time = now_time - save_tree_last_cumulative_time;
             }
         }
+        this.now_LGI_status = logging_save.now_LGI_status;
     }
     //更新当前地点，初始化伐木信息
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -207,14 +224,27 @@ export class Logging_manage {
     //开始伐木，更新伐木技能的数值
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_live_plan_data() {
+        //更新时间
         this.now_time = global.get_game_now_time();
+
+        if (this.now_LGI_status == LGI_status.NO_LGI) {
+            //当前没有伐木，却进入了伐木逻辑，属于错误情况
+            console.log('伐木状态为无，游戏状态为伐木，状态冲突');
+            return;
+        }
+
         if (this.tree_manage.get_tree_statu()) {
-            //树活着，读条进行砍伐
-            this.tree_live_logging();
+            //树活着
+            if (this.now_LGI_status == LGI_status.ENERGY_LGI || this.now_LGI_status == LGI_status.NO_ENERGY_LGI) {
+                // 精力够用，进行砍伐
+                this.tree_live_logging();
+            }
         } else {
             //树死了，进入复活逻辑
             this.tree_death_reborn();
         }
+        //实时监测精力，根据精力值切换到对应的伐木状态
+        this.monitor_energy_change_LGI_status();
     }
     //开始伐木，更新伐木技能的界面
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -287,6 +317,7 @@ export class Logging_manage {
         }
         //停止伐木
         global.set_flag('GS_game_statu', 'NULL');
+        this.now_LGI_status = LGI_status.NO_LGI;
         //重置按钮
         const LGI_S_button = document.getElementById('LGI_S_button');
         const LGI_E_button = document.getElementById('LGI_E_button');
@@ -310,6 +341,21 @@ export class Logging_manage {
         this.updata_true_LGI_data();
     }
 
+    //按下了“开始伐木”按钮，这里初始化伐木参数，
+    player_start_logging() {
+        let P_attr = player.get_player_attributes();
+        let surface_energy_ratio = P_attr.get_data_attr('surface_energy_ratio');
+
+        if (surface_energy_ratio >= 50) {
+            //精力充足，切换到对应的状态
+            this.now_LGI_status = LGI_status.ENERGY_LGI;
+        } else {
+            //精力不太足
+            this.now_LGI_status = LGI_status.NO_ENERGY_LGI;
+        }
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.set_game_log('live_skill_run', 'start', 'logging');
+    }
     //伐木模式切换，更新数值
     updata_logging_way(now_way) {
         this.now_LGI_way = now_way;
@@ -319,26 +365,11 @@ export class Logging_manage {
     }
     //更新伐木时的玩家参数
     updata_true_LGI_data() {
-        //伐木伤害计算需要比较精细，在伐木进度条完成时才即时读取计算
+        //伐木攻击力
+        this.true_LGI_attack = this.get_true_LGI_attack();
 
-        //伐木攻速加成
-        let LGI_speed = this.player_end_attr['LGI_speed'];
-        if (LGI_speed === undefined) {
-            LGI_speed = 0;
-        }
-        //武器类型的伐木攻速加成
-        for (let weapon_type of this.player_end_attr['weapon_type']) {
-            let speed_attr_name = 'LGI_speed_' + weapon_type;
-            if (!is_Empty_Object(this.player_end_attr[speed_attr_name])) {
-                LGI_speed += this.player_end_attr[speed_attr_name];
-            }
-        }
         //伐木间隔
-        let base_LGI_interval = this.player_end_attr['LGI_interval'];
-        this.true_LGI_interval = base_LGI_interval / ((100 + LGI_speed) * 0.01);
-        if (this.true_LGI_interval < 0.25) {
-            this.true_LGI_interval = 0.25;
-        }
+        this.true_LGI_interval = this.get_true_LGI_interval();
 
         //伐木暴击率
         this.true_LGI_critical_chance = this.player_end_attr['LGI_critical_chance'];
@@ -347,7 +378,6 @@ export class Logging_manage {
 
         if (this.now_LGI_way == 'LGI_M_way') {
             //精细伐木有数值补正
-            this.true_LGI_interval = this.true_LGI_interval * 1.5;
             this.true_LGI_critical_chance = this.player_end_attr['LGI_critical_chance'] + 30;
             this.true_LGI_critical_damage = this.player_end_attr['LGI_critical_damage'] + 50;
         } else if (this.now_LGI_way == 'LGI_F_way') {
@@ -363,6 +393,19 @@ export class Logging_manage {
             return;
         }
         //到时候了，准备砍一下树
+        //判断精力是否足够砍这一下
+        let LGI_energy = this.tree_manage.get_LGI_energy();
+        let P_attr = player.get_player_attributes();
+        if (!P_attr.use_energy_point(LGI_energy)) {
+            //精力不足，不能砍伐，要进入伐木休息状态
+            this.now_LGI_status = LGI_status.REST_LGI;
+            //写游戏日志，实在没有精力了，暂停伐木，原地休息
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('live_skill_run', 'no_energy_2', 'logging');
+            return;
+        }
+        //精力足够，已经消耗，砍一下树
+
         //获取伐木伤害
         let LGI_damage = this.get_LGI_damage();
         //砍到树身上
@@ -375,7 +418,8 @@ export class Logging_manage {
         global_flag_manage.record_logging_behavior(logging_behavior);
 
         if (!this.tree_manage.get_tree_statu()) {
-            //树死了，进入掉落物品逻辑
+            //树死了
+            // 进入掉落物品逻辑
             let items_arr = this.tree_manage.get_drop_reward();
             for (let item_key in items_arr) {
                 player.Player_get_item(items_arr[item_key]);
@@ -384,6 +428,13 @@ export class Logging_manage {
             let tree_id = this.tree_manage.get_tree_id();
             if (places[this.now_place].LGI_trees[tree_id].rare_flag) {
                 this.LGI_place_rare_trees[this.now_place][tree_id].cumulative_num--;
+            }
+            //如果玩家疲劳了，进入休息状态，
+            if (this.now_LGI_status == LGI_status.NO_ENERGY_LGI) {
+                this.now_LGI_status = LGI_status.REST_LGI;
+                //写游戏日志，感到疲劳，暂停伐木，原地休息
+                let global_flag_manage = global.get_global_flag_manage();
+                global_flag_manage.set_game_log('live_skill_run', 'no_energy_1', 'logging');
             }
         }
         //砍完重置回合
@@ -501,13 +552,12 @@ export class Logging_manage {
     get_attack_ratio() {
         return (this.now_round_time / (this.true_LGI_interval * 1000)) * 100 + '%';
     }
-    //获取最终伐木伤害
-    get_LGI_damage() {
-        //伐木的伤害计算流程有5个阶段
-        //计算最终面板，伤害增幅结算，暴击结算，伤害打到树上结算
-        // 这里进行结算伤害增幅和结算暴击
+    //获取最终伐木攻击力
+    get_true_LGI_attack() {
+        //基础伐木攻击
         let LGI_attack = this.player_end_attr['LGI_attack'];
 
+        //获取所有直接乘算增幅
         let damage_add = 0;
         //武器类型伤害增幅
         for (let weapon_type of this.player_end_attr['weapon_type']) {
@@ -516,14 +566,89 @@ export class Logging_manage {
                 damage_add += this.player_end_attr[damage_attr_name];
             }
         }
-        let LGI_damage = LGI_attack * (1 + damage_add * 0.01);
 
+        //获取所有最终乘算增幅
+        let end_LGI_attack = this.player_end_attr['end_LGI_attack'];
+        if (end_LGI_attack === undefined) {
+            end_LGI_attack = 0;
+        }
+
+        let true_LGI_attack;
+        if (damage_add >= 0) {
+            true_LGI_attack = LGI_attack * (100 + damage_add) * 0.01;
+        } else {
+            true_LGI_attack = LGI_attack * (100 / (100 - damage_add));
+        }
+        if (end_LGI_attack >= 0) {
+            true_LGI_attack = true_LGI_attack * (100 + end_LGI_attack) * 0.01;
+        } else {
+            true_LGI_attack = true_LGI_attack * (100 / (100 - end_LGI_attack));
+        }
+        return true_LGI_attack;
+    }
+    //获取最终伐木伤害
+    get_LGI_damage() {
+        let LGI_damage;
         //暴击结算
         let random_manage = global.get_random_manage(); //随机数管理类
         if (random_manage.try_critical(this.true_LGI_critical_chance)) {
-            LGI_damage = LGI_damage * (this.true_LGI_critical_damage * 0.01);
+            LGI_damage = this.true_LGI_attack * (this.true_LGI_critical_damage * 0.01);
+        } else {
+            LGI_damage = this.true_LGI_attack;
         }
         return LGI_damage;
+    }
+    //获取最终伐木间隔
+    get_true_LGI_interval() {
+        //伐木间隔算法
+        //基础伐木间隔 *（1+伐木攻速加成）*（1+最终伐木攻速加成）
+        //基础伐木间隔就是玩家初始的伐木间隔
+        //伐木攻速加成是各个技能中提到的伐木攻速加成，统一都是正数，所有数累加即为总加成，
+        //最终伐木攻速加成只有少数几个来源，如疲劳影响，伐木模式
+
+        //基础伐木间隔
+        let base_LGI_interval = this.player_end_attr['LGI_interval'];
+
+        //累加所有伐木攻速加成
+        let LGI_speed = this.player_end_attr['LGI_speed']; //结算完的常态伐木攻速
+        if (LGI_speed === undefined) {
+            LGI_speed = 0;
+        }
+        //武器类型的伐木攻速加成
+        for (let weapon_type of this.player_end_attr['weapon_type']) {
+            let speed_attr_name = 'LGI_speed_' + weapon_type;
+            if (!is_Empty_Object(this.player_end_attr[speed_attr_name])) {
+                LGI_speed += this.player_end_attr[speed_attr_name];
+            }
+        }
+
+        //最终伐木攻速加成
+        let end_LGI_speed = this.player_end_attr['end_LGI_speed']; //结算完的常态伐木攻速
+        if (end_LGI_speed === undefined) {
+            end_LGI_speed = 0;
+        }
+        if (this.now_LGI_way == 'LGI_M_way') {
+            end_LGI_speed += -50;
+        }
+
+        //结算伐木间隔
+        let true_LGI_interval = 0;
+        if (LGI_speed >= 0) {
+            true_LGI_interval = base_LGI_interval / ((100 + LGI_speed) * 0.01);
+        } else {
+            true_LGI_interval = base_LGI_interval * ((100 - LGI_speed) * 0.01);
+        }
+        if (end_LGI_speed >= 0) {
+            true_LGI_interval = true_LGI_interval / ((100 + end_LGI_speed) * 0.01);
+        } else {
+            true_LGI_interval = true_LGI_interval * ((100 - end_LGI_speed) * 0.01);
+        }
+
+        if (true_LGI_interval < 0.25) {
+            return 0.25;
+        } else {
+            return true_LGI_interval;
+        }
     }
     //树刚刚复活时，将新复活的树的信息展示出来
     show_new_tree_div() {
@@ -586,6 +711,41 @@ export class Logging_manage {
         logging_way_bar.children[0].children[0].style.width = '0%';
 
         tree_head.dataset.statu = 'false';
+    }
+    //实时监测精力，恢复好就切换到其他伐木状态
+    monitor_energy_change_LGI_status() {
+        let P_attr = player.get_player_attributes();
+        let surface_energy_ratio = P_attr.get_data_attr('surface_energy_ratio');
+        if (this.now_LGI_status == LGI_status.ENERGY_LGI) {
+            //精力掉到49%以内时切换为精力不足且伐木
+            if (surface_energy_ratio < 50) {
+                this.now_LGI_status = LGI_status.NO_ENERGY_LGI;
+            }
+        } else if (this.now_LGI_status == LGI_status.NO_ENERGY_LGI) {
+            //精力不足且伐木在一棵树伐木完成时自动切换成休息
+        } else if (this.now_LGI_status == LGI_status.REST_LGI) {
+            //精力不足且休息状态在精力回满的时候切换到其他伐木状态
+            if (P_attr.judge_surface_energy_max()) {
+                let global_flag_manage = global.get_global_flag_manage();
+                if (surface_energy_ratio >= 50) {
+                    //精力充足
+                    this.now_LGI_status = LGI_status.ENERGY_LGI;
+                    global_flag_manage.set_game_log('live_skill_run', 'max_energy_1', 'logging');
+                } else if (surface_energy_ratio >= 25 && surface_energy_ratio < 50) {
+                    //精力不太足
+                    this.now_LGI_status = LGI_status.NO_ENERGY_LGI;
+                    global_flag_manage.set_game_log('live_skill_run', 'max_energy_1', 'logging');
+                } else if (surface_energy_ratio < 25) {
+                    //精力不足，不能伐木
+                    this.stop_game_statu();
+                    global_flag_manage.set_game_log('live_skill_run', 'max_energy_2', 'logging');
+                }
+            }
+        }
+    }
+    //获取伐木状态
+    get_now_LGI_status() {
+        return this.now_LGI_status;
     }
 }
 

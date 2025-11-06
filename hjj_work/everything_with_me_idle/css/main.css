@@ -6,5 +6,6 @@
 @import url('./styles.css');
 @import url('./tooltip.css');
 @import url('./store.css');
+@import url('./map.css');
 
 @import url('./live_plan/live_plan.css');

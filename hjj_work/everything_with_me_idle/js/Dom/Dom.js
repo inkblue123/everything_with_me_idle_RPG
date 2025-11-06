@@ -36,7 +36,7 @@ function create_game_dom() {
     //游离于游戏布局之上，跟随鼠标的小窗口
     let Tooltip = create_Tooltip();
     //非战斗时右上，地图界面
-    let map = crtElement('div', 'map', 'section', '', '');
+    let map = crtElement('div', 'map', null, '', '');
     map.textContent = '地图界面';
 
     //创建布局
@@ -81,26 +81,103 @@ function create_game_dom() {
 }
 //将游戏界面切换到初始状态
 function init_game_dom() {
+    //中上和右上
     //激活非战斗时游戏界面
-    // show_normal_game_div();
-    let Live_plan = document.getElementById('Live_plan');
-    let Store = document.getElementById('Store');
+    const game_up_combat = document.getElementById('game_up_combat');
+    const game_up_nomal = document.getElementById('game_up_nomal');
+    game_up_combat.style.display = 'none';
+    game_up_nomal.style.display = '';
+    //激活生活技能规划窗口
+    const Live_plan_div = document.getElementById('Live_plan');
+    const Store_div = document.getElementById('Store');
+    const goods_trade_div = document.getElementById('goods_trade_div');
+    Live_plan_div.style.display = '';
+    Store_div.style.display = 'none';
+    goods_trade_div.style.display = 'none';
 
-    //初始化脑海-重要事件界面
-    let game_event_manage = global.get_game_event_manage();
-    game_event_manage.init_IE_div();
+    //左上
+    //玩家属性界面切换到角色属性窗口
+    const PAB_div = document.getElementById('PAB_div');
+    const PSK_div = document.getElementById('PSK_div');
+    PAB_div.style.display = '';
+    PSK_div.style.display = 'none';
+    //玩家属性界面分类按钮切换到角色属性上
+    const player_attr_switch_radio_div = document.getElementById('player_attr_switch_radio_div');
+    player_attr_switch_radio_div.children[0].checked = true;
+    //角色装备栏切换到第一个
+    const EQP_switch_div = document.getElementById('EQP_switch_div');
+    EQP_switch_div.children[0].children[0].checked = true;
+    //展示属性和展示装备功能切换到展示属性
+    const attribute_show = document.getElementById('attribute_show');
+    const equipment_show = document.getElementById('equipment_show');
+    const buff_show_scroll_box = document.getElementById('buff_show_scroll_box');
+    attribute_show.style.display = '';
+    equipment_show.style.display = 'none';
+    buff_show_scroll_box.style.display = 'none';
+    //玩家技能窗口内左侧的过滤条件调整到"全部"按钮
+    const PSK_ALL_radio_div = document.getElementById('PSK_ALL_radio_div');
+    PSK_ALL_radio_div.children[0].checked = true;
+    //展开的其他过滤条件窗口都隐藏
+    const PSK_B_droptable = document.getElementById('PSK_B_droptable');
+    PSK_B_droptable.style.display = 'none';
+    const PSK_C_droptable = document.getElementById('PSK_C_droptable');
+    PSK_C_droptable.style.display = 'none';
+    const PSK_L_droptable = document.getElementById('PSK_L_droptable');
+    PSK_L_droptable.style.display = 'none';
+    const PSK_A_droptable = document.getElementById('PSK_A_droptable');
+    PSK_A_droptable.style.display = 'none';
+    const PSK_S_droptable = document.getElementById('PSK_S_droptable');
+    PSK_S_droptable.style.display = 'none';
 
-    //初始化玩家主动技能展示
-    updata_player_active(); //主动技能测试，正常应该在战斗规划界面设置主动技能，设置之后调用这个接口
+    //左下
+    //战斗规划功能分类切换到背包按钮上
+    const BP_switch_radio_div = document.getElementById('BP_switch_radio_div');
+    BP_switch_radio_div.children[0].checked = true;
+    //战斗规划界面切换到背包窗口
+    const BP_div = document.getElementById('BP_div');
+    const CBP_div = document.getElementById('CBP_div');
+    BP_div.style.display = '';
+    CBP_div.style.display = 'none';
+    //背包界面的过滤条件切换到"全部"上
+    const BP_ALL_radio_div = document.getElementById('BP_ALL_radio_div');
+    BP_ALL_radio_div.children[0].checked = true;
+    //其他过滤按钮都隐藏
+    const BP_EQP_droptable = document.getElementById('BP_EQP_droptable');
+    BP_EQP_droptable.style.display = 'none';
+    const BP_CSB_droptable = document.getElementById('BP_CSB_droptable');
+    BP_CSB_droptable.style.display = 'none';
+    const BP_MTR_droptable = document.getElementById('BP_MTR_droptable');
+    BP_MTR_droptable.style.display = 'none';
+    //背包界面排序按钮切换到个数排序
+    const BP_num_radio_div = document.getElementById('BP_num_radio_div');
+    BP_num_radio_div.children[0].checked = true;
+    //战斗规划界面切换到主动技能规划
+    const ASP_radio_div = document.getElementById('ASP_radio_div');
+    ASP_radio_div.children[0].checked = true;
 
-    // 将每个装备栏中的信息初始化
-    let P_worn = player.get_player_worn();
-    const radios = document.querySelectorAll('input[name="EQP_switch"]');
-    for (const radio of radios) {
-        P_worn.updata_equipment_show(radio.value);
-    }
-    //移动到初始位置
-    let place_manage = global.get_place_manage();
-    place_manage.set_now_place('village_home');
+    //右下
+    //游戏日志功能分类切换到脑海按钮
+    const MD_switch_radio_div = document.getElementById('MD_switch_radio_div');
+    MD_switch_radio_div.children[0].checked = true;
+    //战斗规划界面切换到背包窗口
+    const MD_div = document.getElementById('MD_div');
+    const IB_div = document.getElementById('IB_div');
+    MD_div.style.display = '';
+    IB_div.style.display = 'none';
+    //脑海界面的过滤按钮切换到流水账
+    const RA_radio_div = document.getElementById('RA_radio_div');
+    RA_radio_div.children[0].checked = true;
+    //其他过滤按钮都隐藏
+    const RA_droptable = document.getElementById('RA_droptable');
+    RA_droptable.style.display = 'none';
+    const OP_droptable = document.getElementById('OP_droptable');
+    OP_droptable.style.display = 'none';
+    //脑海界面的右侧内容切换到流水账
+    const RA_value_scroll_box = document.getElementById('RA_value_scroll_box');
+    const IE_value_scroll_box = document.getElementById('IE_value_scroll_box');
+    const OP_div = document.getElementById('OP_div');
+    RA_value_scroll_box.style.display = '';
+    IE_value_scroll_box.style.display = 'none';
+    OP_div.style.display = 'none';
 }
 export { create_game_dom, init_game_dom };

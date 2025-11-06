@@ -119,6 +119,68 @@ function get_random_enemy_distance(place_x, place_y) {
     }
     return get_random(min, max);
 }
+//计算常规数值型的属性的加成结果
+function calculate_num_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr_ratio2) {
+    //基本数值
+    if (!base_attr) return 0;
+    if (!attr_num1) attr_num1 = 0;
+    if (!attr_ratio1) attr_ratio1 = 0;
+    if (!attr_num2) attr_num2 = 0;
+    if (!attr_ratio2) attr_ratio2 = 0;
+
+    let end_attr = base_attr;
+    //直接加算
+    end_attr += attr_num1;
+    //直接乘算
+    if (attr_ratio1 >= 0) {
+        end_attr = end_attr * ((100 + attr_ratio1) * 0.01);
+    } else {
+        end_attr = end_attr * (100 / (100 - attr_ratio1));
+    }
+    //最终加算
+    end_attr += attr_num2;
+    //最终乘算
+    if (attr_ratio2 >= 0) {
+        end_attr = end_attr * ((100 + attr_ratio2) * 0.01);
+    } else {
+        end_attr = end_attr * (100 / (100 - attr_ratio2));
+    }
+    if (end_attr < 0) {
+        end_attr = 0;
+    }
+    return end_attr;
+}
+//计算攻速型的属性的加成结果
+function calculate_speed_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr_ratio2) {
+    //基本数值
+    if (!base_attr) return 0;
+    if (!attr_num1) attr_num1 = 0;
+    if (!attr_ratio1) attr_ratio1 = 0;
+    if (!attr_num2) attr_num2 = 0;
+    if (!attr_ratio2) attr_ratio2 = 0;
+
+    let end_attr = base_attr;
+    //直接加算
+    end_attr += attr_num1;
+    //直接乘算
+    if (attr_ratio1 >= 0) {
+        end_attr = end_attr / ((100 + attr_ratio1) * 0.01);
+    } else {
+        end_attr = end_attr * ((100 - attr_ratio1) * 0.01);
+    }
+    //最终加算
+    end_attr += attr_num2;
+    //最终乘算
+    if (attr_ratio2 >= 0) {
+        end_attr = end_attr / ((100 + attr_ratio2) * 0.01);
+    } else {
+        end_attr = end_attr * ((100 - attr_ratio2) * 0.01);
+    }
+    if (end_attr < 0.25) {
+        end_attr = 0.25;
+    }
+    return end_attr;
+}
 
 //攻击技能效果计算函数
 function Attack_effect_algorithm(id, base_attr, Attack_effect) {
@@ -264,4 +326,6 @@ export {
     skill_levelup_exp_algorithm,
     skill_rewards_algorithm,
     format_numbers,
+    calculate_num_attr,
+    calculate_speed_attr,
 };

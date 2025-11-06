@@ -131,6 +131,10 @@ export class Exp_manage {
     //判断当前行为能否为指定技能提供经验
     judge_leveling_behavior(skill_id) {
         let skill_LB = P_skills[skill_id].leveling_behavior;
+        if (is_Empty_Object(skill_LB)) {
+            //技能没有规定什么行为下可以加经验，判定为任何情况下都不加经验
+            return false;
+        }
         let P_LB = this.leveling_behavior;
         for (let type in skill_LB) {
             if (type == 'behavior') {
@@ -152,7 +156,7 @@ export class Exp_manage {
     //从玩家行为中寻找指定经验依据的数值
     get_exp_source(exp_source) {
         if (enums['exp_source_for_Leveling_Behavior'][exp_source] === undefined) {
-            console.log('%s经验依据没有定义它归属于哪种升级行为');
+            console.log('%s经验依据没有定义它归属于哪种升级行为', exp_source);
             return 0;
         }
         let son_behavior = enums['exp_source_for_Leveling_Behavior'][exp_source];

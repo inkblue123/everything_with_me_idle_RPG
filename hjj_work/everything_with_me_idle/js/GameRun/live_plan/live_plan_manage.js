@@ -14,6 +14,15 @@ import { Foraging_manage } from './foraging.js';
 export class Live_plan_manage {
     constructor() {
         this.EC_live_plan_class_name = ['logging_manage', 'fishing_manage', 'mining_manage', 'foraging_manage', 'diving_manage', 'archaeology_manage', 'exploration_manage'];
+        // this.logging_manage = new Logging_manage(); //伐木管理对象
+        // this.fishing_manage = new Fishing_manage(); //钓鱼管理对象
+        // // this.mining_manage = new Mining_manage(); //挖矿管理对象
+        // this.foraging_manage = new Foraging_manage(); //采集管理对象
+        // // this.diving_manage = new Diving_manage(); //潜水管理对象
+        // // this.archaeology_manage = new Archaeology_manage(); //考古管理对象
+        // // this.exploration_manage = new Exploration_manage(); //探索管理对象
+    }
+    init() {
         this.logging_manage = new Logging_manage(); //伐木管理对象
         this.fishing_manage = new Fishing_manage(); //钓鱼管理对象
         // this.mining_manage = new Mining_manage(); //挖矿管理对象

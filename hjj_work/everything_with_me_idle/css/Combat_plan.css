@@ -1,7 +1,10 @@
 /* 战斗规划总界面 */
 #Combat_plan {
     box-sizing: border-box;
-    border: 2px solid #797691; /* 内框 */
+    border-top: 1px solid #797691; /* 内框 */
+    border-left: 2px solid #797691; /* 内框 */
+    border-right: 1px solid #797691; /* 内框 */
+    border-bottom: 2px solid #797691; /* 内框 */
     user-select: none;
 }
 /* 战斗规划n个子界面的切换按钮的div */

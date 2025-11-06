@@ -28,7 +28,11 @@ class Global_manage {
         this.init_config();
         //初始化
         this.time_manage = new Time_manage(); //帧率和时间类
-        this.time_manage.init(this.config.fps);
+        this.time_manage.init();
+        this.global_flag_manage = new Global_flag_manage(); //游戏状态管理类
+        this.global_flag_manage.init();
+        this.live_plan_manage = new Live_plan_manage(); //生活技能管理类
+        this.live_plan_manage.init();
         this.place_manage = new Place_manage(); //玩家所处地点类
         this.place_manage.init();
         this.enemy_manage = new Enemy_manage(); //场地内敌人类
@@ -38,10 +42,6 @@ class Global_manage {
         this.exp_manage = new Exp_manage(); //技能经验管理类
         this.game_event_manage = new Game_event_manage(); //游戏事件管理类
         // this.game_event_manage.init();
-        this.global_flag_manage = new Global_flag_manage(); //游戏状态管理类
-        this.global_flag_manage.init();
-        this.live_plan_manage = new Live_plan_manage(); //生活技能管理类
-        // this.live_plan_manage.init();
         this.store_manage = new Store_manage(); //交易和商店管理类
     }
     init_config() {
@@ -135,7 +135,7 @@ class Global_manage {
     load_global_manage(global_save) {
         this.init_config();
         this.time_manage = new Time_manage(); //帧率和时间类
-        this.time_manage.init(this.config.fps);
+        this.time_manage.init();
         this.time_manage.load_Time_manage(global_save.Time_save);
         this.global_flag_manage.load_global_flag_manage(global_save.global_flag_save);
         this.game_event_manage.load_Game_event_manage(global_save.game_event_save);

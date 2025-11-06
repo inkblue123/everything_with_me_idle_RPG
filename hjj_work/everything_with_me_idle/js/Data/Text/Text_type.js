@@ -376,6 +376,9 @@ function fish_status(texts) {
     id = 5;
     // add_text_object(texts, id);
     texts[id].fish_status_name = '鱼跑了';
+    id = 6;
+    // add_text_object(texts, id);
+    texts[id].fish_status_name = '原地休息';
 }
 //商人使用的货币名称
 function store_use_money_type(texts) {

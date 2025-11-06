@@ -50,9 +50,8 @@
 .TLV_left {
     display: flex;
     font-size: 15px;
-    justify-content: center;
     align-items: center;
-    text-align: center;
+    text-align: left;
 }
 /* 左边显示类型，右边显示具体内容的div*/
 .TLV_right {
@@ -188,14 +187,28 @@
     display: flex;
     width: 100%;
     height: 15%;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 /* 存档布局中的按钮 */
 .SandL_button {
-    min-width: 50px;
-    min-height: 30px;
+    min-width: 80px;
+    min-height: 40px;
     font-size: 15px;
+}
+/* 删除存档界面中的特殊按钮 */
+#SandL_delete_button {
+    min-width: 80px;
+    min-height: 40px;
+    font-size: 15px;
+    background-color: black;
+    transition: background-color 5s ease;
+}
+#SandL_delete_button.normal {
+    /* 普通按钮样式 */
+    background-color: #f0f0f0;
+    /* color: #333; */
+    border: 1px solid #ccc;
 }
 
 /* 经验组件：最大的父元素 */
@@ -220,4 +233,31 @@
     line-height: 1.2;
     user-select: none;
     color: rgb(0, 0, 0);
+}
+
+/* 提示框中的精力条组件：表层精力进度 */
+#tip_surface_ENP_bar {
+    box-sizing: border-box;
+    /* 组件原定颜色 */
+    /* background-color: rgba(51, 255, 51); */
+    /* 将ui改成不太明显的颜色，降低上班时被发现的概率 */
+    background-color: rgba(3, 1, 1, 0.712);
+    width: 100%; /* 宽度为整个窗口的85% */
+    height: 15px; /* 高度固定为15px */
+}
+/* 提示框中的精力条组件：深层精力进度 */
+#tip_deep_ENP_bar {
+    /* 组件原定颜色 */
+    /* background-color: rgb(0, 204, 0); */
+    /* 将ui改成不太明显的颜色，降低上班时被发现的概率 */
+    background-color: rgba(0, 0, 0, 0.185);
+    width: 100%;
+    height: 25px;
+}
+/* 提示框中的精力条组件：深层精力最大值 */
+#tip_ENMax_bar {
+    box-sizing: border-box;
+    border: 1px solid #000; /* 内框 */
+    width: 100%; /* 宽度为整个窗口的85% */
+    height: 25px; /* 高度固定为15px */
 }

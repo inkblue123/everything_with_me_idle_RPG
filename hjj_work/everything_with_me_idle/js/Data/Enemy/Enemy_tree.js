@@ -6,6 +6,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(5, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(2); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(4); //分了2档，0-4秒，大于4秒
     //第0档的奖励
@@ -25,6 +26,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(8, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(5); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(4, 8, 16); //分了4档，0-4秒，4-8秒，8-16秒，大于16秒
     //第0档的奖励，5个木头，1-2个木屑
@@ -52,6 +54,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(12, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(6); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(5, 11); //分了3档，0-5秒，5-11秒，大于11秒
     //第0档的奖励，3个木头，1-2个木屑
@@ -74,6 +77,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(18, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(7); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(7, 14); //分了3档，0-7秒，7-14秒，大于14秒
     //第0档的奖励，3个木头，1-2个木屑
@@ -96,6 +100,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(25, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(8); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(7, 14); //分了3档，0-7秒，7-14秒，大于14秒
     //第0档的奖励，3个木头，1-2个木屑
@@ -118,6 +123,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(40, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(11); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(8, 16); //分了3档，0-8秒，8-16秒，大于16秒
     //第0档的奖励，3个木头，1-2个木屑
@@ -145,6 +151,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(40, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(12); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(8, 16); //分了3档，0-5秒，5-11秒，大于11秒
     //第0档的奖励，3个木头，1-2个木屑
@@ -172,6 +179,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(12, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(5); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(5, 11); //分了3档，0-5秒，5-11秒，大于11秒
     //第0档的奖励，3个木头，1-2个木屑
@@ -194,6 +202,7 @@ function init_Enemy_tree(enemys) {
     add_E_tree_object(enemys, id);
     //最大生命，最大魔力，最大精力
     enemys[id].init_survival_attr(12, 0, 0); //生存属性初始化
+    enemys[id].init_tree_attr(6); //设置属于树的属性，每次砍伐的精力消耗
     //设置奖励层级时间
     enemys[id].set_reward_level_time(5, 11); //分了3档，0-5秒，5-11秒，大于11秒
     //第0档的奖励，3个木头，1-2个木屑
