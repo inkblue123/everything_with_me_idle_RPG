@@ -3,20 +3,26 @@ import { init_Place_combat } from './Place_combat.js';
 import { init_Place_NPC } from './Place_NPC.js';
 import { init_Place_other } from './Place_other.js';
 import { init_Place_store } from './Place_store.js';
+import { init_areas } from './Area.js';
 
 var places = new Object();
+var areas = new Object();
 
 //初始化地点库
+function init_places() {
+    //普通地点初始化
+    init_Place_normal(places);
+    //战斗地点初始化
+    init_Place_combat(places);
+    //NPC地点初始化
+    init_Place_NPC(places);
+    //其他地点初始化
+    init_Place_other(places);
+    //交易地点初始化
+    init_Place_store(places);
 
-//普通地点初始化
-init_Place_normal(places);
-//战斗地点初始化
-init_Place_combat(places);
-//NPC地点初始化
-init_Place_NPC(places);
-//其他地点初始化
-init_Place_other(places);
-//交易地点初始化
-init_Place_store(places);
+    //区域信息初始化
+    init_areas(areas);
+}
 
-export { places };
+export { places,areas, init_places };

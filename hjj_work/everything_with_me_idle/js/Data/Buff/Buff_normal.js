@@ -46,7 +46,7 @@ function init_normal_buff(buffs) {
     buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack', -20); //伐木攻击力降低20%
     buffs[id].add_buff_value('only_start_restore', 'end_FIS_walkfish_attack', -20); //钓鱼遛鱼力降低20%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_attack', -20); //采集力降低20%
-    buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed', -20); //采集速度延长20%
+    buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed_num', -20); //采集速度延长20%
 
     id = 'extreme_fatigue'; //极度疲劳
     add_Buff_object(buffs, id);
@@ -56,7 +56,7 @@ function init_normal_buff(buffs) {
     buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack', -50); //伐木攻击力降低50%
     buffs[id].add_buff_value('only_start_restore', 'end_FIS_walkfish_attack', -50); //钓鱼遛鱼力降低50%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_attack', -50); //采集力降低50%
-    buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed', -50); //采集速度延长50%
+    buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed_num', -50); //采集速度延长50%
     buffs[id].add_buff_value('only_start_restore', 'attack_ratio', -50); //攻击力降低50%
     buffs[id].add_buff_value('only_start_restore', 'precision_ratio', -50); //精准降低50%
     buffs[id].add_buff_value('only_start_restore', 'critical_chance_ratio', -50); //暴击率降低50%
@@ -73,7 +73,7 @@ function init_normal_buff(buffs) {
     buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack', 20); //伐木攻击力提高20%
     buffs[id].add_buff_value('only_start_restore', 'end_FIS_walkfish_attack', 20); //钓鱼遛鱼力提高20%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_attack', 20); //采集力提高20%
-    buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed', 20); //采集间隔缩短20%
+    buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed_num', 20); //采集间隔缩短20%
     buffs[id].add_buff_value('only_start_restore', 'attack_ratio', 20); //攻击力提高20%
     buffs[id].add_buff_value('only_start_restore', 'precision_ratio', 20); //精准提高20%
     buffs[id].add_buff_value('only_start_restore', 'critical_chance_ratio', 20); //暴击率提高20%

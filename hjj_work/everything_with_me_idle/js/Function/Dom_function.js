@@ -181,6 +181,7 @@ function Gradient_div(div_id) {
     let target_div = document.getElementById(div_id);
     if (target_div == undefined) {
         console.log('渐变显示%s失败，没有找到这个元素', div_id);
+        return;
     }
     // target_div.style.display = '';
     target_div.style.visibility = 'visible';
@@ -196,6 +197,46 @@ function Gradient_div(div_id) {
         }
         target_div.style.opacity = opacity;
     }, 50); // 设置渐变的时间
+}
+//让指定div元素从它的父元素上方向下移动到正常居中位置，可以用作特效显示文本
+function start_magic_animation(div_id, text) {
+    const textElement = document.getElementById(div_id);
+    if (textElement == undefined) {
+        console.log('渐变显示%s失败，没有找到这个元素', div_id);
+        return;
+    }
+    textElement.innerHTML = text;
+
+    // 重置位置
+    textElement.style.transform = 'translateY(-100px)';
+
+    let startTime = null;
+    function animate(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = timestamp - startTime;
+        const duration = 500; // 动画时长1.5秒
+
+        if (progress < duration) {
+            // 计算动画进度 (0-1)
+            const progressRatio = progress / duration;
+
+            // 缓动函数 - 先快后慢
+            const easeOut = 1 - Math.pow(1 - progressRatio, 3);
+
+            // 位置移动
+            const newY = -100 + easeOut * 100;
+            textElement.style.transform = `translateY(${newY}px)`;
+
+            // 透明度变化
+
+            requestAnimationFrame(animate);
+        } else {
+            // 动画结束
+            textElement.style.transform = 'translateY(0)';
+        }
+    }
+
+    requestAnimationFrame(animate);
 }
 
 //重新生成战斗界面的玩家主动技能部分
@@ -231,4 +272,5 @@ export {
     Gradient_div,
     delete_player_active_div,
     delete_active_show_div,
+    start_magic_animation,
 };

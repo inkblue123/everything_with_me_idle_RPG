@@ -12,34 +12,35 @@ import { init_Text_game_flag } from './Text_game_flag.js';
 import { init_Text_other } from './Text_other.js';
 
 var texts = new Object();
+function init_texts() {
+    //使用数字枚举当作id的文本在这里初始化
+    //更细的分类使用对象的成员名来区分
+    for (let i = 0; i < 101; i++) {
+        add_text_object(texts, i);
+    }
 
-//使用数字枚举当作id的文本在这里初始化
-//更细的分类使用对象的成员名来区分
-for (let i = 0; i < 101; i++) {
-    add_text_object(texts, i);
+    //初始化文本数据库中与类型相关的文本
+    init_Text_type(texts);
+    //初始化文本数据库中与物品相关的文本
+    init_Text_item(texts);
+    //初始化文本数据库中与地点相关的文本
+    init_Text_place(texts);
+    //初始化文本数据库中与敌人相关的文本
+    init_Text_enemy(texts);
+    //初始化文本数据库中与技能相关的文本
+    init_Text_skill(texts);
+    //初始化文本数据库中与游戏事件相关的文本
+    init_Text_game_event(texts);
+    //初始化文本数据库中与界面布局相关的文本
+    init_Text_div(texts);
+    //初始化文本数据库中与buff相关的文本
+    init_Text_buff(texts);
+    //初始化文本数据库中与属性名称相关的文本
+    init_Text_attr(texts);
+    //初始化文本数据库中属于游戏状态相关的文本
+    init_Text_game_flag(texts);
+    //初始化文本数据库中剩余没有分类的文本
+    init_Text_other(texts);
 }
 
-//初始化文本数据库中与类型相关的文本
-init_Text_type(texts);
-//初始化文本数据库中与物品相关的文本
-init_Text_item(texts);
-//初始化文本数据库中与地点相关的文本
-init_Text_place(texts);
-//初始化文本数据库中与敌人相关的文本
-init_Text_enemy(texts);
-//初始化文本数据库中与技能相关的文本
-init_Text_skill(texts);
-//初始化文本数据库中与游戏事件相关的文本
-init_Text_game_event(texts);
-//初始化文本数据库中与界面布局相关的文本
-init_Text_div(texts);
-//初始化文本数据库中与buff相关的文本
-init_Text_buff(texts);
-//初始化文本数据库中与属性名称相关的文本
-init_Text_attr(texts);
-//初始化文本数据库中属于游戏状态相关的文本
-init_Text_game_flag(texts);
-//初始化文本数据库中剩余没有分类的文本
-init_Text_other(texts);
-
-export { texts };
+export { texts, init_texts };

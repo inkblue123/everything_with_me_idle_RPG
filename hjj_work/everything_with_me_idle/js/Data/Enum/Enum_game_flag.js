@@ -81,7 +81,14 @@ function init_game_log_status(enums) {
     id = 'live_log_type'; //属于生活技能相关的游戏日志
     add_Enum_Array(enums, id);
     enums[id] = [
-        'live_skill_run', //生活技能运行时的日志
+        'live_skill_run', //生活技能运行时的通用日志
+        'logging', //伐木技能运行时的日志
+        'fishing', //钓鱼技能运行时的日志
+        'mining', //挖矿技能运行时的日志
+        'foraging', //采集技能运行时的日志
+        'diving', //潜水技能运行时的日志
+        'archaeology', //考古技能运行时的日志
+        'exploration', //探索技能运行时的日志
     ];
     id = 'other_log_type'; //属于其他部分的游戏日志
     add_Enum_Array(enums, id);

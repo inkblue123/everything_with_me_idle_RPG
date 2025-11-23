@@ -346,7 +346,7 @@ export class Enemy_manage {
         //获取这次要刷的敌人id
         let enemys = places[this.now_place].enemy; //当前地点所有敌人的对象
         let random_manage = global.get_random_manage();
-        let enemy_id = random_manage.chance_randow_get_id(enemys, 'ADD_ENEMY', this.now_place);
+        let enemy_id = random_manage.chance_random_get_id(enemys, 'ADD_ENEMY', this.now_place);
         //判断这次要刷的怪有没有限制条件，现在能不能刷
         if (!this.judge_add_new_enemy_id(enemy_id)) {
             return false;

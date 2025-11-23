@@ -15,7 +15,7 @@ const skill_rewards_func = {
     3: skill_rewards_3,
 };
 
-//简单生成一个随机数
+//简单生成一个min到max之间的随机整数
 function get_random(min, max) {
     if (max < min) {
         console.log('最大值比最小值要小，参数异常');
@@ -122,7 +122,7 @@ function get_random_enemy_distance(place_x, place_y) {
 //计算常规数值型的属性的加成结果
 function calculate_num_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr_ratio2) {
     //基本数值
-    if (!base_attr) return 0;
+    if (!base_attr) base_attr = 0;
     if (!attr_num1) attr_num1 = 0;
     if (!attr_ratio1) attr_ratio1 = 0;
     if (!attr_num2) attr_num2 = 0;
@@ -145,15 +145,13 @@ function calculate_num_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr_r
     } else {
         end_attr = end_attr * (100 / (100 - attr_ratio2));
     }
-    if (end_attr < 0) {
-        end_attr = 0;
-    }
+
     return end_attr;
 }
 //计算攻速型的属性的加成结果
 function calculate_speed_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr_ratio2) {
     //基本数值
-    if (!base_attr) return 0;
+    if (!base_attr) base_attr = 0;
     if (!attr_num1) attr_num1 = 0;
     if (!attr_ratio1) attr_ratio1 = 0;
     if (!attr_num2) attr_num2 = 0;
@@ -272,15 +270,16 @@ function skill_levelup_exp_3(base_exp, now_level) {
     return Math.floor(levelup_exp);
 }
 //技能的常态等级加成具体数值计算函数
-function skill_rewards_algorithm(id, now_level) {
+function skill_rewards_algorithm(id, base_data, now_level) {
     const func = skill_rewards_func[id];
     if (!func) {
         console.log('技能的常态等级加成具体数值计算函数没有定义 %d', id);
     }
-    return func(now_level);
+    return func(base_data, now_level);
 }
 //技能的常态等级加成计算函数1号
-function skill_rewards_1(now_level) {
+function skill_rewards_1(base_data, now_level) {
+    //base_data为1时
     //等级  0  1   2   3   4   5   6   7    8   9   10
     //加成  1 1.2 1.4 1.5 1.6 1.7 1.8 1.85 1.9 1.95 2.0
     //加成  0 20   40  50  60  70  80  85   90  95  100
@@ -288,33 +287,36 @@ function skill_rewards_1(now_level) {
     if (now_level <= 0) {
         return 0;
     } else if (now_level >= 1 && now_level <= 2) {
-        return now_level * 20;
+        return now_level * 20 * base_data;
     } else if (now_level >= 3 && now_level <= 6) {
-        return 20 + now_level * 10;
+        return (20 + now_level * 10) * base_data;
     } else if (now_level >= 7 && now_level <= 10) {
-        return 50 + now_level * 5;
+        return (50 + now_level * 5) * base_data;
     } else if (now_level > 10) {
-        return 100;
+        return 100 * base_data;
     }
 }
 //技能的常态等级加成计算函数2号
-function skill_rewards_2(now_level) {
+function skill_rewards_2(base_data, now_level) {
+    //base_data为1时
     //等级  0  1  2  3  4  5  6  7  8  9  10
     //加成  0  5  10 15 20 25 30 35 40 45 50
+
     if (now_level <= 0) {
         return 0;
     } else {
-        return now_level * 5;
+        return now_level * 5 * base_data;
     }
 }
 //技能的常态等级加成计算函数3号
-function skill_rewards_3(now_level) {
+function skill_rewards_3(base_data, now_level) {
+    //base_data为1时
     //等级  0  1  2  3  4  5  6  7  8  9  10
     //加成  0  1  2  3  4  5  6  7  8  9  10
     if (now_level <= 0) {
         return 0;
     } else {
-        return now_level;
+        return now_level * base_data;
     }
 }
 export {

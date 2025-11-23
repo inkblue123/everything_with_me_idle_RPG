@@ -1,5 +1,6 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
 import { get_item_obj } from '../Function/Function.js';
+import { get_random } from '../Function/math_func.js';
 import { save_game, save_game_show_tip, delete_save, load_save, load_save_show_tip } from '../LoadAndSave/load.js';
 import { player } from '../Player/Player.js';
 import { P_skills } from '../Data/Skill/Skill.js';
@@ -17,51 +18,6 @@ function create_Option() {
 function make_option_page_test_div(option_page) {
     let button_div;
 
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '完成3天的新手教学';
-    // button_div.onclick = function () {
-    //     finish_new_player_teach_123();
-    // };
-
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '完成当前挑战';
-    // button_div.onclick = function () {
-    //     finish_now_challenge();
-    // };
-
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '逐渐解锁生活技能';
-    // button_div.onclick = function () {
-    //     unlock_live_plan_skill();
-    // };
-
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '暂停游戏';
-    // button_div.onclick = function () {
-    //     stop_game_speed();
-    // };
-
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '恢复游戏';
-    // button_div.onclick = function () {
-    //     start_game_speed();
-    // };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '导出存档';
-    // button_div.onclick = function () {
-    //     save_game();
-    //     save_game_show_tip();
-    // };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '清空存档';
-    // button_div.onclick = function () {
-    //     delete_save();
-    // };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '导入存档';
-    // button_div.onclick = function () {
-    //     load_save_show_tip();
-    // };
     //  button_div = addElement(option_page, 'button');
     // button_div.innerHTML = '进入测试战斗地点';
     // button_div.onclick = function () {
@@ -92,79 +48,24 @@ function make_option_page_test_div(option_page) {
         give_player_item();
     };
     // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '游戏速度X1';
-    // button_div.onclick = function () {
-    //     x1_game_speed();
-    // };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '游戏速度X2';
-    // button_div.onclick = function () {
-    //     x2_game_speed();
-    // };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '游戏速度X5';
-    // button_div.onclick = function () {
-    //     x5_game_speed();
-    // };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '解锁全部技能';
-    // button_div.onclick = function () {
-    //     give_player_every_skill();
-    // };
-    // button_div = addElement(option_page, 'button');
     // button_div.innerHTML = '技能测试';
     // button_div.onclick = function () {
     //     player_skill_test();
     // };
+    button_div = addElement(option_page, 'button');
+    button_div.innerHTML = 'css特效测试';
+    button_div.onclick = function () {
+        startMagicAnimation();
+    };
+    button_div = addElement(option_page, 'button');
+    button_div.innerHTML = '随机数测试';
+    button_div.onclick = function () {
+        let data = Math.random();
+        // let data = get_random(0, 100);
+        console.log('%s', data);
+    };
 }
-//完成3天的新手教学
-function finish_new_player_teach_123() {
-    //正常流程得把文本和剧情呈现到玩家控制界面，但是这个测试按钮并不想管那么多
-    //所以就只是获得物品和技能，以及一些标记
-    //由于这些事件的物品奖励是在对话过程中给予的，完成事件其实什么都没有，所以单独给奖励
-    let game_event_manage = global.get_game_event_manage();
-    let P_All_Skills = player.get_player_All_Skills();
-    game_event_manage.end_mini_event('new_player_teach_1', 'finish');
-    P_All_Skills.player_unlock_skill('normal_attack_Melee');
-    player.Player_get_item('wood_sword', 1, 'ordinary');
-    player.Player_get_item('wood_helmet', 1, 'ordinary');
-    player.Player_get_item('wood_chest_armor', 1, 'ordinary');
-    player.Player_get_item('wood_leg_armor', 1, 'ordinary');
-    player.Player_get_item('wood_shoes', 1, 'ordinary');
-    game_event_manage.end_mini_event('new_player_teach_2', 'finish');
-    player.Player_get_item('wood_shield', 1, 'ordinary');
-    P_All_Skills.player_unlock_skill('shield_defense');
-    game_event_manage.end_mini_event('new_player_teach_3', 'finish');
-    player.Player_get_item('test_sword', 1, 'ordinary'); //测试用武器
-}
-//完成当前挑战
-function finish_now_challenge() {
-    let game_event_manage = global.get_game_event_manage();
-    game_event_manage.test_finish_now_challenge();
-    game_event_manage.init_IE_div();
-}
-//逐渐解锁生活技能
-function unlock_live_plan_skill() {
-    if (!global.get_flag('GS_unlock_foraging')) {
-        global.set_flag('GS_unlock_foraging', true);
-    } else if (!global.get_flag('GS_unlock_fishing')) {
-        global.set_flag('GS_unlock_fishing', true);
-    } else if (!global.get_flag('GS_unlock_mining')) {
-        global.set_flag('GS_unlock_mining', true);
-    } else if (!global.get_flag('GS_unlock_logging')) {
-        global.set_flag('GS_unlock_logging', true);
-    } else if (!global.get_flag('GS_unlock_diving')) {
-        global.set_flag('GS_unlock_diving', true);
-    } else if (!global.get_flag('GS_unlock_archaeology')) {
-        global.set_flag('GS_unlock_archaeology', true);
-    } else if (!global.get_flag('GS_unlock_exploration')) {
-        global.set_flag('GS_unlock_exploration', true);
-    }
-    //移动到当前位置，触发刷新界面的逻辑
-    let place_manage = global.get_place_manage();
-    let now_place = place_manage.get_now_place();
-    place_manage.set_now_place(now_place);
-}
+
 //暂停游戏
 function stop_game_speed() {
     let time_manage = global.get_time_manage();
@@ -174,21 +75,6 @@ function stop_game_speed() {
 function start_game_speed() {
     let time_manage = global.get_time_manage();
     time_manage.set_game_speed_num('global', 1);
-}
-//五倍速运行游戏
-function x5_game_speed() {
-    let time_manage = global.get_time_manage();
-    time_manage.set_game_speed_ratio('option', 400);
-}
-//二倍速运行游戏
-function x2_game_speed() {
-    let time_manage = global.get_time_manage();
-    time_manage.set_game_speed_ratio('option', 100);
-}
-//一倍速运行游戏
-function x1_game_speed() {
-    let time_manage = global.get_time_manage();
-    time_manage.set_game_speed_ratio('option', 0);
 }
 
 //切换商店界面和生活规划界面
@@ -206,49 +92,80 @@ function change_store_liveplan_div() {
 }
 // 物品测试
 function give_player_item() {
-    // player.Player_get_item('Oak_logs', 10);
-    // player.Player_get_item('birch_logs', 10);
-    // player.Player_get_item('fir_logs', 10);
-    // player.Player_get_item('lightning_bark', 10);
-    // player.Player_get_item('frost_marrow_resin', 10);
-    // player.Player_get_item('viresilver_stem', 10);
-    // player.Player_get_item('porcini', 10);
-    // player.Player_get_item('chanterelle', 10);
-    // player.Player_get_item('termite_mushroom', 10);
-    // player.Player_get_item('river_mussel', 10);
-    // player.Player_get_item('creek_fish', 10);
-    // player.Player_get_item('animal_raw_meat', 10);
-    // player.Player_get_item('red_berry', 10);
-    // player.Player_get_item('yellow_berry', 10);
-    // player.Player_get_item('grilled_fish', 10);
-    // player.Player_get_item('termite_mushroom_soup', 10);
-    // player.Player_get_item('fish_jerky', 10);
-    // player.Player_get_item('wood_arrow', 10);
-    player.Player_get_item('copper_coin', 1);
-    // player.Player_get_item('greedy_copper_coin', 10);
+    player.Player_get_item('Oak_logs', 10);
+    player.Player_get_item('birch_logs', 10);
+    player.Player_get_item('fir_logs', 10);
+    player.Player_get_item('lightning_bark', 10);
+    player.Player_get_item('frost_marrow_resin', 10);
+    player.Player_get_item('viresilver_stem', 10);
+    player.Player_get_item('porcini', 10);
+    player.Player_get_item('chanterelle', 10);
+    player.Player_get_item('termite_mushroom', 10);
+    player.Player_get_item('river_mussel', 10);
+    player.Player_get_item('creek_fish', 10);
+    player.Player_get_item('animal_raw_meat', 10);
+    player.Player_get_item('red_berry', 10);
+    player.Player_get_item('yellow_berry', 10);
+    player.Player_get_item('grilled_fish', 10);
+    player.Player_get_item('termite_mushroom_soup', 10);
+    player.Player_get_item('fish_jerky', 10);
+    player.Player_get_item('wood_arrow', 10);
+    player.Player_get_item('copper_coin', 10);
+    player.Player_get_item('greedy_copper_coin', 10);
 
-    // player.Player_get_item('wood_sword', 6, 'damaged');
-    // player.Player_get_item('wood_sword', 6, 'ordinary');
-    // player.Player_get_item('wood_sword', 6, 'excellent');
-    // player.Player_get_item('wood_sword', 6, 'rare');
-    // player.Player_get_item('wood_sword', 6, 'epic');
-    // player.Player_get_item('test_boomerang', 1, 'ordinary');
-    // player.Player_get_item('test_boomerang', 3, 'excellent');
-    // player.Player_get_item('test_boomerang', 5, 'rare');
-    // player.Player_get_item('hatchet', 1, 'ordinary');
-    // player.Player_get_item('mowing_sickle', 1, 'ordinary');
+    player.Player_get_item('wood_sword', 6, 'damaged');
+    player.Player_get_item('wood_sword', 6, 'ordinary');
+    player.Player_get_item('wood_sword', 6, 'excellent');
+    player.Player_get_item('wood_sword', 6, 'rare');
+    player.Player_get_item('wood_sword', 6, 'epic');
+    player.Player_get_item('test_boomerang', 1, 'ordinary');
+    player.Player_get_item('test_boomerang', 3, 'excellent');
+    player.Player_get_item('test_boomerang', 5, 'rare');
+    player.Player_get_item('hatchet', 1, 'ordinary');
+    player.Player_get_item('mowing_sickle', 1, 'ordinary');
 }
-//给予玩家所有技能
-function give_player_every_skill() {
-    let P_All_Skills = player.get_player_All_Skills();
-    for (let id in P_skills) {
-        P_All_Skills.player_unlock_skill(id);
-    }
-}
+
 //技能测试
 function player_skill_test() {
     let P_All_Skills = player.get_player_All_Skills();
     P_All_Skills.skill_levelup('lucky_finder');
+}
+//css特效测试
+function startMagicAnimation() {
+    const textElement = document.getElementById('FAG_show_tip_text');
+    const text = '道法自然，万法归宗';
+    textElement.innerHTML = text;
+
+    // 重置位置
+    textElement.style.transform = 'translateY(-100px)';
+
+    let startTime = null;
+    function animate(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = timestamp - startTime;
+        const duration = 500; // 动画时长1.5秒
+
+        if (progress < duration) {
+            // 计算动画进度 (0-1)
+            const progressRatio = progress / duration;
+
+            // 缓动函数 - 先快后慢
+            const easeOut = 1 - Math.pow(1 - progressRatio, 3);
+
+            // 位置移动
+            const newY = -100 + easeOut * 100;
+            textElement.style.transform = `translateY(${newY}px)`;
+
+            // 透明度变化
+
+            requestAnimationFrame(animate);
+        } else {
+            // 动画结束
+            textElement.style.transform = 'translateY(0)';
+        }
+    }
+
+    requestAnimationFrame(animate);
 }
 
 export { create_Option };

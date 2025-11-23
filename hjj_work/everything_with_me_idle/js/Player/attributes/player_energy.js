@@ -140,10 +140,6 @@ export class Player_energy_manage {
     }
     //随时间自然恢复精力
     recover_energy_point() {
-        if (this.surface_energy_point >= this.deep_energy_point) {
-            //表层精力满了，不用恢复
-            return;
-        }
         let rest_flag = global.get_flag('GS_rest_flag');
         let GS_flag = global.get_flag('GS_game_statu');
         let game_now_time = global.get_game_now_time();
@@ -177,30 +173,21 @@ export class Player_energy_manage {
         } else if (GS_flag == 'NULL' || rest_flag == true) {
             //当前处于休息状态时，或者什么都没做，恢复表层精力
             if (this.surface_energy_point >= this.deep_energy_point) {
-                //表层精力已满，不用处理
+                //表层精力满了，不用恢复
                 return;
             }
             this.recover_surface_energy_point(time_in);
-        } else if (GS_flag == 'fishing') {
-            //钓鱼的等鱼上钩阶段，也允许恢复表层精力
+        } else if (enums['live_plan_GS'].includes(GS_flag)) {
+            //各个生活技能的休息状态里也可以恢复表层精力
+            if (this.surface_energy_point >= this.deep_energy_point) {
+                //表层精力满了，不用恢复
+                return;
+            }
             let live_plan_manage = global.get_live_plan_manage();
-            let fishing_manage = live_plan_manage.get_EC_live_skill_manage('fishing_manage');
-            let FIS_status = fishing_manage.get_now_FIS_status();
-            //钓鱼中的休息状态为数字枚举2和6
-            if (FIS_status != 2 && FIS_status != 6) {
-                return;
+            if (live_plan_manage.is_live_plan_skill_rest()) {
+                //处于休息状态，恢复精力
+                this.recover_surface_energy_point(time_in);
             }
-            this.recover_surface_energy_point(time_in);
-        } else if (GS_flag == 'logging') {
-            //伐木时的休息状态也允许恢复表层精力
-            let live_plan_manage = global.get_live_plan_manage();
-            let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
-            let LGI_status = logging_manage.get_now_LGI_status();
-            //伐木中的休息状态为数字枚举4
-            if (LGI_status != 4) {
-                return;
-            }
-            this.recover_surface_energy_point(time_in);
         } else {
             //其他状态不恢复精力，不处理
         }

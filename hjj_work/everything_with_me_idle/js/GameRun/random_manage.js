@@ -1,5 +1,5 @@
 import { is_Empty_Object } from '../Function/Function.js';
-import { format_numbers } from '../Function/math_func.js';
+import { format_numbers, get_random } from '../Function/math_func.js';
 import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 
@@ -70,10 +70,10 @@ class Rare_manage {
     }
 }
 //暴击管理类
-class Critical_manage {
+class Number_manage {
     constructor() {}
     //用宏观暴击率计算真暴击率
-    get_true_critical_chance(x, n) {
+    get_true_chance(x, n) {
         let y = 0;
         if (x >= 0 && x < 85) {
             y = 0.011 * x ** 2 + 0.05 * x;
@@ -84,28 +84,39 @@ class Critical_manage {
         let true_critical_chance = y * n;
         return true_critical_chance;
     }
-    //尝试进行一次暴击率为x的暴击
-    try_critical(x) {
-        //对暴击率格式化和取整
-        x = format_numbers(x);
-        if (x < 0) x = 0;
-        if (x > 100) x = 100;
-
-        if (is_Empty_Object(this[x])) {
-            this[x] = 0;
+    //尝试进行一次概率为chance的数值随机
+    try_number_random(chance) {
+        //对概率格式化
+        if (typeof chance === 'string') {
+            chance = parseInt(chance);
         }
-        //尝试次数+1
-        this[x]++;
-        //获取真暴击率
-        let true_CRIC = this.get_true_critical_chance(x, this[x]);
-        let random = get_random(0, 100);
-        if (random <= true_CRIC) {
-            //暴击成功
-            this[x] = 0;
-            return true;
-        } else {
-            //暴击失败
+        if (chance <= 0) {
             return false;
+        } else if (chance >= 100) {
+            return true;
+        } else if (chance > 0 && chance < 100) {
+            if (chance < 0.0001) {
+                console.log('要随机的概率低于百万分级，必定失败，精确度可能需要升级了');
+            }
+            let key = chance.toFixed(4);
+            if (is_Empty_Object(this[key])) {
+                this[key] = 0;
+            }
+            //尝试次数+1
+            this[key]++;
+            //获取真概率
+            let true_chance = this.get_true_chance(chance, this[key]);
+            let random = Math.random() * 100;
+            if (random <= true_chance) {
+                //成功
+                this[key] = 0;
+                return true;
+            } else {
+                //失败
+                return false;
+            }
+        } else {
+            console.log('暴击随机失败，未知暴击率参数%s', chance);
         }
     }
 }
@@ -113,17 +124,15 @@ class Critical_manage {
 export class Random_manage {
     constructor() {
         this.rare_manage = new Rare_manage(); //稀有游戏内容管理对象
-        this.critical_manage = new Critical_manage(); //稀有游戏内容管理对象
+        this.number_manage = new Number_manage(); //数值随机管理对象
     }
     //获取随机数管理对象的存档
     save_Random_manage() {
         let Random_save = new Object();
         //稀有游戏内容管理对象
-        Random_save.rare_manage_save = new Object();
-        for (let key in this.rare_manage) {
-            Random_save.rare_manage_save[key] = this.rare_manage[key];
-        }
+        Random_save.rare_manage_save = this.rare_manage;
         //暴击管理部分可以不用保存
+        Random_save.number_manage_save = this.number_manage;
 
         return Random_save;
     }
@@ -185,7 +194,7 @@ export class Random_manage {
         return rare_arr;
     }
     //从掉落对象里按照权重随机获得一个key
-    chance_randow_get_id(drop_obj, thing_flag, father_id) {
+    chance_random_get_id(drop_obj, thing_flag, father_id) {
         //按照权重随机，先得到一个正常随机结果
         let item_key = get_obj_chance_random_id(drop_obj);
 
@@ -228,14 +237,14 @@ export class Random_manage {
         return item_key;
     }
     //从drop_arr里按照权重随机获得一个id，不涉及稀有对象和保底
-    chance_randow_get_id_norare(drop_obj) {
+    chance_random_get_id_norare(drop_obj) {
         return get_obj_chance_random_id(drop_obj);
     }
     //敌人死亡，在指定掉落列表里返回一个物品id
     get_enemy_death_item_id(enemy_id, arr_id) {
         let items = enemys[enemy_id].item_array[arr_id].items;
         let father_id = enemy_id + '_' + arr_id;
-        let item_id = this.chance_randow_get_id(items, 'ENEMY_DEATH_DROP', father_id);
+        let item_id = this.chance_random_get_id(items, 'ENEMY_DEATH_DROP', father_id);
         return item_id;
     }
     //伐木敌人死亡，在指定等级的指定掉落列表里返回一个物品id
@@ -243,18 +252,15 @@ export class Random_manage {
         // let items = enemys[tree_id].item_array[arr_id].items;
         let items = enemys[tree_id].reward_level_item[reward_level][arr_id].items;
         let father_id = tree_id + '_' + reward_level + '_' + arr_id;
-        let item_id = this.chance_randow_get_id(items, 'ENEMY_DEATH_DROP', father_id);
+        let item_id = this.chance_random_get_id(items, 'ENEMY_DEATH_DROP', father_id);
         return item_id;
     }
-    //尝试进行一次暴击
-    try_critical(chance) {
-        return this.critical_manage.try_critical(chance);
+    //尝试进行一次数值随机
+    try_number_random(chance) {
+        return this.number_manage.try_number_random(chance);
     }
 }
-//生成一个min到max之间的1级随机数
-function get_random(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+
 //输入随机目标对象数组，根据每个对象的权重，随机得到某个对象的id
 function get_obj_chance_random_id(arr) {
     let all_chance = 0;

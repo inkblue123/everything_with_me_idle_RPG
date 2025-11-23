@@ -1,8 +1,13 @@
-import { enums } from './Enum/Enum.js';
-import { texts } from './Text/Text.js';
+import { buffs, init_buffs } from './Buff/Buff.js';
+import { enemys, init_enemys } from './Enemy/Enemy.js';
+import { enums, init_enums } from './Enum/Enum.js';
+import { formulas, init_formulas } from './Formula/Formula.js';
+import { items, init_items } from './Item/Item.js';
+import { places, init_places } from './Place/Place.js';
+import { init_skills } from './Skill/Skill.js';
+import { texts, init_texts } from './Text/Text.js';
 import { add_text_object } from './Text/Text_class.js';
-import { items } from './Item/Item.js';
-import { game_events } from './Game_event/Game_Event.js';
+import { game_events, init_game_events } from './Game_event/Game_Event.js';
 import { get_uniqueArr } from '../Function/Function.js';
 
 //数据库中内容大部分可以写死定义
@@ -11,6 +16,17 @@ import { get_uniqueArr } from '../Function/Function.js';
 //在这个函数中进行动态的更新，避免手动更新的遗漏
 //游戏数据库初始化
 function game_data_init() {
+    //初始化每个数据库，有顺序要求，不要乱动
+    init_texts();
+    init_enums();
+    init_buffs();
+    init_items();
+    init_formulas();
+    init_game_events();
+    init_places();
+    init_skills();
+    init_enemys();
+
     //枚举数据库-游戏状态部分的枚举更新
     Enum_game_status_init();
     //枚举数据库-物品部分的枚举更新

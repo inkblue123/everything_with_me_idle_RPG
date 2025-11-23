@@ -205,10 +205,12 @@ function make_Combat_plan_div(Game_log) {
                     //设置-测试-给予buff测试
                     var OP_test_GivePlayerbuff_div = addElement(OP_test_div, 'div', 'OP_test_GivePlayerbuff_div', 'OP_TLV_div');
                     var OP_test_GivePlayerbuff_lable = addElement(OP_test_GivePlayerbuff_div, 'div', 'OP_test_GivePlayerbuff_lable', 'OP_T2_div');
-                    OP_test_GivePlayerbuff_lable.innerHTML = '给予buff测试';
-                    var OP_test_GivePlayerbuff_value = addElement(OP_test_GivePlayerbuff_div, 'div', 'OP_test_GivePlayerbuff_value', 'OP_V_div');
-                    var OP_test_GivePlayerbuff_button = addElement(OP_test_GivePlayerbuff_value, 'button', 'OP_test_GivePlayerbuff_button', 'OP_button');
+                    OP_test_GivePlayerbuff_lable.innerHTML = 'buff测试';
+                    var OP_test_Playerbuff_value = addElement(OP_test_GivePlayerbuff_div, 'div', 'OP_test_Playerbuff_value', 'OP_V_div');
+                    var OP_test_GivePlayerbuff_button = addElement(OP_test_Playerbuff_value, 'button', 'OP_test_GivePlayerbuff_button', 'OP_button');
                     OP_test_GivePlayerbuff_button.innerHTML = '给予buff测试';
+                    var OP_test_DeletePlayerbuff_button = addElement(OP_test_Playerbuff_value, 'button', 'OP_test_DeletePlayerbuff_button', 'OP_button');
+                    OP_test_DeletePlayerbuff_button.innerHTML = '清空buff';
                 }
             }
         }
@@ -451,6 +453,12 @@ function set_Combat_plan_button(Game_log) {
         // P_buff.set_buff_attr('fatigue');//疲劳
         P_buff.set_buff_attr('extreme_fatigue'); //极度疲劳
     };
+    //清空buff
+    let OP_test_DeletePlayerbuff_button = Game_log.querySelector('#OP_test_DeletePlayerbuff_button');
+    OP_test_DeletePlayerbuff_button.onclick = function () {
+        let P_buff = player.get_player_buff();
+        P_buff.reset_buff_attr(); //清空所有buff
+    };
 }
 //按下游戏日志中，脑海界面左侧分类按钮之后，切换到脑海界面对应的子界面
 function change_game_log_MD_div(button_id) {
@@ -554,36 +562,36 @@ function unlock_live_plan_skill() {
 }
 // 批量给予物品
 function give_player_item() {
-    // player.Player_get_item('Oak_logs', 10);
-    // player.Player_get_item('birch_logs', 10);
-    // player.Player_get_item('fir_logs', 10);
-    // player.Player_get_item('lightning_bark', 10);
-    // player.Player_get_item('frost_marrow_resin', 10);
-    // player.Player_get_item('viresilver_stem', 10);
-    // player.Player_get_item('porcini', 10);
-    // player.Player_get_item('chanterelle', 10);
-    // player.Player_get_item('termite_mushroom', 10);
-    // player.Player_get_item('river_mussel', 10);
-    // player.Player_get_item('creek_fish', 10);
-    // player.Player_get_item('animal_raw_meat', 10);
-    // player.Player_get_item('red_berry', 10);
-    // player.Player_get_item('yellow_berry', 10);
-    // player.Player_get_item('grilled_fish', 10);
-    // player.Player_get_item('termite_mushroom_soup', 10);
-    // player.Player_get_item('fish_jerky', 10);
-    // player.Player_get_item('wood_arrow', 10);
-    player.Player_get_item('copper_coin', 1);
-    // player.Player_get_item('greedy_copper_coin', 10);
+    player.Player_get_item('Oak_logs', 10);
+    player.Player_get_item('birch_logs', 10);
+    player.Player_get_item('fir_logs', 10);
+    player.Player_get_item('lightning_bark', 10);
+    player.Player_get_item('frost_marrow_resin', 10);
+    player.Player_get_item('viresilver_stem', 10);
+    player.Player_get_item('porcini', 10);
+    player.Player_get_item('chanterelle', 10);
+    player.Player_get_item('termite_mushroom', 10);
+    player.Player_get_item('river_mussel', 10);
+    player.Player_get_item('creek_fish', 10);
+    player.Player_get_item('animal_raw_meat', 10);
+    player.Player_get_item('red_berry', 10);
+    player.Player_get_item('yellow_berry', 10);
+    player.Player_get_item('grilled_fish', 10);
+    player.Player_get_item('termite_mushroom_soup', 10);
+    player.Player_get_item('fish_jerky', 10);
+    player.Player_get_item('wood_arrow', 10);
+    player.Player_get_item('copper_coin', 10);
+    player.Player_get_item('greedy_copper_coin', 10);
 
-    // player.Player_get_item('wood_sword', 6, 'damaged');
-    // player.Player_get_item('wood_sword', 6, 'ordinary');
-    // player.Player_get_item('wood_sword', 6, 'excellent');
-    // player.Player_get_item('wood_sword', 6, 'rare');
-    // player.Player_get_item('wood_sword', 6, 'epic');
-    // player.Player_get_item('test_boomerang', 1, 'ordinary');
-    // player.Player_get_item('test_boomerang', 3, 'excellent');
-    // player.Player_get_item('test_boomerang', 5, 'rare');
-    // player.Player_get_item('hatchet', 1, 'ordinary');
-    // player.Player_get_item('mowing_sickle', 1, 'ordinary');
+    player.Player_get_item('wood_sword', 6, 'damaged');
+    player.Player_get_item('wood_sword', 6, 'ordinary');
+    player.Player_get_item('wood_sword', 6, 'excellent');
+    player.Player_get_item('wood_sword', 6, 'rare');
+    player.Player_get_item('wood_sword', 6, 'epic');
+    player.Player_get_item('test_boomerang', 1, 'ordinary');
+    player.Player_get_item('test_boomerang', 3, 'excellent');
+    player.Player_get_item('test_boomerang', 5, 'rare');
+    player.Player_get_item('hatchet', 1, 'ordinary');
+    player.Player_get_item('mowing_sickle', 1, 'ordinary');
 }
 export { create_Game_log };

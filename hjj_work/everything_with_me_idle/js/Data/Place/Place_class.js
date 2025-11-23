@@ -182,11 +182,12 @@ export class P_normal extends Place {
         // this.LGI_reborn_time = reborn_time;
     }
     //设置这个地点的采集相关参数
-    set_foraging_data(defense) {
+    set_foraging_data(defense, energy) {
         if (this.live_plan_flag[3] == false) {
             console.log('%s地点不允许采集却设定了采集相关参数');
         }
-        this.FAG_defense = defense;
+        this.FAG_defense = defense; //采集防御
+        this.FAG_energy = energy; //采集时每秒精力消耗
     }
     //设置这个地点的潜水相关参数
     set_diving_data() {
@@ -449,6 +450,55 @@ export class P_resource extends Place {
 
     set_resource_type() {}
 }
+//区域
+export class Area {
+    constructor(area_id) {
+        this.id = area_id; //唯一id
+        this.name; //区域名称
+        this.desc; //区域描述
+        this.init_Area_name_desc();
+    }
+    //自动设置区域名称
+    init_Area_name_desc() {
+        //区域名称
+        if (texts[this.area_id] === undefined) {
+            //尚未定义
+            this.name = '未命名区域';
+        } else {
+            if (texts[area_id].area_name == undefined) {
+                this.name = '未命名区域';
+            } else {
+                this.name = texts[area_id].area_name;
+            }
+        }
+    }
+    //添加一个在这个区域采集时可能遇到的危险，持续型
+    set_continuous_foraging_danger(data_type, continuous_time, data_value, text_id) {
+        if (is_Empty_Object(this.foraging_danger)) {
+            this.foraging_danger = new Array();
+        }
+        let obj = new Object();
+        obj.danger_type = 'continuous'; //持续型
+        obj.data_type = data_type; //持续期间生效的效果
+        obj.continuous_time = continuous_time; //持续时间
+        obj.data_value = data_value; //效果数值
+        obj.text_id = text_id; //触发时使用的提示文本（没有实际使用）
+        this.foraging_danger.push(obj);
+    }
+    //添加一个在这个区域采集时可能遇到的危险，即刻生效型
+    set_start_foraging_danger(data_type, max_data_value, min_data_value, text_id) {
+        if (is_Empty_Object(this.foraging_danger)) {
+            this.foraging_danger = new Array();
+        }
+        let obj = new Object();
+        obj.danger_type = 'start'; //即刻生效型
+        obj.data_type = data_type;
+        obj.max_data_value = max_data_value;
+        obj.min_data_value = min_data_value;
+        obj.text_id = text_id; //触发时使用的提示文本（没有实际使用）
+        this.foraging_danger.push(obj);
+    }
+}
 
 function add_Place_object(places, newid, area) {
     if (places[newid] === undefined) {
@@ -492,6 +542,13 @@ function add_resource_Place(places, newid, area) {
         console.log('创建places[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
+function add_Area_object(areas, newid) {
+    if (areas[newid] === undefined) {
+        areas[newid] = new Area(newid);
+    } else {
+        console.log('创建areas[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
+    }
+}
 
 export {
     add_Place_object,
@@ -500,4 +557,5 @@ export {
     add_NPC_Place,
     add_store_Place,
     add_resource_Place,
+    add_Area_object,
 };

@@ -1,6 +1,6 @@
-import { get_random } from '../../Function/math_func.js';
+import { get_random, calculate_num_attr } from '../../Function/math_func.js';
 import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object, compare_dataset_value, set_dataset_value, get_item_id_key } from '../../Function/Function.js';
+import { is_Empty_Object, get_item_id_key, get_random_text } from '../../Function/Function.js';
 import { enemys } from '../../Data/Enemy/Enemy.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
@@ -388,6 +388,17 @@ export class Fishing_manage {
         // //更新钓鱼时的玩家参数
         this.updata_true_FIS_data();
     }
+    //判断当前是否处于钓鱼的休息状态
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    is_rest_status() {
+        if (this.now_FIS_status == FIS_status.WAIT_FIS) {
+            return true;
+        } else if (this.now_FIS_status == FIS_status.REST_FIS) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //每个阶段初始化钓鱼参数
     init_FIS_data() {
@@ -485,7 +496,7 @@ export class Fishing_manage {
             //玩家上钩力介于及格和最大阈值之间，进行数值随机
             let random_manage = global.get_random_manage(); //随机数管理类
             let chance = (this.true_takebait_attack / FIS_max_takebait) * 100;
-            return random_manage.try_critical(chance);
+            return random_manage.try_number_random(chance);
         } else if (this.true_takebait_attack >= FIS_max_takebait) {
             //玩家上钩力大于最大阈值，必定成功
             return true;
@@ -501,7 +512,7 @@ export class Fishing_manage {
         }
         //根据权重获得id
         let random_manage = global.get_random_manage(); //随机数管理类
-        let fish_id = random_manage.chance_randow_get_id(FIS_fishs, 'ADD_ENEMY', this.now_place);
+        let fish_id = random_manage.chance_random_get_id(FIS_fishs, 'ADD_ENEMY', this.now_place);
 
         if (is_Empty_Object(FIS_fishs[fish_id].rare_flag)) {
             console.log('%s地点设定的%s钓鱼对象没有定义稀有标记', this.now_place, fish_id);
@@ -755,9 +766,11 @@ export class Fishing_manage {
         this.true_takebait_attack = this.player_end_attr['FIS_takebait_attack'];
         // this.true_takebait_attack += this.FIS_point_data; //添加钓点补正
         // this.true_takebait_attack += this.FIS_food_data; //添加鱼饵补正
+
         //玩家遛鱼力
-        this.true_walkfish_attack = this.get_true_walkfish_attack();
-        // this.true_walkfish_attack = this.player_end_attr['FIS_walkfish_attack'];
+        let base_FIS_walkfish_attack = this.player_end_attr['FIS_walkfish_attack']; //基础遛鱼力
+        let end_FIS_walkfish_attack = this.player_end_attr['end_FIS_walkfish_attack']; //最终乘算遛鱼力
+        this.true_walkfish_attack = calculate_num_attr(base_FIS_walkfish_attack, 0, 0, 0, end_FIS_walkfish_attack);
     }
     //更新切换钓鱼状态时的固定提示信息
     updata_FIS_status_change_tip() {
@@ -822,10 +835,7 @@ export class Fishing_manage {
         //当前处于等鱼上钩阶段
         if (this.now_FIS_status == FIS_status.WAIT_FIS) {
             //随机选择等鱼上钩阶段的一个文本
-            let keys = Object.keys(texts['wail_FIS_tip_text']);
-            let num = get_random(0, keys.length - 1 - 1); //-1是为了序号，再-1是去掉文本数据库中的"id"这个键值对
-            let key = 'text' + (num + 1);
-            ch = texts['wail_FIS_tip_text'][key];
+            ch = get_random_text('wail_FIS_tip_text'); //随机获取一条提示文本
         }
         //当前处于遛鱼阶段
         if (this.now_FIS_status == FIS_status.WALK_FIS) {
@@ -837,11 +847,7 @@ export class Fishing_manage {
                 let walk_FIS_time = this.fish_manage.get_walk_FIS_tip_time();
                 text_id = 'walk_FIS_status' + walk_FIS_time + '_tip_text';
             }
-            let text_obj = texts[text_id];
-            let keys = Object.keys(text_obj);
-            let num = get_random(0, keys.length - 1 - 1); //-1是为了序号，再-1是去掉文本数据库中的"id"这个键值对
-            let key = 'text' + (num + 1);
-            ch = text_obj[key];
+            ch = get_random_text(text_id); //随机获取一条提示文本
         }
         if (ch == '' || is_Empty_Object(ch)) {
             console.log('error2');
@@ -967,39 +973,8 @@ export class Fishing_manage {
         }
         return updata_flag;
     }
-    //获取最终遛鱼力
-    get_true_walkfish_attack() {
-        //基础遛鱼力
-        let base_FIS_walkfish_attack = this.player_end_attr['FIS_walkfish_attack'];
 
-        //累加所有直接乘算遛鱼力加成
-        let FIS_walkfish = 0;
-        // let FIS_walkfish = this.player_end_attr['FIS_walkfish'];
-        // if (FIS_walkfish === undefined) {
-        //     FIS_walkfish = 0;
-        // }
-
-        //最终乘算遛鱼力
-        let end_FIS_walkfish_attack = this.player_end_attr['end_FIS_walkfish_attack'];
-        if (end_FIS_walkfish_attack === undefined) {
-            end_FIS_walkfish_attack = 0;
-        }
-
-        //结算遛鱼力
-        let true_walkfish_attack = 0;
-        if (FIS_walkfish >= 0) {
-            true_walkfish_attack = base_FIS_walkfish_attack * ((100 + FIS_walkfish) * 0.01);
-        } else {
-            true_walkfish_attack = base_FIS_walkfish_attack * (100 / (100 - FIS_walkfish));
-        }
-        if (end_FIS_walkfish_attack >= 0) {
-            true_walkfish_attack = true_walkfish_attack * ((100 + end_FIS_walkfish_attack) * 0.01);
-        } else {
-            true_walkfish_attack = true_walkfish_attack * (100 / (100 - end_FIS_walkfish_attack));
-        }
-
-        return true_walkfish_attack;
-    }
+    //获取当前钓鱼状态
     get_now_FIS_status() {
         return this.now_FIS_status;
     }

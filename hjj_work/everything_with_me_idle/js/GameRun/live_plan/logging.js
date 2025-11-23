@@ -1,4 +1,4 @@
-import { get_random } from '../../Function/math_func.js';
+import { get_random, calculate_num_attr, calculate_speed_attr } from '../../Function/math_func.js';
 import { addElement } from '../../Function/Dom_function.js';
 import { is_Empty_Object, get_uniqueArr, get_item_id_key, get_item_obj } from '../../Function/Function.js';
 import { enemys } from '../../Data/Enemy/Enemy.js';
@@ -340,6 +340,15 @@ export class Logging_manage {
         //更新伐木时的玩家参数
         this.updata_true_LGI_data();
     }
+    //判断当前是否处于伐木的休息状态
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    is_rest_status() {
+        if (this.now_LGI_status == LGI_status.REST_LGI) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //按下了“开始伐木”按钮，这里初始化伐木参数，
     player_start_logging() {
@@ -516,7 +525,7 @@ export class Logging_manage {
         }
         //根据权重获得id
         let random_manage = global.get_random_manage(); //随机数管理类
-        let tree_id = random_manage.chance_randow_get_id(LGI_trees, 'ADD_ENEMY', this.now_place);
+        let tree_id = random_manage.chance_random_get_id(LGI_trees, 'ADD_ENEMY', this.now_place);
 
         if (is_Empty_Object(LGI_trees[tree_id].rare_flag)) {
             console.log('%s地点设定的%s伐木对象没有定义稀有标记', this.now_place, tree_id);
@@ -569,21 +578,8 @@ export class Logging_manage {
 
         //获取所有最终乘算增幅
         let end_LGI_attack = this.player_end_attr['end_LGI_attack'];
-        if (end_LGI_attack === undefined) {
-            end_LGI_attack = 0;
-        }
 
-        let true_LGI_attack;
-        if (damage_add >= 0) {
-            true_LGI_attack = LGI_attack * (100 + damage_add) * 0.01;
-        } else {
-            true_LGI_attack = LGI_attack * (100 / (100 - damage_add));
-        }
-        if (end_LGI_attack >= 0) {
-            true_LGI_attack = true_LGI_attack * (100 + end_LGI_attack) * 0.01;
-        } else {
-            true_LGI_attack = true_LGI_attack * (100 / (100 - end_LGI_attack));
-        }
+        let true_LGI_attack = calculate_num_attr(LGI_attack, 0, damage_add, 0, end_LGI_attack);
         return true_LGI_attack;
     }
     //获取最终伐木伤害
@@ -591,7 +587,7 @@ export class Logging_manage {
         let LGI_damage;
         //暴击结算
         let random_manage = global.get_random_manage(); //随机数管理类
-        if (random_manage.try_critical(this.true_LGI_critical_chance)) {
+        if (random_manage.try_number_random(this.true_LGI_critical_chance)) {
             LGI_damage = this.true_LGI_attack * (this.true_LGI_critical_damage * 0.01);
         } else {
             LGI_damage = this.true_LGI_attack;
@@ -600,12 +596,6 @@ export class Logging_manage {
     }
     //获取最终伐木间隔
     get_true_LGI_interval() {
-        //伐木间隔算法
-        //基础伐木间隔 *（1+伐木攻速加成）*（1+最终伐木攻速加成）
-        //基础伐木间隔就是玩家初始的伐木间隔
-        //伐木攻速加成是各个技能中提到的伐木攻速加成，统一都是正数，所有数累加即为总加成，
-        //最终伐木攻速加成只有少数几个来源，如疲劳影响，伐木模式
-
         //基础伐木间隔
         let base_LGI_interval = this.player_end_attr['LGI_interval'];
 
@@ -632,23 +622,8 @@ export class Logging_manage {
         }
 
         //结算伐木间隔
-        let true_LGI_interval = 0;
-        if (LGI_speed >= 0) {
-            true_LGI_interval = base_LGI_interval / ((100 + LGI_speed) * 0.01);
-        } else {
-            true_LGI_interval = base_LGI_interval * ((100 - LGI_speed) * 0.01);
-        }
-        if (end_LGI_speed >= 0) {
-            true_LGI_interval = true_LGI_interval / ((100 + end_LGI_speed) * 0.01);
-        } else {
-            true_LGI_interval = true_LGI_interval * ((100 - end_LGI_speed) * 0.01);
-        }
-
-        if (true_LGI_interval < 0.25) {
-            return 0.25;
-        } else {
-            return true_LGI_interval;
-        }
+        let true_LGI_interval = calculate_speed_attr(base_LGI_interval, 0, LGI_speed, 0, end_LGI_speed);
+        return true_LGI_interval;
     }
     //树刚刚复活时，将新复活的树的信息展示出来
     show_new_tree_div() {

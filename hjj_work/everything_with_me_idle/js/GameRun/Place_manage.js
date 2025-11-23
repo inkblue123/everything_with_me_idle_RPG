@@ -87,6 +87,9 @@ export class Place_manage {
     get_now_place() {
         return this.now_place;
     }
+    get_now_area() {
+        return places[this.now_place].area_id;
+    }
     get_last_place() {
         return this.last_place;
     }

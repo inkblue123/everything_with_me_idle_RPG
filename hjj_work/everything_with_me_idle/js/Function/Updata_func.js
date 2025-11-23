@@ -4,25 +4,6 @@ import { enums } from '../Data/Enum/Enum.js';
 import { add_show_Tooltip, add_click_Active_skill_worn_remove, delete_player_active_div, delete_active_show_div } from './Dom_function.js';
 import { is_Empty_Object } from './Function.js';
 
-//更新角色名
-function updata_player_name() {
-    const Player_name_div = document.getElementById('Player_name');
-
-    //获取更新后的玩家名称
-    let input_name = Player_name_div.value;
-    if (input_name.toString().trim().length == 0) {
-        input_name = '玩家';
-    }
-    //修改左上玩家状态界面
-    Player_name_div.value = input_name;
-    //修改玩家属性
-    let P_attr = player.get_player_attributes();
-    P_attr.set_data_attr('name', input_name);
-    //修改战斗界面玩家名称显示
-    let MCP_player_head = document.getElementById('MCP_player_head');
-    MCP_player_head.innerHTML = input_name;
-}
-
 //更新玩家属性展示表格中的数值
 function updata_attribute_show() {
     const combat_attr_show = document.getElementById('combat_attribute_show');
@@ -232,4 +213,4 @@ function updata_player_active() {
     updata_player_active_show();
 }
 
-export { updata_player_name, updata_attribute_show, updata_player_EQP, updata_player_active_slots_num, updata_player_active_show, updata_player_active, updata_player_active_time_bar };
+export { updata_attribute_show, updata_player_EQP, updata_player_active_slots_num, updata_player_active_show, updata_player_active, updata_player_active_time_bar };

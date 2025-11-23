@@ -44,15 +44,6 @@ export class Buff {
         buff_value.data_type = data_type;
         buff_value.data_value = data_value;
 
-        // if (buff_type == 'get_data_attr') {
-        //     //给予属性的buff
-        //     buff_value.data_attr = value[0]; //给予哪种属性
-        //     buff_value.data = value[1]; //每次buff生效获得多少数值
-        // }
-        // if (buff_type == 'change_game_speed') {
-        //     //改变游戏速度的buff
-        //     buff_value.data = value[0]; //buff生效期间改变多少
-        // }
         this.buff_value.push(buff_value);
     }
 }

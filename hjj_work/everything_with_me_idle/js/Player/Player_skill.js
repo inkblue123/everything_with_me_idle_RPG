@@ -11,9 +11,10 @@ import { player } from '../Player/Player.js';
 class Player_skill {
     constructor(id) {
         this.id = id; //唯一id
-        // if (is_Empty_Object(P_skills[id])) {
-        //     console.log('%s,error', id);
-        // }
+        if (is_Empty_Object(P_skills[id])) {
+            console.log('%s技能不存在，无法初始化', id);
+            return;
+        }
         this.type = P_skills[id].type; //主动或被动类型
         this.name = P_skills[id].name; //技能名
         this.desc = P_skills[id].desc; //技能描述
@@ -49,7 +50,8 @@ class Player_skill {
     update_skill_rewards() {
         for (let reward_obj of this.rewards) {
             let algorithm = reward_obj.algorithm;
-            reward_obj.data = skill_rewards_algorithm(algorithm, this.level);
+            let base_data = reward_obj.base_data;
+            reward_obj.data = skill_rewards_algorithm(algorithm, base_data, this.level);
         }
     }
 }
@@ -135,6 +137,10 @@ export class Player_skills {
         }
 
         for (let id in Player_skills_save.active_skills) {
+            if (is_Empty_Object(P_skills[id])) {
+                console.log('存档记载的%s技能不存在数据库中，无法初始化', id);
+                continue;
+            }
             let skill_obj = new Player_A_skill(id);
             let skill_save = Player_skills_save.active_skills[id];
 
@@ -155,6 +161,10 @@ export class Player_skills {
             this.active_skills[id] = skill_obj;
         }
         for (let id in Player_skills_save.passive_skills) {
+            if (is_Empty_Object(P_skills[id])) {
+                console.log('存档记载的%s技能不存在数据库中，无法初始化', id);
+                continue;
+            }
             let skill_obj = new Player_P_skill(id);
             let skill_save = Player_skills_save.passive_skills[id];
 

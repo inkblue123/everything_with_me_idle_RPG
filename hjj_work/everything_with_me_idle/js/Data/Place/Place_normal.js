@@ -85,7 +85,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_live_plan_flag(9); //当前地点可以执行的生活技能
     places[id].set_logging_data(5); //这个地点的伐木相关参数，树的复活时间5秒
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树
-    places[id].set_foraging_data(100); //这个地点的采集相关参数，采集防御力100点
+    places[id].set_foraging_data(100, 1); //这个地点的采集相关参数，采集防御力100点
     places[id].set_foraging_item('red_berry', 100, false); //这个地点可采集的物品，红浆果
     places[id].set_foraging_item('yellow_berry', 100, false); //这个地点可采集的物品，黄浆果
     places[id].set_foraging_item('black_berry', 100, false); //这个地点可采集的物品，黑浆果
@@ -97,7 +97,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_live_plan_flag(9); //当前地点可以执行的生活技能
     places[id].set_logging_data(10); //这个地点的伐木相关参数，树的复活时间10秒
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树
-    places[id].set_foraging_data(10); //这个地点的采集相关参数，采集防御力10点
+    places[id].set_foraging_data(10, 0.5); //这个地点的采集相关参数，采集防御力10点
     places[id].set_foraging_item('red_berry', 100, false); //这个地点可采集的物品，红浆果
     places[id].set_foraging_item('yellow_berry', 100, false); //这个地点可采集的物品，黄浆果
     places[id].set_foraging_item('black_berry', 100, false); //这个地点可采集的物品，黑浆果
@@ -118,7 +118,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_logging_data(3); //这个地点的伐木相关参数，树的复活时间3秒
     places[id].set_logging_tree('oak_tree', 10, false); //这个地点可刷的树，橡树
     places[id].set_logging_tree('Willow_tree', 10, false); //这个地点可刷的树，柳树
-    places[id].set_foraging_data(15); //这个地点的采集相关参数，采集防御力15点
+    places[id].set_foraging_data(15, 1); //这个地点的采集相关参数，采集防御力15点
     places[id].set_foraging_item('decayed_wood', 50, false); //这个地点可采集的物品，朽木
     places[id].set_foraging_item('broken_fur', 50, false); //这个地点可采集的物品，碎毛皮
     places[id].set_foraging_item('animal_bone', 10, false); //这个地点可采集的物品，兽骨
@@ -131,7 +131,7 @@ function init_village_backhill_normal_place(places) {
     add_normal_Place(places, id, area);
     places[id].add_connect_normal_place('logged_forest');
     places[id].set_live_plan_flag(10); //当前地点可以执行的生活技能
-    places[id].set_foraging_data(100); //这个地点的采集相关参数，采集防御力100点
+    places[id].set_foraging_data(100, 2); //这个地点的采集相关参数，采集防御力100点
     places[id].set_foraging_item('decayed_wood', 100, false); //这个地点可采集的物品，朽木
     places[id].set_foraging_item('river_mussel', 20, false); //这个地点可采集的物品，河蚌
     places[id].set_foraging_item('river_crab', 20, false); //这个地点可采集的物品，河蟹
@@ -154,7 +154,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_logging_data(5); //这个地点的伐木相关参数，树的复活时间5秒
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树，灌木丛
     places[id].set_logging_tree('oak_tree', 10, false); //这个地点可刷的树，橡树
-    places[id].set_foraging_data(120); //这个地点的采集相关参数，采集防御力120点
+    places[id].set_foraging_data(120, 1.5); //这个地点的采集相关参数，采集防御力120点
     places[id].set_foraging_item('decayed_wood', 50, false); //这个地点可采集的物品，朽木
     places[id].set_foraging_item('red_berry', 10, false); //这个地点可采集的物品，红浆果
     places[id].set_foraging_item('yellow_berry', 10, false); //这个地点可采集的物品，黄浆果
@@ -171,7 +171,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树，灌木丛
     places[id].set_logging_tree('oak_tree', 10, false); //这个地点可刷的树，橡树
     places[id].set_logging_tree('ash_skin_birch', 5, false); //这个地点可刷的树，灰肤桦
-    places[id].set_foraging_data(60); //这个地点的采集相关参数，采集防御力60点
+    places[id].set_foraging_data(60, 1); //这个地点的采集相关参数，采集防御力60点
     places[id].set_foraging_item('decayed_wood', 50, false); //这个地点可采集的物品，朽木
     places[id].set_foraging_item('red_berry', 10, false); //这个地点可采集的物品，红浆果
     places[id].set_foraging_item('yellow_berry', 10, false); //这个地点可采集的物品，黄浆果
@@ -188,7 +188,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_logging_data(5); //这个地点的伐木相关参数，树的复活时间5秒
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树，灌木丛
     places[id].set_logging_tree('Willow_tree', 10, false); //这个地点可刷的树，柳树
-    places[id].set_foraging_data(200); //这个地点的采集相关参数，采集防御力200点
+    places[id].set_foraging_data(200, 2.5); //这个地点的采集相关参数，采集防御力200点
     places[id].set_foraging_item('river_crab', 35, false); //这个地点可采集的物品，河蟹
     places[id].set_foraging_item('coral_fungus', 15, false); //这个地点可采集的物品，珊瑚菌
     places[id].set_foraging_item('chanterelle', 15, false); //这个地点可采集的物品，鸡油菌
@@ -207,7 +207,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_logging_tree('ash_skin_birch', 20, false); //这个地点可刷的树，灰肤桦
     places[id].set_logging_tree('pine', 5, false); //这个地点可刷的树，松树
     places[id].set_logging_tree('frost_marrow_pine', 1, true, 1, 4320); //这个地点可刷的树，寒髓松
-    places[id].set_foraging_data(90); //这个地点的采集相关参数，采集防御力90点
+    places[id].set_foraging_data(90, 4); //这个地点的采集相关参数，采集防御力90点
     places[id].set_foraging_item('decayed_wood', 50, false); //这个地点可采集的物品，朽木
     places[id].set_foraging_item('animal_bone', 50, false); //这个地点可采集的物品，兽骨
     places[id].set_foraging_item('hard_rock', 50, false); //这个地点可采集的物品，坚硬岩石
@@ -223,7 +223,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_live_plan_flag(9); //当前地点可以执行的生活技能
     places[id].set_logging_data(20); //这个地点的伐木相关参数，树的复活时间20秒
     places[id].set_logging_tree('bushes', 20, false); //这个地点可刷的树，灌木丛
-    places[id].set_foraging_data(300); //这个地点的采集相关参数，采集防御力300点
+    places[id].set_foraging_data(300, 4); //这个地点的采集相关参数，采集防御力300点
     places[id].set_foraging_item('hard_rock', 5, false); //这个地点可采集的物品，坚硬岩石
     places[id].set_foraging_item('lowFe_rock', 1, false); //这个地点可采集的物品，含铁岩石
 
@@ -235,7 +235,7 @@ function init_village_backhill_normal_place(places) {
     places[id].set_logging_tree('pine', 30, false); //这个地点可刷的树，松树
     places[id].set_logging_tree('lightning_iron_fir', 1, true, 5, 4320); //这个地点可刷的树，雷击铁杉
     places[id].set_logging_tree('frost_marrow_pine', 1, true, 5, 4320); //这个地点可刷的树，寒髓松
-    places[id].set_foraging_data(300); //这个地点的采集相关参数，采集防御力300点
+    places[id].set_foraging_data(300, 5); //这个地点的采集相关参数，采集防御力300点
     places[id].set_foraging_item('decayed_wood', 50, false); //这个地点可采集的物品，含铁岩石
     places[id].set_foraging_item('pine_logs', 20, false); //这个地点可采集的物品，松树原木
     places[id].set_foraging_item('lightning_bark', 5, true, 1, 1440); //这个地点可采集的物品，雷杉树皮

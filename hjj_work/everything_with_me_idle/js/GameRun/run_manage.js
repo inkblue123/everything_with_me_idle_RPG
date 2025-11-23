@@ -24,6 +24,7 @@ function game_loop() {
     //更新这一帧的新的游戏画面
     updata_game_div();
 
+
     Time_manage.updata_FPS_end();
     //一帧运行完毕，睡眠一段时间，保证游戏一秒运行帧数次
     let sleep_ms = global.get_sleep_ms();
@@ -100,8 +101,6 @@ function updata_game_div() {
     let P_attr = player.get_player_attributes();
     //更新玩家红蓝绿资源
     P_attr.updata_HP_MP_ENP_div();
-    //玩家名称显示更新
-    // updata_player_name();
     //玩家属性显示更新
     updata_attribute_show();
 }

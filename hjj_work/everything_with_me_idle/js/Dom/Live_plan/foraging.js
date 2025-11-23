@@ -22,21 +22,37 @@ function make_foraging_div(FAG_value_div) {
     //采集中部，采集提示信息
     let FAG_middle_div = addElement(FAG_value_div, 'div', 'FAG_middle_div', null, '');
     //采集概率展示
-    var FAG_show_chance_div = addElement(FAG_middle_div, 'div', 'FAG_show_chance_div', ' player_foraging_bar');
+    var FAG_show_chance_div = addElement(FAG_middle_div, 'div', 'FAG_show_chance_div', null);
     FAG_show_chance_div.innerHTML = '采集概率：';
-
     //采集的进度条
-    var FAG_bar = addElement(FAG_middle_div, 'div', 'FAG_bar', 'progress_bar player_foraging_bar', '');
-    var FAG_frame = addElement(FAG_bar, 'div', 'FAG_frame', 'progress_bar_frame player_foraging_frame'); //条的外框
-    var FAG_current = addElement(FAG_frame, 'div', 'FAG_current', 'progress_bar_current player_foraging_current');
+    var FAG_bar = addElement(FAG_middle_div, 'div', 'FAG_bar', 'progress_bar ', null);
+    var FAG_frame = addElement(FAG_bar, 'div', 'FAG_frame', 'progress_bar_frame'); //条的外框
+    var FAG_current = addElement(FAG_frame, 'div', 'FAG_current', 'progress_bar_current');
     FAG_bar.children[0].children[0].style.width = '0%';
+    //特殊采集状态的提示信息
+    var FAG_show_tip_div = addElement(FAG_middle_div, 'div', 'FAG_show_tip_div', null);
+    var FAG_show_tip_text = addElement(FAG_show_tip_div, 'div', 'FAG_show_tip_text', null);
 
-    //采集下部，开始按钮
+    //采集下部，各种设置按钮
     let FAG_down_div = addElement(FAG_value_div, 'div', 'FAG_down_div', null, '');
-    var FAG_S_button = addElement(FAG_down_div, 'button', 'FAG_S_button', 'LP_button', '');
+    //左边，启动幸运采集和涉险采集的按钮
+    let FAG_option1_div = addElement(FAG_down_div, 'div', null, 'FAG_option_div', '');
+    var FAG_luck_open_button = addElement(FAG_option1_div, 'button', 'FAG_luck_open_button', 'LP_button', '');
+    FAG_luck_open_button.innerHTML = '☑幸运采集';
+    var FAG_luck_close_button = addElement(FAG_option1_div, 'button', 'FAG_luck_close_button', 'LP_button', 'none');
+    FAG_luck_close_button.innerHTML = '☐幸运采集';
+    var FAG_danger_open_button = addElement(FAG_option1_div, 'button', 'FAG_danger_open_button', 'LP_button', '');
+    FAG_danger_open_button.innerHTML = '☑涉险采集';
+    var FAG_danger_close_button = addElement(FAG_option1_div, 'button', 'FAG_danger_close_button', 'LP_button', 'none');
+    FAG_danger_close_button.innerHTML = '☐涉险采集';
+    //中间，开始或停止采集的按钮
+    let FAG_start_button_div = addElement(FAG_down_div, 'div', 'FAG_start_button_div', 'FAG_option_div', '');
+    var FAG_S_button = addElement(FAG_start_button_div, 'button', 'FAG_S_button', 'LP_button', '');
     FAG_S_button.innerHTML = '开始采集';
-    var FAG_E_button = addElement(FAG_down_div, 'button', 'FAG_E_button', 'LP_button', 'none');
+    var FAG_E_button = addElement(FAG_start_button_div, 'button', 'FAG_E_button', 'LP_button', 'none');
     FAG_E_button.innerHTML = '停止采集';
+    //右边，待定
+    let FAG_option2_div = addElement(FAG_down_div, 'div', null, 'FAG_option_div', '');
 }
 
 //为采集界面中的按钮添加交互逻辑
@@ -47,9 +63,10 @@ function set_foraging_button(FAG_value_div) {
     FAG_S_button.onclick = function () {
         //开启采集状态
         global.set_flag('GS_game_statu', 'foraging');
-        //开启一轮采集，重置采集的参数
         let live_plan_manage = global.get_live_plan_manage();
         let foraging_manage = live_plan_manage.get_EC_live_skill_manage('foraging_manage');
+        //开启一轮采集，重置采集的参数
+        foraging_manage.player_start_foraging();
         foraging_manage.reset_round();
         //开始采集按钮切换成停止采集
         FAG_S_button.style.display = 'none';
@@ -61,6 +78,45 @@ function set_foraging_button(FAG_value_div) {
         let foraging_manage = live_plan_manage.get_EC_live_skill_manage('foraging_manage');
         foraging_manage.stop_game_statu(); // 停止采集状态
         foraging_manage.reset_round(); //重置一轮采集的参数
+    };
+
+    //幸运采集按钮
+    let FAG_luck_open_button = FAG_value_div.querySelector('#FAG_luck_open_button');
+    let FAG_luck_close_button = FAG_value_div.querySelector('#FAG_luck_close_button');
+    FAG_luck_open_button.onclick = function () {
+        let live_plan_manage = global.get_live_plan_manage();
+        let foraging_manage = live_plan_manage.get_EC_live_skill_manage('foraging_manage');
+        foraging_manage.set_FAG_option('luck_FAG_flag', false);
+        //幸运采集按钮样式切换
+        FAG_luck_open_button.style.display = 'none';
+        FAG_luck_close_button.style.display = '';
+    };
+    FAG_luck_close_button.onclick = function () {
+        let live_plan_manage = global.get_live_plan_manage();
+        let foraging_manage = live_plan_manage.get_EC_live_skill_manage('foraging_manage');
+        foraging_manage.set_FAG_option('luck_FAG_flag', true);
+        //幸运采集按钮样式切换
+        FAG_luck_open_button.style.display = '';
+        FAG_luck_close_button.style.display = 'none';
+    };
+    //涉险采集按钮
+    let FAG_danger_open_button = FAG_value_div.querySelector('#FAG_danger_open_button');
+    let FAG_danger_close_button = FAG_value_div.querySelector('#FAG_danger_close_button');
+    FAG_danger_open_button.onclick = function () {
+        let live_plan_manage = global.get_live_plan_manage();
+        let foraging_manage = live_plan_manage.get_EC_live_skill_manage('foraging_manage');
+        foraging_manage.set_FAG_option('danger_FAG_flag', false);
+        //涉险采集按钮样式切换
+        FAG_danger_open_button.style.display = 'none';
+        FAG_danger_close_button.style.display = '';
+    };
+    FAG_danger_close_button.onclick = function () {
+        let live_plan_manage = global.get_live_plan_manage();
+        let foraging_manage = live_plan_manage.get_EC_live_skill_manage('foraging_manage');
+        foraging_manage.set_FAG_option('danger_FAG_flag', true);
+        //涉险采集按钮样式切换
+        FAG_danger_open_button.style.display = '';
+        FAG_danger_close_button.style.display = 'none';
     };
 }
 export { make_foraging_div, set_foraging_button };

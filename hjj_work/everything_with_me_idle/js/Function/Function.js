@@ -1,6 +1,7 @@
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
+import { get_random } from '../Function/math_func.js';
 
 //将属性补正数值转义成简写字母
 function attr_correct_handle(attr_correct) {
@@ -257,7 +258,6 @@ function get_item_obj(id, num, ...args) {
 
     return item_obj;
 }
-
 //获取物品对象的唯一key
 function get_item_id_key(item_obj, length = 16) {
     let id = item_obj.id;
@@ -282,7 +282,20 @@ function get_item_id_key(item_obj, length = 16) {
     let item_key = id + ':' + hash_key;
     return item_key;
 }
-
+//在指定文本数据库中随机选择一条文本
+//仅会选择key为text+数字的文本
+function get_random_text(texts_id) {
+    let text_obj = texts[texts_id];
+    let keys = Object.keys(text_obj);
+    let random = get_random(1, keys.length - 1); //-1是去掉文本数据库中的"id"这个键值对
+    let key = 'text' + random;
+    let ch = text_obj[key];
+    if (ch == undefined) {
+        console.log('随机文本选择异常，选择的id为%s', key);
+        return 'error';
+    }
+    return ch;
+}
 export {
     check_Equipment,
     is_Empty_Object, //
@@ -296,4 +309,5 @@ export {
     set_dataset_value,
     get_item_id_key,
     get_item_obj,
+    get_random_text,
 };

@@ -234,6 +234,15 @@ export class Live_plan_manage {
             this[manage_name].stop_game_statu();
         }
     }
+    //判断当前正在进行的生活技能是否处于休息状态
+    is_live_plan_skill_rest() {
+        let now_GS = global.get_flag('GS_game_statu');
+        if (!enums['live_plan_GS'].includes(now_GS)) {
+            return false; //当前不处于生活技能，不算休息状态
+        }
+        let manage_name = now_GS + '_manage';
+        return this[manage_name].is_rest_status();
+    }
 }
 
 export {};

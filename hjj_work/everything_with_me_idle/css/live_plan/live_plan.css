@@ -63,6 +63,6 @@
 
 /* 生活技能里统一格式的按钮 */
 .LP_button {
-    width: 70px;
+    /* width: 75px; */
     height: 45px;
 }

@@ -1,5 +1,5 @@
 import { crtElement, addElement, addElement_radio, add_show_Tooltip } from '../Function/Dom_function.js';
-import { updata_player_name, updata_player_EQP } from '../Function/Updata_func.js';
+import { updata_player_EQP } from '../Function/Updata_func.js';
 import { show_dropdown_table } from '../Function/show_func.js';
 import { player } from '../Player/Player.js';
 
@@ -341,5 +341,23 @@ function change_Player_status_div(button_id) {
         PAB_div.style.display = 'none';
         PSK_div.style.display = '';
     }
+}
+//更新角色名
+function updata_player_name() {
+    const Player_name_div = document.getElementById('Player_name');
+
+    //获取更新后的玩家名称
+    let input_name = Player_name_div.value;
+    if (input_name.toString().trim().length == 0) {
+        input_name = '玩家';
+    }
+    //修改左上玩家状态界面
+    Player_name_div.value = input_name;
+    //修改玩家属性
+    let P_attr = player.get_player_attributes();
+    P_attr.set_data_attr('name', input_name);
+    //修改战斗界面玩家名称显示
+    let MCP_player_head = document.getElementById('MCP_player_head');
+    MCP_player_head.innerHTML = input_name;
 }
 export { create_player_status };
