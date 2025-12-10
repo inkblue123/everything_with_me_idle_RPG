@@ -224,7 +224,7 @@ export class Random_manage {
                 let key = rare_id + '_' + thing_flag + '_' + father_id;
 
                 if (floors_flag == true) {
-                    this.add_rare_floors(key);
+                    this.rare_manage.add_rare_floors(key);
                     continue;
                 }
                 if (this.rare_manage.try_floors(key)) {

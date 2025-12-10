@@ -249,6 +249,11 @@ export class Global_flag_manage {
         let exp_manage = global.get_exp_manage();
         exp_manage.set_fishing_leveling_behavior(fishing_behavior);
     }
+    //玩家行为-采集行为记录
+    record_foraging_behavior(foraging_behavior) {
+        let exp_manage = global.get_exp_manage();
+        exp_manage.set_foraging_leveling_behavior(foraging_behavior);
+    }
     //玩家行为-正常完成了某个事件
     record_event_finish_end(id) {
         let game_event_manage = global.get_game_event_manage();

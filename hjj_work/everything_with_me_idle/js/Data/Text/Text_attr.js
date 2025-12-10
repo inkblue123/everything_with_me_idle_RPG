@@ -154,6 +154,16 @@ function init_no_normal_attr_name_foraging(texts) {
     id = 'FAG_attack';
     add_text_object(texts, id);
     texts[id].attr_name = '采集力';
+    id = 'FAG_luck_chance';
+    add_text_object(texts, id);
+    texts[id].attr_name = '幸运采集触发概率';
+    id = 'FAG_danger_chance';
+    add_text_object(texts, id);
+    texts[id].attr_name = '涉险采集触发概率';
+    id = 'FAG_item_add_1_chance';
+    add_text_object(texts, id);
+    texts[id].attr_name = '采集物品数+1概率';
+
     //前缀是采集概率
     //后缀是所有物品子类和一些子类集合
     //这样的属性已经在Data.js中自动定义了，这里可以不需要重复定义

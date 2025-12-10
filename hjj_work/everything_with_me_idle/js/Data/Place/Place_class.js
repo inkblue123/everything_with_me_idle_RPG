@@ -473,28 +473,30 @@ export class Area {
         }
     }
     //添加一个在这个区域采集时可能遇到的危险，持续型
-    set_continuous_foraging_danger(data_type, continuous_time, data_value, text_id) {
+    set_continuous_foraging_danger(data_type, min_time, max_time, min_data, max_data, text_id) {
         if (is_Empty_Object(this.foraging_danger)) {
             this.foraging_danger = new Array();
         }
         let obj = new Object();
         obj.danger_type = 'continuous'; //持续型
         obj.data_type = data_type; //持续期间生效的效果
-        obj.continuous_time = continuous_time; //持续时间
-        obj.data_value = data_value; //效果数值
+        obj.min_time = min_time; //持续时间最小值
+        obj.max_time = max_time; //持续时间最大值
+        obj.min_data = min_data; //效果数值最小值
+        obj.max_data = max_data; //效果数值最大值
         obj.text_id = text_id; //触发时使用的提示文本（没有实际使用）
         this.foraging_danger.push(obj);
     }
     //添加一个在这个区域采集时可能遇到的危险，即刻生效型
-    set_start_foraging_danger(data_type, max_data_value, min_data_value, text_id) {
+    set_start_foraging_danger(data_type, min_data, max_data, text_id) {
         if (is_Empty_Object(this.foraging_danger)) {
             this.foraging_danger = new Array();
         }
         let obj = new Object();
         obj.danger_type = 'start'; //即刻生效型
         obj.data_type = data_type;
-        obj.max_data_value = max_data_value;
-        obj.min_data_value = min_data_value;
+        obj.min_data = min_data;
+        obj.max_data = max_data;
         obj.text_id = text_id; //触发时使用的提示文本（没有实际使用）
         this.foraging_danger.push(obj);
     }

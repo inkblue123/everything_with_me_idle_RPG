@@ -31,6 +31,8 @@ export class Leveling_Behavior {
         this.logging_behavior = new Object();
         //钓鱼过程中发生的行为的参数
         this.fishing_behavior = new Object();
+        //采集过程中发生的行为的参数
+        this.foraging_behavior = new Object();
     }
 }
 
@@ -81,6 +83,15 @@ export class Exp_manage {
                 this.leveling_behavior.fishing_behavior[id] = 0;
             }
             this.leveling_behavior.fishing_behavior[id] += fishing_behavior[id];
+        }
+    }
+    //记录采集时发生的练级行为
+    set_foraging_leveling_behavior(foraging_behavior) {
+        for (let id in foraging_behavior) {
+            if (is_Empty_Object(this.leveling_behavior.foraging_behavior[id])) {
+                this.leveling_behavior.foraging_behavior[id] = 0;
+            }
+            this.leveling_behavior.foraging_behavior[id] += foraging_behavior[id];
         }
     }
     //记录其他练级行为

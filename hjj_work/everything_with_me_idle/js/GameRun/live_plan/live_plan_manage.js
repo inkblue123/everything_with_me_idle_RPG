@@ -14,6 +14,7 @@ import { Foraging_manage } from './foraging.js';
 export class Live_plan_manage {
     constructor() {
         this.EC_live_plan_class_name = ['logging_manage', 'fishing_manage', 'mining_manage', 'foraging_manage', 'diving_manage', 'archaeology_manage', 'exploration_manage'];
+        this.live_plan_name = ['logging', 'fishing', 'mining', 'foraging', 'diving', 'archaeology', 'exploration'];
         // this.logging_manage = new Logging_manage(); //伐木管理对象
         // this.fishing_manage = new Fishing_manage(); //钓鱼管理对象
         // // this.mining_manage = new Mining_manage(); //挖矿管理对象
@@ -132,11 +133,24 @@ export class Live_plan_manage {
     }
     //玩家属性更新，更新到生活技能类里
     updata_player_data(end_data_attr) {
-        for (let manage_name of this.EC_live_plan_class_name) {
-            if (!is_Empty_Object(this[manage_name])) {
-                this[manage_name].updata_player_data(end_data_attr);
+        let global_flag_manage = global.get_global_flag_manage();
+        for (let i = 0; i < 7; i++) {
+            let status_id = 'GS_unlock_' + this.live_plan_name[i];
+            let status = global_flag_manage.get_flag(status_id);
+            let manage_name = this.EC_live_plan_class_name[i];
+            if (status == true) {
+                //技能解锁了才需要更新
+                if (!is_Empty_Object(this[manage_name])) {
+                    this[manage_name].updata_player_data(end_data_attr);
+                }
+            } else {
             }
         }
+        // for (let manage_name of this.EC_live_plan_class_name) {
+        //     if (!is_Empty_Object(this[manage_name])) {
+        //         this[manage_name].updata_player_data(end_data_attr);
+        //     }
+        // }
     }
     //地点更新，给各个技能对象更新地点信息
     set_new_place(next_place) {

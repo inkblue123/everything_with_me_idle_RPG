@@ -73,7 +73,7 @@ export class P_Passive_skill extends Skill {
     add_rewards(attr_name, base_data, algorithm) {
         let obj = new Object();
         obj.attr = attr_name; //属性名
-        obj.base_data = base_data; //属性名
+        obj.base_data = base_data; //属性1级基础数值
         obj.algorithm = algorithm; //常态等级加成算法
         this.rewards.push(obj);
     }

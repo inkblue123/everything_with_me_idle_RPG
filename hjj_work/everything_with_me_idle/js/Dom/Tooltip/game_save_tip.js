@@ -4,7 +4,6 @@ import { load_save, delete_save, init_game } from '../../LoadAndSave/load.js';
 import { texts } from '../../Data/Text/Text.js';
 import { TOOLTIP_WIDTH } from './Tooltip.js';
 
-
 function init_game_save_tip(type, value) {
     let Tooltip = document.getElementById('tooltip');
     //小窗口移动到左上角
@@ -157,8 +156,8 @@ function init_delete_save_tip(value) {
             //重新构建删除完成小窗口
             init_delete_save_OK_tip(delete_save_div);
         });
-    }, 50);
-    // }, 5000);
+        // }, 50);
+    }, 5000);
     //取消按钮
     let exit_button = addElement(button_div, 'button', null, 'SandL_button');
     exit_button.innerHTML = texts['delete_tip_exit_button'].button_text;

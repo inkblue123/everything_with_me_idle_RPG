@@ -64,6 +64,10 @@ function init_foraging_passive_skill(texts) {
     add_text_object(texts, id);
     texts[id].skill_name = '小心采集';
     texts[id].skill_desc = '有些采集物品嵌在石壁里或者埋在深土中，下手轻些才可以完整的取出，有时会有意外收获';
+    id = 'have_the_discerning_eye';
+    add_text_object(texts, id);
+    texts[id].skill_name = '慧眼识珠';
+    texts[id].skill_desc = '你已经采集过许多稀有的物品，你已经知道它们的共同特点，想找到它们会更容易';
 }
 
 export { init_passive_skill };

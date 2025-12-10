@@ -45,7 +45,7 @@ export class Foraging_manage {
         this.danger_FAG_speed_num; //涉险采集状态下的采集速度加成
         this.danger_FAG_MAX_danger; //涉险采集状态中随机出的危险最大数量
         this.danger_FAG_now_danger; //涉险采集状态当前经历过的危险数量
-        this.danger_FAG_continuous_danger_obj = new Array(); //涉险采集状态当前触发的持续性危险记录
+        this.danger_FAG_continuous_danger_obj = new Object(); //涉险采集状态当前触发的持续性危险记录
         this.danger_FAG_end_reason; //涉险采集结束原因
 
         this.player_end_attr; //玩家最终属性拷贝，方便调用
@@ -462,6 +462,8 @@ export class Foraging_manage {
             this.true_FAG_speed = get_true_FAG_speed(this.player_end_attr, this.danger_FAG_speed_num);
             //获取这次涉险采集的危险数量
             this.danger_FAG_MAX_danger = get_random(1, 5);
+            //清空持续型危险记录
+            this.danger_FAG_continuous_danger_obj = new Object(); //涉险采集状态当前触发的持续性危险记录
             //写日志
             let global_flag_manage = global.get_global_flag_manage();
             global_flag_manage.set_game_log('foraging', this.now_FAG_status, 'start');
@@ -556,6 +558,12 @@ export class Foraging_manage {
             let equip_rarity = drop_items[key].equip_rarity;
             player.Player_get_item(id, num, equip_rarity);
         }
+        //记录采集行为，用于结算采集技能的经验
+        let global_flag_manage = global.get_global_flag_manage();
+        let foraging_behavior = new Object();
+        foraging_behavior.FAG_get_item_num = Object.keys(drop_items).length;
+        foraging_behavior.FAG_get_rare_item_num = get_FAG_get_rare_item_num(this.now_place, drop_items);
+        global_flag_manage.record_foraging_behavior(foraging_behavior);
         //将掉落物更新到可采集列表中
         let ret = this.updata_foraging_place_show_drop(drop_items);
         if (ret == true) {
@@ -579,6 +587,12 @@ export class Foraging_manage {
             let equip_rarity = drop_items[key].equip_rarity;
             player.Player_get_item(id, num, equip_rarity);
         }
+        //记录采集行为，用于结算采集技能的经验
+        let global_flag_manage = global.get_global_flag_manage();
+        let foraging_behavior = new Object();
+        foraging_behavior.FAG_get_item_num = Object.keys(drop_items).length;
+        foraging_behavior.FAG_get_rare_item_num = get_FAG_get_rare_item_num(this.now_place, drop_items);
+        global_flag_manage.record_foraging_behavior(foraging_behavior);
         //将掉落物更新到可采集列表中
         let ret = this.updata_foraging_place_show_drop(drop_items);
         if (ret == true) {
@@ -593,7 +607,7 @@ export class Foraging_manage {
         //获取当前地点经过属性加成后的可采集物品列表
         let FAG_item = get_true_FAG_item(this.now_place, this.player_end_attr);
         //从可采集物品中筛选稀有物品
-        let rare_item = this.get_place_rare_item(FAG_item);
+        let rare_item = get_place_rare_item(FAG_item);
         if (is_Empty_Object(rare_item)) {
             console.log('当前地点%s采集物品中没有稀有物品，却进入了涉险采集状态，异常', this.now_place);
             return;
@@ -630,6 +644,12 @@ export class Foraging_manage {
             let equip_rarity = uniqueArr[key].equip_rarity;
             player.Player_get_item(id, num, equip_rarity);
         }
+        //记录采集行为，用于结算采集技能的经验
+        let global_flag_manage = global.get_global_flag_manage();
+        let foraging_behavior = new Object();
+        foraging_behavior.FAG_get_item_num = Object.keys(uniqueArr).length;
+        foraging_behavior.FAG_get_rare_item_num = get_FAG_get_rare_item_num(this.now_place, uniqueArr);
+        global_flag_manage.record_foraging_behavior(foraging_behavior);
 
         //将掉落物更新到可采集列表中
         let ret = this.updata_foraging_place_show_drop(uniqueArr);
@@ -710,7 +730,7 @@ export class Foraging_manage {
         }
 
         //补充rare_no_cumulative_num次非稀有物品掉落
-        let norare_item = this.get_place_norare_item(FAG_item);
+        let norare_item = get_place_norare_item(FAG_item);
         for (let i = 0; i < rare_no_cumulative_num; i++) {
             let item_key = random_manage.chance_random_get_id_norare(norare_item);
             let data_obj = norare_item[item_key];
@@ -737,26 +757,7 @@ export class Foraging_manage {
         }
         return uniqueArr;
     }
-    //获取当前地点没有稀有对象的可采集物品列表
-    get_place_norare_item(FAG_item) {
-        let norare_item = new Object();
-        for (let item_key in FAG_item) {
-            if (!FAG_item[item_key].rare_flag) {
-                norare_item[item_key] = FAG_item[item_key];
-            }
-        }
-        return norare_item;
-    }
-    //获取当前地点纯稀有对象的可采集物品列表
-    get_place_rare_item(FAG_item) {
-        let rare_item = new Object();
-        for (let item_key in FAG_item) {
-            if (FAG_item[item_key].rare_flag) {
-                rare_item[item_key] = FAG_item[item_key];
-            }
-        }
-        return rare_item;
-    }
+
     // 随机选择当前所在区域的一个危险并触发
     danger_FAG_get_danger() {
         let place_manage = global.get_place_manage();
@@ -773,23 +774,29 @@ export class Foraging_manage {
             this.start_foraging_danger(random_danger);
         } else if (random_danger.danger_type == 'continuous') {
             //持续生效的危险
+            //先判断当前已激活的危险库里有没有效果相同的危险
+            if (this.judge_have_continuous_danger(random_danger)) {
+                //当前已激活了这个危险，不重复激活
+                return;
+            }
+            this.get_continuous_foraging_danger(random_danger);
         } else {
             console.log('随机到的危险类型未知，异常情况');
         }
     }
     //触发一个即刻生效的危险
     start_foraging_danger(danger_obj) {
-        let data_type = danger_obj.data_type;
         let data_value;
         if (is_Empty_Object(danger_obj.data_value)) {
             //这个危险没有指定内容，从最大值和最小值之间随机一个数
-            data_value = get_random(danger_obj.min_data_value, danger_obj.max_data_value);
+            data_value = get_random(danger_obj.min_data, danger_obj.max_data);
         } else {
             //这个危险指定了内容，直接使用
             data_value = danger_obj.data_value;
         }
 
         let end_flag;
+        let data_type = danger_obj.data_type;
         if (data_type == 'use_health_point') {
             //消耗生命
             let P_attr = player.get_player_attributes();
@@ -807,7 +814,7 @@ export class Foraging_manage {
         }
         //写日志
         let global_flag_manage = global.get_global_flag_manage();
-        global_flag_manage.set_game_log('foraging', this.now_FAG_status, data_type, data_value);
+        global_flag_manage.set_game_log('foraging', this.now_FAG_status, 'start_danger', data_type, data_value);
         if (!end_flag) {
             //当前危险触发后生效失败，说明此时的涉险采集太困难了，停止涉险采集
             this.danger_FAG_end_reason = 'process_danger';
@@ -815,9 +822,82 @@ export class Foraging_manage {
             this.danger_FAG_end_time = this.now_time;
         }
     }
+    //记录当前触发了一个持续型危险
+    get_continuous_foraging_danger(danger_obj) {
+        //获取危险的数值
+        let data_value;
+        if (is_Empty_Object(danger_obj.data_value)) {
+            //这个危险没有指定内容，从最大值和最小值之间随机一个数
+            data_value = get_random(danger_obj.min_data, danger_obj.max_data);
+        } else {
+            //这个危险指定了内容，直接使用
+            data_value = danger_obj.data_value;
+        }
+        //获取危险的持续时间
+        let continuous_time;
+        if (is_Empty_Object(danger_obj.data_time)) {
+            //这个危险没有指定内容，从最大值和最小值之间随机一个数
+            continuous_time = get_random(danger_obj.min_time, danger_obj.max_time);
+        } else {
+            //这个危险指定了内容，直接使用
+            continuous_time = danger_obj.data_time;
+        }
+        //记录危险参数
+        let obj = new Object();
+        obj.data_type = danger_obj.data_type;
+        obj.data_value = data_value;
+        obj.continuous_time = continuous_time * 1000;
+        obj.start_time = this.now_time;
+        obj.last_start_time = this.now_time;
+        obj.continuous_end = false;
+        this.danger_FAG_continuous_danger_obj[danger_obj.data_type] = obj;
+        //写日志
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.set_game_log('foraging', this.now_FAG_status, 'continuous_danger', danger_obj.data_type);
+    }
     //触发当前还生效的持续型危险
     continuous_foraging_danger() {
-        let last_time = this.now_time - this.last_start_time;
+        for (let data_type in this.danger_FAG_continuous_danger_obj) {
+            let conditions_danger = this.danger_FAG_continuous_danger_obj[data_type];
+            //如果持续标记已经设置过了，说明危险已经到了规定的持续时间，之后不能再触发了
+            if (conditions_danger.continuous_end == true) {
+                continue;
+            }
+            //一帧的时间
+            let last_time = this.now_time - conditions_danger.last_start_time;
+            //一帧内生效的数值
+            let data_value = conditions_danger.data_value * (last_time / 1000);
+
+            let end_flag = false;
+            if (data_type == 'use_health_point') {
+                //消耗生命
+                let P_attr = player.get_player_attributes();
+                P_attr.change_data_attr('health_point', data_value);
+                end_flag = true;
+            } else if (data_type == 'use_magic_point') {
+                //消耗魔力
+                let P_attr = player.get_player_attributes();
+                P_attr.change_data_attr('magic_point', data_value);
+                end_flag = true;
+            } else if (data_type == 'use_energy_point') {
+                //消耗精力
+                let P_attr = player.get_player_attributes();
+                end_flag = P_attr.use_energy_point(data_value);
+            }
+            if (!end_flag) {
+                //当前危险触发后生效失败，说明此时的涉险采集太困难了，停止涉险采集
+                this.danger_FAG_end_reason = 'process_danger';
+                this.next_FAG_status = FAG_status.DANGER_FAG_END;
+                this.danger_FAG_end_time = this.now_time;
+                return;
+            }
+
+            //更新危险触发一帧后的数值
+            conditions_danger.last_start_time = this.now_time;
+            if (this.now_time - conditions_danger.start_time >= conditions_danger.continuous_time) {
+                conditions_danger.continuous_end = true;
+            }
+        }
     }
 
     //更新当前地点的稀有对象积累情况
@@ -1036,7 +1116,7 @@ export class Foraging_manage {
         //到这里就可以进入涉险采集状态
         //当前地点可采集物品中没有稀有物品，即刻退出
         let FAG_item = get_true_FAG_item(this.now_place, this.player_end_attr);
-        let rare_item = this.get_place_rare_item(FAG_item);
+        let rare_item = get_place_rare_item(FAG_item);
         if (is_Empty_Object(rare_item)) {
             this.danger_FAG_end_reason = 'start_no_rare';
             this.next_FAG_status = FAG_status.DANGER_FAG_END;
@@ -1077,6 +1157,15 @@ export class Foraging_manage {
         if (random_manage.try_number_random(25)) {
             this.danger_FAG_now_danger++;
             return true;
+        }
+        return false;
+    }
+    //判断当前是否已经触发了指定的危险
+    judge_have_continuous_danger(danger) {
+        for (let data_type in this.danger_FAG_continuous_danger_obj) {
+            if (data_type == danger.data_type) {
+                return true;
+            }
         }
         return false;
     }
@@ -1267,6 +1356,37 @@ function get_danger_FAG_speed_num(now_round_max_time, now_round_time, true_FAG_s
         }
     }
     return danger_FAG_speed_num;
+}
+//获取当前地点没有稀有对象的可采集物品列表
+function get_place_norare_item(FAG_item) {
+    let norare_item = new Object();
+    for (let item_key in FAG_item) {
+        if (!FAG_item[item_key].rare_flag) {
+            norare_item[item_key] = FAG_item[item_key];
+        }
+    }
+    return norare_item;
+}
+//获取当前地点纯稀有对象的可采集物品列表
+function get_place_rare_item(FAG_item) {
+    let rare_item = new Object();
+    for (let item_key in FAG_item) {
+        if (FAG_item[item_key].rare_flag) {
+            rare_item[item_key] = FAG_item[item_key];
+        }
+    }
+    return rare_item;
+}
+//获取掉落物中稀有物品的数量
+function get_FAG_get_rare_item_num(now_place, drop_tiems) {
+    let FAG_item = JSON.parse(JSON.stringify(places[now_place].FAG_item));
+    let rare_num = 0;
+    for (let item_key in drop_tiems) {
+        if (FAG_item[item_key].rare_flag) {
+            rare_num += drop_tiems[item_key].num;
+        }
+    }
+    return rare_num;
 }
 
 export {};

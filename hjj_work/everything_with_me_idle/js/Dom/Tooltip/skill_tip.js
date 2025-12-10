@@ -8,7 +8,6 @@ import { P_skills, B_skills } from '../../Data/Skill/Skill.js';
 import { player } from '../../Player/Player.js';
 import { TOOLTIP_WIDTH } from './Tooltip.js';
 
-
 function init_skill_tip(type, value) {
     if (type == 'active_skill') {
         //初始化装载在玩家主动技能槽里的主动技能内容
@@ -359,8 +358,13 @@ function show_passive_skill_milepost(div, skill_obj) {
 }
 function get_attr_name(attr_id) {
     let attr_name;
+    if (is_Empty_Object(texts[attr_id])) {
+        console.log('%s属性名称未定义', attr_id);
+        return '未定义属性名';
+    }
     if (is_Empty_Object(texts[attr_id].attr_name)) {
         console.log('%s属性名称未定义', attr_id);
+        return '未定义属性名';
     }
 
     // if (texts[attr].attr_name.length > 4) {

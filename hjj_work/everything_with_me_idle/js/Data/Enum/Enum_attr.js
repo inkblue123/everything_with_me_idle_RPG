@@ -82,6 +82,8 @@ function init_Enum_attr(enums) {
         'critical_damage', //暴击伤害
         'true_critical_damage', //暴击伤害
         'attack_speed', //攻击速度
+        'FAG_item_add_1_chance', //采集物品数+1概率
+
         //前缀是暴击率、暴击伤害、伤害加成、攻速加成、伐木暴率、伐木暴伤、伐木伤害、伐木攻速、挖矿暴率、挖矿暴伤、挖矿伤害、挖矿攻速
         //后缀是所有武器工具子类和空手
         //这样的属性已经在Data.js中自动定义了，这里可以不需要重复定义

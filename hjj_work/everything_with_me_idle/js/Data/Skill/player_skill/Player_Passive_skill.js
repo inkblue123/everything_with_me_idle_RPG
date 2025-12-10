@@ -106,18 +106,33 @@ function init_live_skill_foraging(P_skills) {
     P_skills[id].add_rewards('FAG_attack', 1, 2); //采集力
 
     //小心采集
-    // id = 'be_careful_with_foraging';
-    // add_P_Passive_skill(P_skills, id);
-    // P_skills[id].initial_flag = true; //这是玩家一开始就应该有的初始技能
-    // P_skills[id].switch_type = 'material_acquisition'; //被动技能类型，原料获取
-    // P_skills[id].levelup_type = 'exp_up'; //累计经验可升级
-    // P_skills[id].set_levelup_data(299, 0, 3, 3); //设置一个等级阶段
-    // //升级经验来源
-    // P_skills[id].add_leveling_behavior('behavior', 'foraging'); //采集时
-    // P_skills[id].exp_source = 'FAG_get_item_num'; //根据采集获得物品的数量结算经验
-    // //常态等级加成
-    // P_skills[id].add_rewards('FAG_attack', 1, 3); //采集力
-    // P_skills[id].add_rewards('FAG_item_add_1_chance', 1, 3); //采集获得物品时数量+1的概率
+    id = 'be_careful_with_foraging';
+    add_P_Passive_skill(P_skills, id);
+    P_skills[id].initial_flag = true; //这是玩家一开始就应该有的初始技能
+    P_skills[id].switch_type = 'material_acquisition'; //被动技能类型，原料获取
+    P_skills[id].levelup_type = 'exp_up'; //累计经验可升级
+    P_skills[id].set_levelup_data(299, 0, 3, 3); //设置一个等级阶段
+    //升级经验来源
+    P_skills[id].add_leveling_behavior('behavior', 'foraging'); //采集时
+    P_skills[id].exp_source = 'FAG_get_item_num'; //根据采集获得物品的数量结算经验
+    //常态等级加成
+    P_skills[id].add_rewards('FAG_attack', 1, 3); //采集力
+    P_skills[id].add_rewards('FAG_item_add_1_chance', 1, 3); //采集获得物品时数量+1的概率
+
+    //慧眼识珠
+    id = 'have_the_discerning_eye';
+    add_P_Passive_skill(P_skills, id);
+    P_skills[id].initial_flag = true; //这是玩家一开始就应该有的初始技能
+    P_skills[id].switch_type = 'material_acquisition'; //被动技能类型，原料获取
+    P_skills[id].levelup_type = 'exp_up'; //累计经验可升级
+    P_skills[id].set_levelup_data(799, 0, 5, 1); //设置一个等级阶段
+    //升级经验来源
+    P_skills[id].add_leveling_behavior('behavior', 'foraging'); //采集时
+    P_skills[id].exp_source = 'FAG_get_rare_item_num'; //根据采集获得稀有物品的数量结算经验
+    //常态等级加成
+    P_skills[id].add_rewards('FAG_attack', 5, 3); //采集力
+    P_skills[id].add_rewards('FAG_luck_chance', 0.1, 3); //幸运采集触发概率
+    P_skills[id].add_rewards('FAG_danger_chance', 0.05, 3); //涉险采集触发概率
 }
 //初始化与钓鱼相关的被动技能
 function init_live_skill_fishing(P_skills) {

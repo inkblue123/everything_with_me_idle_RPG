@@ -350,40 +350,54 @@ export class Game_log_status {
     }
     //生成一条采集时的日志
     make_foraging_game_log(new_log_div, log_obj) {
-        let foraging_status = log_obj.log_value[0]; //采集状态
-        let foraging_log_type = log_obj.log_value[1]; //该状态内决定日志内容的类型
-        let foraging_log_value = log_obj.log_value[2]; //该状态内决定日志内容的类型
+        let status = log_obj.log_value[0]; //采集状态
+        let log_type = log_obj.log_value[1]; //该状态内决定日志内容的类型
+        let log_value1 = log_obj.log_value[2]; //该状态内决定日志内容
+        let log_value2 = log_obj.log_value[3]; //该状态内决定日志内容
         let ch;
-        if (foraging_status == 4) {
+        if (status == 4) {
             //幸运采集状态枚举是4
             ch = '触发幸运采集，收获当前地点的一个采集物品';
-        } else if (foraging_status == 5) {
+        } else if (status == 5) {
             //涉险采集状态正常运行阶段枚举是5
-            if (foraging_log_type == 'start') {
+            if (log_type == 'start') {
                 ch = '触发涉险采集，如果能度过危险，最后能收获当前地点的一个稀有采集物品';
-            } else if (foraging_log_type == 'use_health_point') {
-                ch = '遭遇危险，生命' + foraging_log_value;
-            } else if (foraging_log_type == 'use_magic_point') {
-                ch = '遭遇危险，魔力' + foraging_log_value;
-            } else if (foraging_log_type == 'use_energy_point') {
-                ch = '遭遇危险，表层精力消耗' + foraging_log_value;
-            } else if (foraging_log_type == 'get_buff') {
-                ch = '遭遇危险，受到' + foraging_log_value + '的buff影响';
-            } else {
-                console.log('未定义的危险类型%s', foraging_log_value);
-                ch = '遭遇危险，受到未定义类型危险影响';
+            } else if (log_type == 'start_danger') {
+                if (log_value1 == 'use_health_point') {
+                    ch = '遭遇危险，生命' + log_value2;
+                } else if (log_value1 == 'use_magic_point') {
+                    ch = '遭遇危险，魔力' + log_value2;
+                } else if (log_value1 == 'use_energy_point') {
+                    ch = '遭遇危险，表层精力消耗' + log_value2;
+                } else if (log_value1 == 'get_buff') {
+                    ch = '遭遇危险，受到' + log_value2 + '的buff影响';
+                } else {
+                    console.log('未定义的危险类型%s', log_value1);
+                    ch = '遭遇危险，受到未定义类型危险影响';
+                }
+            } else if (log_type == 'continuous_danger') {
+                if (log_value1 == 'use_health_point') {
+                    ch = '遭遇危险，接下来一段时间会消耗生命';
+                } else if (log_value1 == 'use_magic_point') {
+                    ch = '遭遇危险，接下来一段时间会消耗魔力';
+                } else if (log_value1 == 'use_energy_point') {
+                    ch = '遭遇危险，接下来一段时间会消耗表层精力';
+                } else {
+                    console.log('未定义的危险类型%s', log_value1);
+                    ch = '遭遇危险，受到未定义类型危险影响';
+                }
             }
-        } else if (foraging_status == 6) {
+        } else if (status == 6) {
             //涉险采集状态结束阶段枚举是6
-            if (foraging_log_type == 'start_no_rare') {
+            if (log_type == 'start_no_rare') {
                 ch = '触发涉险采集，但当前地点没有稀有物品，放弃涉险';
-            } else if (foraging_log_type == 'start_no_energy') {
+            } else if (log_type == 'start_no_energy') {
                 ch = '触发涉险采集，但当前处于疲劳状态，放弃涉险';
-            } else if (foraging_log_type == 'process_danger') {
+            } else if (log_type == 'process_danger') {
                 ch = '没能度过危险，涉险采集失败';
-            } else if (foraging_log_type == 'process_no_energy') {
+            } else if (log_type == 'process_no_energy') {
                 ch = '没有精力继续了，涉险采集失败';
-            } else if (foraging_log_type == 'finish') {
+            } else if (log_type == 'finish') {
                 ch = '涉险采集完成，收获当前地点的一个稀有采集物品';
             }
         }
