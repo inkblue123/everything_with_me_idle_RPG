@@ -1,7 +1,8 @@
 import { crtElement, addElement, addElement_radio, addElement_select } from '../Function/Dom_function.js';
-import { save_game, save_game_show_tip, delete_save_show_tip, load_save_show_tip } from '../LoadAndSave/load.js';
+import { save_game, save_game_show_tip, save_game_show_object_tip, delete_save_show_tip, load_save_show_tip } from '../LoadAndSave/load.js';
 import { show_dropdown_table } from '../Function/show_func.js';
 import { P_skills } from '../Data/Skill/Skill.js';
+import { items } from '../Data/Item/Item.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 
@@ -99,19 +100,19 @@ function make_Combat_plan_div(Game_log) {
                     var OP_game_OptionTipText_lable = addElement(OP_game_OptionTipText_div, 'div', 'OP_game_OptionTipText_lable', 'OP_T2_div');
                     OP_game_OptionTipText_lable.innerHTML = '设置界面提示文本';
                     var OP_game_OptionTipText_value = addElement(OP_game_OptionTipText_div, 'div', 'OP_game_OptionTipText_value', 'OP_V_div');
-                    addElement_select(OP_game_OptionTipText_value, 'OP_game_OptionTipText', 'OP_select', '设置提示文本', '默认', '以我为尊');
+                    addElement_select(OP_game_OptionTipText_value, 'OP_game_OptionTipText', null, 'OP_select', '设置提示文本', '默认', '以我为尊');
                     //设置-游戏设置-游戏运行帧率
                     var OP_game_FPS_div = addElement(OP_game_div, 'div', 'OP_game_FPS_div', 'OP_TLV_div');
                     var OP_game_FPS_lable = addElement(OP_game_FPS_div, 'div', 'OP_game_FPS_lable', 'OP_T2_div');
                     OP_game_FPS_lable.innerHTML = '游戏运行帧率';
                     var OP_game_FPS_value = addElement(OP_game_FPS_div, 'div', 'OP_game_FPS_value', 'OP_V_div');
-                    addElement_select(OP_game_FPS_value, 'OP_game_FPS', 'OP_select', '帧率选择', 30, 60);
+                    addElement_select(OP_game_FPS_value, 'OP_game_FPS', null, 'OP_select', '帧率选择', 30, 60);
                     //设置-游戏设置-流水账界面日志保存数量上限
                     var OP_game_RASaveLogMax_div = addElement(OP_game_div, 'div', 'OP_game_RASaveLogMax_div', 'OP_TLV_div');
                     var OP_game_RASaveLogMax_lable = addElement(OP_game_RASaveLogMax_div, 'div', 'OP_game_RASaveLogMax_lable', 'OP_T2_div');
                     OP_game_RASaveLogMax_lable.innerHTML = '流水账界面日志保存数量上限';
                     var OP_game_RASaveLogMax_value = addElement(OP_game_RASaveLogMax_div, 'div', 'OP_game_RASaveLogMax_value', 'OP_V_div');
-                    addElement_select(OP_game_RASaveLogMax_value, 'OP_game_RASaveLogMax', 'OP_select', '流水账界面日志保存数量上限', '10', '15', '20', '30', '50');
+                    addElement_select(OP_game_RASaveLogMax_value, 'OP_game_RASaveLogMax', null, 'OP_select', '流水账界面日志保存数量上限', '10', '15', '20', '30', '50');
                     //设置-游戏设置-存档管理
                     var OP_game_SaveManage_div = addElement(OP_game_div, 'div', 'OP_game_SaveManage_div', 'OP_TLV_div');
                     var OP_game_SaveManage_lable = addElement(OP_game_SaveManage_div, 'div', 'OP_game_SaveManage_lable', 'OP_T3_div');
@@ -191,10 +192,12 @@ function make_Combat_plan_div(Game_log) {
                     //设置-测试-批量物品测试
                     var OP_test_GivePlayerItems_div = addElement(OP_test_div, 'div', 'OP_test_GivePlayerItems_div', 'OP_TLV_div');
                     var OP_test_GivePlayerItems_lable = addElement(OP_test_GivePlayerItems_div, 'div', 'OP_test_GivePlayerItems_lable', 'OP_T2_div');
-                    OP_test_GivePlayerItems_lable.innerHTML = '批量物品测试';
+                    OP_test_GivePlayerItems_lable.innerHTML = '物品测试';
                     var OP_test_GivePlayerItems_value = addElement(OP_test_GivePlayerItems_div, 'div', 'OP_test_GivePlayerItems_value', 'OP_V_div');
                     var OP_test_GivePlayerItems_button = addElement(OP_test_GivePlayerItems_value, 'button', 'OP_test_GivePlayerItems_button', 'OP_button');
-                    OP_test_GivePlayerItems_button.innerHTML = '批量物品测试';
+                    OP_test_GivePlayerItems_button.innerHTML = '部分物品测试';
+                    var OP_test_GivePlayerAllItems_button = addElement(OP_test_GivePlayerItems_value, 'button', 'OP_test_GivePlayerAllItems_button', 'OP_button');
+                    OP_test_GivePlayerAllItems_button.innerHTML = '全部物品测试';
                     //设置-测试-解锁全部技能
                     var OP_test_GivePlayerAllSkill_div = addElement(OP_test_div, 'div', 'OP_test_GivePlayerAllSkill_div', 'OP_TLV_div');
                     var OP_test_GivePlayerAllSkill_lable = addElement(OP_test_GivePlayerAllSkill_div, 'div', 'OP_test_GivePlayerAllSkill_lable', 'OP_T2_div');
@@ -211,6 +214,13 @@ function make_Combat_plan_div(Game_log) {
                     OP_test_GivePlayerbuff_button.innerHTML = '给予buff测试';
                     var OP_test_DeletePlayerbuff_button = addElement(OP_test_Playerbuff_value, 'button', 'OP_test_DeletePlayerbuff_button', 'OP_button');
                     OP_test_DeletePlayerbuff_button.innerHTML = '清空buff';
+                    //设置-测试-导出存档对象
+                    var OP_test_GetObjectSave_div = addElement(OP_test_div, 'div', 'OP_test_GetObjectSave_div', 'OP_TLV_div');
+                    var OP_test_GetObjectSave_lable = addElement(OP_test_GetObjectSave_div, 'div', 'OP_test_GetObjectSave_lable', 'OP_T2_div');
+                    OP_test_GetObjectSave_lable.innerHTML = '导出存档对象';
+                    var OP_test_GetObjectSave_value = addElement(OP_test_GetObjectSave_div, 'div', 'OP_test_GetObjectSave_value', 'OP_V_div');
+                    var OP_test_GetObjectSave_button = addElement(OP_test_GetObjectSave_value, 'button', 'OP_test_GetObjectSave_button', 'OP_button');
+                    OP_test_GetObjectSave_button.innerHTML = '导出存档对象';
                 }
             }
         }
@@ -221,49 +231,75 @@ function make_Combat_plan_div(Game_log) {
         {
             var IB_scroll_box = addElement(IB_div, 'div', 'IB_scroll_box', 'overflow_y_div');
             var IB_switch_div = addElement(IB_scroll_box, 'div', 'IB_switch_div', 'in_overflow_div');
+
             // 全部
-            var IB_ALL_button = addElement(IB_switch_div, 'button', 'IB_ALL_button', 'dropdown_button_1');
-            IB_ALL_button.innerHTML = '全部';
-            // 物品
-            var IB_item_button = addElement(IB_switch_div, 'button', 'IB_item_button', 'dropdown_button_1');
-            IB_item_button.innerHTML = '物品';
+            var IB_ALL_radio_div = addElement(IB_switch_div, 'div', 'IB_ALL_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_ALL_radio_div, 'IB_all', 'IB_switch', 'IB_all', '全部');
+            //默认激活"全部"过滤条件
+            IB_ALL_radio_div.children[0].checked = true;
+
+            //物品 item I
+            var IB_item_radio_div = addElement(IB_switch_div, 'div', 'IB_item_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_item_radio_div, 'IB_item_button', 'IB_1_switch', 'IB_item_button', '物品');
             var IB_item_droptable = addElement(IB_switch_div, 'div', 'IB_item_droptable', 'dropdown_table');
-            var IB_item_all_button = addElement(IB_item_droptable, 'button', 'IB_item_all_button', 'dropdown_button_2');
-            IB_item_all_button.innerHTML = '全部';
-            var IB_item_W_button = addElement(IB_item_droptable, 'button', 'IB_item_W_button', 'dropdown_button_2');
-            IB_item_W_button.innerHTML = '武器装备';
-            var IB_item_A_button = addElement(IB_item_droptable, 'button', 'IB_item_A_button', 'dropdown_button_2');
-            IB_item_A_button.innerHTML = '消耗品';
-            var IB_item_D_button = addElement(IB_item_droptable, 'button', 'IB_item_D_button', 'dropdown_button_2');
-            IB_item_D_button.innerHTML = '材料';
-            //技能
-            var IB_skill_button = addElement(IB_switch_div, 'button', 'IB_skill_button', 'dropdown_button_1');
-            IB_skill_button.innerHTML = '技能';
+            var IB_item_all_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_item_all_radio_div, 'IB_item_all', 'IB_switch', 'IB_item_all', '全部');
+            var IB_item_E_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_E_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_item_E_radio_div, 'IB_item_E', 'IB_switch', 'IB_item_E', '武器装备');
+            var IB_item_C_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_C_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_item_C_radio_div, 'IB_item_A', 'IB_switch', 'IB_item_C', '消耗品');
+            var IB_item_M_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_M_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_item_M_radio_div, 'IB_item_M', 'IB_switch', 'IB_item_M', '材料物品');
+
+            //技能 skill S
+            var IB_skill_radio_div = addElement(IB_switch_div, 'div', 'IB_skill_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_skill_radio_div, 'IB_skill_button', 'IB_1_switch', 'IB_skill_button', '技能');
             var IB_skill_droptable = addElement(IB_switch_div, 'div', 'IB_skill_droptable', 'dropdown_table');
-            var IB_skill_all_button = addElement(IB_skill_droptable, 'button', 'IB_skill_all_button', 'dropdown_button_2');
-            IB_skill_all_button.innerHTML = '全部';
-            var IB_skill_W_button = addElement(IB_skill_droptable, 'button', 'IB_skill_W_button', 'dropdown_button_2');
-            IB_skill_W_button.innerHTML = '根基技能';
-            var IB_skill_A_button = addElement(IB_skill_droptable, 'button', 'IB_skill_A_button', 'dropdown_button_2');
-            IB_skill_A_button.innerHTML = '战斗技能';
-            var IB_skill_D_button = addElement(IB_skill_droptable, 'button', 'IB_skill_D_button', 'dropdown_button_2');
-            IB_skill_D_button.innerHTML = '生活技能';
-            var IB_skill_O_button = addElement(IB_skill_droptable, 'button', 'IB_skill_O_button', 'dropdown_button_2');
-            IB_skill_O_button.innerHTML = '主动技能';
-            var IB_skill_B_button = addElement(IB_skill_droptable, 'button', 'IB_skill_O_button', 'dropdown_button_2');
-            IB_skill_B_button.innerHTML = '特殊功法';
-            // 敌人
-            var IB_enemy_button = addElement(IB_switch_div, 'button', 'IB_enemy_button', 'dropdown_button_1');
-            IB_enemy_button.innerHTML = '敌人';
+            var IB_skill_all_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_all_radio_div, 'IB_skill_all', 'IB_switch', 'IB_skill_all', '全部');
+
+            var IB_skill_B_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_B_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_B_radio_div, 'IB_skill_B', 'IB_switch', 'IB_skill_B', '根基技能');
+
+            var IB_skill_C_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_C_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_C_radio_div, 'IB_skill_C', 'IB_2_switch', 'IB_skill_C', '战斗技能');
+            var IB_skill_C_droptable = addElement(IB_skill_droptable, 'div', 'IB_skill_C_droptable', 'dropdown_table');
+            var IB_skill_C_all_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_all_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_C_all_radio_div, 'IB_skill_C_all', 'IB_switch', 'open_2_switch', '全部');
+            var IB_skill_C_W_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_W_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_C_W_radio_div, 'IB_skill_C_W', 'IB_switch', 'open_2_switch', '武器精通技能');
+            var IB_skill_C_Env_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_Env_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_C_Env_radio_div, 'IB_skill_C_Env', 'IB_switch', 'open_2_switch', '环境适应技能');
+            var IB_skill_C_Ene_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_Ene_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_C_Ene_radio_div, 'IB_skill_C_Ene', 'IB_switch', 'open_2_switch', '对敌精通技能');
+
+            var IB_skill_L_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_L_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_L_radio_div, 'IB_skill_L', 'IB_2_switch', 'IB_skill_L', '生活技能');
+            var IB_skill_L_droptable = addElement(IB_skill_droptable, 'div', 'IB_skill_L_droptable', 'dropdown_table');
+            var IB_skill_L_all_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_all_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_all_radio_div, 'IB_skill_L_all', 'IB_switch', 'open_2_switch', '全部');
+            var IB_skill_L_Raw_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_Raw_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_Raw_radio_div, 'IB_skill_L_Raw', 'IB_switch', 'open_2_switch', '原料获取技能');
+            var IB_skill_L_P_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_P_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_P_radio_div, 'IB_skill_L_P', 'IB_switch', 'open_2_switch', '原料加工技能');
+            var IB_skill_L_F_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_F_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_F_radio_div, 'IB_skill_L_F', 'IB_switch', 'open_2_switch', '成品使用技能');
+            var IB_skill_L_Rec_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_Rec_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_Rec_radio_div, 'IB_skill_L_Rec', 'IB_switch', 'open_2_switch', '回收利用技能');
+
+            var IB_skill_A_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_A_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_A_radio_div, 'IB_skill_A', 'IB_switch', 'IB_skill_A', '主动技能');
+            var IB_skill_S_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_S_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_S_radio_div, 'IB_skill_S', 'IB_switch', 'IB_skill_S', '特殊功法');
+            //敌人 enemy E
+            var IB_enemy_radio_div = addElement(IB_switch_div, 'div', 'IB_enemy_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_enemy_radio_div, 'IB_enemy_button', 'IB_1_switch', 'IB_enemy_button', '敌人');
             var IB_enemy_droptable = addElement(IB_switch_div, 'div', 'IB_enemy_droptable', 'dropdown_table');
-            var IB_enemy_all_button = addElement(IB_enemy_droptable, 'button', 'IB_enemy_all_button', 'dropdown_button_2');
-            IB_enemy_all_button.innerHTML = '全部';
-            // 事件
-            var IB_event_button = addElement(IB_switch_div, 'button', 'IB_event_button', 'dropdown_button_1');
-            IB_event_button.innerHTML = '事件';
-            var IB_event_droptable = addElement(IB_switch_div, 'div', 'IB_event_droptable', 'dropdown_table');
-            var IB_event_all_button = addElement(IB_event_droptable, 'button', 'IB_event_all_button', 'dropdown_button_2');
-            IB_event_all_button.innerHTML = '全部';
+            var IB_enemy_all_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_enemy_all_radio_div, 'IB_enemy_all', 'IB_switch', 'IB_enemy_all', '全部');
+            //事件 event E 也许不做事件的图鉴
+            //游戏机制 ？
+            //
         }
         //右侧图鉴内容
         {
@@ -285,180 +321,262 @@ function set_Combat_plan_button(Game_log) {
             change_Game_log_div(this.id);
         });
     });
-    //选择脑海界面的具体功能
-    radios = Game_log.querySelectorAll('input[type="radio"][name="MD_switch"]');
-    radios.forEach((radio) => {
-        radio.addEventListener('click', function () {
-            if (this.id == 'RA_button') {
-                //针对流水账按钮，按下之后打开流水账的过滤按钮
-                show_dropdown_table('MD_switch_div', 'RA_droptable');
-                //激活“最新消息”分类
-                let RA_new_radio_div = Game_log.querySelector('#RA_new_radio_div');
-                RA_new_radio_div.children[0].checked = true;
-                let global_flag_manage = global.get_global_flag_manage();
-                global_flag_manage.show_game_log_status('RA_new');
-            } else if (this.id == 'OP_button') {
-                //针对游戏设置按钮，按下之后打开游戏设置的过滤按钮
-                show_dropdown_table('MD_switch_div', 'OP_droptable');
-                //激活游戏设置下的第一个分类，“游戏”分类
-                let OP_game_radio_div = Game_log.querySelector('#OP_game_radio_div');
-                OP_game_radio_div.children[0].checked = true;
-                change_game_log_OP_div('OP_game');
-            } else {
-                show_dropdown_table('MD_switch_div');
-            }
-            // 流水账与重要事件的切换
-            change_game_log_MD_div(this.id);
+    //脑海中的组件
+    {
+        //选择脑海界面的具体功能
+        radios = Game_log.querySelectorAll('input[type="radio"][name="MD_switch"]');
+        radios.forEach((radio) => {
+            radio.addEventListener('click', function () {
+                if (this.id == 'RA_button') {
+                    //针对流水账按钮，按下之后打开流水账的过滤按钮
+                    show_dropdown_table('MD_switch_div', 'RA_droptable');
+                    //激活“最新消息”分类
+                    let RA_new_radio_div = Game_log.querySelector('#RA_new_radio_div');
+                    RA_new_radio_div.children[0].checked = true;
+                    let global_flag_manage = global.get_global_flag_manage();
+                    global_flag_manage.show_game_log_status('RA_new');
+                } else if (this.id == 'OP_button') {
+                    //针对游戏设置按钮，按下之后打开游戏设置的过滤按钮
+                    show_dropdown_table('MD_switch_div', 'OP_droptable');
+                    //激活游戏设置下的第一个分类，“游戏”分类
+                    let OP_game_radio_div = Game_log.querySelector('#OP_game_radio_div');
+                    OP_game_radio_div.children[0].checked = true;
+                    change_game_log_OP_div('OP_game');
+                } else {
+                    show_dropdown_table('MD_switch_div');
+                }
+                // 流水账与重要事件的切换
+                change_game_log_MD_div(this.id);
+            });
         });
-    });
 
-    //选择脑海-流水账功能的过滤条件
-    radios = Game_log.querySelectorAll('input[type="radio"][name="RA_switch"]');
-    radios.forEach((radio) => {
-        radio.addEventListener('click', function () {
-            let global_flag_manage = global.get_global_flag_manage();
-            global_flag_manage.show_game_log_status(this.id);
+        //选择脑海-流水账功能的过滤条件
+        radios = Game_log.querySelectorAll('input[type="radio"][name="RA_switch"]');
+        radios.forEach((radio) => {
+            radio.addEventListener('click', function () {
+                let global_flag_manage = global.get_global_flag_manage();
+                global_flag_manage.show_game_log_status(this.id);
+            });
         });
-    });
-    //选择脑海-设置功能的过滤条件
-    radios = Game_log.querySelectorAll('input[type="radio"][name="OP_switch"]');
-    radios.forEach((radio) => {
-        radio.addEventListener('click', function () {
-            change_game_log_OP_div(this.id);
+        //选择脑海-设置功能的过滤条件
+        radios = Game_log.querySelectorAll('input[type="radio"][name="OP_switch"]');
+        radios.forEach((radio) => {
+            radio.addEventListener('click', function () {
+                change_game_log_OP_div(this.id);
+            });
         });
-    });
-    let IB_item_button = Game_log.querySelector('#IB_item_button');
-    IB_item_button.onclick = function () {
-        show_dropdown_table('IB_switch_div', 'IB_item_droptable');
-    };
-    let IB_skill_button = Game_log.querySelector('#IB_skill_button');
-    IB_skill_button.onclick = function () {
-        show_dropdown_table('IB_switch_div', 'IB_skill_droptable');
-    };
-    let IB_enemy_button = Game_log.querySelector('#IB_enemy_button');
-    IB_enemy_button.onclick = function () {
-        show_dropdown_table('IB_switch_div', 'IB_enemy_droptable');
-    };
-    let IB_event_button = Game_log.querySelector('#IB_event_button');
-    IB_event_button.onclick = function () {
-        show_dropdown_table('IB_switch_div', 'IB_event_droptable');
-    };
-    //给脑海-设置里用select下拉框的每个选项添加触发函数
-    let selects = Game_log.querySelectorAll('[name="OP_select"]');
-    selects.forEach((select) => {
-        select.addEventListener('change', function (event) {
-            let new_set = event.target.value;
-            let option_type = this.id;
-            global.set_flag(option_type, new_set);
+
+        //给脑海-设置里用select下拉框的每个选项添加触发函数
+        let selects = Game_log.querySelectorAll('[name="OP_select"]');
+        selects.forEach((select) => {
+            select.addEventListener('change', function (event) {
+                let new_set = event.target.value;
+                let option_type = this.id;
+                global.set_flag(option_type, new_set);
+            });
         });
-    });
-    //导出存档
-    let OP_game_Save_button = Game_log.querySelector('#OP_game_Save_button');
-    OP_game_Save_button.onclick = function () {
-        //保存游戏
-        save_game();
-        //弹出含有当前存档的提示框
-        save_game_show_tip();
-    };
-    //导入存档
-    let OP_game_Load_button = Game_log.querySelector('#OP_game_Load_button');
-    OP_game_Load_button.onclick = function () {
-        load_save_show_tip();
-    };
-    //删除存档
-    let OP_game_CleanSave_button = Game_log.querySelector('#OP_game_CleanSave_button');
-    OP_game_CleanSave_button.onclick = function () {
-        delete_save_show_tip();
-    };
-    //完成3天的新手教学
-    let OP_test_FinishNewPlayerTeach123_button = Game_log.querySelector('#OP_test_FinishNewPlayerTeach123_button');
-    OP_test_FinishNewPlayerTeach123_button.onclick = function () {
-        finish_new_player_teach_123();
-    };
-    //完成当前挑战
-    let OP_test_FinishNowChallenge_button = Game_log.querySelector('#OP_test_FinishNowChallenge_button');
-    OP_test_FinishNowChallenge_button.onclick = function () {
-        finish_now_challenge();
-    };
-    //逐渐解锁生活技能
-    let OP_test_UnlockLivePlanSkill_button = Game_log.querySelector('#OP_test_UnlockLivePlanSkill_button');
-    OP_test_UnlockLivePlanSkill_button.onclick = function () {
-        unlock_live_plan_skill();
-    };
-    //暂停游戏
-    let OP_test_StopGameSpeed_button = Game_log.querySelector('#OP_test_StopGameSpeed_button');
-    OP_test_StopGameSpeed_button.onclick = function () {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed_num('global', 0);
-    };
-    //恢复游戏
-    let OP_test_StartGameSpeed_button = Game_log.querySelector('#OP_test_StartGameSpeed_button');
-    OP_test_StartGameSpeed_button.onclick = function () {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed_num('global', 1);
-    };
-    //游戏速度X1
-    let OP_test_GameSpeedX1_button = Game_log.querySelector('#OP_test_GameSpeedX1_button');
-    OP_test_GameSpeedX1_button.onclick = function () {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed_ratio('option', 0);
-    };
-    //游戏速度X2
-    let OP_test_GameSpeedX2_button = Game_log.querySelector('#OP_test_GameSpeedX2_button');
-    OP_test_GameSpeedX2_button.onclick = function () {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed_ratio('option', 100);
-    };
-    //游戏速度X5
-    let OP_test_GameSpeedX5_button = Game_log.querySelector('#OP_test_GameSpeedX5_button');
-    OP_test_GameSpeedX5_button.onclick = function () {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed_ratio('option', 400);
-    };
-    //血量设0
-    let OP_test_HPSet0_button = Game_log.querySelector('#OP_test_HPSet0_button');
-    OP_test_HPSet0_button.onclick = function () {
-        let P_attr = player.get_player_attributes();
-        P_attr.set_data_attr('health_point', 0);
-    };
-    //魔力设0
-    let OP_test_MPSet0_button = Game_log.querySelector('#OP_test_MPSet0_button');
-    OP_test_MPSet0_button.onclick = function () {
-        let P_attr = player.get_player_attributes();
-        P_attr.set_data_attr('magic_point', 0);
-    };
-    //精力设0
-    let OP_test_ENPSet0_button = Game_log.querySelector('#OP_test_ENPSet0_button');
-    OP_test_ENPSet0_button.onclick = function () {
-        let P_attr = player.get_player_attributes();
-        P_attr.set_data_attr('surface_energy_point', 0);
-    };
-    //批量给予物品
-    let OP_test_GivePlayerItems_button = Game_log.querySelector('#OP_test_GivePlayerItems_button');
-    OP_test_GivePlayerItems_button.onclick = function () {
-        give_player_item();
-    };
-    //给予玩家所有技能
-    let OP_test_GivePlayerAllSkill_button = Game_log.querySelector('#OP_test_GivePlayerAllSkill_button');
-    OP_test_GivePlayerAllSkill_button.onclick = function () {
-        let P_All_Skills = player.get_player_All_Skills();
-        for (let id in P_skills) {
-            P_All_Skills.player_unlock_skill(id);
+        //设置界面中的按钮
+        {
+            //导出存档
+            let OP_game_Save_button = Game_log.querySelector('#OP_game_Save_button');
+            OP_game_Save_button.onclick = function () {
+                //保存游戏
+                save_game();
+                //弹出含有当前存档的提示框
+                save_game_show_tip();
+            };
+            //导入存档
+            let OP_game_Load_button = Game_log.querySelector('#OP_game_Load_button');
+            OP_game_Load_button.onclick = function () {
+                load_save_show_tip();
+            };
+            //删除存档
+            let OP_game_CleanSave_button = Game_log.querySelector('#OP_game_CleanSave_button');
+            OP_game_CleanSave_button.onclick = function () {
+                delete_save_show_tip();
+            };
+            //完成3天的新手教学
+            let OP_test_FinishNewPlayerTeach123_button = Game_log.querySelector('#OP_test_FinishNewPlayerTeach123_button');
+            OP_test_FinishNewPlayerTeach123_button.onclick = function () {
+                finish_new_player_teach_123();
+            };
+            //完成当前挑战
+            let OP_test_FinishNowChallenge_button = Game_log.querySelector('#OP_test_FinishNowChallenge_button');
+            OP_test_FinishNowChallenge_button.onclick = function () {
+                finish_now_challenge();
+            };
+            //逐渐解锁生活技能
+            let OP_test_UnlockLivePlanSkill_button = Game_log.querySelector('#OP_test_UnlockLivePlanSkill_button');
+            OP_test_UnlockLivePlanSkill_button.onclick = function () {
+                unlock_live_plan_skill();
+            };
+            //暂停游戏
+            let OP_test_StopGameSpeed_button = Game_log.querySelector('#OP_test_StopGameSpeed_button');
+            OP_test_StopGameSpeed_button.onclick = function () {
+                let time_manage = global.get_time_manage();
+                time_manage.set_game_speed_num('global', 0);
+            };
+            //恢复游戏
+            let OP_test_StartGameSpeed_button = Game_log.querySelector('#OP_test_StartGameSpeed_button');
+            OP_test_StartGameSpeed_button.onclick = function () {
+                let time_manage = global.get_time_manage();
+                time_manage.set_game_speed_num('global', 1);
+            };
+            //游戏速度X1
+            let OP_test_GameSpeedX1_button = Game_log.querySelector('#OP_test_GameSpeedX1_button');
+            OP_test_GameSpeedX1_button.onclick = function () {
+                let time_manage = global.get_time_manage();
+                time_manage.set_game_speed_ratio('option', 0);
+            };
+            //游戏速度X2
+            let OP_test_GameSpeedX2_button = Game_log.querySelector('#OP_test_GameSpeedX2_button');
+            OP_test_GameSpeedX2_button.onclick = function () {
+                let time_manage = global.get_time_manage();
+                time_manage.set_game_speed_ratio('option', 100);
+            };
+            //游戏速度X5
+            let OP_test_GameSpeedX5_button = Game_log.querySelector('#OP_test_GameSpeedX5_button');
+            OP_test_GameSpeedX5_button.onclick = function () {
+                let time_manage = global.get_time_manage();
+                time_manage.set_game_speed_ratio('option', 400);
+            };
+            //血量设0
+            let OP_test_HPSet0_button = Game_log.querySelector('#OP_test_HPSet0_button');
+            OP_test_HPSet0_button.onclick = function () {
+                let P_attr = player.get_player_attributes();
+                P_attr.set_data_attr('health_point', 0);
+            };
+            //魔力设0
+            let OP_test_MPSet0_button = Game_log.querySelector('#OP_test_MPSet0_button');
+            OP_test_MPSet0_button.onclick = function () {
+                let P_attr = player.get_player_attributes();
+                P_attr.set_data_attr('magic_point', 0);
+            };
+            //精力设0
+            let OP_test_ENPSet0_button = Game_log.querySelector('#OP_test_ENPSet0_button');
+            OP_test_ENPSet0_button.onclick = function () {
+                let P_attr = player.get_player_attributes();
+                P_attr.set_data_attr('surface_energy_point', 0);
+            };
+            //批量给予物品
+            let OP_test_GivePlayerItems_button = Game_log.querySelector('#OP_test_GivePlayerItems_button');
+            OP_test_GivePlayerItems_button.onclick = function () {
+                give_player_item();
+            };
+            //批量给予物品
+            let OP_test_GivePlayerAllItems_button = Game_log.querySelector('#OP_test_GivePlayerAllItems_button');
+            OP_test_GivePlayerAllItems_button.onclick = function () {
+                give_player_all_item();
+            };
+            //给予玩家所有技能
+            let OP_test_GivePlayerAllSkill_button = Game_log.querySelector('#OP_test_GivePlayerAllSkill_button');
+            OP_test_GivePlayerAllSkill_button.onclick = function () {
+                let P_All_Skills = player.get_player_All_Skills();
+                for (let id in P_skills) {
+                    P_All_Skills.player_unlock_skill(id);
+                }
+            };
+            //给予buff测试
+            let OP_test_GivePlayerbuff_button = Game_log.querySelector('#OP_test_GivePlayerbuff_button');
+            OP_test_GivePlayerbuff_button.onclick = function () {
+                let P_buff = player.get_player_buff();
+                // P_buff.set_buff_attr('fatigue');//疲劳
+                P_buff.set_buff_attr('extreme_fatigue'); //极度疲劳
+            };
+            //清空buff
+            let OP_test_DeletePlayerbuff_button = Game_log.querySelector('#OP_test_DeletePlayerbuff_button');
+            OP_test_DeletePlayerbuff_button.onclick = function () {
+                let P_buff = player.get_player_buff();
+                P_buff.reset_buff_attr(); //清空所有buff
+            };
+            //导出存档对象
+            let OP_test_GetObjectSave_button = Game_log.querySelector('#OP_test_GetObjectSave_button');
+            OP_test_GetObjectSave_button.onclick = function () {
+                //保存游戏
+                save_game();
+                //弹出含有当前存档的提示框
+                save_game_show_object_tip();
+            };
         }
-    };
-    //给予buff测试
-    let OP_test_GivePlayerbuff_button = Game_log.querySelector('#OP_test_GivePlayerbuff_button');
-    OP_test_GivePlayerbuff_button.onclick = function () {
-        let P_buff = player.get_player_buff();
-        // P_buff.set_buff_attr('fatigue');//疲劳
-        P_buff.set_buff_attr('extreme_fatigue'); //极度疲劳
-    };
-    //清空buff
-    let OP_test_DeletePlayerbuff_button = Game_log.querySelector('#OP_test_DeletePlayerbuff_button');
-    OP_test_DeletePlayerbuff_button.onclick = function () {
-        let P_buff = player.get_player_buff();
-        P_buff.reset_buff_attr(); //清空所有buff
-    };
+    }
+    //图鉴中的组件
+    {
+        //图鉴界面1级分类按钮，物品、技能、敌人
+        radios = Game_log.querySelectorAll('input[type="radio"][name="IB_1_switch"]');
+        radios.forEach((radio) => {
+            radio.addEventListener('click', function () {
+                if (this.id == 'IB_item_button') {
+                    let IB_item_all_radio_div = document.getElementById('IB_item_all_radio_div');
+                    IB_item_all_radio_div.children[0].checked = true;
+                    show_dropdown_table('IB_switch_div', 'IB_item_droptable');
+                } else if (this.id == 'IB_skill_button') {
+                    let IB_skill_all_radio_div = document.getElementById('IB_skill_all_radio_div');
+                    IB_skill_all_radio_div.children[0].checked = true;
+                    show_dropdown_table('IB_switch_div', 'IB_skill_droptable');
+                } else if (this.id == 'IB_enemy_button') {
+                    let IB_enemy_all_radio_div = document.getElementById('IB_enemy_all_radio_div');
+                    IB_enemy_all_radio_div.children[0].checked = true;
+                    show_dropdown_table('IB_switch_div', 'IB_enemy_droptable');
+                }
+                //关闭2级分类按钮
+                const radios = document.querySelectorAll('input[name="IB_2_switch"]');
+                for (const radio of radios) {
+                    radio.checked = false;
+                }
+                // let P_All_Skills = player.get_player_All_Skills();
+                // P_All_Skills.updata_PSK_value();
+            });
+        });
+        //图鉴界面2级分类按钮
+        radios = Game_log.querySelectorAll('input[type="radio"][name="IB_2_switch"]');
+        radios.forEach((radio) => {
+            radio.addEventListener('click', function () {
+                if (this.id == 'IB_skill_C') {
+                    let IB_skill_C_all_radio_div = document.getElementById('IB_skill_C_all_radio_div');
+                    IB_skill_C_all_radio_div.children[0].checked = true;
+                    show_dropdown_table('IB_skill_droptable', 'IB_skill_C_droptable');
+                } else if (this.id == 'IB_skill_L') {
+                    let IB_skill_L_all_radio_div = document.getElementById('IB_skill_L_all_radio_div');
+                    IB_skill_L_all_radio_div.children[0].checked = true;
+                    show_dropdown_table('IB_skill_droptable', 'IB_skill_L_droptable');
+                    // } else if (this.id == 'IB_enemy_button') {
+                    //     let IB_enemy_all_radio_div = document.getElementById('IB_enemy_all_radio_div');
+                    //     IB_enemy_all_radio_div.children[0].checked = true;
+                    //     show_dropdown_table('IB_skill_droptable', 'IB_enemy_droptable');
+                }
+                // let P_All_Skills = player.get_player_All_Skills();
+                // P_All_Skills.updata_PSK_value();
+            });
+        });
+        //图鉴内每种最小分类按钮
+        radios = Game_log.querySelectorAll('input[type="radio"][name="IB_switch"]');
+        radios.forEach((radio) => {
+            radio.addEventListener('click', function () {
+                if (this.id == 'IB_all') {
+                    //针对图鉴界面的“全部”按钮，额外新增关闭其他下拉框的功能
+                    show_dropdown_table('IB_switch_div');
+                    //额外关闭所有1级2级分类按钮
+                    const radios = document.querySelectorAll('input[name="IB_1_switch"]');
+                    for (const radio of radios) {
+                        radio.checked = false;
+                    }
+                    radios = document.querySelectorAll('input[name="IB_2_switch"]');
+                    for (const radio of radios) {
+                        radio.checked = false;
+                    }
+                }
+                //部分最小分类按钮要关闭所有2级分类按钮，并且关闭所属下拉框内的所有子下拉框
+                let open_2_skill_C_id = ['IB_skill_all', 'IB_skill_B', 'IB_skill_A', 'IB_skill_SS'];
+                if (open_2_skill_C_id.includes(this.id)) {
+                    show_dropdown_table('IB_skill_droptable');
+                    radios = document.querySelectorAll('input[name="IB_2_switch"]');
+                    for (const radio of radios) {
+                        radio.checked = false;
+                    }
+                }
+            });
+        });
+    }
 }
 //按下游戏日志中，脑海界面左侧分类按钮之后，切换到脑海界面对应的子界面
 function change_game_log_MD_div(button_id) {
@@ -593,5 +711,17 @@ function give_player_item() {
     player.Player_get_item('test_boomerang', 5, 'rare');
     player.Player_get_item('hatchet', 1, 'ordinary');
     player.Player_get_item('mowing_sickle', 1, 'ordinary');
+}
+// 批量给予物品
+function give_player_all_item() {
+    for (let id in items) {
+        if (items[id].main_type.includes('equipment')) {
+            player.Player_get_item(id, 1, 'ordinary');
+        } else if (items[id].main_type.includes('consumable')) {
+            player.Player_get_item(id, 1);
+        } else if (items[id].main_type.includes('material')) {
+            player.Player_get_item(id, 1);
+        }
+    }
 }
 export { create_Game_log };

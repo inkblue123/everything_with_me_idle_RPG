@@ -4,7 +4,7 @@ import { player } from '../../Player/Player.js';
 import { global } from '../../GameRun/global_manage.js';
 import { make_logging_div, set_logging_button } from './logging.js';
 import { make_fishing_div, set_fishing_button } from './fishing.js';
-// import { make_mining_div, set_mining_button } from './mining.js';
+import { make_mining_div, set_mining_button } from './mining.js';
 import { make_foraging_div, set_foraging_button } from './foraging.js';
 // import { make_diving_div, set_diving_button } from './diving.js';
 // import { make_archaeology_div, set_archaeology_button } from './archaeology.js';
@@ -23,11 +23,11 @@ function make_Live_plan_div(Live_plan) {
     //界面上部，区分当前展示的内容的按钮
     var Live_plan_switch_div = crtElement('div', 'Live_plan_switch_div', 'page_flex', 'none');
     //搜索采集窗口 Explore_collection EC
-    var EC_switch_radio_div = addElement(Live_plan_switch_div, 'div', null, 'radio_div div_switch_button');
+    var EC_switch_radio_div = addElement(Live_plan_switch_div, 'div', 'EC_switch_radio_div', 'radio_div div_switch_button');
     addElement_radio(EC_switch_radio_div, 'EC_switch_button', 'Live_plan_switch', 'EC_switch', '搜索采集');
     EC_switch_radio_div.children[0].checked = true; //初始激活该按钮
     //合成制造窗口 Synthetic_manufacturing SM
-    var SM_switch_radio_div = addElement(Live_plan_switch_div, 'div', null, 'radio_div div_switch_button');
+    var SM_switch_radio_div = addElement(Live_plan_switch_div, 'div', 'SM_switch_radio_div', 'radio_div div_switch_button');
     addElement_radio(SM_switch_radio_div, 'SM_switch_button', 'Live_plan_switch', 'SM_switch', '合成制造');
     //界面下部，具体展示内容的窗口
     var Live_plan_value_div = crtElement('div', 'Live_plan_value_div', 'page_columns_1', 'none');
@@ -84,7 +84,7 @@ function make_Live_plan_div(Live_plan) {
             FIS_value_div_overlay.innerHTML = '这个地点没有钓鱼的条件';
             //挖矿
             var MIN_value_div = addElement(EC_div, 'div', 'MIN_value_div', null, 'none');
-            // make_mining_div(MIN_value_div);
+            make_mining_div(MIN_value_div);
             let MIN_value_div_overlay = addElement(MIN_value_div, 'div', null, 'overlay', 'none');
             MIN_value_div_overlay.innerHTML = '这个地点没有挖矿的条件';
             //采集
@@ -115,30 +115,40 @@ function make_Live_plan_div(Live_plan) {
         {
             var SM_scroll_box = addElement(SM_div, 'div', 'SM_scroll_box', 'overflow_y_div');
             var SM_switch_div = addElement(SM_scroll_box, 'div', 'SM_switch_div', 'in_overflow_div');
+
             //原料加工 material_refining MTR
-            var SM_MTR_button = addElement(SM_switch_div, 'button', 'SM_MTR_button', 'dropdown_button_1');
-            SM_MTR_button.innerHTML = '原料加工';
+            var MTR_radio_div = addElement(SM_switch_div, 'div', 'MTR_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(MTR_radio_div, 'MTR_button', 'SM_switch', 'MTR_button', '原料加工');
+            MTR_radio_div.children[0].checked = true; //初始激活该按钮
+            addElement(MTR_radio_div, 'div', null, 'overlay', 'none'); //给组件加上默认隐藏的遮罩，在不可执行的时候显示
             //成品制造 finishing FIN
-            var SM_FIN_button = addElement(SM_switch_div, 'button', 'SM_FIN_button', 'dropdown_button_1');
-            SM_FIN_button.innerHTML = '成品制造';
+            var FIN_radio_div = addElement(SM_switch_div, 'div', 'FIN_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(FIN_radio_div, 'FIN_button', 'SM_switch', 'FIN_button', '成品制造');
+            addElement(FIN_radio_div, 'div', null, 'overlay', 'none');
             //烹饪 cooking COK
-            var SM_COK_button = addElement(SM_switch_div, 'button', 'SM_COK_button', 'dropdown_button_1');
-            SM_COK_button.innerHTML = '烹饪';
+            var COK_radio_div = addElement(SM_switch_div, 'div', 'COK_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(COK_radio_div, 'COK_button', 'SM_switch', 'COK_button', '烹饪');
+            addElement(COK_radio_div, 'div', null, 'overlay', 'none');
             //锻造 forging FRG
-            var SM_FRG_button = addElement(SM_switch_div, 'button', 'SM_FRG_button', 'dropdown_button_1');
-            SM_FRG_button.innerHTML = '锻造';
+            var FRG_radio_div = addElement(SM_switch_div, 'div', 'FRG_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(FRG_radio_div, 'FRG_button', 'SM_switch', 'FRG_button', '锻造');
+            addElement(FRG_radio_div, 'div', null, 'overlay', 'none');
             //炼丹 Elixir_alchemy  EXA
-            var SM_EXA_button = addElement(SM_switch_div, 'button', 'SM_EXA_button', 'dropdown_button_1');
-            SM_EXA_button.innerHTML = '炼丹';
+            var EXA_radio_div = addElement(SM_switch_div, 'div', 'EXA_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(EXA_radio_div, 'EXA_button', 'SM_switch', 'EXA_button', '炼丹');
+            addElement(EXA_radio_div, 'div', null, 'overlay', 'none');
             //药浴 herbal_bath HBB
-            var SM_HBB_button = addElement(SM_switch_div, 'button', 'SM_HBB_button', 'dropdown_button_1');
-            SM_HBB_button.innerHTML = '药浴';
+            var HBB_radio_div = addElement(SM_switch_div, 'div', 'HBB_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(HBB_radio_div, 'HBB_button', 'SM_switch', 'HBB_button', '药浴');
+            addElement(HBB_radio_div, 'div', null, 'overlay', 'none');
             //雕刻 engrave EGV
-            var SM_EGV_button = addElement(SM_switch_div, 'button', 'SM_EGV_button', 'dropdown_button_1');
-            SM_EGV_button.innerHTML = '雕刻';
+            var EGV_radio_div = addElement(SM_switch_div, 'div', 'EGV_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(EGV_radio_div, 'EGV_button', 'SM_switch', 'EGV_button', '雕刻');
+            addElement(EGV_radio_div, 'div', null, 'overlay', 'none');
             //炼金术 alchemy ACM
-            var SM_ACM_button = addElement(SM_switch_div, 'button', 'SM_ACM_button', 'dropdown_button_1');
-            SM_ACM_button.innerHTML = '炼金术';
+            var ACM_radio_div = addElement(SM_switch_div, 'div', 'ACM_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(ACM_radio_div, 'ACM_button', 'SM_switch', 'ACM_button', '炼金术');
+            addElement(ACM_radio_div, 'div', null, 'overlay', 'none');
         }
         //右侧具体的内容
         {
@@ -168,9 +178,12 @@ function set_Live_plan_button(Live_plan) {
     radios = Live_plan.querySelectorAll('input[type="radio"][name="EC_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
-            //停止当前进行的生活技能
             let live_plan_manage = global.get_live_plan_manage();
+            //停止当前进行的生活技能
             live_plan_manage.stop_now_live_skill();
+            //初始化新技能的界面
+            live_plan_manage.init_live_plan_game_div(this.id);
+
             //停止游戏状态
             global.set_flag('GS_game_statu', 'NULL');
             //切换界面
@@ -185,8 +198,8 @@ function set_Live_plan_button(Live_plan) {
     let FIS_value_div = Live_plan.querySelector('#FIS_value_div');
     set_fishing_button(FIS_value_div);
     //为挖矿界面中的按钮添加交互逻辑
-    // let MIN_value_div = Live_plan.querySelector('#MIN_value_div');
-    // set_mining_button(MIN_value_div);
+    let MIN_value_div = Live_plan.querySelector('#MIN_value_div');
+    set_mining_button(MIN_value_div);
     //为采集界面中的按钮添加交互逻辑
     let FAG_value_div = Live_plan.querySelector('#FAG_value_div');
     set_foraging_button(FAG_value_div);

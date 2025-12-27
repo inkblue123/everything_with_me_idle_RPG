@@ -91,6 +91,20 @@ function init_live_skill_logging(P_skills) {
     //关键等级节点
     P_skills[id].add_milepost(1, 'LGI_speed_battle_axe', 10); //
     P_skills[id].add_milepost(1, 'LGI_speed_logging_tool', 10); //
+
+    //精确连续劈砍
+    id = 'accurate_continuous_logging';
+    add_P_Passive_skill(P_skills, id);
+    P_skills[id].initial_flag = true; //这是玩家一开始就应该有的初始技能
+    P_skills[id].switch_type = 'material_acquisition'; //被动技能类型，原料获取
+    P_skills[id].levelup_type = 'exp_up'; //累计经验可升级
+    P_skills[id].set_levelup_data(4230, 0, 1, 3); //设置一个等级阶段
+    P_skills[id].add_leveling_behavior('behavior', 'logging'); //伐木时
+    P_skills[id].add_leveling_behavior('weapon_type', 'battle_axe', 'logging_tool'); //武器类型为战斧或者伐木工具时
+    P_skills[id].exp_source = 'LGI_M_damage'; //根据精细伐木伤害结算经验
+    //常态等级加成
+    P_skills[id].add_rewards('LGI_M_attack', 1, 3); //精细伐木攻击
+    //关键等级节点
 }
 //初始化与采集相关的被动技能
 function init_live_skill_foraging(P_skills) {

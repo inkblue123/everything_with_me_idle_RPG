@@ -154,10 +154,94 @@ export class E_tree extends Enemy {
         item_obj.max_num = max_num;
         item_obj.min_num = min_num;
         if (is_Empty_Object(this.reward_level_item[level])) {
-            console.log('未定义%d掉落层级', level);
+            console.log('敌人%s在等级%d未定义掉落队列', this.id, level);
+            return;
+        }
+        if (is_Empty_Object(this.reward_level_item[level][item_array_id])) {
+            console.log('敌人%s在等级%d未定义%d号掉落队列', this.id, level, item_array_id);
             return;
         }
         let item_key = get_item_id_key(item_obj);
+        this.reward_level_item[level][item_array_id].items[item_key] = item_obj;
+    }
+}
+//挖矿技能中的敌人
+export class E_ore extends Enemy {
+    constructor(enemy_id) {
+        super(enemy_id);
+        this.type = 'ore';
+        //奖励层级信息
+        this.reward_level_data = new Array(); //每个层级的基础信息
+        this.reward_level_attr = new Array(); //每个层级的属性补正
+        this.reward_level_item = new Object(); //每个层级的奖励
+        //次要奖励
+        this.second_reward_array = new Array();
+        this.MIN_energy; //每次挖矿的精力需求
+    }
+    //设置属于矿石的属性
+    init_ore_attr(MIN_energy) {
+        this.MIN_energy = MIN_energy; //每次挖矿的精力需求
+    }
+    //设置指定层级的基础信息
+    set_reward_level_data(level, chance, super_flag) {
+        if (!is_Empty_Object(this.reward_level_data[level])) {
+            console.log('设置挖矿敌人的层级基础信息出现重复，将会覆盖已设置的信息，需要确认是否异常');
+        }
+        let obj = new Object();
+        obj.chance = chance; //该层级出现权重
+        obj.super_flag = super_flag; //该层级是否属于特殊层级
+        this.reward_level_data[level] = obj;
+    }
+    //设置指定层级的属性补正
+    set_reward_level_attr(level, health_max, defense, MIN_energy) {
+        if (!is_Empty_Object(this.reward_level_attr[level])) {
+            console.log('设置挖矿敌人的层级属性补正出现重复，将会覆盖已设置的信息，需要确认是否异常');
+        }
+        let obj = new Object();
+        obj.health_max = health_max; //该层级血量补正
+        obj.defense = defense; //该层级防御补正
+        obj.MIN_energy = MIN_energy; //该层级挖矿精力消耗补正
+        this.reward_level_attr[level] = obj;
+    }
+    //在指定层级设定一个物品队列
+    set_reward_level_item_array(level, drop_chance) {
+        if (is_Empty_Object(this.reward_level_item[level])) {
+            this.reward_level_item[level] = new Array();
+        }
+        let obj = new Object();
+        obj.items = new Object();
+        obj.drop_chance = drop_chance;
+        this.reward_level_item[level].push(obj);
+    }
+    //在指定层级指定物品队列里添加一个掉落物
+    add_item(level, item_array_id, item_id, chance, max_num, min_num, ...args) {
+        let item_obj = new Object();
+        if (items[item_id].main_type.includes('equipment')) {
+            //物品是装备，args内参数的含义按以下顺序排列：
+            //稀有度
+            equip_rarity = args[0];
+            item_obj = get_item_obj(item_id, 1, equip_rarity);
+        } else if (items[item_id].main_type.includes('material')) {
+            item_obj = get_item_obj(item_id, 1);
+            //物品是材料，没有独特属性
+        } else if (items[item_id].main_type.includes('consumable')) {
+            //物品是消耗品，args内参数的含义按以下顺序排列：
+            // 暂无
+            item_obj = get_item_obj(item_id, 1);
+        }
+        item_obj.chance = chance; //权重
+        item_obj.max_num = max_num;
+        item_obj.min_num = min_num;
+        let item_key = get_item_id_key(item_obj);
+        if (is_Empty_Object(this.reward_level_item[level])) {
+            console.log('敌人%s在等级%d未定义掉落队列', this.id, level);
+            return;
+        }
+        if (is_Empty_Object(this.reward_level_item[level][item_array_id])) {
+            console.log('敌人%s在等级%d未定义%d号掉落队列', this.id, level, item_array_id);
+            return;
+        }
+
         this.reward_level_item[level][item_array_id].items[item_key] = item_obj;
     }
 }
@@ -189,6 +273,13 @@ function add_E_tree_object(enemys, newid) {
         console.log('创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
+function add_E_ore_object(enemys, newid) {
+    if (enemys[newid] === undefined) {
+        enemys[newid] = new E_ore(newid);
+    } else {
+        console.log('创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
+    }
+}
 function add_E_fish_object(enemys, newid) {
     if (enemys[newid] === undefined) {
         enemys[newid] = new E_fish(newid);
@@ -196,4 +287,4 @@ function add_E_fish_object(enemys, newid) {
         console.log('创建enemys[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
 }
-export { add_Enemy_object, add_E_tree_object, add_E_fish_object };
+export { add_Enemy_object, add_E_tree_object, add_E_ore_object, add_E_fish_object };

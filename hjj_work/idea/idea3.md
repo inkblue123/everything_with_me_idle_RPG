@@ -591,3 +591,58 @@ npc 地点有条件出现的事件用 ❔ 表示，就像其他游戏里的支�
 ## 主菜单
 
 这个功能
+
+## select 下拉框
+
+原生 select 下拉框什么都好，就是有个问题，下拉框内要出现 20 个选项才能出现滚动条，此时这个框就很长很长
+关于这一点，没有找到简单的解决方法
+截止 2025-12-17，V0.1.51 版本，这个问题倒不是很大的问题，先凑合用了
+
+在这里记录一下优化方案
+
+1：最理想最简单的解决方案：在 css 里加点什么我不知道的选项
+ai 说加上  
+max-height: 50px;
+overflow-y: auto;
+就好了，结果怎么试都没有生效
+反正我觉得理论上应该有这个功能的，但是没有找到
+
+2：使用文本框+select 组合
+select 如果和设置 id、classname、value 这些属性一样设置了 size
+这个组件就会从传统的点击后展开下拉框，变成类似列表的展开模式
+这个展开模式实际上就是我想要的指定高度的下拉框，但是它是默认展开的
+将它和一个文本框组合在一起使用，就能勉强凑出想要的功能
+
+理论操作代码
+https://mybj123.com/1326.html
+
+原理是文本框下面放下拉框，下拉框设置 size 并且隐藏
+点击文本框时，触发函数，把下拉框显示出来，模拟原生下拉框的显示出下拉选项的功能
+点击了下拉框内的选项之后，触发函数，修改文本框的内容，并且把自己隐藏，模拟原生下拉框的选择选项的功能
+点击了除下拉框内的其他的地方后，也隐藏下拉框，模拟原生下拉框点击其他地方取消选择的功能
+
+有个新的问题就是，常态展示的文本框不像下拉框
+毕竟下拉框右侧有个箭头，这个箭头是下拉框的特色，缺了总感觉少了什么
+不过可以用伪元素画一个箭头出来，总体来说应该不算很复杂
+
+3：根据点击行为设置 select 的 size
+虽然设置了 select 的 size 后多选框就变成了新模式，但是如果是在点击了下拉框之后变成新模式，就还是符合需求的
+
+ <!DOCTYPE html>
+<html>
+    <body>
+        <select style="width: 100px" onmousedown="if(this.options.length>3){this.size=4}" onblur="this.size=1" onchange="this.size=1">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+            <option value="audi2">Audi2</option>
+            <option value="audi3">Audi3</option>
+            <option value="audi4">Audi4</option>
+            <option value="audi5">Audi5</option>
+        </select>
+    </body>
+</html>
+
+这是一个样例，不过它有个缺陷，是只能点击下拉框右侧的向下箭头才能触发 onmousedown，才能展开
+理论上应该也可以简单改几行就行的，但是 ai 没有搞好，总是改的很复杂，而且效果还不如这个

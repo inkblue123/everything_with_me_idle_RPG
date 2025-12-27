@@ -19,10 +19,10 @@ function init_game() {
 
     if (save_str) {
         //base64解密
-        console.log('%s', save_str);
+        // console.log('%s', save_str);
         save_str = b64_to_utf8(save_str);
         //把字符串转换成存档对象
-        console.log('%s', save_str);
+        // console.log('%s', save_str);
         let save_obj = JSON.parse(save_str);
         //用存档对象里的内容加载游戏
         player.load_player_class(save_obj.player_save);
@@ -41,11 +41,11 @@ function save_game() {
 
     //将存档对象转换成字符串
     let save_JSON_str = JSON.stringify(save_obj);
-    console.log('%s', save_JSON_str);
+    // console.log('%s', save_JSON_str);
 
     //用base64加密
     let save_str = utf8_to_b64(save_JSON_str);
-    console.log('%s', save_str);
+    // console.log('%s', save_str);
     //存储到浏览器内存中
     window.localStorage.setItem('v0.1', save_str);
 
@@ -53,9 +53,16 @@ function save_game() {
     // let tooltip = document.getElementById('tooltip');
     // tooltip.InitTip('save_game', save_str);
 }
-//删除当前存档-弹窗提示玩家删除存档
+//导出存档功能-弹窗并将玩家的加密存档输出到弹窗中
 function save_game_show_tip() {
     let save_str = window.localStorage.getItem('v0.1');
+    let tooltip = document.getElementById('tooltip');
+    tooltip.InitTip('save_game', save_str);
+}
+//导出存档功能-弹窗并将玩家的存档对象输出到弹窗中
+function save_game_show_object_tip() {
+    let save_str = window.localStorage.getItem('v0.1');
+    save_str = b64_to_utf8(save_str);
     let tooltip = document.getElementById('tooltip');
     tooltip.InitTip('save_game', save_str);
 }
@@ -82,10 +89,10 @@ function load_save(save_str) {
         //输入内容是明文字符串存档
         //字符串->对象->字符串，去掉多于的换行和空格
         save_str = JSON.stringify(JSON.parse(save_str));
-        console.log('%s', save_str);
+        // console.log('%s', save_str);
         //用base64加密
         let b64_save_str = utf8_to_b64(save_str);
-        console.log('%s', b64_save_str);
+        // console.log('%s', b64_save_str);
         //在浏览器中保存存档
         window.localStorage.setItem('v0.1', b64_save_str);
 
@@ -96,10 +103,10 @@ function load_save(save_str) {
         //在浏览器中保存存档
         window.localStorage.setItem('v0.1', save_str);
         //base64解密
-        console.log('%s', save_str);
+        // console.log('%s', save_str);
         save_str = b64_to_utf8(save_str);
         //把字符串转换成存档对象
-        console.log('%s', save_str);
+        // console.log('%s', save_str);
         save_obj = JSON.parse(save_str);
     }
 
@@ -203,6 +210,7 @@ export {
     init_game, //
     save_game,
     save_game_show_tip,
+    save_game_show_object_tip,
     delete_save,
     delete_save_show_tip,
     load_save,

@@ -253,7 +253,7 @@ class Equipment extends Item {
     //自动设置所有稀有度的最基本的属性值
     auto_set_all_rarity_attr() {
         for (let rarity in this.equip_attr) {
-            let attr_rate = enums[rarity].attr_rate;
+            let attr_rate = enums[rarity].attr_rate; //获取rarity稀有度的属性倍率
             for (let attr_name in this.equip_attr['ordinary']) {
                 if (attr_name == 'attack_interval') {
                     //不同稀有度的攻击间隔一致，如果需要自定义需要手动设置

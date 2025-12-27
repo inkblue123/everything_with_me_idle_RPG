@@ -16,7 +16,7 @@ function init_Enum_buff(enums) {
     enums[id] = [
         'max_health_ratio',
         'end_LGI_speed',
-        'end_LGI_attack', //
+        'end_LGI_attack_ratio', //
         'end_FIS_walkfish_attack',
         'end_FAG_attack',
         'end_FAG_speed_num',

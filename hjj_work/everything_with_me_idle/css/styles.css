@@ -233,9 +233,9 @@ html {
     flex-direction: column;
     flex-wrap: nowrap;
     /* margin-top: 10px; */
-    transition: max-height 0.5s ease-out;
+    transition: height 0.3s ease-out;
+    /* height: 0px; */
     overflow: hidden;
-    max-height: 0;
 }
 
 /* 进度条组件：最大的父元素 */

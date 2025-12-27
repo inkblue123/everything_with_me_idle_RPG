@@ -38,6 +38,10 @@ function init_logging_passive_skill(texts) {
     add_text_object(texts, id);
     texts[id].skill_name = '快斧手';
     texts[id].skill_desc = '增加装备伐木工具时的伐木伤害';
+    id = 'accurate_continuous_logging';
+    add_text_object(texts, id);
+    texts[id].skill_name = '精确连续劈砍';
+    texts[id].skill_desc = '已经可以做到精确的砍到同一个位置，精确伐木时效率更高了';
 }
 //初始化与钓鱼相关的被动技能的文本
 function init_fishing_passive_skill(texts) {
@@ -56,10 +60,10 @@ function init_foraging_passive_skill(texts) {
     add_text_object(texts, id);
     texts[id].skill_name = '幸运搜索者';
     texts[id].skill_desc = '好东西就藏在那里，我发现了，就是我的';
-    id = 'mushroom_bulge_sharp_perception';
-    add_text_object(texts, id);
-    texts[id].skill_name = '蘑菇鼓包敏锐察觉';
-    texts[id].skill_desc = '蘑菇顶起的鼓包总是有迹可循，善于发现这些鼓包可以找到更多蘑菇，或是找到其他采集物品';
+    // id = 'mushroom_bulge_sharp_perception';
+    // add_text_object(texts, id);
+    // texts[id].skill_name = '蘑菇鼓包敏锐察觉';
+    // texts[id].skill_desc = '蘑菇顶起的鼓包总是有迹可循，善于发现这些鼓包可以找到更多蘑菇，或是找到其他采集物品';
     id = 'be_careful_with_foraging';
     add_text_object(texts, id);
     texts[id].skill_name = '小心采集';

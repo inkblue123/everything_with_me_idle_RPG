@@ -1,6 +1,7 @@
 @import url('./logging.css');
 @import url('./fishing.css');
 @import url('./foraging.css');
+@import url('./mining.css');
 /* 生活规划总界面 */
 #Live_plan {
     box-sizing: border-box;

@@ -43,7 +43,7 @@ function init_normal_buff(buffs) {
     buffs[id].set_time_type('game_time_buff', 'infinite'); //以游戏内时间为依据，持续时间无限
     //仅需要生效一次，清除buff时需要还原
     buffs[id].add_buff_value('only_start_restore', 'end_LGI_speed', -20); //伐木间隔延长20%
-    buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack', -20); //伐木攻击力降低20%
+    buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack_ratio', -20); //伐木攻击力降低20%
     buffs[id].add_buff_value('only_start_restore', 'end_FIS_walkfish_attack', -20); //钓鱼遛鱼力降低20%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_attack', -20); //采集力降低20%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed_num', -20); //采集速度延长20%
@@ -53,7 +53,7 @@ function init_normal_buff(buffs) {
     buffs[id].set_time_type('game_time_buff', 'infinite'); //以游戏内时间为依据，持续时间无限
     //仅需要生效一次，清除buff时需要还原
     buffs[id].add_buff_value('only_start_restore', 'end_LGI_speed', -50); //伐木间隔延长50%
-    buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack', -50); //伐木攻击力降低50%
+    buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack_ratio', -50); //伐木攻击力降低50%
     buffs[id].add_buff_value('only_start_restore', 'end_FIS_walkfish_attack', -50); //钓鱼遛鱼力降低50%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_attack', -50); //采集力降低50%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed_num', -50); //采集速度延长50%
@@ -70,7 +70,7 @@ function init_normal_buff(buffs) {
     buffs[id].set_time_type('game_time_buff', 'infinite'); //以游戏内时间为依据，持续时间无限
     //仅需要生效一次，清除buff时需要还原
     buffs[id].add_buff_value('only_start_restore', 'end_LGI_speed', 20); //伐木间隔缩短20%
-    buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack', 20); //伐木攻击力提高20%
+    buffs[id].add_buff_value('only_start_restore', 'end_LGI_attack_ratio', 20); //伐木攻击力提高20%
     buffs[id].add_buff_value('only_start_restore', 'end_FIS_walkfish_attack', 20); //钓鱼遛鱼力提高20%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_attack', 20); //采集力提高20%
     buffs[id].add_buff_value('only_start_restore', 'end_FAG_speed_num', 20); //采集间隔缩短20%

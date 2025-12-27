@@ -81,8 +81,8 @@ export class Data_attr_manage {
         this.live_plan_attr['FAG_interval'] = 5; //采集速度
         // this.live_plan_attr['FAG_luck_chance'] = 100; //幸运采集触发概率
         this.live_plan_attr['FAG_luck_chance'] = 0.1; //幸运采集触发概率
-        this.live_plan_attr['FAG_danger_chance'] = 100; //涉险采集触发概率
-        // this.live_plan_attr['FAG_danger_chance'] = 0.07; //涉险采集触发概率
+        // this.live_plan_attr['FAG_danger_chance'] = 100; //涉险采集触发概率
+        this.live_plan_attr['FAG_danger_chance'] = 0.07; //涉险采集触发概率
 
         //汇总
         this.prevObjects['player_attr'] = JSON.parse(JSON.stringify(this.player_attr));

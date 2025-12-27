@@ -5,7 +5,7 @@ import { enums } from '../../Data/Enum/Enum.js';
 import { global } from '../../GameRun/global_manage.js';
 import { Logging_manage } from './logging.js';
 import { Fishing_manage } from './fishing.js';
-// import { Mining_manage } from './mining.js';
+import { Mining_manage } from './mining.js';
 import { Foraging_manage } from './foraging.js';
 // import { Diving_manage } from './diving.js';
 // import { Archaeology_manage } from './archaeology.js';
@@ -13,11 +13,13 @@ import { Foraging_manage } from './foraging.js';
 //生活技能规划管理对象
 export class Live_plan_manage {
     constructor() {
+        this.now_place; //当前地点
         this.EC_live_plan_class_name = ['logging_manage', 'fishing_manage', 'mining_manage', 'foraging_manage', 'diving_manage', 'archaeology_manage', 'exploration_manage'];
         this.live_plan_name = ['logging', 'fishing', 'mining', 'foraging', 'diving', 'archaeology', 'exploration'];
+        this.EC_live_plan_min_name = { LGI: 0, FIS: 1, MIN: 2, FAG: 3, DIV: 4, ACL: 5, ELT: 6 };
         // this.logging_manage = new Logging_manage(); //伐木管理对象
         // this.fishing_manage = new Fishing_manage(); //钓鱼管理对象
-        // // this.mining_manage = new Mining_manage(); //挖矿管理对象
+        // this.mining_manage = new Mining_manage(); //挖矿管理对象
         // this.foraging_manage = new Foraging_manage(); //采集管理对象
         // // this.diving_manage = new Diving_manage(); //潜水管理对象
         // // this.archaeology_manage = new Archaeology_manage(); //考古管理对象
@@ -26,7 +28,7 @@ export class Live_plan_manage {
     init() {
         this.logging_manage = new Logging_manage(); //伐木管理对象
         this.fishing_manage = new Fishing_manage(); //钓鱼管理对象
-        // this.mining_manage = new Mining_manage(); //挖矿管理对象
+        this.mining_manage = new Mining_manage(); //挖矿管理对象
         this.foraging_manage = new Foraging_manage(); //采集管理对象
         // this.diving_manage = new Diving_manage(); //潜水管理对象
         // this.archaeology_manage = new Archaeology_manage(); //考古管理对象
@@ -60,7 +62,7 @@ export class Live_plan_manage {
             EX_LP_name = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
         } else if (SM_div.style.display == '') {
             Live_plan_save.LP_type = 'SM_switch_button';
-            // EX_LP_name = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+            EX_LP_name = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
         }
         //保存当前生活技能规划界面展示了哪个具体技能
         for (let key of EX_LP_name) {
@@ -96,11 +98,16 @@ export class Live_plan_manage {
         // 将生活技能规划界面切换到存档中保存的技能上
         change_Live_plan_div(Live_plan_save.LP_type); //切换到大类
         if (Live_plan_save.LP_type == 'EC_switch_button') {
+            var EC_switch_radio_div = document.getElementById('EC_switch_radio_div');
+            EC_switch_radio_div.children[0].checked = true; //生活技能规划最上方的分类按钮切换到探索采集
+
             change_Explore_collection_div(Live_plan_save.EX_LP_name);
             let radio_div = document.getElementById(Live_plan_save.EX_LP_name);
             radio_div.checked = true;
         } else {
             //合成制造部分还没开发，暂时不能跳转，只处理搜索采集类型的子技能
+            var SM_switch_radio_div = document.getElementById('SM_switch_radio_div');
+            SM_switch_radio_div.children[0].checked = true; //生活技能规划最上方的分类按钮切换到合成制造
         }
     }
     //获取探索采集类生活技能的管理对象
@@ -131,26 +138,22 @@ export class Live_plan_manage {
         let manage_name = now_GS + '_manage';
         this[manage_name].updata_live_plan_div();
     }
+    //生活界面切换，对切换到的技能界面进行初始化
+    init_live_plan_game_div(button_id) {
+        let min_name = button_id.substring(0, 3);
+        let i = this.EC_live_plan_min_name[min_name];
+        let manage_name = this.EC_live_plan_class_name[i];
+        if (!is_Empty_Object(this[manage_name])) {
+            this[manage_name].init_live_plan_game_div();
+        }
+    }
     //玩家属性更新，更新到生活技能类里
     updata_player_data(end_data_attr) {
-        let global_flag_manage = global.get_global_flag_manage();
-        for (let i = 0; i < 7; i++) {
-            let status_id = 'GS_unlock_' + this.live_plan_name[i];
-            let status = global_flag_manage.get_flag(status_id);
-            let manage_name = this.EC_live_plan_class_name[i];
-            if (status == true) {
-                //技能解锁了才需要更新
-                if (!is_Empty_Object(this[manage_name])) {
-                    this[manage_name].updata_player_data(end_data_attr);
-                }
-            } else {
+        for (let manage_name of this.EC_live_plan_class_name) {
+            if (!is_Empty_Object(this[manage_name])) {
+                this[manage_name].updata_player_data(end_data_attr);
             }
         }
-        // for (let manage_name of this.EC_live_plan_class_name) {
-        //     if (!is_Empty_Object(this[manage_name])) {
-        //         this[manage_name].updata_player_data(end_data_attr);
-        //     }
-        // }
     }
     //地点更新，给各个技能对象更新地点信息
     set_new_place(next_place) {
@@ -158,7 +161,7 @@ export class Live_plan_manage {
         this.stop_now_live_skill();
 
         //探索采集类生活技能
-        let EC_live_plan_min_name = { LGI: 0, FIS: 1, MIN: 2, FAG: 3, DIV: 4, ACL: 5, ELT: 6 };
+        // let EC_live_plan_min_name = { LGI: 0, FIS: 1, MIN: 2, FAG: 3, DIV: 4, ACL: 5, ELT: 6 };
         let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
         for (let i = 0; i < 7; i++) {
             if (!places[next_place].live_plan_flag[i]) {
@@ -185,7 +188,7 @@ export class Live_plan_manage {
                 }
             }
             EC_skill = EC_skill.substring(0, 3);
-            let i = EC_live_plan_min_name[EC_skill];
+            let i = this.EC_live_plan_min_name[EC_skill];
             if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]])) {
                 this[this.EC_live_plan_class_name[i]].updata_super_game_div(next_place);
             }
@@ -224,7 +227,7 @@ export class Live_plan_manage {
                 }
             }
             EC_skill = EC_skill.substring(0, 3);
-            let i = EC_live_plan_min_name[EC_skill];
+            let i = this.EC_live_plan_min_name[EC_skill];
             if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]])) {
                 this[this.EC_live_plan_class_name[i]].updata_super_game_div(next_place);
             }

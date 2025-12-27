@@ -154,12 +154,17 @@ function init_game_dom() {
     //战斗规划界面切换到主动技能规划
     const ASP_radio_div = document.getElementById('ASP_radio_div');
     ASP_radio_div.children[0].checked = true;
+    //战斗规划内的隐藏下拉框都隐藏
+    const ASP_droptable = document.getElementById('ASP_droptable');
+    ASP_droptable.style.display = 'none';
+    const ASP_N_droptable = document.getElementById('ASP_N_droptable');
+    ASP_N_droptable.style.display = 'none';
 
     //右下
     //游戏日志功能分类切换到脑海按钮
     const MD_switch_radio_div = document.getElementById('MD_switch_radio_div');
     MD_switch_radio_div.children[0].checked = true;
-    //战斗规划界面切换到背包窗口
+    //游戏日志界面切换到脑海界面
     const MD_div = document.getElementById('MD_div');
     const IB_div = document.getElementById('IB_div');
     MD_div.style.display = '';
@@ -179,5 +184,19 @@ function init_game_dom() {
     RA_value_scroll_box.style.display = '';
     IE_value_scroll_box.style.display = 'none';
     OP_div.style.display = 'none';
+    //图鉴界面内的过滤按钮切换到全部
+    const IB_ALL_radio_div = document.getElementById('IB_ALL_radio_div');
+    IB_ALL_radio_div.children[0].checked = true;
+    //其他过滤按钮都隐藏
+    const IB_item_droptable = document.getElementById('IB_item_droptable');
+    IB_item_droptable.style.display = 'none';
+    const IB_skill_droptable = document.getElementById('IB_skill_droptable');
+    IB_skill_droptable.style.display = 'none';
+    const IB_skill_C_droptable = document.getElementById('IB_skill_C_droptable');
+    IB_skill_C_droptable.style.display = 'none';
+    const IB_skill_L_droptable = document.getElementById('IB_skill_L_droptable');
+    IB_skill_L_droptable.style.display = 'none';
+    const IB_enemy_droptable = document.getElementById('IB_enemy_droptable');
+    IB_enemy_droptable.style.display = 'none';
 }
 export { create_game_dom, init_game_dom };

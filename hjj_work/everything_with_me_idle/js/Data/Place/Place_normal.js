@@ -74,8 +74,8 @@ function init_village_backhill_normal_place(places) {
     places[id].add_connect_normal_place('village_square', 'cemetery'); //测试
     // places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge'); //测试
     places[id].add_condition_connect_normal_place('logged_forest', 'unlock_foraging_logging', true); //完成了指定事件才允许进入已开荒的林区
-    // places[id].add_condition_connect_normal_place('forest_edge', 'unlock_foraging_logging', true); //完成了指定事件才允许进入外层森林
-    places[id].add_condition_connect_normal_place('forest_edge_road', 'unlock_foraging_logging', true); //完成了指定事件才允许进入外层森林
+    places[id].add_condition_connect_normal_place('forest_edge', 'unlock_foraging_logging', true); //完成了指定事件才允许进入外层森林
+    // places[id].add_condition_connect_normal_place('forest_edge_road', 'unlock_foraging_logging', true); //完成了指定事件才允许进入外层森林
     places[id].add_place_NPC('village_old_woman');
     // places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge_road');
 
@@ -245,9 +245,14 @@ function init_village_backhill_normal_place(places) {
 }
 //后山洞穴区域的普通地点
 function init_backhill_cave_place(places) {
-    let id = 'cave_inlet'; //洞穴入口
+    let id;
+    id = 'cave_inlet'; //洞穴入口
     add_normal_Place(places, id, 'backhill_cave');
     places[id].add_connect_normal_place('forest_edge', 'karst_cave');
+    places[id].set_live_plan_flag(4); //当前地点可以执行的生活技能
+    places[id].set_mining_data(10); //这个地点的挖矿相关参数，矿石的复活时间10秒
+    places[id].set_mining_ore('hard_stratum', 10); //这个地点可刷的矿石
+
     id = 'karst_cave'; //溶洞
     add_normal_Place(places, id, 'backhill_cave');
     places[id].add_connect_normal_place('cave_inlet');

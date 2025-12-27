@@ -239,20 +239,10 @@ export class Global_flag_manage {
         let exp_manage = global.get_exp_manage();
         exp_manage.set_combat_leveling_behavior(combat_behavior);
     }
-    //玩家行为-伐木行为记录
-    record_logging_behavior(logging_behavior) {
+    //生活技能行为记录
+    record_live_plan_skill_leveling_behavior(skill_type, behavior) {
         let exp_manage = global.get_exp_manage();
-        exp_manage.set_logging_leveling_behavior(logging_behavior);
-    }
-    //玩家行为-钓鱼行为记录
-    record_fishing_behavior(fishing_behavior) {
-        let exp_manage = global.get_exp_manage();
-        exp_manage.set_fishing_leveling_behavior(fishing_behavior);
-    }
-    //玩家行为-采集行为记录
-    record_foraging_behavior(foraging_behavior) {
-        let exp_manage = global.get_exp_manage();
-        exp_manage.set_foraging_leveling_behavior(foraging_behavior);
+        exp_manage.set_live_plan_skill_leveling_behavior(skill_type, behavior);
     }
     //玩家行为-正常完成了某个事件
     record_event_finish_end(id) {

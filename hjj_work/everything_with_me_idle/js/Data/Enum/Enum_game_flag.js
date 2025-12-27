@@ -23,7 +23,6 @@ function init_game_status(enums) {
         GS_game_statu: 'NULL', //当前游戏状态，比如战斗中、伐木中、钓鱼中等等
         GS_challenge_flag: false, //是否处于挑战中
         GS_rest_flag: false, //是否处于休息状态
-        GS_logging_way: 'LGI_F_way', //伐木技能选择的伐木策略
         GS_unlock_logging: false, //伐木技能是否解锁
         GS_unlock_fishing: false, //钓鱼技能是否解锁
         GS_unlock_mining: false, //挖矿技能是否解锁

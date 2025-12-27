@@ -85,6 +85,13 @@ function fish_enemy(texts) {
     // add_text_object(texts, id);//同id对象已定义
     texts[id].enemy_name = '溪鱼';
 }
+//挖矿敌人-矿石的文本
+function ore_enemy(texts) {
+    let id;
+    id = 'hard_stratum';
+    add_text_object(texts, id);
+    texts[id].enemy_name = '坚硬山岩';
+}
 //初始化文本数据库中与敌人相关的文本
 function init_Text_enemy(texts) {
     //普通敌人的文本
@@ -93,6 +100,8 @@ function init_Text_enemy(texts) {
     tree_enemy(texts);
     //钓鱼敌人-鱼的文本
     fish_enemy(texts);
+    //挖矿敌人-矿石的文本
+    ore_enemy(texts);
 }
 
 export { init_Text_enemy };

@@ -37,23 +37,92 @@ function addElement_radio(parent_element, id, name, value, textContent) {
     parent_element.appendChild(newlabel);
     return newradio;
 }
-//向parent_element中添加一个select
-function addElement_select(parent_element, id, name, title, ...option_name) {
+//向parent_element中添加一个选项固定的select
+function addElement_select(parent_element, id, cls, name, title, ...option_name) {
     let newselect = document.createElement('select');
+    //初始化select基本信息
     if (id) newselect.id = id;
+    if (cls) newselect.className = cls;
     if (name) newselect.name = name;
+    // newselect.size = 5;
     if (title) {
-        newselect.title = title;
+        newselect.setAttribute('aria-label', title);
     } else {
-        newselect.title = 'select_title';
+        newselect.setAttribute('aria-label', 'select_title');
     }
-    parent_element.appendChild(newselect);
+    //将选项放入select
     for (let index in option_name) {
         const option = document.createElement('option');
         option.value = index;
         option.textContent = option_name[index];
         newselect.appendChild(option);
     }
+    parent_element.appendChild(newselect);
+    return newselect;
+}
+//向parent_element中添加一个选项会在点开之后才加载的select
+function addElement_lazy_select(parent_element, id, cls, name, title, D_option, getOptionsLoader) {
+    let newselect = document.createElement('select');
+    //初始化select
+    if (id) newselect.id = id;
+    if (cls) newselect.className = cls;
+    if (name) newselect.name = name;
+    // newselect.size = 5;
+
+    if (title) {
+        newselect.setAttribute('aria-label', title);
+    } else {
+        newselect.setAttribute('aria-label', 'select_title');
+    }
+    //添加默认选项
+    const option = document.createElement('option');
+    option.value = D_option;
+    option.textContent = D_option;
+    newselect.appendChild(option);
+
+    // 点击事件监听 - 用户点击下拉框时调用函数获取选项
+    newselect.addEventListener('click', function () {
+        //获取新选项
+        let options = getOptionsLoader();
+        // 保存当前选择的index和value
+        const currentIndex = this.selectedIndex;
+        const currentValue = this.value;
+        // 清空现有选项（保留第一个占位符）
+        while (this.options.length > 1) {
+            this.removeChild(this.options[1]);
+        }
+        // 添加新选项
+        for (let id in options) {
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = options[id];
+            this.appendChild(option);
+        }
+        //该函数在下拉框click事件中，而与select交互的过程中，会触发两次click
+        //一次是点开下拉框时，一次是选择了下拉框内部选项时
+        //点开下拉框时，该函数清空了所有选项，会把框内的旧选择也重置成默认选项，这不符合直觉，
+        //所以需要在清空之后将选项恢复为旧选项
+        //选择下拉框内选项时，该函数清空了所有选项，会把框内刚刚选择的新选项重置成默认选项，
+        //所以也要清空之后恢复为新选项
+        //恢复选项
+        if (currentValue && currentValue !== '无') {
+            for (let i = 0; i < this.options.length; i++) {
+                if (this.options[i].value === currentValue) {
+                    this.selectedIndex = i;
+                    return;
+                }
+            }
+        }
+        // 如果value找不到，尝试通过index恢复（但要确保index有效）
+        if (currentIndex >= 0 && currentIndex < this.options.length) {
+            this.selectedIndex = currentIndex;
+        } else {
+            // 否则选择默认选项
+            this.selectedIndex = 0;
+        }
+    });
+
+    parent_element.appendChild(newselect);
     return newselect;
 }
 //删除一个div中所有元素
@@ -262,6 +331,7 @@ export {
     addElement,
     addElement_radio,
     addElement_select,
+    addElement_lazy_select,
     empty_dom,
     add_show_Tooltip,
     add_click_Equipment_worn,

@@ -31,6 +31,8 @@ export class Leveling_Behavior {
         this.logging_behavior = new Object();
         //钓鱼过程中发生的行为的参数
         this.fishing_behavior = new Object();
+        //挖矿过程中发生的行为的参数
+        this.mining_behavior = new Object();
         //采集过程中发生的行为的参数
         this.foraging_behavior = new Object();
     }
@@ -67,31 +69,21 @@ export class Exp_manage {
             this.leveling_behavior.combat_behavior[id] += combat_behavior[id];
         }
     }
-    //记录伐木时发生的练级行为
-    set_logging_leveling_behavior(logging_behavior) {
-        for (let id in logging_behavior) {
-            if (is_Empty_Object(this.leveling_behavior.logging_behavior[id])) {
-                this.leveling_behavior.logging_behavior[id] = 0;
-            }
-            this.leveling_behavior.logging_behavior[id] += logging_behavior[id];
+    //记录生活技能中发生的练级行为
+    set_live_plan_skill_leveling_behavior(skill_type, behavior) {
+        //寻找指定生活技能的存储数据结构
+        const methodName = skill_type + '_behavior';
+        let leveling_behavior = this.leveling_behavior[methodName];
+        if (leveling_behavior === undefined) {
+            console.log('记录%s技能的经验时未定义对应技能的存储数据结构', skill_type);
+            return;
         }
-    }
-    //记录钓鱼时发生的练级行为
-    set_fishing_leveling_behavior(fishing_behavior) {
-        for (let id in fishing_behavior) {
-            if (is_Empty_Object(this.leveling_behavior.fishing_behavior[id])) {
-                this.leveling_behavior.fishing_behavior[id] = 0;
+        //记录练级行为以及对应的数据
+        for (let id in behavior) {
+            if (is_Empty_Object(leveling_behavior[id])) {
+                leveling_behavior[id] = 0;
             }
-            this.leveling_behavior.fishing_behavior[id] += fishing_behavior[id];
-        }
-    }
-    //记录采集时发生的练级行为
-    set_foraging_leveling_behavior(foraging_behavior) {
-        for (let id in foraging_behavior) {
-            if (is_Empty_Object(this.leveling_behavior.foraging_behavior[id])) {
-                this.leveling_behavior.foraging_behavior[id] = 0;
-            }
-            this.leveling_behavior.foraging_behavior[id] += foraging_behavior[id];
+            leveling_behavior[id] += behavior[id];
         }
     }
     //记录其他练级行为

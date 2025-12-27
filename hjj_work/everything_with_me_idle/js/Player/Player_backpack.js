@@ -10,6 +10,8 @@ import { global } from '../GameRun/global_manage.js';
 export class Player_backpack {
     constructor() {
         this.backpack_items = new Object(); //玩家背包所有物品对象
+        this.last_BP_switch_type = 'all';
+        this.last_all_BP_secon_type = new Array();
     }
     init() {
         //重置背包界面
@@ -26,6 +28,7 @@ export class Player_backpack {
         this.backpack_items = Player_backpack_save.backpack_items;
         this.updata_BP_value();
     }
+
     //给玩家背包添加物品
     Player_get_item(item_obj) {
         let id = item_obj.id;
@@ -73,17 +76,37 @@ export class Player_backpack {
     //更新左下角的背包物品栏中的元素
     updata_BP_value() {
         //缓存上次背包界面激活的分类条件
-        let last_BP_switch_type = get_BP_switch_type();
-        //清空左下角背包界面的所有元素
-        delete_BP_div();
+        let now_BP_switch_type = get_BP_switch_type();
+        //缓存上次背包界面展示的所有小类
+        // let last_all_BP_secon_type = get_BP_switch_type();
         //获取这次需要展示的物品的所有小类
         let all_BP_secon_type = get_all_BP_secon_type(this.backpack_items);
         //获取这次更新后应该激活的分类条件
-        let now_BP_switch_type = check_BP_switch_type(last_BP_switch_type, all_BP_secon_type);
-        //重新生成背包界面的分类条件按钮
-        reset_BP_switch_button(now_BP_switch_type, all_BP_secon_type);
+        let true_BP_switch_type = check_BP_switch_type(now_BP_switch_type, all_BP_secon_type);
+        //判断这次更新操作需要更新的部分
+        let updata_mod = get_updata_BP_mod(this.last_BP_switch_type, true_BP_switch_type, this.last_all_BP_secon_type, all_BP_secon_type);
+
+        this.last_all_BP_secon_type = all_BP_secon_type;
+        this.last_BP_switch_type = true_BP_switch_type;
+        if (updata_mod == 0) {
+            //只是按下了左侧分类按钮中的同一个按钮，背包界面元素不需要更新
+            return;
+        } else if (updata_mod == 1) {
+            //按下了左侧分类按钮中的另一个按钮，左侧分类按钮不需要清空，右侧物品需要清空
+            delete_BP_value_div(); //右侧物品
+        } else if (updata_mod == 2) {
+            //左侧分类按钮数量种类发生变化，所有元素都需要重新生成
+            delete_BP_value_div(); //清空背包界面右侧物品
+            delete_BP_switch_div(); //清空背包界面左侧分类按钮
+            //重新生成背包界面的分类条件按钮
+            reset_BP_switch_button(true_BP_switch_type, all_BP_secon_type);
+        }
+
+        // delete_BP_value_div(); //右侧物品
+        // delete_BP_switch_div(); //左侧分类按钮
+
         //转义物品类别
-        let type_switch = BP_switch_type_handle(now_BP_switch_type);
+        let type_switch = BP_switch_type_handle(true_BP_switch_type);
         //获取当前背包物品点击之后要发挥什么用处，正常使用/选择出售
         let click_use_type = get_BP_click_use_type();
         //获取当前背包界面激活的排序条件
@@ -112,7 +135,10 @@ export class Player_backpack {
             }
         }
     }
-
+    //获取玩家背包中的所有物品对象
+    get_BP_all_item() {
+        return this.backpack_items;
+    }
     //获取当前背包物品里数量最多的一种物品的数量
     get_BP_aitem_max_num() {
         let max_num = 0;
@@ -217,10 +243,13 @@ export class Player_backpack {
         return key_arr;
     }
 }
-//清空左下角背包界面的所有元素
-function delete_BP_div() {
+//清空左下角背包界面的所有物品
+function delete_BP_value_div() {
     let BP_value_div = document.getElementById('BP_value_div');
     BP_value_div.replaceChildren(); //清空现有背包内展示的物品
+}
+//清空左下角背包界面的左侧分类按钮
+function delete_BP_switch_div() {
     let BP_EQP_droptable = document.getElementById('BP_EQP_droptable');
     BP_EQP_droptable.replaceChildren(); //清空装备的过滤选项
     let BP_CSB_droptable = document.getElementById('BP_CSB_droptable');
@@ -236,6 +265,29 @@ function get_BP_switch_type() {
             // 找到一个选中的按钮后可以结束循环
             return radio.value;
         }
+    }
+}
+//判断一次更新操作需要更新的部分
+function get_updata_BP_mod(last_BP_switch_type, now_BP_switch_type, last_all_BP_secon_type, all_BP_secon_type) {
+    const set1 = new Set(last_all_BP_secon_type);
+    const set2 = new Set(all_BP_secon_type);
+    //背包物品小类的种数不一样，需要全部更新
+    if (set1.size !== set2.size) {
+        return 2;
+    }
+    //背包物品小类存在区别，需要全部更新
+    for (let type of set1) {
+        if (!set2.has(type)) {
+            return 2;
+        }
+    }
+    //小类一样，左侧分类按钮一样，不需要更新任何元素
+    if (last_BP_switch_type == now_BP_switch_type) {
+        return 0;
+    }
+    //小类一样，左侧分类按钮不一样，只需要更新右侧的背包物品
+    if (last_BP_switch_type != now_BP_switch_type) {
+        return 1;
     }
 }
 //检查之前屏幕上激活的过滤条件在更新后是否适用，返回更新后适用的当前激活过滤条件

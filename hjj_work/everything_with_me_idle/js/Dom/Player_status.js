@@ -147,15 +147,15 @@ function make_player_status_div(player_status) {
             PSK_ALL_radio_div.children[0].checked = true;
 
             // 根基技能 basic B
-            var PSK_B_button = addElement(PSK_switch_div, 'button', 'PSK_B_button', 'dropdown_button_1');
-            PSK_B_button.innerHTML = '根基技能';
+            var PSK_B_radio_div = addElement(PSK_switch_div, 'div', 'PSK_B_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(PSK_B_radio_div, 'PSK_B_button', 'PSK_1_switch', 'PSK_B_button', '根基技能');
             var PSK_B_droptable = addElement(PSK_switch_div, 'div', 'PSK_B_droptable', 'dropdown_table');
             var PSK_B_all_radio_div = addElement(PSK_B_droptable, 'div', 'PSK_B_all_radio_div', 'radio_div switch_radio_div_2');
             addElement_radio(PSK_B_all_radio_div, 'PSK_B_all', 'PSK_switch', 'B_all', '全部');
 
             //战斗技能 combat C
-            var PSK_C_button = addElement(PSK_switch_div, 'button', 'PSK_C_button', 'dropdown_button_1');
-            PSK_C_button.innerHTML = '战斗技能';
+            var PSK_C_radio_div = addElement(PSK_switch_div, 'div', 'PSK_C_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(PSK_C_radio_div, 'PSK_C_button', 'PSK_1_switch', 'PSK_C_button', '战斗技能');
             var PSK_C_droptable = addElement(PSK_switch_div, 'div', 'PSK_C_droptable', 'dropdown_table');
             var PSK_C_all_radio_div = addElement(PSK_C_droptable, 'div', 'PSK_C_all_radio_div', 'radio_div switch_radio_div_2');
             addElement_radio(PSK_C_all_radio_div, 'PSK_C_all', 'PSK_switch', 'C_all', '全部');
@@ -167,8 +167,8 @@ function make_player_status_div(player_status) {
             addElement_radio(PSK_C_Ene_radio_div, 'PSK_C_Ene', 'PSK_switch', 'C_Ene', '对敌精通技能');
 
             //生活技能 life L
-            var PSK_L_button = addElement(PSK_switch_div, 'button', 'PSK_L_button', 'dropdown_button_1');
-            PSK_L_button.innerHTML = '生活技能';
+            var PSK_L_radio_div = addElement(PSK_switch_div, 'div', 'PSK_L_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(PSK_L_radio_div, 'PSK_L_button', 'PSK_1_switch', 'PSK_L_button', '生活技能');
             var PSK_L_droptable = addElement(PSK_switch_div, 'div', 'PSK_L_droptable', 'dropdown_table');
             var PSK_L_all_radio_div = addElement(PSK_L_droptable, 'div', 'PSK_L_all_radio_div', 'radio_div switch_radio_div_2');
             addElement_radio(PSK_L_all_radio_div, 'PSK_L_all', 'PSK_switch', 'L_all', '全部');
@@ -182,8 +182,8 @@ function make_player_status_div(player_status) {
             addElement_radio(PSK_L_Rec_radio_div, 'PSK_L_Rec', 'PSK_switch', 'L_Rec', '回收利用技能');
 
             // 主动技能 active A
-            var PSK_A_button = addElement(PSK_switch_div, 'button', 'PSK_A_button', 'dropdown_button_1');
-            PSK_A_button.innerHTML = '主动技能';
+            var PSK_A_radio_div = addElement(PSK_switch_div, 'div', 'PSK_A_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(PSK_A_radio_div, 'PSK_A_button', 'PSK_1_switch', 'PSK_A_button', '主动技能');
             var PSK_A_droptable = addElement(PSK_switch_div, 'div', 'PSK_A_droptable', 'dropdown_table');
             var PSK_A_all_radio_div = addElement(PSK_A_droptable, 'div', 'PSK_A_all_radio_div', 'radio_div switch_radio_div_2');
             addElement_radio(PSK_A_all_radio_div, 'PSK_A_all', 'PSK_switch', 'A_all', '全部');
@@ -197,8 +197,8 @@ function make_player_status_div(player_status) {
             addElement_radio(PSK_A_F_radio_div, 'PSK_A_F', 'PSK_switch', 'A_F', '可辅助的技能');
 
             // 特殊功法 super S
-            var PSK_S_button = addElement(PSK_switch_div, 'button', 'PSK_S_button', 'dropdown_button_1');
-            PSK_S_button.innerHTML = '特殊功法';
+            var PSK_S_radio_div = addElement(PSK_switch_div, 'div', 'PSK_S_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(PSK_S_radio_div, 'PSK_S_button', 'PSK_1_switch', 'PSK_S_button', '特殊功法');
             var PSK_S_droptable = addElement(PSK_switch_div, 'div', 'PSK_S_droptable', 'dropdown_table');
             var PSK_S_all_radio_div = addElement(PSK_S_droptable, 'div', 'PSK_S_all_radio_div', 'radio_div switch_radio_div_2');
             addElement_radio(PSK_S_all_radio_div, 'PSK_S_all', 'PSK_switch', 'S_all', '全部');
@@ -226,46 +226,6 @@ function set_player_status_button(player_status) {
             change_Player_status_div(this.id);
         });
     });
-    let PSK_B_button = player_status.querySelector('#PSK_B_button');
-    PSK_B_button.onclick = function () {
-        let PSK_B_all_radio_div = player_status.querySelector('#PSK_B_all_radio_div');
-        PSK_B_all_radio_div.children[0].checked = true;
-        let P_All_Skills = player.get_player_All_Skills();
-        P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_switch_div', 'PSK_B_droptable');
-    };
-    let PSK_C_button = player_status.querySelector('#PSK_C_button');
-    PSK_C_button.onclick = function () {
-        let PSK_C_all_radio_div = player_status.querySelector('#PSK_C_all_radio_div');
-        PSK_C_all_radio_div.children[0].checked = true;
-        let P_All_Skills = player.get_player_All_Skills();
-        P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_switch_div', 'PSK_C_droptable');
-    };
-    let PSK_L_button = player_status.querySelector('#PSK_L_button');
-    PSK_L_button.onclick = function () {
-        let PSK_L_all_radio_div = player_status.querySelector('#PSK_L_all_radio_div');
-        PSK_L_all_radio_div.children[0].checked = true;
-        let P_All_Skills = player.get_player_All_Skills();
-        P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_switch_div', 'PSK_L_droptable');
-    };
-    let PSK_A_button = player_status.querySelector('#PSK_A_button');
-    PSK_A_button.onclick = function () {
-        let PSK_A_all_radio_div = player_status.querySelector('#PSK_A_all_radio_div');
-        PSK_A_all_radio_div.children[0].checked = true;
-        let P_All_Skills = player.get_player_All_Skills();
-        P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_switch_div', 'PSK_A_droptable');
-    };
-    let PSK_S_button = player_status.querySelector('#PSK_S_button');
-    PSK_S_button.onclick = function () {
-        let PSK_S_all_radio_div = player_status.querySelector('#PSK_S_all_radio_div');
-        PSK_S_all_radio_div.children[0].checked = true;
-        let P_All_Skills = player.get_player_All_Skills();
-        P_All_Skills.updata_PSK_value();
-        show_dropdown_table('PSK_switch_div', 'PSK_S_droptable');
-    };
 
     //角色名文本框，实时修改角色名称
     let Player_name = player_status.querySelector('#Player_name');
@@ -289,6 +249,35 @@ function set_player_status_button(player_status) {
         });
     });
 
+    //1级分类按钮，根基技能、战斗技能、生活技能、主动技能、特殊功法
+    radios = player_status.querySelectorAll('input[type="radio"][name="PSK_1_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            if (this.id == 'PSK_B_button') {
+                let PSK_B_all_radio_div = player_status.querySelector('#PSK_B_all_radio_div');
+                PSK_B_all_radio_div.children[0].checked = true;
+                show_dropdown_table('PSK_switch_div', 'PSK_B_droptable');
+            } else if (this.id == 'PSK_C_button') {
+                let PSK_C_all_radio_div = player_status.querySelector('#PSK_C_all_radio_div');
+                PSK_C_all_radio_div.children[0].checked = true;
+                show_dropdown_table('PSK_switch_div', 'PSK_C_droptable');
+            } else if (this.id == 'PSK_L_button') {
+                let PSK_L_all_radio_div = player_status.querySelector('#PSK_L_all_radio_div');
+                PSK_L_all_radio_div.children[0].checked = true;
+                show_dropdown_table('PSK_switch_div', 'PSK_L_droptable');
+            } else if (this.id == 'PSK_A_button') {
+                let PSK_A_all_radio_div = player_status.querySelector('#PSK_A_all_radio_div');
+                PSK_A_all_radio_div.children[0].checked = true;
+                show_dropdown_table('PSK_switch_div', 'PSK_A_droptable');
+            } else if (this.id == 'PSK_S_button') {
+                let PSK_S_all_radio_div = player_status.querySelector('#PSK_S_all_radio_div');
+                PSK_S_all_radio_div.children[0].checked = true;
+                show_dropdown_table('PSK_switch_div', 'PSK_S_droptable');
+            }
+            let P_All_Skills = player.get_player_All_Skills();
+            P_All_Skills.updata_PSK_value();
+        });
+    });
     //技能展示过滤
     radios = player_status.querySelectorAll('input[type="radio"][name="PSK_switch"]');
     radios.forEach((radio) => {
@@ -296,6 +285,11 @@ function set_player_status_button(player_status) {
             if (this.id == 'PSK_all') {
                 //针对技能展示界面最大的“全部”按钮，额外新增关闭其他下拉框的功能
                 show_dropdown_table('PSK_switch_div');
+                //额外关闭所有1级分类按钮
+                const radios = document.querySelectorAll('input[name="PSK_1_switch"]');
+                for (const radio of radios) {
+                    radio.checked = false;
+                }
             }
             let P_All_Skills = player.get_player_All_Skills();
             P_All_Skills.updata_PSK_value();

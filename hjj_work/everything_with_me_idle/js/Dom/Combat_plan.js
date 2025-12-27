@@ -40,16 +40,16 @@ function make_Combat_plan_div(Combat_plan) {
             //默认激活"全部"过滤条件
             BP_ALL_radio_div.children[0].checked = true;
             // 武器装备 equipment
-            var BP_EQP_button = addElement(BP_switch_div, 'button', 'BP_EQP_button', 'dropdown_button_1');
-            BP_EQP_button.innerHTML = '武器装备';
+            var BP_EQP_radio_div = addElement(BP_switch_div, 'div', 'BP_EQP_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(BP_EQP_radio_div, 'BP_EQP_button', 'BP_1_switch', 'BP_EQP_button', '武器装备');
             var BP_EQP_droptable = addElement(BP_switch_div, 'div', 'BP_EQP_droptable', 'dropdown_table');
             //消耗品 consumable
-            var BP_CSB_button = addElement(BP_switch_div, 'button', 'BP_CSB_button', 'dropdown_button_1');
-            BP_CSB_button.innerHTML = '消耗品';
+            var BP_CSB_radio_div = addElement(BP_switch_div, 'div', 'BP_CSB_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(BP_CSB_radio_div, 'BP_CSB_button', 'BP_1_switch', 'BP_CSB_button', '消耗品');
             var BP_CSB_droptable = addElement(BP_switch_div, 'div', 'BP_CSB_droptable', 'dropdown_table');
             //材料 Material
-            var BP_MTR_button = addElement(BP_switch_div, 'button', 'BP_MTR_button', 'dropdown_button_1');
-            BP_MTR_button.innerHTML = '材料物品';
+            var BP_MTR_radio_div = addElement(BP_switch_div, 'div', 'BP_MTR_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(BP_MTR_radio_div, 'BP_MTR_button', 'BP_1_switch', 'BP_MTR_button', '材料物品');
             var BP_MTR_droptable = addElement(BP_switch_div, 'div', 'BP_MTR_droptable', 'dropdown_table');
 
             //下半排序按钮
@@ -75,14 +75,16 @@ function make_Combat_plan_div(Combat_plan) {
             addElement_radio(ASP_radio_div, 'ASP_button', 'CBP_switch', 'ASP_button', '主动技能规划');
             ASP_radio_div.children[0].checked = true; //初始激活该按钮
             var ASP_droptable = addElement(CBP_switch_div, 'div', 'ASP_droptable', 'dropdown_table');
-            var ASP_all_radio_div = addElement(ASP_droptable, 'div', null, 'radio_div switch_radio_div_2');
+            var ASP_all_radio_div = addElement(ASP_droptable, 'div', 'ASP_all_radio_div', 'radio_div switch_radio_div_2');
 
             addElement_radio(ASP_all_radio_div, 'ASP_all', 'ASP_switch', 'ASP_all', '全部主动技能');
             ASP_all_radio_div.children[0].checked = true; //初始激活该按钮
-            var ASP_N_button = addElement(ASP_droptable, 'button', 'ASP_N_button', 'dropdown_button_2');
-            ASP_N_button.innerHTML = '占槽数分类';
+            // var ASP_N_button = addElement(ASP_droptable, 'button', 'ASP_N_button', 'dropdown_button_2');
+            // ASP_N_button.innerHTML = '占槽数分类';
+            var ASP_N_radio_div = addElement(ASP_droptable, 'div', 'ASP_N_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(ASP_N_radio_div, 'ASP_N_button', 'ASP_1_switch', 'ASP_N_button', '占槽数分类');
             var ASP_N_droptable = addElement(ASP_droptable, 'div', 'ASP_N_droptable', 'dropdown_table');
-            var ASP_N_1_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div switch_radio_div_3');
+            var ASP_N_1_radio_div = addElement(ASP_N_droptable, 'div', 'ASP_N_1_radio_div', 'radio_div switch_radio_div_3');
             addElement_radio(ASP_N_1_radio_div, 'ASP_N_1', 'ASP_switch', 'ASP_N_1', '1 槽');
             var ASP_N_2_radio_div = addElement(ASP_N_droptable, 'div', null, 'radio_div switch_radio_div_3');
             addElement_radio(ASP_N_2_radio_div, 'ASP_N_2', 'ASP_switch', 'ASP_N_2', '2 槽');
@@ -148,46 +150,39 @@ function set_Combat_plan_button(Combat_plan) {
         });
     });
 
-    //展开隐藏的分类按钮
-    let BP_EQP_button = Combat_plan.querySelector('#BP_EQP_button');
-    BP_EQP_button.onclick = function () {
-        //点击就激活武器装备分类下的“全部”过滤条件
-        let BP_EQP_all_radio_div = document.getElementById('BP_EQP_all_radio_div');
-        BP_EQP_all_radio_div.children[0].checked = true;
-        let P_backpack = player.get_player_backpack();
-        P_backpack.updata_BP_value();
-        show_dropdown_table('BP_switch_div', 'BP_EQP_droptable');
-    };
-    let BP_CSB_button = Combat_plan.querySelector('#BP_CSB_button');
-    BP_CSB_button.onclick = function () {
-        //点击就激活消耗品分类下的“全部”过滤条件
-        let BP_CSB_all_radio_div = document.getElementById('BP_CSB_all_radio_div');
-        BP_CSB_all_radio_div.children[0].checked = true;
-        let P_backpack = player.get_player_backpack();
-        P_backpack.updata_BP_value();
-        show_dropdown_table('BP_switch_div', 'BP_CSB_droptable');
-    };
-    let BP_MTR_button = Combat_plan.querySelector('#BP_MTR_button');
-    BP_MTR_button.onclick = function () {
-        //点击就激活材料分类下的“全部”过滤条件
-        let BP_MTR_all_radio_div = document.getElementById('BP_MTR_all_radio_div');
-        BP_MTR_all_radio_div.children[0].checked = true;
-        let P_backpack = player.get_player_backpack();
-        P_backpack.updata_BP_value();
-        show_dropdown_table('BP_switch_div', 'BP_MTR_droptable');
-    };
-    let ASP_N_button = Combat_plan.querySelector('#ASP_N_button');
-    ASP_N_button.onclick = function () {
-        ASP_N_1_radio_div.children[0].checked = true;
-        show_dropdown_table('ASP_droptable', 'ASP_N_droptable');
-    };
-    //背包物品分类按钮
+    //背包1级分类按钮，武器装备、消耗品、材料物品
+    radios = Combat_plan.querySelectorAll('input[type="radio"][name="BP_1_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            if (this.id == 'BP_EQP_button') {
+                let BP_EQP_all_radio_div = document.getElementById('BP_EQP_all_radio_div');
+                BP_EQP_all_radio_div.children[0].checked = true;
+                show_dropdown_table('BP_switch_div', 'BP_EQP_droptable');
+            } else if (this.id == 'BP_CSB_button') {
+                let BP_CSB_all_radio_div = document.getElementById('BP_CSB_all_radio_div');
+                BP_CSB_all_radio_div.children[0].checked = true;
+                show_dropdown_table('BP_switch_div', 'BP_CSB_droptable');
+            } else if (this.id == 'BP_MTR_button') {
+                let BP_MTR_all_radio_div = document.getElementById('BP_MTR_all_radio_div');
+                BP_MTR_all_radio_div.children[0].checked = true;
+                show_dropdown_table('BP_switch_div', 'BP_MTR_droptable');
+            }
+            let P_backpack = player.get_player_backpack();
+            P_backpack.updata_BP_value();
+        });
+    });
+    //背包每种物品小类分类按钮
     radios = Combat_plan.querySelectorAll('input[type="radio"][name="BP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
             if (this.id == 'BP_all') {
                 //针对背包界面的“全部”按钮，额外新增关闭其他下拉框的功能
                 show_dropdown_table('BP_switch_div');
+                //额外关闭所有1级分类按钮
+                const radios = document.querySelectorAll('input[name="BP_1_switch"]');
+                for (const radio of radios) {
+                    radio.checked = false;
+                }
             }
             let P_backpack = player.get_player_backpack();
             P_backpack.updata_BP_value();
@@ -202,7 +197,7 @@ function set_Combat_plan_button(Combat_plan) {
         });
     });
 
-    // //选择战斗规划界面的具体功能
+    //选择战斗规划界面的具体功能
     radios = Combat_plan.querySelectorAll('input[type="radio"][name="CBP_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
@@ -211,6 +206,7 @@ function set_Combat_plan_button(Combat_plan) {
                 //切换到主动技能规划界面中
                 change_ASP_ARP_AEP(this.id);
                 //激活“全部”主动技能分类
+                let ASP_all_radio_div = document.getElementById('ASP_all_radio_div');
                 ASP_all_radio_div.children[0].checked = true;
                 //打开主动技能规划中的分类下拉框
                 show_dropdown_table('CBP_switch_div', 'ASP_droptable');
@@ -224,14 +220,51 @@ function set_Combat_plan_button(Combat_plan) {
             P_All_Skills.updata_ASP_value();
         });
     });
-    //主动技能过滤
-    radios = Combat_plan.querySelectorAll('input[type="radio"][name="ASP_switch"]');
+    //主动技能规划1级分类按钮，占槽数分类
+    radios = Combat_plan.querySelectorAll('input[type="radio"][name="ASP_1_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
+            if (this.id == 'ASP_N_button') {
+                let ASP_N_1_radio_div = document.getElementById('ASP_N_1_radio_div');
+                ASP_N_1_radio_div.children[0].checked = true;
+                show_dropdown_table('ASP_droptable', 'ASP_N_droptable');
+            }
+            //关闭2级分类按钮
+            // const radios = document.querySelectorAll('input[name="IB_2_switch"]');
+            // for (const radio of radios) {
+            //     radio.checked = false;
+            // }
+            //过滤主动技能
             let P_All_Skills = player.get_player_All_Skills();
             P_All_Skills.updata_ASP_value();
         });
     });
+    //主动技能过滤
+    radios = Combat_plan.querySelectorAll('input[type="radio"][name="ASP_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            //过滤主动技能
+            let P_All_Skills = player.get_player_All_Skills();
+            P_All_Skills.updata_ASP_value();
+
+            //部分最小分类按钮要关闭所有2级分类按钮，并且关闭所属下拉框内的所有子下拉框
+            let open_2_skill_C_id = ['ASP_all', 'ASP_A', 'ASP_D', 'ASP_R', 'ASP_F'];
+            if (open_2_skill_C_id.includes(this.id)) {
+                show_dropdown_table('ASP_droptable');
+                radios = document.querySelectorAll('input[name="ASP_1_switch"]');
+                for (const radio of radios) {
+                    radio.checked = false;
+                }
+            }
+        });
+    });
+
+    // let ASP_N_button = Combat_plan.querySelector('#ASP_N_button');
+    // ASP_N_button.onclick = function () {
+    //     let ASP_N_1_radio_div = document.getElementById('ASP_N_1_radio_div');
+    //     ASP_N_1_radio_div.children[0].checked = true;
+    //     show_dropdown_table('ASP_droptable', 'ASP_N_droptable');
+    // };
 }
 
 //切换战斗规划界面中背包、战斗规划窗口的按钮

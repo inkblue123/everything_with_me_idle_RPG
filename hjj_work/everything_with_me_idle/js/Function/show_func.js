@@ -35,18 +35,28 @@ function show_dropdown_table(in_overflow_div, table_id) {
         if (dropdownTable.style.display === 'flex') {
             // 切换目标下拉框的显示/隐藏状态
             // 如果表格已经显示，则折叠它
-            dropdownTable.style.maxHeight = '0';
+            const contentHeight = dropdownTable.scrollHeight;
+            dropdownTable.style.height = contentHeight + 'px';
+            // 强制重排，确保height变化被浏览器识别
+            dropdownTable.offsetHeight;
+            // 开始折叠动画
+            dropdownTable.style.height = '0px';
             setTimeout(() => {
                 dropdownTable.style.display = 'none';
-            }, 500); // 等待动画完成后隐藏
+                dropdownTable.style.height = '';
+            }, 300); // 等待动画完成后隐藏
         } else {
             // 如果表格没有显示，则展开它
             dropdownTable.style.display = 'flex';
+            dropdownTable.style.height = '0px';
+            // 强制重排，确保height变化被浏览器识别
+            dropdownTable.offsetHeight;
+            // 开始折叠动画
+            const contentHeight = dropdownTable.scrollHeight;
+            dropdownTable.style.height = contentHeight + 'px';
             setTimeout(() => {
-                // const contentHeight = dropdownTable.scrollHeight; // 获取实际内容的高度
-                // dropdownTable.style.maxHeight = contentHeight + 'px';
-                dropdownTable.style.maxHeight = '500px'; // 最大高度需要根据内容调整
-            }, 10); // 让显示状态先更新，再触发动画
+                dropdownTable.style.height = ''; // 最大高度需要根据内容调整
+            }, 300); // 让显示状态先更新，再触发动画
         }
     }
     //遍历，并且关闭其他下拉框
@@ -56,10 +66,15 @@ function show_dropdown_table(in_overflow_div, table_id) {
             // 切换表格的显示/隐藏状态
             if (table.style.display === 'flex') {
                 // 如果表格已经显示，则折叠它
-                table.style.maxHeight = '0';
+                const contentHeight = table.scrollHeight;
+                table.style.height = contentHeight + 'px';
+                // 强制重排，确保height变化被浏览器识别
+                table.offsetHeight;
+                // 开始折叠动画
+                table.style.height = '0px';
                 setTimeout(() => {
                     table.style.display = 'none';
-                }, 500); // 等待动画完成后隐藏
+                }, 300); // 等待动画完成后隐藏
             }
         }
     }

@@ -20,7 +20,7 @@ const FAG_status = Object.freeze({
 export class Foraging_manage {
     constructor() {
         this.now_time; //当前时间
-        this.now_place; //当前地点
+        this.now_place = 'village_home'; //当前地点
 
         this.round_start_time; //当前回合开始时间
         this.now_round_time = 0; //当前回合运行了多久的时间
@@ -69,6 +69,7 @@ export class Foraging_manage {
         foraging_save.now_FAG_status = this.now_FAG_status;
         foraging_save.luck_FAG_flag = this.luck_FAG_flag;
         foraging_save.danger_FAG_flag = this.danger_FAG_flag;
+        foraging_save.now_place = this.now_place;
 
         return foraging_save;
     }
@@ -98,6 +99,8 @@ export class Foraging_manage {
         this.danger_FAG_flag = foraging_save.danger_FAG_flag;
         //上一帧的时间
         this.last_start_time = now_time;
+        //采集地点
+        this.now_place = foraging_save.now_place;
     }
 
     //更新当前地点，初始化采集信息
@@ -198,6 +201,11 @@ export class Foraging_manage {
             this.updata_danger_FAG_end_data();
         }
         this.last_start_time = this.now_time;
+    }
+    //生活技能切换，切换到了采集界面，初始化采集界面
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    init_live_plan_game_div() {
+        this.updata_FAG_chance_show();
     }
     //开始采集，更新采集技能的界面
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -333,6 +341,7 @@ export class Foraging_manage {
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_player_data(player_end_attr) {
         if (player_end_attr) this.player_end_attr = player_end_attr;
+
         //更新采集时的玩家参数
         //采集力
         this.true_FAG_attack = get_true_FAG_attack(this.player_end_attr);
@@ -345,6 +354,11 @@ export class Foraging_manage {
         //涉险采集概率
         this.true_FAG_danger_chance = get_true_FAG_danger_chance(this.player_end_attr);
 
+        // 如果当前地点不可采集，就不用更新后续采集属性，防止读到未定义的采集参数
+        if (!places[this.now_place].live_plan_flag[3]) {
+            return;
+        }
+        //伴随角色属性变化而变化的其他采集属性
         //采集力更新，当前地点的采集概率更新
         this.updata_FAG_chance_show();
     }
@@ -563,7 +577,7 @@ export class Foraging_manage {
         let foraging_behavior = new Object();
         foraging_behavior.FAG_get_item_num = Object.keys(drop_items).length;
         foraging_behavior.FAG_get_rare_item_num = get_FAG_get_rare_item_num(this.now_place, drop_items);
-        global_flag_manage.record_foraging_behavior(foraging_behavior);
+        global_flag_manage.record_live_plan_skill_leveling_behavior('foraging', foraging_behavior);
         //将掉落物更新到可采集列表中
         let ret = this.updata_foraging_place_show_drop(drop_items);
         if (ret == true) {
@@ -592,7 +606,7 @@ export class Foraging_manage {
         let foraging_behavior = new Object();
         foraging_behavior.FAG_get_item_num = Object.keys(drop_items).length;
         foraging_behavior.FAG_get_rare_item_num = get_FAG_get_rare_item_num(this.now_place, drop_items);
-        global_flag_manage.record_foraging_behavior(foraging_behavior);
+        global_flag_manage.record_live_plan_skill_leveling_behavior('foraging', foraging_behavior);
         //将掉落物更新到可采集列表中
         let ret = this.updata_foraging_place_show_drop(drop_items);
         if (ret == true) {
@@ -649,7 +663,7 @@ export class Foraging_manage {
         let foraging_behavior = new Object();
         foraging_behavior.FAG_get_item_num = Object.keys(uniqueArr).length;
         foraging_behavior.FAG_get_rare_item_num = get_FAG_get_rare_item_num(this.now_place, uniqueArr);
-        global_flag_manage.record_foraging_behavior(foraging_behavior);
+        global_flag_manage.record_live_plan_skill_leveling_behavior('foraging', foraging_behavior);
 
         //将掉落物更新到可采集列表中
         let ret = this.updata_foraging_place_show_drop(uniqueArr);
@@ -1022,24 +1036,24 @@ export class Foraging_manage {
     //更新游戏界面上的采集概率展示
     updata_FAG_chance_show() {
         let EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
-        if (EC_div.style.display != '') {
-            //当前不处于搜索采集窗口内，不需要更新
-            return;
-        }
-        let EC_skill;
-        let radios = document.querySelectorAll('input[name="EC_switch"]');
-        // 找到当前激活的生活技能
-        for (const radio of radios) {
-            if (radio.checked) {
-                EC_skill = radio.value;
-                break;
-            }
-        }
-        EC_skill = EC_skill.substring(0, 3);
-        if (EC_skill != 'FAG') {
-            //当前展示的窗口不是采集，不需要更新
-            return;
-        }
+        // if (EC_div.style.display != '') {
+        //     //当前不处于搜索采集窗口内，不需要更新
+        //     return;
+        // }
+        // let EC_skill;
+        // let radios = document.querySelectorAll('input[name="EC_switch"]');
+        // // 找到当前激活的生活技能
+        // for (const radio of radios) {
+        //     if (radio.checked) {
+        //         EC_skill = radio.value;
+        //         break;
+        //     }
+        // }
+        // EC_skill = EC_skill.substring(0, 3);
+        // if (EC_skill != 'FAG') {
+        //     //当前展示的窗口不是采集，不需要更新
+        //     return;
+        // }
 
         let FAG_chance = this.get_FAG_chance();
         let max_FAG_chance = this.get_max_FAG_chance();

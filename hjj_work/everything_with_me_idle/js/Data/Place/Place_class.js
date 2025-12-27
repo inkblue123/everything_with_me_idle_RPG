@@ -175,11 +175,11 @@ export class P_normal extends Place {
         this.FIS_max_wait_time = max_wait_time;
     }
     //设置这个地点的挖矿相关参数
-    set_mining_data() {
+    set_mining_data(reborn_time) {
         if (this.live_plan_flag[2] == false) {
             console.log('%s地点不允许挖矿却设定了挖矿相关参数');
         }
-        // this.LGI_reborn_time = reborn_time;
+        this.MIN_reborn_time = reborn_time;
     }
     //设置这个地点的采集相关参数
     set_foraging_data(defense, energy) {
@@ -230,6 +230,19 @@ export class P_normal extends Place {
             obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
         }
         this.LGI_trees[id] = obj;
+    }
+    //设置这个地点挖矿时可能出现的矿石
+    set_mining_ore(id, chance) {
+        if (this.live_plan_flag[2] == false) {
+            console.log('%s地点不允许挖矿却设定了挖矿相关参数');
+        }
+        if (is_Empty_Object(this.MIN_ores)) {
+            this.MIN_ores = new Object();
+        }
+        let obj = new Object();
+        obj.id = id; //矿的id
+        obj.chance = chance; //矿的刷新权重
+        this.MIN_ores[id] = obj;
     }
     //设置这个地点钓鱼时可能出现的鱼
     set_fishing_fish(id, chance, rare_flag, max_cumulative_num, cumulative_time) {

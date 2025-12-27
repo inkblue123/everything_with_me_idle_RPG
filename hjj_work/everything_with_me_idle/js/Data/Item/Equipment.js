@@ -331,6 +331,8 @@ function init_logging_tool(items) {
     items[id].init_Equipment([secon_type, 'foraging_tool'], 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
     items[id].init_Item_price('ordinary_coin', 50); //物品价值
     items[id].set_attr_level('L0', 'attack', secon_type); //调用L0级的攻击属性预设
+    items[id].equip_attr['ordinary']['mini_tree_LGI_damage'] = 3;
+    items[id].equip_attr['ordinary']['FAG_chance_ordinary_wood'] = 5;
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     // items[id].init_Equipment_attack_attr('ordinary',3, 5, 10, 50, 2);
 }

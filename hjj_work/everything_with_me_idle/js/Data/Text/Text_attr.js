@@ -125,15 +125,12 @@ function init_no_normal_attr_name_logging(texts) {
     // id = 'LGI_damage_battle_axe';
     // add_text_object(texts, id);
     // texts[id].attr_name = '战斧伐木伤害';
-    // id = 'LGI_damage_logging_tool';
-    // add_text_object(texts, id);
-    // texts[id].attr_name = '伐木工具伐木伤害';
-    // id = 'LGI_speed_battle_axe';
-    // add_text_object(texts, id);
-    // texts[id].attr_name = '战斧伐木速度';
-    // id = 'LGI_speed_logging_tool';
-    // add_text_object(texts, id);
-    // texts[id].attr_name = '伐木工具伐木速度';
+    id = 'LGI_M_attack';
+    add_text_object(texts, id);
+    texts[id].attr_name = '精细伐木攻击力';
+    id = 'mini_tree_LGI_damage';
+    add_text_object(texts, id);
+    texts[id].attr_name = '对小树伐木伤害';
 }
 //不是很常规的属性-钓鱼方面的
 function init_no_normal_attr_name_fishing(texts) {

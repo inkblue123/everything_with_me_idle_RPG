@@ -134,12 +134,16 @@ class Tree_manage {
     get_HP_ratio() {
         return (this.health_point / this.health_max) * 100 + '%';
     }
+    //获取这棵树的最大血量
+    get_max_HP() {
+        return this.health_max;
+    }
 }
 //伐木技能管理类
 export class Logging_manage {
     constructor() {
         this.now_time; //当前时间
-        this.now_place; //当前地点
+        this.now_place = 'village_home'; //当前地点
         this.now_LGI_way = 'LGI_F_way'; //当前选择的伐木方式
 
         this.round_start_time; //当前回合开始时间
@@ -164,6 +168,8 @@ export class Logging_manage {
         logging_save.now_time = this.now_time;
         logging_save.LGI_place_rare_trees = this.LGI_place_rare_trees;
         logging_save.now_LGI_status = this.now_LGI_status;
+        logging_save.now_LGI_way = this.now_LGI_way;
+        logging_save.now_place = this.now_place;
 
         return logging_save;
     }
@@ -172,6 +178,8 @@ export class Logging_manage {
         if (is_Empty_Object(logging_save)) {
             return;
         }
+
+        this.now_place = logging_save.now_place; //地点
         let now_time = global.get_game_now_time();
         let save_time = logging_save.now_time;
         // 伐木地点参数加载，需要将存档中的时间同步到当前时间
@@ -185,6 +193,24 @@ export class Logging_manage {
             }
         }
         this.now_LGI_status = logging_save.now_LGI_status;
+        //伐木方式按钮切换
+        this.now_LGI_way = logging_save.now_LGI_way;
+        const LGI_F_way_bar = document.getElementById('LGI_F_way_bar');
+        const LGI_M_way_bar = document.getElementById('LGI_M_way_bar');
+        if (logging_save.now_LGI_way == 'LGI_F_way') {
+            //快速伐木
+            LGI_F_way_bar.style.visibility = 'visible';
+            LGI_M_way_bar.style.visibility = 'hidden';
+            const LGI_F_way_radio_div = document.getElementById('LGI_F_way_radio_div');
+            LGI_F_way_radio_div.children[0].checked = true; //激活快速伐木按钮
+        }
+        if (logging_save.now_LGI_way == 'LGI_M_way') {
+            //精细伐木
+            LGI_F_way_bar.style.visibility = 'hidden';
+            LGI_M_way_bar.style.visibility = 'visible';
+            const LGI_M_way_radio_div = document.getElementById('LGI_M_way_radio_div');
+            LGI_M_way_radio_div.children[0].checked = true; //激活精细伐木按钮
+        }
     }
     //更新当前地点，初始化伐木信息
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -246,6 +272,9 @@ export class Logging_manage {
         //实时监测精力，根据精力值切换到对应的伐木状态
         this.monitor_energy_change_LGI_status();
     }
+    //生活技能切换，切换到了伐木界面，初始化伐木界面
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    init_live_plan_game_div() {}
     //开始伐木，更新伐木技能的界面
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_live_plan_div() {
@@ -267,10 +296,9 @@ export class Logging_manage {
             }
             //玩家攻击进度条
             let logging_way_bar;
-            let logging_way = global.get_flag('GS_logging_way');
-            if (logging_way == 'LGI_F_way') {
+            if (this.now_LGI_way == 'LGI_F_way') {
                 logging_way_bar = document.getElementById('LGI_F_way_bar');
-            } else if (logging_way == 'LGI_M_way') {
+            } else if (this.now_LGI_way == 'LGI_M_way') {
                 logging_way_bar = document.getElementById('LGI_M_way_bar');
             }
             let now_attack_ratio = this.get_attack_ratio();
@@ -295,10 +323,9 @@ export class Logging_manage {
 
         //重置玩家攻击进度条
         let logging_way_bar;
-        let logging_way = global.get_flag('GS_logging_way');
-        if (logging_way == 'LGI_F_way') {
+        if (this.now_LGI_way == 'LGI_F_way') {
             logging_way_bar = document.getElementById('LGI_F_way_bar');
-        } else if (logging_way == 'LGI_M_way') {
+        } else if (this.now_LGI_way == 'LGI_M_way') {
             logging_way_bar = document.getElementById('LGI_M_way_bar');
         }
         let now_attack_ratio = this.get_attack_ratio();
@@ -325,10 +352,9 @@ export class Logging_manage {
         LGI_E_button.style.display = 'none';
         //重置进度条
         let logging_way_bar;
-        let logging_way = global.get_flag('GS_logging_way');
-        if (logging_way == 'LGI_F_way') {
+        if (this.now_LGI_way == 'LGI_F_way') {
             logging_way_bar = document.getElementById('LGI_F_way_bar');
-        } else if (logging_way == 'LGI_M_way') {
+        } else if (this.now_LGI_way == 'LGI_M_way') {
             logging_way_bar = document.getElementById('LGI_M_way_bar');
         }
         logging_way_bar.children[0].children[0].style.width = '0%';
@@ -337,8 +363,14 @@ export class Logging_manage {
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_player_data(player_end_attr) {
         if (player_end_attr) this.player_end_attr = player_end_attr;
+
         //更新伐木时的玩家参数
         this.updata_true_LGI_data();
+
+        // 如果当前地点不可伐木，就不用更新后续的伐木属性，防止读到未定义的伐木参数
+        if (!places[this.now_place].live_plan_flag[0]) {
+            return;
+        }
     }
     //判断当前是否处于伐木的休息状态
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -420,11 +452,18 @@ export class Logging_manage {
         //砍到树身上
         this.tree_manage.attack_tree(LGI_damage);
 
-        //记录砍了多少伤害，用于结算伐木技能的经验
+        //记录伐木中的参数，用于结算伐木技能的经验
         let global_flag_manage = global.get_global_flag_manage();
         let logging_behavior = new Object();
         logging_behavior.LGI_damage = LGI_damage;
-        global_flag_manage.record_logging_behavior(logging_behavior);
+        if (this.now_LGI_status == 'LGI_F_way') {
+            //当前模式是快速伐木，记录快速伐木模式的伐木伤害
+            logging_behavior.LGI_F_damage = LGI_damage;
+        } else if (this.now_LGI_status == 'LGI_M_way') {
+            //当前模式是精细伐木，记录精细伐木模式的伐木伤害
+            logging_behavior.LGI_M_damage = LGI_damage;
+        }
+        global_flag_manage.record_live_plan_skill_leveling_behavior('logging', logging_behavior);
 
         if (!this.tree_manage.get_tree_statu()) {
             //树死了
@@ -565,6 +604,13 @@ export class Logging_manage {
     get_true_LGI_attack() {
         //基础伐木攻击
         let LGI_attack = this.player_end_attr['LGI_attack'];
+        //直接加算增幅
+        let attack_add = 0;
+        if (this.now_LGI_way == 'LGI_M_way') {
+            if (!is_Empty_Object(this.player_end_attr['LGI_M_attack'])) {
+                attack_add += this.player_end_attr['LGI_M_attack'];
+            }
+        }
 
         //获取所有直接乘算增幅
         let damage_add = 0;
@@ -577,21 +623,26 @@ export class Logging_manage {
         }
 
         //获取所有最终乘算增幅
-        let end_LGI_attack = this.player_end_attr['end_LGI_attack'];
+        let end_LGI_attack_ratio = this.player_end_attr['end_LGI_attack_ratio'];
 
-        let true_LGI_attack = calculate_num_attr(LGI_attack, 0, damage_add, 0, end_LGI_attack);
+        let true_LGI_attack = calculate_num_attr(LGI_attack, attack_add, damage_add, 0, end_LGI_attack_ratio);
         return true_LGI_attack;
     }
     //获取最终伐木伤害
     get_LGI_damage() {
-        let LGI_damage;
+        let LGI_damage = this.true_LGI_attack;
         //暴击结算
         let random_manage = global.get_random_manage(); //随机数管理类
         if (random_manage.try_number_random(this.true_LGI_critical_chance)) {
-            LGI_damage = this.true_LGI_attack * (this.true_LGI_critical_damage * 0.01);
-        } else {
-            LGI_damage = this.true_LGI_attack;
+            LGI_damage = LGI_damage * (this.true_LGI_critical_damage * 0.01);
         }
+        //对小树的增伤
+        if (this.tree_manage.get_max_HP() <= 15) {
+            if (!is_Empty_Object(this.player_end_attr['mini_tree_LGI_damage'])) {
+                LGI_damage += this.player_end_attr['mini_tree_LGI_damage'];
+            }
+        }
+
         return LGI_damage;
     }
     //获取最终伐木间隔
@@ -677,10 +728,9 @@ export class Logging_manage {
         drop_value.innerHTML = '无';
         //玩家攻击进度条
         let logging_way_bar;
-        let logging_way = global.get_flag('GS_logging_way');
-        if (logging_way == 'LGI_F_way') {
+        if (this.now_LGI_way == 'LGI_F_way') {
             logging_way_bar = document.getElementById('LGI_F_way_bar');
-        } else if (logging_way == 'LGI_M_way') {
+        } else if (this.now_LGI_way == 'LGI_M_way') {
             logging_way_bar = document.getElementById('LGI_M_way_bar');
         }
         logging_way_bar.children[0].children[0].style.width = '0%';

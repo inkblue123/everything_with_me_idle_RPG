@@ -128,7 +128,7 @@ class Fish_manage {
 export class Fishing_manage {
     constructor() {
         this.now_time; //当前时间
-        this.now_place; //当前地点
+        this.now_place = 'village_home'; //当前地点
         this.last_FIS_status = FIS_status.NO_FIS; //上一帧钓鱼状态
         this.now_FIS_status; //当前钓鱼状态
 
@@ -162,6 +162,7 @@ export class Fishing_manage {
         fishing_save.now_FIS_status = this.now_FIS_status;
         fishing_save.FIS_place_rare_fishs = this.FIS_place_rare_fishs;
         fishing_save.FIS_place_items_show = this.FIS_place_items_show;
+        fishing_save.now_place = this.now_place;
         return fishing_save;
     }
     //加载钓鱼技能存档
@@ -189,6 +190,7 @@ export class Fishing_manage {
             }
         }
         this.FIS_place_items_show = fishing_save.FIS_place_items_show;
+        this.now_place = fishing_save.now_place; //地点
     }
     //更新当前地点，初始化钓鱼信息
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -206,6 +208,9 @@ export class Fishing_manage {
         //界面切换到钓鱼状态对应界面
         this.show_now_FIS_status_div();
     }
+    //生活技能切换，切换到了钓鱼界面，初始化钓鱼界面
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    init_live_plan_game_div() {}
     //地点变化时，对钓鱼界面特殊更新
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_super_game_div(next_place) {
@@ -385,8 +390,14 @@ export class Fishing_manage {
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_player_data(player_end_attr) {
         if (player_end_attr) this.player_end_attr = player_end_attr;
-        // //更新钓鱼时的玩家参数
+        //更新钓鱼时的玩家参数
         this.updata_true_FIS_data();
+
+        // 如果当前地点不可钓鱼，就不用更新后续钓鱼属性，防止读到未定义的钓鱼参数
+        if (!places[this.now_place].live_plan_flag[3]) {
+            return;
+        }
+        //伴随角色属性变化而变化的其他钓鱼属性
     }
     //判断当前是否处于钓鱼的休息状态
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -475,7 +486,7 @@ export class Fishing_manage {
             let global_flag_manage = global.get_global_flag_manage();
             let fishing_behavior = new Object();
             fishing_behavior.bait_fish_num = 1;
-            global_flag_manage.record_fishing_behavior(fishing_behavior);
+            global_flag_manage.record_live_plan_skill_leveling_behavior('fishing', fishing_behavior);
         } else {
             //上钩失败，重置上钩阶段
             this.reset_round();

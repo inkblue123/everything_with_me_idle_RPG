@@ -56,12 +56,13 @@ function get_UGS_village_barracks_week() {
 function get_UGS_BP_weight() {
     var BP_weight = 0;
     let P_backpack = player.get_player_backpack();
-    let arr = Object.keys(P_backpack); //将拥有的物品的key转换成一个数组
+    let BP_all_item = P_backpack.get_BP_all_item();
+    let arr = Object.keys(BP_all_item); //将拥有的物品的key转换成一个数组
     for (let item_key of arr) {
-        let item_obj = P_backpack[item_key];
+        let item_obj = BP_all_item[item_key];
         let id = item_obj.id;
 
-        let aitem_num = P_backpack[item_key].num;
+        let aitem_num = BP_all_item[item_key].num;
         BP_weight += Math.floor(aitem_num / items[id].maxStack);
         if (aitem_num % items[id].maxStack != 0) {
             BP_weight++;

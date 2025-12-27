@@ -34,7 +34,7 @@ function make_logging_div(LGI_value_div) {
     var LGI_F_way_current = addElement(LGI_F_way_frame, 'div', 'LGI_F_way_current', 'progress_bar_current player_logging_current');
     LGI_F_way_bar.children[0].children[0].style.width = '0%';
 
-    var LGI_F_way_radio_div = addElement(LGI_M_L_div, 'div', null, 'radio_div LGI_radio_div');
+    var LGI_F_way_radio_div = addElement(LGI_M_L_div, 'div', 'LGI_F_way_radio_div', 'radio_div LGI_radio_div');
     addElement_radio(LGI_F_way_radio_div, 'LGI_F_way', 'LGI_switch', 'LGI_F_way', '快速伐木');
     LGI_F_way_radio_div.children[0].checked = true; //初始激活该按钮
     //中部中侧
@@ -47,7 +47,7 @@ function make_logging_div(LGI_value_div) {
     LGI_M_way_bar.style.visibility = 'hidden';
     LGI_M_way_bar.children[0].children[0].style.width = '0%';
 
-    var LGI_M_way_radio_div = addElement(LGI_M_M_div, 'div', null, 'radio_div LGI_radio_div');
+    var LGI_M_way_radio_div = addElement(LGI_M_M_div, 'div', 'LGI_M_way_radio_div', 'radio_div LGI_radio_div');
     addElement_radio(LGI_M_way_radio_div, 'LGI_M_way', 'LGI_switch', 'LGI_M_way', '精细伐木');
 
     //中部右侧
@@ -70,7 +70,6 @@ function set_logging_button(LGI_value_div) {
     let radios = LGI_value_div.querySelectorAll('input[type="radio"][name="LGI_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
-            global.set_flag('GS_logging_way', this.id);
             change_LGI_way(this.id);
             let live_plan_manage = global.get_live_plan_manage();
             let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
