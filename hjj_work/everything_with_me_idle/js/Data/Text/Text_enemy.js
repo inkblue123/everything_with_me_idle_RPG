@@ -88,9 +88,18 @@ function fish_enemy(texts) {
 //挖矿敌人-矿石的文本
 function ore_enemy(texts) {
     let id;
+    id = 'gravel_layer';
+    add_text_object(texts, id);
+    texts[id].enemy_name = '碎石岩层';
     id = 'hard_stratum';
     add_text_object(texts, id);
     texts[id].enemy_name = '坚硬山岩';
+    id = 'iron_stratum';
+    add_text_object(texts, id);
+    texts[id].enemy_name = '铁矿山石';
+    id = 'cold_rock_layer';
+    add_text_object(texts, id);
+    texts[id].enemy_name = '硬冷岩层';
 }
 //初始化文本数据库中与敌人相关的文本
 function init_Text_enemy(texts) {

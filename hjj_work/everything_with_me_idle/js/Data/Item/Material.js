@@ -277,6 +277,7 @@ function init_rock(items) {
     add_Material_object(items, id);
     items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 4); //物品价值
+
     id = 'lowFe_rock'; //含铁岩石
     add_Material_object(items, id);
     items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
@@ -285,6 +286,35 @@ function init_rock(items) {
     add_Material_object(items, id);
     items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 16); //物品价值
+
+    id = 'low_xuantie_rock'; //玄铁碎石
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 2); //物品价值
+    id = 'high_xuantieFe_rock'; //玄铁矿
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 16); //物品价值
+
+    id = 'low_iceiron_rock'; //寒元碎石
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 2); //物品价值
+    id = 'high_iceiron_rock'; //寒元矿
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 16); //物品价值
+
+    id = 'low_firecopper_rock'; //赤铜碎石
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 2); //物品价值
+    id = 'high_firecopper_rock'; //赤铜矿
+    add_Material_object(items, id);
+    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 16); //物品价值
+
+    //精金，灼炎石，地龙须碎，寒冰玉，枯荣石，繁花石
 }
 
 //木制零件

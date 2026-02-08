@@ -247,9 +247,8 @@ export class Random_manage {
         let item_id = this.chance_random_get_id(items, 'ENEMY_DEATH_DROP', father_id);
         return item_id;
     }
-    //伐木敌人死亡，在指定等级的指定掉落列表里返回一个物品id
-    get_tree_death_item_id(tree_id, reward_level, arr_id) {
-        // let items = enemys[tree_id].item_array[arr_id].items;
+    //敌人死亡，在指定等级的指定掉落列表里返回一个物品id
+    get_enemy_death_reward_level_item_id(tree_id, reward_level, arr_id) {
         let items = enemys[tree_id].reward_level_item[reward_level][arr_id].items;
         let father_id = tree_id + '_' + reward_level + '_' + arr_id;
         let item_id = this.chance_random_get_id(items, 'ENEMY_DEATH_DROP', father_id);

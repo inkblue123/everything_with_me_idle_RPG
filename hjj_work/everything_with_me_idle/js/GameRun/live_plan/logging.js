@@ -103,7 +103,7 @@ class Tree_manage {
             }
             for (let j = 0; j < drop_times; j++) {
                 //根据权重，获取掉落哪一个物品
-                let item_key = random_manage.get_tree_death_item_id(this.id, reward_level, i);
+                let item_key = random_manage.get_enemy_death_reward_level_item_id(this.id, reward_level, i);
                 let data_obj = enemy_item_array.items[item_key];
 
                 let item_obj = new Object();
@@ -120,6 +120,9 @@ class Tree_manage {
         //对掉落物去重
         let uniqueArr = new Object();
         for (let item_obj of drop_item_arry) {
+            if (item_obj.num == 0) {
+                continue;
+            }
             let item_key = get_item_id_key(item_obj);
 
             if (is_Empty_Object(uniqueArr[item_key])) {

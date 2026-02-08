@@ -79,10 +79,12 @@ export class Data_attr_manage {
         this.live_plan_attr['FIS_walkfish_attack'] = 3; //钓鱼遛鱼力
         this.live_plan_attr['FAG_attack'] = 5; //采集力
         this.live_plan_attr['FAG_interval'] = 5; //采集速度
-        // this.live_plan_attr['FAG_luck_chance'] = 100; //幸运采集触发概率
         this.live_plan_attr['FAG_luck_chance'] = 0.1; //幸运采集触发概率
-        // this.live_plan_attr['FAG_danger_chance'] = 100; //涉险采集触发概率
         this.live_plan_attr['FAG_danger_chance'] = 0.07; //涉险采集触发概率
+        this.live_plan_attr['MIN_interval'] = 1; //挖矿基础间隔
+        this.live_plan_attr['MIN_attack'] = 3; //挖矿力
+        this.live_plan_attr['MIN_critical_chance'] = 5; //挖矿暴击率
+        this.live_plan_attr['MIN_critical_damage'] = 150; //挖矿暴击伤害
 
         //汇总
         this.prevObjects['player_attr'] = JSON.parse(JSON.stringify(this.player_attr));

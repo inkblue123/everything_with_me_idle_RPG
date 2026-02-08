@@ -175,7 +175,3 @@ export class Exp_manage {
         return this.leveling_behavior[son_behavior][exp_source];
     }
 }
-
-var exp_manage = new Exp_manage();
-
-export { exp_manage };

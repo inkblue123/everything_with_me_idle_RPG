@@ -249,17 +249,30 @@ function init_backhill_cave_place(places) {
     id = 'cave_inlet'; //洞穴入口
     add_normal_Place(places, id, 'backhill_cave');
     places[id].add_connect_normal_place('forest_edge', 'karst_cave');
-    places[id].set_live_plan_flag(4); //当前地点可以执行的生活技能
+    places[id].set_live_plan_flag(5); //当前地点可以执行的生活技能
+    // places[id].set_live_plan_flag(4); //当前地点可以执行的生活技能
+    places[id].set_logging_data(5); //这个地点的伐木相关参数，树的复活时间5秒
+    places[id].set_logging_tree('pine', 30, false); //这个地点可刷的树，松树
     places[id].set_mining_data(10); //这个地点的挖矿相关参数，矿石的复活时间10秒
-    places[id].set_mining_ore('hard_stratum', 10); //这个地点可刷的矿石
+    places[id].set_mining_ore('gravel_layer', 75); //这个地点可刷的矿石，碎石岩层
+    places[id].set_mining_ore('hard_stratum', 25); //这个地点可刷的矿石，坚硬山岩
 
     id = 'karst_cave'; //溶洞
     add_normal_Place(places, id, 'backhill_cave');
     places[id].add_connect_normal_place('cave_inlet');
+    places[id].set_live_plan_flag(4); //当前地点可以执行的生活技能
+    places[id].set_mining_data(10); //这个地点的挖矿相关参数，矿石的复活时间10秒
+    places[id].set_mining_ore('gravel_layer', 15); //这个地点可刷的矿石，碎石岩层
+    places[id].set_mining_ore('hard_stratum', 50); //这个地点可刷的矿石，坚硬山岩
+    places[id].set_mining_ore('iron_stratum', 35); //这个地点可刷的矿石，铁矿山石
 
     id = 'alp_cave_inlet'; //高山洞穴入口
     add_normal_Place(places, id, 'backhill_cave');
     places[id].add_connect_normal_place('forest_core');
+    places[id].set_live_plan_flag(4); //当前地点可以执行的生活技能
+    places[id].set_mining_data(10); //这个地点的挖矿相关参数，矿石的复活时间10秒
+    places[id].set_mining_ore('hard_stratum', 75); //这个地点可刷的矿石，坚硬山岩
+    places[id].set_mining_ore('cold_rock_layer', 25); //这个地点可刷的矿石，硬冷岩层
 }
 
 export { init_Place_normal };

@@ -184,8 +184,13 @@ function set_Live_plan_button(Live_plan) {
             //初始化新技能的界面
             live_plan_manage.init_live_plan_game_div(this.id);
 
-            //停止游戏状态
-            global.set_flag('GS_game_statu', 'NULL');
+            //切换游戏状态
+            if (this.id == 'MIN_button') {
+                global.set_flag('GS_game_statu', 'mining');
+            } else {
+                //停止游戏状态
+                global.set_flag('GS_game_statu', 'NULL');
+            }
             //切换界面
             change_Explore_collection_div(this.id);
         });

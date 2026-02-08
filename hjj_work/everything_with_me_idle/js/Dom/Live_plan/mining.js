@@ -65,42 +65,51 @@ function make_mining_div(MIN_value_div) {
     var MIN_MR_frame = addElement(MIN_MR_bar, 'div', 'MIN_MR_frame', 'progress_bar_frame player_mining_frame'); //条的外框
     var MIN_MR_current = addElement(MIN_MR_frame, 'div', 'MIN_MR_current', 'progress_bar_current player_mining_current');
     MIN_MR_bar.children[0].children[0].style.width = '0%';
-    MIN_MR_bar.style.visibility = 'hidden';
+    // MIN_MR_bar.style.visibility = 'hidden';
     //更换挖矿目标的按钮
     var MIN_replace_button = addElement(MIN_M_R_div, 'button', 'MIN_replace_button', null);
     MIN_replace_button.innerHTML = '更换目标';
 
     //挖矿下部，开始按钮
     let MIN_down_div = addElement(MIN_value_div, 'div', 'MIN_down_div', null, '');
-    var MIN_start_button = addElement(MIN_down_div, 'button', 'MIN_start_button', 'LP_button', '');
-    MIN_start_button.innerHTML = '开始挖矿';
-    var MIN_end_button = addElement(MIN_down_div, 'button', 'MIN_end_button', 'LP_button', 'none');
-    MIN_end_button.innerHTML = '停止挖矿';
+    // 下部左侧
+    let MIN_D_L_div = addElement(MIN_down_div, 'div', null, 'MIN_D_div', '');
+    // 下部中侧
+    //玩家挖矿进度条
+    let MIN_D_M_div = addElement(MIN_down_div, 'div', null, 'MIN_D_div', '');
+    var MIN_D_bar = addElement(MIN_D_M_div, 'div', 'MIN_D_bar', 'progress_bar');
+    var MIN_D_frame = addElement(MIN_D_bar, 'div', 'MIN_D_frame', 'progress_bar_frame player_mining_frame'); //条的外框
+    var MIN_D_current = addElement(MIN_D_frame, 'div', 'MIN_D_current', 'progress_bar_current player_mining_current');
+    MIN_D_bar.children[0].children[0].style.width = '0%';
+    //开始和停止挖矿按钮
+    var MIN_S_button = addElement(MIN_D_M_div, 'button', 'MIN_S_button', 'LP_button', '');
+    MIN_S_button.innerHTML = '开始挖矿';
+    var MIN_E_button = addElement(MIN_D_M_div, 'button', 'MIN_E_button', 'LP_button', 'none');
+    MIN_E_button.innerHTML = '停止挖矿';
+    // 下部右侧
+    let MIN_D_R_div = addElement(MIN_down_div, 'div', null, 'MIN_D_div', '');
 }
 
 //为挖矿界面中的按钮添加交互逻辑
 function set_mining_button(MIN_value_div) {
-    let MIN_start_button = MIN_value_div.querySelector('#MIN_start_button');
-    let MIN_end_button = MIN_value_div.querySelector('#MIN_end_button');
+    let MIN_S_button = MIN_value_div.querySelector('#MIN_S_button');
+    let MIN_E_button = MIN_value_div.querySelector('#MIN_E_button');
     //开始挖矿按钮
-    MIN_start_button.onclick = function () {
-        //开启挖矿状态
-        global.set_flag('GS_game_statu', 'mining');
+    MIN_S_button.onclick = function () {
         //开启一轮挖矿，重置挖矿的参数
         let live_plan_manage = global.get_live_plan_manage();
         let mining_manage = live_plan_manage.get_EC_live_skill_manage('mining_manage');
         mining_manage.player_start_mining();
         mining_manage.reset_round();
         //开始挖矿按钮切换成停止挖矿
-        MIN_start_button.style.display = 'none';
-        MIN_end_button.style.display = '';
+        MIN_S_button.style.display = 'none';
+        MIN_E_button.style.display = '';
     };
     //停止挖矿按钮
-    MIN_end_button.onclick = function () {
+    MIN_E_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
         let mining_manage = live_plan_manage.get_EC_live_skill_manage('mining_manage');
         mining_manage.stop_game_statu();
-        mining_manage.reset_round();
     };
     // 使用的主动技能变化
     let MIN_M_UseAPS_select = MIN_value_div.querySelector('#MIN_M_UseAPS_select');
@@ -113,9 +122,7 @@ function set_mining_button(MIN_value_div) {
         let live_plan_manage = global.get_live_plan_manage();
         let mining_manage = live_plan_manage.get_EC_live_skill_manage('mining_manage');
         //更换当前挖矿目标
-        mining_manage.reborn_ore();
-        //停止当前挖矿动作
-        mining_manage.stop_game_statu();
+        mining_manage.ore_replace_reborn();
     };
 }
 function get_MIN_use_CSB() {

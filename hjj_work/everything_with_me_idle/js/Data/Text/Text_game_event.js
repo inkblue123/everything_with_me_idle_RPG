@@ -39,7 +39,7 @@ function mini_event_text(texts) {
     add_text_object(texts, id);
     texts[id].event_name = '周二新手教学';
     texts[id].button_name = '进行周二新手教学';
-    texts[id].text1 = '        兵营教练：赤手空拳与敌人战斗是不明知的，合适的防具可以降低敌人的伤害，兵营为所有人都准备了一套装备，好好磨合，战斗考验要用的';
+    texts[id].text1 = '        兵营教练：赤手空拳与敌人战斗是不明智的，合适的防具可以降低敌人的伤害，兵营为所有人都准备了一套装备，好好磨合，战斗考验要用的';
     texts[id].text2 = '获得“全套木制护甲”<br>（在左下窗口的“背包物品中使用它们”）';
 
     id = 'new_player_teach_3';

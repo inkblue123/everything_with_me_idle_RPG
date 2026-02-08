@@ -180,3 +180,14 @@
     box-sizing: border-box;
     align-items: center;
 }
+/* 挖矿下部的分块div */
+.MIN_D_div {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* width: 80%; */
+    height: 100%;
+    gap: 2%;
+}

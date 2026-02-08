@@ -342,6 +342,9 @@ export class Combat_manage {
         //对掉落物去重进行合并
         let uniqueArr = new Object();
         for (let item_obj of drop_item_arry) {
+            if (item_obj.num == 0) {
+                continue;
+            }
             let item_key = get_item_id_key(item_obj);
 
             if (is_Empty_Object(uniqueArr[item_key])) {
@@ -353,7 +356,3 @@ export class Combat_manage {
         return uniqueArr;
     }
 }
-
-var combat_manage = new Combat_manage();
-
-export { combat_manage };

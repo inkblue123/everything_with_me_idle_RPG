@@ -12,6 +12,7 @@ import { create_Combat } from './Combat.js';
 import { create_Game_log } from './Game_log.js';
 import { create_Live_plan } from './Live_plan/Live_plan.js';
 import { create_Store } from './Store.js';
+import { create_Map } from './Map.js';
 
 //构建所有游戏界面布局
 function create_game_dom() {
@@ -36,8 +37,9 @@ function create_game_dom() {
     //游离于游戏布局之上，跟随鼠标的小窗口
     let Tooltip = create_Tooltip();
     //非战斗时右上，地图界面
-    let map = crtElement('div', 'map', null, '', '');
-    map.textContent = '地图界面';
+    let map = create_Map();
+    // let map = crtElement('div', 'map', null, '', '');
+    // map.textContent = '地图界面';
 
     //创建布局
     //整个项目先分成上下两部分，上95%是游戏主体，下5%是设置

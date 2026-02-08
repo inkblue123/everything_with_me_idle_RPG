@@ -19,10 +19,10 @@ function init_game() {
 
     if (save_str) {
         //base64解密
-        // console.log('%s', save_str);
+        console.log('%s', save_str);
         save_str = b64_to_utf8(save_str);
         //把字符串转换成存档对象
-        // console.log('%s', save_str);
+        console.log('%s', save_str);
         let save_obj = JSON.parse(save_str);
         //用存档对象里的内容加载游戏
         player.load_player_class(save_obj.player_save);

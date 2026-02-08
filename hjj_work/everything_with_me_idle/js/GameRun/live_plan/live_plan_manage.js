@@ -43,7 +43,7 @@ export class Live_plan_manage {
         //钓鱼存档
         Live_plan_save.fishing_save = this.fishing_manage.save_fishing_manage();
         //挖矿存档
-        // Live_plan_save.mining_save = this.mining_manage.save_mining_manage();
+        Live_plan_save.mining_save = this.mining_manage.save_mining_manage();
         //采集存档
         Live_plan_save.foraging_save = this.foraging_manage.save_foraging_manage();
         //潜水存档
@@ -85,7 +85,7 @@ export class Live_plan_manage {
         //钓鱼存档
         this.fishing_manage.load_fishing_manage(Live_plan_save.fishing_save);
         //挖矿存档
-        // this.mining_manage.load_mining_manage(Live_plan_save.mining_save);
+        this.mining_manage.load_mining_manage(Live_plan_save.mining_save);
         //采集存档
         this.foraging_manage.load_foraging_manage(Live_plan_save.foraging_save);
         //潜水存档

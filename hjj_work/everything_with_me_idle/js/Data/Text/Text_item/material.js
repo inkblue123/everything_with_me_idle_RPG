@@ -251,6 +251,22 @@ function init_Text_rock(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '富铁矿石';
     texts[id].item_desc = '高纯度含铁矿石，断裂面呈银灰色，重量比普通岩石更大，';
+    id = 'low_iceiron_rock';
+    add_text_object(texts, id);
+    texts[id].item_name = '寒元碎石';
+    texts[id].item_desc = '含有寒元矿的碎石，只有大量的碎石才能费时费力的提炼出寒元锭来，难堪大用，价值不高';
+    id = 'high_iceiron_rock';
+    add_text_object(texts, id);
+    texts[id].item_name = '寒元矿';
+    texts[id].item_desc = '寒冷地区孕育出的特殊矿石，表面呈深蓝色，光滑如镜，散发寒气，内含水元素，却比寻常金属更坚硬三分';
+    id = 'low_firecopper_rock';
+    add_text_object(texts, id);
+    texts[id].item_name = '赤铜碎石';
+    texts[id].item_desc = '含有赤铜矿的碎石，只有大量的碎石才能费时费力的提炼出赤铜锭来，难堪大用，价值不高';
+    id = 'high_firecopper_rock';
+    add_text_object(texts, id);
+    texts[id].item_name = '赤铜矿';
+    texts[id].item_desc = '炎热地区孕育出的特殊矿石，呈现出赤红与暗金交杂的斑驳色泽，边缘锐利如残刃，能感觉到火元素波动';
 }
 //木制零件的文本
 function init_Text_wood_parts(texts) {
