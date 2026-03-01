@@ -1,19 +1,28 @@
 import { add_store_Place } from './Place_class.js';
 
 function init_Place_store(places) {
-    let id = 'VH_pharmacy'; //村庄诊所-药房
-    add_store_Place(places, id, 'village');
-    //该商店的商品列表
-    // places[id].add_infinite_normal_goods('Oak_logs');
-    places[id].add_goods('Oak_logs');
+    //村庄区域的商店
+    init_village_store(places);
+}
 
-    id = 'VM_smithy'; //村庄集市-铁匠铺
-    add_store_Place(places, id, 'village');
+function init_village_store(places) {
+    let id;
+    let area = 'village';
+
+    id = 'VH_pharmacy'; //村庄诊所-药房
+    add_store_Place(places, id, area);
     //该商店的商品列表
-    // places[id].add_infinite_normal_goods('Oak_logs');
+    places[id].set_use_money_type('ordinary_coin');
+    // places[id].add_goods('Oak_logs');
+
+    id = 'VM_smithy_showcase'; //村庄集市-铁匠铺-商品橱窗
+    add_store_Place(places, id, area);
+    //该商店的商品列表
+    places[id].set_use_money_type('ordinary_coin');
+    places[id].add_goods('Oak_logs', 'fixed', 'infinite', null, null, null, null);
 
     id = 'VM_woodshop_showcase'; //村庄集市-木工坊-商品橱窗
-    add_store_Place(places, id, 'village');
+    add_store_Place(places, id, area);
     //该商店的商品列表
     //橡树原木，固定商品，无限库存，不会涨价，不需要补货
     places[id].add_goods('Oak_logs', 'fixed', 'infinite', null, null, null, null);
@@ -29,7 +38,7 @@ function init_Place_store(places) {
     places[id].set_clearance_data(7200, 30);
 
     id = 'VM_trade_hub'; //村庄集市-交易市场
-    add_store_Place(places, id, 'village');
+    add_store_Place(places, id, area);
     //该商店的商品列表
     // places[id].add_infinite_normal_goods('Oak_logs');
 }

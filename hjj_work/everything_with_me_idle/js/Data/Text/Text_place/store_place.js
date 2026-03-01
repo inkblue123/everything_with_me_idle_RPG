@@ -16,9 +16,19 @@ function village_store_place_text(texts) {
     texts[id].place_name = '药房';
     texts[id].place_desc = '售药窗口：村庄药品不容浪费，每人每天限额购买，你需要什么';
 
+    id = 'VM_smithy_showcase';
+    add_text_object(texts, id);
+    texts[id].place_name = '铁匠铺商店橱窗';
+    texts[id].place_desc = ''; //这个文本目前用不到
+
     id = 'VM_woodshop_showcase';
     add_text_object(texts, id);
     texts[id].place_name = '木工坊商店橱窗';
+    texts[id].place_desc = ''; //这个文本目前用不到
+
+    id = 'VM_trade_hub';
+    add_text_object(texts, id);
+    texts[id].place_name = '交易市场';
     texts[id].place_desc = ''; //这个文本目前用不到
 }
 //村外后山区域的npc文本

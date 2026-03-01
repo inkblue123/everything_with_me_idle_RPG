@@ -2,6 +2,9 @@ import { add_Area_object } from './Place_class.js';
 
 function init_areas(areas) {
     let id;
+    id = 'test'; //测试地点
+    add_Area_object(areas, id);
+
     id = 'village'; //村庄
     add_Area_object(areas, id);
 

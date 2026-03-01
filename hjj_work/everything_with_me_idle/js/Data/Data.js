@@ -3,6 +3,7 @@ import { enemys, init_enemys } from './Enemy/Enemy.js';
 import { enums, init_enums } from './Enum/Enum.js';
 import { formulas, init_formulas } from './Formula/Formula.js';
 import { items, init_items } from './Item/Item.js';
+import { maps, init_maps } from './Map/map.js';
 import { places, init_places } from './Place/Place.js';
 import { init_skills } from './Skill/Skill.js';
 import { texts, init_texts } from './Text/Text.js';
@@ -26,6 +27,7 @@ function game_data_init() {
     init_places();
     init_skills();
     init_enemys();
+    init_maps();
 
     //枚举数据库-游戏状态部分的枚举更新
     Enum_game_status_init();

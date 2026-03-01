@@ -251,18 +251,29 @@ function init_Text_rock(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '富铁矿石';
     texts[id].item_desc = '高纯度含铁矿石，断裂面呈银灰色，重量比普通岩石更大，';
+
+    id = 'low_xuantie_rock';
+    add_text_object(texts, id);
+    texts[id].item_name = '玄铁碎石';
+    texts[id].item_desc = '含有玄铁矿的碎石，含有些许金元素，只有大量的碎石才能费时费力的提炼出玄铁锭来';
+    id = 'high_xuantieFe_rock';
+    add_text_object(texts, id);
+    texts[id].item_name = '玄铁矿';
+    texts[id].item_desc = '铁矿脉最深处最坚硬的宝材，获取不易锻造不易加工不易，但却是曾经最广泛的炼器材料';
+
     id = 'low_iceiron_rock';
     add_text_object(texts, id);
     texts[id].item_name = '寒元碎石';
-    texts[id].item_desc = '含有寒元矿的碎石，只有大量的碎石才能费时费力的提炼出寒元锭来，难堪大用，价值不高';
+    texts[id].item_desc = '含有寒元矿的碎石，含有些许水元素，只有大量的碎石才能费时费力的提炼出寒元锭来，难堪大用，价值不高';
     id = 'high_iceiron_rock';
     add_text_object(texts, id);
     texts[id].item_name = '寒元矿';
     texts[id].item_desc = '寒冷地区孕育出的特殊矿石，表面呈深蓝色，光滑如镜，散发寒气，内含水元素，却比寻常金属更坚硬三分';
+
     id = 'low_firecopper_rock';
     add_text_object(texts, id);
     texts[id].item_name = '赤铜碎石';
-    texts[id].item_desc = '含有赤铜矿的碎石，只有大量的碎石才能费时费力的提炼出赤铜锭来，难堪大用，价值不高';
+    texts[id].item_desc = '含有赤铜矿的碎石，含有些许火元素，只有大量的碎石才能费时费力的提炼出赤铜锭来，难堪大用，价值不高';
     id = 'high_firecopper_rock';
     add_text_object(texts, id);
     texts[id].item_name = '赤铜矿';

@@ -16,15 +16,61 @@
     border-right: 2px solid #797691; /* 内框 */
     border-bottom: 1px solid #797691; /* 内框 */
     user-select: none;
+    background-color: white;
+    /* background-color: white; */
 }
 /* 地图界面负责移动的div */
 #map_move_div {
+    /* display: flex; */
+    /* flex-direction: column;
+    align-items: center;
+    justify-content: center; */
     position: absolute;
     width: 1200px;
     height: 900px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* background: white; */
     color: white;
+    transform-origin: 0 0; /* 缩放的原点 */
+    will-change: transform; /* 优化性能 */
+    /* z-index: 1; */
+}
+/* 地图界面负责承载画图线条的div */
+#map_canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transform-origin: 0 0; /* 缩放的原点 */
+    /* z-index: 0; */
 }
 
 .map_button {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    background-color: #efefef !important; /* 灰色背景 */
+    cursor: pointer; /* 鼠标悬停标识，手*/
+}
+/* 不可用按钮的样式 */
+.btn-disabled {
+    /* opacity: 0.5;  */
+    cursor: not-allowed; /* 显示禁止光标 */
+    pointer-events: none; /* 禁用所有鼠标事件 */
+    background-color: #6d6d6d !important; /* 灰色背景 */
+    border-color: #999999 !important; /* 灰色边框 */
+}
+
+/* 测试内容 */
+.map_move_div h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.map_move_div p {
+    font-size: 1.5em;
+    margin: 10px 0;
+    text-align: center;
+    max-width: 80%;
 }

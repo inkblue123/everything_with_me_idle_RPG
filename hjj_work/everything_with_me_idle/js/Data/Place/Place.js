@@ -25,4 +25,4 @@ function init_places() {
     init_areas(areas);
 }
 
-export { places,areas, init_places };
+export { places, areas, init_places };

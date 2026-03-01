@@ -177,7 +177,6 @@ export class Player_backpack {
             money_value[item_key].num = this.backpack_items[item_key].num - sell_num;
         }
         //计算需要补齐的货币的数量
-        // let need_money_obj = calculateCurrencyCombination(130, money_value);
         let need_money_obj = calculateCurrencyCombination(need_money, money_value);
         //将这些数量的货币放入待出售界面
         for (let item_key in need_money_obj.combination) {

@@ -221,6 +221,13 @@ function make_Combat_plan_div(Game_log) {
                     var OP_test_GetObjectSave_value = addElement(OP_test_GetObjectSave_div, 'div', 'OP_test_GetObjectSave_value', 'OP_V_div');
                     var OP_test_GetObjectSave_button = addElement(OP_test_GetObjectSave_value, 'button', 'OP_test_GetObjectSave_button', 'OP_button');
                     OP_test_GetObjectSave_button.innerHTML = '导出存档对象';
+                    //设置-测试-地图功能测试
+                    var OP_test_Map_div = addElement(OP_test_div, 'div', 'OP_test_Map_div', 'OP_TLV_div');
+                    var OP_test_Map_lable = addElement(OP_test_Map_div, 'div', 'OP_test_Map_lable', 'OP_T2_div');
+                    OP_test_Map_lable.innerHTML = '地图功能测试';
+                    var OP_test_Map_value = addElement(OP_test_Map_div, 'div', 'OP_test_Map_value', 'OP_V_div');
+                    var OP_test_MapSize_button = addElement(OP_test_Map_value, 'button', 'OP_test_MapSize_button', 'OP_button');
+                    OP_test_MapSize_button.innerHTML = '地图大小测试';
                 }
             }
         }
@@ -496,6 +503,12 @@ function set_Combat_plan_button(Game_log) {
                 save_game();
                 //弹出含有当前存档的提示框
                 save_game_show_object_tip();
+            };
+            //地图大小测试
+            let OP_test_MapSize_button = Game_log.querySelector('#OP_test_MapSize_button');
+            OP_test_MapSize_button.onclick = function () {
+                let map_manage = global.get_map_manage();
+                map_manage.change_map_size();
             };
         }
     }

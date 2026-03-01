@@ -94,7 +94,7 @@ function set_Control_func(Control) {
             show_new_combat(places[now_place_id]);
         } else {
             // if (places[now_place_id].type == 'normal' ) {
-            show_new_place(places[now_place_id]);
+            show_new_normal_place(places[now_place_id]);
         }
         if (global.get_flag('GS_challenge_flag')) {
             add_control_button_end_event('退出', null);
@@ -181,7 +181,7 @@ function set_Control_func(Control) {
 }
 
 //展示新的普通地点的内容
-function show_new_place(new_place) {
+function show_new_normal_place(new_place) {
     //展示新地点的描述
     Place_desc_div.innerHTML = new_place.desc;
 

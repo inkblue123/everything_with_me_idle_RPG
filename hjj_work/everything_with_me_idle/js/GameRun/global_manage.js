@@ -35,6 +35,8 @@ class Global_manage {
         this.global_flag_manage.init();
         this.live_plan_manage = new Live_plan_manage(); //生活技能管理类
         this.live_plan_manage.init();
+        this.map_manage = new Map_manage(); //地图管理类
+        this.map_manage.init();
         this.place_manage = new Place_manage(); //玩家所处地点类
         this.place_manage.init();
         this.enemy_manage = new Enemy_manage(); //场地内敌人类
@@ -45,8 +47,6 @@ class Global_manage {
         this.game_event_manage = new Game_event_manage(); //游戏事件管理类
         // this.game_event_manage.init();
         this.store_manage = new Store_manage(); //交易和商店管理类
-        this.map_manage = new Map_manage(); //地图管理类
-        this.map_manage.init();
     }
     init_config() {
         //
@@ -83,6 +83,9 @@ class Global_manage {
     }
     get_store_manage() {
         return this.store_manage;
+    }
+    get_map_manage() {
+        return this.map_manage;
     }
     //对外提供一些常用功能的接口
     updata_time_manage() {

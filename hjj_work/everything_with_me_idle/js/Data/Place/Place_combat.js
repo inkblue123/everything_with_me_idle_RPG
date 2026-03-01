@@ -2,13 +2,15 @@ import { add_combat_Place } from './Place_class.js';
 
 //位于测试区域的战斗地点
 function init_test_combat_place(places) {
-    let id = 'test_combat1'; //测试战斗地点
-    add_combat_Place(places, id, 'test');
+    let id;
+    let area = 'test'; //地点所处区域
+
+    id = 'test_combat1'; //测试战斗地点
+    add_combat_Place(places, id, area);
     //可联通地点的id
     places[id].add_connect_normal_place('test_normal1');
     places[id].set_combat_type('infinite_enemy');
     places[id].set_add_enemy_data(1, 1);
-
     //战斗地点-刷怪相关内容
     places[id].add_enemy_type = 'fixed'; //刷怪方式-固定位置
     //刷怪方式的约束条件
@@ -26,9 +28,10 @@ function init_test_combat_place(places) {
 //位于村庄区域的战斗地点
 function init_village_combat_place(places) {
     let id;
+    let area = 'village'; //地点所处区域
 
     id = 'VB_melee_train'; //村庄兵营-近战训练场地
-    add_combat_Place(places, id, 'village');
+    add_combat_Place(places, id, area);
     places[id].add_connect_normal_place('village_barracks');
     places[id].set_combat_type('infinite_enemy');
     places[id].set_add_enemy_data(5, 3);
@@ -42,7 +45,7 @@ function init_village_combat_place(places) {
     places[id].set_enemy_data('Training_Dummy', 50);
 
     id = 'VB_range_train'; //村庄兵营-远程训练场地
-    add_combat_Place(places, id, 'village');
+    add_combat_Place(places, id, area);
     places[id].add_connect_normal_place('village_barracks');
     places[id].set_combat_type('infinite_enemy');
     places[id].set_add_enemy_data(5, 3);
@@ -51,7 +54,7 @@ function init_village_combat_place(places) {
     places[id].set_enemy_data('Training_Dummy', 50);
 
     id = 'new_player_combat_test'; //新手战斗训练场所
-    add_combat_Place(places, id, 'village');
+    add_combat_Place(places, id, area);
     places[id].set_combat_type('infinite_enemy');
     places[id].set_add_enemy_data(5, 3);
     //战斗地点-刷怪相关内容

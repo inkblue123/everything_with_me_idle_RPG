@@ -17,13 +17,11 @@ function init_test_normal_place(places) {
 
     id = 'game_statr';
     add_normal_Place(places, id, area);
-    //可联通地点的id
-    places[id].add_connect_normal_place('test_combat1');
+    places[id].add_connect_normal_place('test_combat1'); //常态可联通的普通地点
 
     id = 'test_normal1';
     add_normal_Place(places, id, area);
-    //可联通地点的id
-    places[id].add_connect_normal_place('test_combat1');
+    places[id].add_connect_normal_place('test_combat1'); //常态可联通的普通地点
 }
 //村庄区域的普通地点
 function init_village_normal_place(places) {
@@ -44,7 +42,7 @@ function init_village_normal_place(places) {
 
     id = 'village_market'; //村庄集市
     add_normal_Place(places, id, area);
-    places[id].add_connect_normal_place('village_square', 'VM_woodshop');
+    places[id].add_connect_normal_place('village_square', 'VM_woodshop', 'VM_smithy');
     // places[id].add_connect_store_place('VM_smithy', 'VM_woodshop', 'VM_trade_hub');
 
     id = 'village_barracks'; //村庄兵营
@@ -63,6 +61,11 @@ function init_village_normal_place(places) {
     places[id].add_connect_normal_place('village_market');
     places[id].add_connect_store_place('VM_woodshop_showcase');
     places[id].add_place_NPC('village_woodshop_owner');
+
+    id = 'VM_smithy'; //村庄集市-铁匠铺
+    add_normal_Place(places, id, area);
+    places[id].add_connect_normal_place('village_market');
+    places[id].add_connect_store_place('VM_smithy_showcase');
 }
 //村外后山区域的普通地点
 function init_village_backhill_normal_place(places) {
@@ -246,8 +249,10 @@ function init_village_backhill_normal_place(places) {
 //后山洞穴区域的普通地点
 function init_backhill_cave_place(places) {
     let id;
+    let area = 'backhill_cave';
+
     id = 'cave_inlet'; //洞穴入口
-    add_normal_Place(places, id, 'backhill_cave');
+    add_normal_Place(places, id, area);
     places[id].add_connect_normal_place('forest_edge', 'karst_cave');
     places[id].set_live_plan_flag(5); //当前地点可以执行的生活技能
     // places[id].set_live_plan_flag(4); //当前地点可以执行的生活技能
@@ -258,7 +263,7 @@ function init_backhill_cave_place(places) {
     places[id].set_mining_ore('hard_stratum', 25); //这个地点可刷的矿石，坚硬山岩
 
     id = 'karst_cave'; //溶洞
-    add_normal_Place(places, id, 'backhill_cave');
+    add_normal_Place(places, id, area);
     places[id].add_connect_normal_place('cave_inlet');
     places[id].set_live_plan_flag(4); //当前地点可以执行的生活技能
     places[id].set_mining_data(10); //这个地点的挖矿相关参数，矿石的复活时间10秒
@@ -267,7 +272,7 @@ function init_backhill_cave_place(places) {
     places[id].set_mining_ore('iron_stratum', 35); //这个地点可刷的矿石，铁矿山石
 
     id = 'alp_cave_inlet'; //高山洞穴入口
-    add_normal_Place(places, id, 'backhill_cave');
+    add_normal_Place(places, id, area);
     places[id].add_connect_normal_place('forest_core');
     places[id].set_live_plan_flag(4); //当前地点可以执行的生活技能
     places[id].set_mining_data(10); //这个地点的挖矿相关参数，矿石的复活时间10秒

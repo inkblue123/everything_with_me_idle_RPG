@@ -12,7 +12,12 @@ function normal_place_text(texts) {
 }
 //位于测试区域的普通地点
 function test_normal_place(texts) {
-    let id = 'test_normal1';
+    let id;
+    id = 'game_statr';
+    add_text_object(texts, id);
+    texts[id].place_name = '初始地点';
+    texts[id].place_desc = '这里是初始地点';
+    id = 'test_normal1';
     add_text_object(texts, id);
     texts[id].place_name = '普通地点1';
     texts[id].place_desc = '这里是普通地点1，这里不会进行战斗，可以通往其他地方';
@@ -43,6 +48,10 @@ function village_normal_place(texts) {
     add_text_object(texts, id);
     texts[id].place_name = '木工坊';
     texts[id].place_desc = '村里大部分的木工产物都来自于这里';
+    id = 'VM_smithy';
+    add_text_object(texts, id);
+    texts[id].place_name = '铁匠铺';
+    texts[id].place_desc = '村里大部分的金属制品都来自于这里';
 }
 //位于村外后山区域的普通地点
 function village_backhill_normal_place(texts) {

@@ -50,6 +50,9 @@ export class Place_manage {
         //展示新地点的内容
         let control = document.getElementById('control');
         control.show_now_place();
+        //地图更新
+        let map_manage = global.get_map_manage();
+        map_manage.set_now_place(next_place);
     }
     //更新新旧地点参数
     updata_new_place_data() {
@@ -155,6 +158,9 @@ export class Place_manage {
         //展示新地点的内容
         let control = document.getElementById('control');
         control.show_now_place();
+        //地图更新
+        let map_manage = global.get_map_manage();
+        map_manage.set_now_place(next_place);
     }
 }
 
