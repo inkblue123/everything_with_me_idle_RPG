@@ -156,8 +156,8 @@ export class Game_log_status {
                 this.make_skill_levelup_game_log(new_log_div, a_new_log);
             } else if (a_new_log.log_type == 'live_skill_run') {
                 this.make_live_skill_run_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'foraging') {
-                this.make_foraging_game_log(new_log_div, a_new_log);
+            } else if (a_new_log.log_type == 'collect') {
+                this.make_collect_game_log(new_log_div, a_new_log);
             } else {
                 console.log('没有给%s类型的日志定义对应的日志生成函数', a_new_log.log_type);
             }
@@ -210,8 +210,8 @@ export class Game_log_status {
                     this.make_skill_levelup_game_log(new_log_div, a_new_log);
                 } else if (a_new_log.log_type == 'live_skill_run') {
                     this.make_live_skill_run_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'foraging') {
-                    this.make_foraging_game_log(new_log_div, a_new_log);
+                } else if (a_new_log.log_type == 'collect') {
+                    this.make_collect_game_log(new_log_div, a_new_log);
                 } else {
                     console.log('没有给%s类型的日志定义对应的日志生成函数', a_new_log.log_type);
                 }
@@ -349,7 +349,7 @@ export class Game_log_status {
         part1.innerHTML = ch;
     }
     //生成一条采集时的日志
-    make_foraging_game_log(new_log_div, log_obj) {
+    make_collect_game_log(new_log_div, log_obj) {
         let status = log_obj.log_value[0]; //采集状态
         let log_type = log_obj.log_value[1]; //该状态内决定日志内容的类型
         let log_value1 = log_obj.log_value[2]; //该状态内决定日志内容

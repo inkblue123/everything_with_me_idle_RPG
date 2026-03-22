@@ -1,21 +1,21 @@
 import { player } from '../Player/Player.js';
 
-//按下生活规划中，搜索采集、合成制造按钮之后，切换到对应的子界面
+//按下生活规划中，搜索采集、原料处理按钮之后，切换到对应的子界面
 function change_Live_plan_div(button_id) {
     const EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
-    const SM_div = document.getElementById('SM_div'); //合成制造窗口 Synthetic_manufacturing SM
+    const MH_div = document.getElementById('MH_div'); //原料处理窗口 Material_handling MH
     if (button_id == 'EC_switch_button') {
         EC_div.style.display = '';
-        SM_div.style.display = 'none';
+        MH_div.style.display = 'none';
     }
-    if (button_id == 'SM_switch_button') {
+    if (button_id == 'MH_switch_button') {
         EC_div.style.display = 'none';
-        SM_div.style.display = '';
+        MH_div.style.display = '';
     }
 }
-//按下生活规划中，搜索采集部分是某一个具体技能之后，切换到对应界面
+//按下生活规划中，搜索采集部分的某一个具体技能之后，切换到对应界面
 function change_Explore_collection_div(button_id) {
-    let div_obj = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+    let div_obj = ['LGI', 'FIS', 'MIN', 'CLT', 'DIV', 'ACL', 'ELT'];
 
     for (let key of div_obj) {
         let div_id = key + '_value_div';
@@ -26,6 +26,20 @@ function change_Explore_collection_div(button_id) {
         }
     }
 }
+//按下生活规划中，原料处理部分的某一个具体技能之后，切换到对应界面
+function change_Material_handling_div(button_id) {
+    let div_obj = ['SYN', 'COK', 'FRG', 'EXA', 'HBB', 'EGV', 'ACM'];
+
+    for (let key of div_obj) {
+        let div_id = key + '_value_div';
+        let div = document.getElementById(div_id);
+        div.style.display = 'none';
+        if (button_id == key + '_button') {
+            div.style.display = '';
+        }
+    }
+}
+
 //点击了隐藏下拉框的按钮之后，展示当前按钮相关的下拉框，隐藏其他下拉框
 function show_dropdown_table(in_overflow_div, table_id) {
     const dropdownTable = document.getElementById(table_id);
@@ -80,4 +94,4 @@ function show_dropdown_table(in_overflow_div, table_id) {
     }
 }
 
-export { show_dropdown_table, change_Live_plan_div, change_Explore_collection_div };
+export { show_dropdown_table, change_Live_plan_div, change_Explore_collection_div, change_Material_handling_div };

@@ -93,7 +93,8 @@ export class Global_flag_manage {
     get_game_log_manage() {
         return this.GL_status;
     }
-    get_flag(flag_name) {
+    //使用游戏状态名查询对应游戏状态数值
+    get_flag(flag_name, status_in1, status_in2, status_in3) {
         let flag_type = this.get_flag_type(flag_name);
         let flag_value;
         if (flag_type == 'game_status') {
@@ -101,7 +102,8 @@ export class Global_flag_manage {
         } else if (flag_type == 'short_game_status') {
             flag_value = this.SGS_status.get_short_game_status(flag_name);
         } else if (flag_type == 'use_game_status') {
-            flag_value = get_use_game_status(flag_name);
+            flag_value = get_use_game_status(flag_name, status_in1, status_in2, status_in3);
+            return flag_value;
         } else if (flag_type == 'game_option') {
             flag_value = this.game_option.get_game_option(flag_name);
         } else {
@@ -111,8 +113,60 @@ export class Global_flag_manage {
         if (flag_value == undefined) {
             flag_value = false;
         }
-
         return flag_value;
+    }
+    //使用需要查询的游戏状态对象查询当前是否满足所有
+    use_obj_get_flag(flag_obj) {
+        let flag = true;
+        //遍历每个游戏状态名
+        for (let status_id in flag_obj) {
+            let flag_type = this.get_flag_type(status_id);
+            let flag_value; //当前该游戏状态数值
+            if (flag_type == 'use_game_status') {
+                let status_in1 = flag_obj[status_id].status_in1;
+                let status_in2 = flag_obj[status_id].status_in2;
+                let status_in3 = flag_obj[status_id].status_in3;
+                flag_value = get_use_game_status(status_id, status_in1, status_in2, status_in3);
+            } else {
+                flag_value = this.get_flag(status_id); //使用游戏状态名查询游戏状态数值
+            }
+            //当前数值与需求数值关系
+            switch (flag_obj[status_id].status_direction) {
+                case '=':
+                case undefined: //当前数值需要等于需求数值，不等于则视作不满足
+                    if (flag_value != flag_obj[status_id].status_value) {
+                        flag = false;
+                    }
+                    break;
+                case '<': //当前数值需要小于需求数值，大于等于则视作不满足
+                    if (flag_value >= flag_obj[status_id].status_value) {
+                        flag = false;
+                    }
+                    break;
+                case '<=': //当前数值需要小于等于需求数值，大于则视作不满足
+                    if (flag_value > flag_obj[status_id].status_value) {
+                        flag = false;
+                    }
+                    break;
+                case '>': //当前数值需要大于需求数值，小于等于则视作不满足
+                    if (flag_value <= flag_obj[status_id].status_value) {
+                        flag = false;
+                    }
+                    break;
+                case '>=': //当前数值需要大于等于需求数值，小于则视作不满足
+                    if (flag_value < flag_obj[status_id].status_value) {
+                        flag = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            //任意条件不满足则本次判断就不通过
+            if (flag == false) {
+                break;
+            }
+        }
+        return flag;
     }
     get_flag_type(id) {
         //游戏状态都以“GS_”开头

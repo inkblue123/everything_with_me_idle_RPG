@@ -18,8 +18,8 @@ function init_Enum_buff(enums) {
         'end_LGI_speed',
         'end_LGI_attack_ratio', //
         'end_FIS_walkfish_attack',
-        'end_FAG_attack',
-        'end_FAG_speed_num',
+        'end_CLT_attack',
+        'end_CLT_speed_num',
         'attack_ratio',
         'precision_ratio',
         'critical_chance_ratio',

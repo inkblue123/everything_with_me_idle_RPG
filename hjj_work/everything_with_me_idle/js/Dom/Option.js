@@ -132,7 +132,7 @@ function player_skill_test() {
 }
 //css特效测试
 function startMagicAnimation() {
-    const textElement = document.getElementById('FAG_show_tip_text');
+    const textElement = document.getElementById('CLT_show_tip_text');
     const text = '道法自然，万法归宗';
     textElement.innerHTML = text;
 

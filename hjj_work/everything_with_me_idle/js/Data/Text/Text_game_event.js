@@ -89,7 +89,7 @@ function mini_event_text(texts) {
     texts[id].text1 = '时候不早，该起床了';
     texts[id].text2 = '起床，前往村庄住所';
 
-    id = 'unlock_foraging_logging';
+    id = 'unlock_collect_logging';
     add_text_object(texts, id);
     texts[id].event_name = '向老妇人询问村外的情况';
     texts[id].button_name = '向老妇人询问村外的情况';

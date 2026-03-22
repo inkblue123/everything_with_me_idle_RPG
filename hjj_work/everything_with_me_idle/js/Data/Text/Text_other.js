@@ -13,7 +13,7 @@ function live_skill_name(texts) {
     id = 'mining';
     add_text_object(texts, id);
     texts[id].live_skill_name = '挖矿';
-    id = 'foraging';
+    id = 'collect';
     add_text_object(texts, id);
     texts[id].live_skill_name = '采集';
     id = 'diving';
@@ -25,11 +25,43 @@ function live_skill_name(texts) {
     id = 'exploration';
     add_text_object(texts, id);
     texts[id].live_skill_name = '探索';
+
+    id = 'synthesis';
+    add_text_object(texts, id);
+    texts[id].live_skill_name = '合成制造';
+    id = 'cooking';
+    add_text_object(texts, id);
+    texts[id].live_skill_name = '烹饪';
+    id = 'forging';
+    add_text_object(texts, id);
+    texts[id].live_skill_name = '锻造';
+    id = 'elixir_alchemy';
+    add_text_object(texts, id);
+    texts[id].live_skill_name = '炼丹';
+    id = 'herbal_bath';
+    add_text_object(texts, id);
+    texts[id].live_skill_name = '药浴';
+    id = 'engrave';
+    add_text_object(texts, id);
+    texts[id].live_skill_name = '雕刻';
+    id = 'alchemy';
+    add_text_object(texts, id);
+    texts[id].live_skill_name = '炼金术';
+}
+//原料处理类生活技能中配方的工作环境名称文本
+function work_bench_name(texts) {
+    let id;
+
+    id = 'carpentry_bench';
+    add_text_object(texts, id);
+    texts[id].work_bench_name = '木工台';
 }
 //初始化文本数据库中没有明确分类的文本
 function init_Text_other(texts) {
     //生活技能的名称文本
     live_skill_name(texts);
+    //原料处理类生活技能中配方的工作环境名称文本
+    work_bench_name(texts);
 }
 
 export { init_Text_other };

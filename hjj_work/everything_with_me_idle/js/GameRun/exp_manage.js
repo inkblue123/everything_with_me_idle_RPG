@@ -34,7 +34,7 @@ export class Leveling_Behavior {
         //挖矿过程中发生的行为的参数
         this.mining_behavior = new Object();
         //采集过程中发生的行为的参数
-        this.foraging_behavior = new Object();
+        this.collect_behavior = new Object();
     }
 }
 

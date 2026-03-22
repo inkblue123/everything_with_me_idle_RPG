@@ -1,5 +1,6 @@
 import { add_text_object } from '../Text_class.js';
 //区域的文本
+//所有的区域的文本后会附带“区域”二字，所以区域的名称就不能带有这两个字了
 function area_text(texts) {
     let id = 'village';
     add_text_object(texts, id);

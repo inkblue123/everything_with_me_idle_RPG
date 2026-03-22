@@ -36,7 +36,7 @@ function init_village_backhill_NPC(places) {
     id = 'village_old_woman'; //村口老妇
     add_NPC_Place(places, id, area);
     //有条件出现的事件入口
-    places[id].add_condition_behavior('unlock_foraging_logging');
+    places[id].add_condition_behavior('unlock_collect_logging');
     //有条件出现的见面对话，按优先级排列
 }
 

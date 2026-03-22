@@ -29,7 +29,7 @@ function init_Text_equipment(texts) {
     init_Text_logging_tool(texts); //伐木工具
     init_Text_fishing_tool(texts); //钓鱼工具
     init_Text_mining_tool(texts); //挖矿工具
-    init_Text_foraging_tool(texts); //采集工具
+    init_Text_collect_tool(texts); //采集工具
     init_Text_diving_tool(texts); //潜水工具
     init_Text_archaeology_tool(texts); //考古工具
     init_Text_exploration_tool(texts); //探索工具
@@ -196,7 +196,7 @@ function init_Text_mining_tool(texts) {
     // texts[id].item_desc = '物品描述';
 }
 //采集工具
-function init_Text_foraging_tool(texts) {
+function init_Text_collect_tool(texts) {
     let id;
 
     id = 'mowing_sickle';

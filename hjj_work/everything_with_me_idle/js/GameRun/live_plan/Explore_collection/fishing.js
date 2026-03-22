@@ -1,12 +1,12 @@
-import { get_random, calculate_num_attr } from '../../Function/math_func.js';
-import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object, get_item_id_key, get_random_text } from '../../Function/Function.js';
-import { enemys } from '../../Data/Enemy/Enemy.js';
-import { items } from '../../Data/Item/Item.js';
-import { places } from '../../Data/Place/Place.js';
-import { texts } from '../../Data/Text/Text.js';
-import { player } from '../../Player/Player.js';
-import { global } from '../global_manage.js';
+import { get_random, calculate_num_attr } from '../../../Function/math_func.js';
+import { addElement } from '../../../Function/Dom_function.js';
+import { is_Empty_Object, get_item_id_key, get_random_text } from '../../../Function/Function.js';
+import { enemys } from '../../../Data/Enemy/Enemy.js';
+import { items } from '../../../Data/Item/Item.js';
+import { places } from '../../../Data/Place/Place.js';
+import { texts } from '../../../Data/Text/Text.js';
+import { player } from '../../../Player/Player.js';
+import { global } from '../../global_manage.js';
 //钓鱼状态
 const FIS_status = Object.freeze({
     NO_FIS: 1, //没有钓鱼
@@ -943,17 +943,17 @@ export class Fishing_manage {
                 if (this.FIS_place_items_show[this.now_place].show_flag[id] == false) {
                     continue;
                 }
-                let FAG_drop_value = addElement(FIS_drop_table_value_div, 'div', null, 'drop_value');
+                let CLT_drop_value = addElement(FIS_drop_table_value_div, 'div', null, 'drop_value');
                 if (items[id].main_type.includes('equipment')) {
                     //如果掉落的是装备，改变字体颜色变成稀有度的颜色
-                    FAG_drop_value.style.color = hex2Rgba(enums[equip_rarity].rarity_color, alpha);
+                    CLT_drop_value.style.color = hex2Rgba(enums[equip_rarity].rarity_color, alpha);
                 }
-                FAG_drop_value.innerHTML = items[id].name;
+                CLT_drop_value.innerHTML = items[id].name;
             }
             if (can_show_num < all_num) {
                 //当前地点里还有玩家没发现的可采集物，显示提示信息
-                let FAG_drop_value = addElement(FIS_drop_table_value_div, 'div', null, 'drop_value');
-                FAG_drop_value.innerHTML = '未知鱼影';
+                let CLT_drop_value = addElement(FIS_drop_table_value_div, 'div', null, 'drop_value');
+                CLT_drop_value.innerHTML = '未知鱼影';
             }
         }
     }

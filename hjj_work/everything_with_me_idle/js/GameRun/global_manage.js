@@ -104,8 +104,8 @@ class Global_manage {
         this.combat_manage.set_player_next_attack(player_Attack_effect);
     }
     //获取游戏标记
-    get_flag(flag_name) {
-        return this.global_flag_manage.get_flag(flag_name);
+    get_flag(flag_name, status_in1, status_in2, status_in3) {
+        return this.global_flag_manage.get_flag(flag_name, status_in1, status_in2, status_in3);
     }
     set_flag(flag_name, flag_value) {
         return this.global_flag_manage.set_flag(flag_name, flag_value);
@@ -130,6 +130,8 @@ class Global_manage {
         global_save.random_save = this.random_manage.save_Random_manage();
         //交易和商店管理类
         global_save.store_save = this.store_manage.save_Store_manage();
+        //地图管理类
+        global_save.map_save = this.map_manage.save_map_manage();
 
         //目前战斗管理类只是负责记录参数进行运算的平台，并没有需要保存的信息
         // this.combat_manage; //战斗管理类
@@ -150,6 +152,7 @@ class Global_manage {
         this.live_plan_manage.load_Live_plan_manage(global_save.live_plan_save);
         this.random_manage.load_Random_manage(global_save.random_save);
         this.store_manage.load_Store_manage(global_save.store_save);
+        this.map_manage.load_map_manage(global_save.map_save);
         // 其他的游戏部分内容展示有很多依赖于地点的切换，所以地点存档最后更新
         this.place_manage.load_place_manage(global_save.place_save);
     }

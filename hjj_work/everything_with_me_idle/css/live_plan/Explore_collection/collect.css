@@ -1,5 +1,5 @@
 /* 探索采集-采集界面的内容 */
-#FAG_value_div {
+#CLT_value_div {
     display: flex;
     flex-direction: column;
     position: relative;
@@ -10,7 +10,7 @@
 }
 
 /* 采集上部div */
-#FAG_up_div {
+#CLT_up_div {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -22,7 +22,7 @@
 }
 /* 采集中使用的掉落品div */
 /* 每个元素只给右侧画线，专门为第3n + 1个元素左右都画线，实现表格内的样式 */
-.FAG_drop_value {
+.CLT_drop_value {
     width: 100%;
     text-align: center;
     box-sizing: border-box;
@@ -30,25 +30,28 @@
     border-bottom: 1px solid #797691;
 }
 /* 第3n + 1个元素左右都画线 */
-.page_columns_111 .FAG_drop_value:nth-child(3n + 1) {
+.page_columns_111 .CLT_drop_value:nth-child(3n + 1) {
     border-inline: 1px solid #797691;
 }
 
 /* 当前采集对象的掉落物表头 */
-#FAG_drop_table_head {
+#CLT_drop_table_head {
     width: 100%;
     height: 25px;
     text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
 }
 /* 当前采集对象中的掉落物列表滚动窗口 */
-#FAG_drop_table_scroll_box {
+#CLT_drop_table_scroll_box {
     width: 100%;
     height: 70%;
     box-sizing: border-box;
+    border: 1px solid #797691; /* 内框 */
 }
 
 /* 采集中部div */
-#FAG_middle_div {
+#CLT_middle_div {
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -59,13 +62,13 @@
     box-sizing: border-box;
 }
 /* 玩家采集进度条：最大的父元素 */
-#FAG_bar {
+#CLT_bar {
     /* flex: 1; */
     width: 80%;
     height: 25px;
 }
 /* 玩家采集进度条：外框的样式 */
-#FAG_frame {
+#CLT_frame {
     width: 100%;
     height: 25px;
     box-sizing: border-box;
@@ -73,11 +76,11 @@
     background-color: rgba(46, 60, 255, 0.3);
 }
 /* 玩家采集进度条：进度条中央，长度随进度变化的色块 */
-#FAG_current {
+#CLT_current {
     background-color: rgb(16, 118, 201);
 }
 
-#FAG_show_tip_div {
+#CLT_show_tip_div {
     width: 100%;
     height: 42px;
     /* border: 1px solid #333; */
@@ -88,7 +91,7 @@
     box-sizing: border-box;
 }
 /* 采集下部父div */
-#FAG_down_div {
+#CLT_down_div {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
@@ -98,7 +101,7 @@
     box-sizing: border-box;
 }
 /* 采集下部子div */
-.FAG_option_div {
+.CLT_option_div {
     display: flex;
     flex: 1;
 

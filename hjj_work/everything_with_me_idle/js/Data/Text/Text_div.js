@@ -104,10 +104,10 @@ function fishing_div_text(texts) {
     texts[id].text4 = '快快收线<br>快快收线';
 }
 //采集界面中用到的文本
-function foraging_div_text(texts) {
+function collect_div_text(texts) {
     let id;
     //幸运采集时的提示文本
-    id = 'luck_FAG_tip_text';
+    id = 'luck_CLT_tip_text';
     add_text_object(texts, id);
     texts[id].text1 = '幸运采集！好东西怎么在路边呢';
     texts[id].text2 = '幸运采集！这么好的东西就在这放着，我寻思没人要呢';
@@ -125,7 +125,7 @@ function foraging_div_text(texts) {
     texts[id].text14 = '幸运采集！天上掉馅饼，正好砸我头上';
     texts[id].text15 = '幸运采集！快哉快哉';
     //涉险采集开始时的提示文本
-    id = 'danger_FAG_start_tip_text';
+    id = 'danger_CLT_start_tip_text';
     add_text_object(texts, id);
     texts[id].text1 = '涉险采集开始，风险与收益并存，我去去就回';
     texts[id].text2 = '涉险采集开始，那边好像有个好东西在发光，虽然过去的路不好走，但值得试试看';
@@ -143,7 +143,7 @@ function foraging_div_text(texts) {
     texts[id].text14 = '涉险采集开始，得想个安全的路线过去，不能太莽撞，但一定要拿到手';
     texts[id].text15 = '涉险采集开始，虽然累了点，但看到宝贝就有劲了，加把劲过去看看';
     //触发涉险采集，但当前处于疲劳状态，直接放弃时的文本
-    id = 'danger_FAG_start_no_energy_end_tip_text';
+    id = 'danger_CLT_start_no_energy_end_tip_text';
     add_text_object(texts, id);
     texts[id].text1 = '涉险采集结束，采集的路上发现远处有个稀有物品，但现在有点累了，涉险过去要不得，果断放弃';
     texts[id].text2 = '涉险采集结束，收益虽好，风险太大，以现在的状态，不该去';
@@ -158,7 +158,7 @@ function foraging_div_text(texts) {
     texts[id].text11 = '涉险采集结束，我停下脚步，心中满是无奈。身体的疲劳是如此真实，我知道今天只能到此为止';
     texts[id].text12 = '涉险采集结束，宝物诚可贵，生命价更高。今日身体不适，过去也是白给，不如在此调息恢复';
     //触发涉险采集，但当前地点没有稀有物品，直接放弃时的文本
-    id = 'danger_FAG_start_no_rare_end_tip_text';
+    id = 'danger_CLT_start_no_rare_end_tip_text';
     add_text_object(texts, id);
     texts[id].text1 = '涉险采集结束，远远看着还以为是什么稀罕物，仔细一瞧才发现就是普通的草药，白高兴一场';
     texts[id].text2 = '涉险采集结束，发现个隐藏的道路，还以为捡到宝了，结果就是个常见玩意儿';
@@ -173,7 +173,7 @@ function foraging_div_text(texts) {
     texts[id].text11 = '涉险采集结束，既然不是宝贝，那该放弃就放弃，不浪费精力了';
     texts[id].text12 = '涉险采集结束，白高兴一场';
     //触发涉险采集，遭遇无法承受的危险，中途放弃时的文本
-    id = 'danger_FAG_process_danger_end_tip_text';
+    id = 'danger_CLT_process_danger_end_tip_text';
     add_text_object(texts, id);
     texts[id].text1 = '涉险采集结束，刚走到半路就遇到塌方，看来这宝贝和我没缘分，还是回去采点普通药草算了';
     texts[id].text2 = '涉险采集结束，低估了难度，准备不足差点出事，下次要做好万全准备再来尝试';
@@ -186,7 +186,7 @@ function foraging_div_text(texts) {
     texts[id].text9 = '涉险采集结束，走到一半感觉不行了，及时止损，回来采些普通药材也挺好';
     texts[id].text10 = '涉险采集结束，走到这里已经到极限了，知难而退也是种智慧';
     //触发涉险采集，过程中精力不足无法继续，中途放弃时的文本
-    id = 'danger_FAG_process_no_energy_end_tip_text';
+    id = 'danger_CLT_process_no_energy_end_tip_text';
     add_text_object(texts, id);
     texts[id].text1 = '涉险采集结束，感觉快摸到宝物了，结果体力耗尽晕了过去，醒来发现宝物也找不到了，只能自认倒霉';
     texts[id].text2 = '涉险采集结束，走得太深耗光了力气，昏睡一觉后彻底迷失方向，宝物再也找不到了';
@@ -205,7 +205,7 @@ function foraging_div_text(texts) {
     texts[id].text15 = '涉险采集结束，这次教训深刻，追逐宝物要预留体力，否则得不偿失';
     texts[id].text16 = '涉险采集结束，吃一堑长一智，下次要做好充分准备再冒险';
     //触发涉险采集，度过所有危险，得到稀有物品的文本
-    id = 'danger_FAG_finish_end_tip_text';
+    id = 'danger_CLT_finish_end_tip_text';
     add_text_object(texts, id);
     texts[id].text1 = '涉险采集结束，几经周折，终于把东西拿到手了。这一路上可真不容易，好在最后总算没白忙活';
     texts[id].text2 = '涉险采集结束，费了这么大劲，差点把命搭上，不过看着到手的宝贝，觉得一切都值了';
@@ -234,7 +234,7 @@ function init_Text_div(texts) {
     //钓鱼界面中用到的文本
     fishing_div_text(texts);
     //采集界面中用到的文本
-    foraging_div_text(texts);
+    collect_div_text(texts);
 }
 
 export { init_Text_div };

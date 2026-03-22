@@ -96,6 +96,48 @@ function init_game_dom() {
     Live_plan_div.style.display = '';
     Store_div.style.display = 'none';
     goods_trade_div.style.display = 'none';
+    //生活技能规划切换到探索采集窗口
+    const EC_div = document.getElementById('EC_div');
+    const MH_div = document.getElementById('MH_div');
+    EC_div.style.display = '';
+    MH_div.style.display = 'none';
+    //探索采集窗口的技能筛选切换到伐木
+    // const LGI_radio_div = document.getElementById('LGI_radio_div');
+    // LGI_radio_div.children[0].checked = true;
+    //原料处理窗口的技能筛选切换到合成制造，其他技能下拉窗口都隐藏
+    const SYN_radio_div = document.getElementById('SYN_radio_div');
+    SYN_radio_div.children[0].checked = true;
+    const SYN_droptable = document.getElementById('SYN_droptable');
+    SYN_droptable.style.display = 'flex';
+    const SYN_MK_radio_div = document.getElementById('SYN_MK_radio_div');
+    SYN_MK_radio_div.children[0].checked = true;
+    const COK_droptable = document.getElementById('COK_droptable');
+    COK_droptable.style.display = 'none';
+    const FRG_droptable = document.getElementById('FRG_droptable');
+    FRG_droptable.style.display = 'none';
+    const EXA_droptable = document.getElementById('EXA_droptable');
+    EXA_droptable.style.display = 'none';
+    const HBB_droptable = document.getElementById('HBB_droptable');
+    HBB_droptable.style.display = 'none';
+    const EGV_droptable = document.getElementById('EGV_droptable');
+    EGV_droptable.style.display = 'none';
+    const ACM_droptable = document.getElementById('ACM_droptable');
+    ACM_droptable.style.display = 'none';
+    //原料处理窗口右侧技能切换到合成制造，其他技能都隐藏
+    const SYN_value_div = document.getElementById('SYN_value_div');
+    SYN_value_div.style.display = '';
+    const COK_value_div = document.getElementById('COK_value_div');
+    COK_value_div.style.display = 'none';
+    const FRG_value_div = document.getElementById('FRG_value_div');
+    FRG_value_div.style.display = 'none';
+    const EXA_value_div = document.getElementById('EXA_value_div');
+    EXA_value_div.style.display = 'none';
+    const HBB_value_div = document.getElementById('HBB_value_div');
+    HBB_value_div.style.display = 'none';
+    const EGV_value_div = document.getElementById('EGV_value_div');
+    EGV_value_div.style.display = 'none';
+    const ACM_value_div = document.getElementById('ACM_value_div');
+    ACM_value_div.style.display = 'none';
 
     //左上
     //玩家属性界面切换到角色属性窗口

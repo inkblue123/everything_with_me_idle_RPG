@@ -50,6 +50,7 @@
     position: absolute;
     width: 100px;
     height: 60px;
+    font-size: 12px;
     background-color: #efefef !important; /* 灰色背景 */
     cursor: pointer; /* 鼠标悬停标识，手*/
 }
@@ -60,6 +61,10 @@
     pointer-events: none; /* 禁用所有鼠标事件 */
     background-color: #6d6d6d !important; /* 灰色背景 */
     border-color: #999999 !important; /* 灰色边框 */
+}
+/* 当前地点按钮的外框样式 */
+.btn_nowplace {
+    outline: 5px outset #3597db;
 }
 
 /* 测试内容 */

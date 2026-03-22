@@ -65,7 +65,7 @@ function init_Enum_item(enums) {
         logging_tool: 70, //伐木工具
         fishing_tool: 71, //钓鱼工具
         mining_tool: 72, //挖矿工具
-        foraging_tool: 73, //采集工具
+        collect_tool: 73, //采集工具
         diving_tool: 74, //潜水工具
         archaeology_tool: 75, //考古工具
         exploration_tool: 76, //探索工具
@@ -112,20 +112,20 @@ function init_Enum_item(enums) {
     ];
 
     //采集时提到的任意木头是指哪些小类
-    id = 'FAG_chance_all_wood';
+    id = 'CLT_chance_all_wood';
     add_Enum_Array(enums, id);
     enums[id] = [
         'ordinary_wood', //凡木
         'spirit_wood', //灵木
     ];
     //采集时提到的任意草是指哪些小类
-    id = 'FAG_chance_all_grass';
+    id = 'CLT_chance_all_grass';
     add_Enum_Array(enums, id);
     enums[id] = [
         'spirit_grass', //灵草
     ];
     //采集时提到的任意蘑菇是指哪些小类
-    id = 'FAG_chance_all_mushroom';
+    id = 'CLT_chance_all_mushroom';
     add_Enum_Array(enums, id);
     enums[id] = [
         'ordinary_mushroom', //普通蘑菇

@@ -305,7 +305,7 @@ function show_store_div() {
 function goto_new_place_get(next_place) {
     //新地点有buff
     if (!is_Empty_Object(places[next_place].buff)) {
-        let P_buff = player.get_player_buff();
+        let P_buff = player.get_player_buff_manage();
         for (let id of places[next_place].buff) {
             if (is_Empty_Object(buffs[id])) {
                 console.log('%s地点有未知buff：%s', next_place, id);
@@ -322,7 +322,7 @@ function leave_old_place_delete(old_place) {
     }
     if (!is_Empty_Object(places[old_place].buff)) {
         //旧地点有buff
-        let P_buff = player.get_player_buff();
+        let P_buff = player.get_player_buff_manage();
         for (let id of places[old_place].buff) {
             if (is_Empty_Object(buffs[id])) {
                 console.log('%s地点有未知buff：%s', old_place, id);
@@ -351,7 +351,7 @@ function check_next_place(next_place) {
 //根据普通地点的生活技能可用情况，给不可用的生活技能规划界面和按钮添加遮罩
 function show_place_can_live_plan_div(next_place) {
     //探索采集类生活技能
-    let live_plan_id = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+    let live_plan_id = ['LGI', 'FIS', 'MIN', 'CLT', 'DIV', 'ACL', 'ELT'];
     let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
     for (let i = 0; i < 7; i++) {
         //单选按钮
@@ -377,8 +377,8 @@ function show_place_can_live_plan_div(next_place) {
 //根据生活技能的解锁情况，隐藏不可见的生活技能界面和按钮
 function show_unlock_live_plan_div() {
     //探索采集类生活技能
-    let live_plan_name = ['logging', 'fishing', 'mining', 'foraging', 'diving', 'archaeology', 'exploration'];
-    let live_plan_div_id = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+    let live_plan_name = ['logging', 'fishing', 'mining', 'collect', 'diving', 'archaeology', 'exploration'];
+    let live_plan_div_id = ['LGI', 'FIS', 'MIN', 'CLT', 'DIV', 'ACL', 'ELT'];
     let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
     let global_flag_manage = global.get_global_flag_manage();
     let unlock_skill_num = 0; //解锁技能数

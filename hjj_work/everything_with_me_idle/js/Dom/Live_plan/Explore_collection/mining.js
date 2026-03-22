@@ -1,9 +1,8 @@
-import { crtElement, addElement, addElement_radio, addElement_select, addElement_lazy_select } from '../../Function/Dom_function.js';
-// import {  } from '../../Function/show_func.js';
-import { P_skills, B_skills } from '../../Data/Skill/Skill.js';
-import { items } from '../../Data/Item/Item.js';
-import { global } from '../../GameRun/global_manage.js';
-import { player } from '../../Player/Player.js';
+import { crtElement, addElement, addElement_radio, addElement_select, addElement_lazy_select } from '../../../Function/Dom_function.js';
+import { P_skills, B_skills } from '../../../Data/Skill/Skill.js';
+import { items } from '../../../Data/Item/Item.js';
+import { global } from '../../../GameRun/global_manage.js';
+import { player } from '../../../Player/Player.js';
 
 //构建挖矿技能的界面内容
 function make_mining_div(MIN_value_div) {
@@ -11,7 +10,7 @@ function make_mining_div(MIN_value_div) {
     let MIN_up_div = addElement(MIN_value_div, 'div', 'MIN_up_div', '', '');
     let ore_head_div = addElement(MIN_up_div, 'div', 'ore_head_div', '', '');
     //矿石的头像
-    let ore_head = addElement(ore_head_div, 'div', 'ore_head', 'LP_div', '');
+    let ore_head = addElement(ore_head_div, 'div', 'ore_head', null, '');
     ore_head.innerHTML = '没有目标';
     //矿石的生命进度条
     var ore_blood_bar = addElement(ore_head_div, 'div', 'ore_blood_bar', 'progress_bar', '');
@@ -20,9 +19,9 @@ function make_mining_div(MIN_value_div) {
     var ore_blood_number = addElement(ore_blood_bar, 'div', 'ore_blood_number', 'progress_bar_number'); //显示的数字，表示当前精力具体数值
     //掉落物列表
     let MIN_drop_table_div = addElement(MIN_up_div, 'div', 'MIN_drop_table_div', '', '');
-    let MIN_drop_table_head = addElement(MIN_drop_table_div, 'div', 'MIN_drop_table_head', 'LP_div', '');
+    let MIN_drop_table_head = addElement(MIN_drop_table_div, 'div', 'MIN_drop_table_head', null, '');
     MIN_drop_table_head.innerHTML = '可能的产物';
-    let drop_table_scroll_box = addElement(MIN_drop_table_div, 'div', 'MIN_drop_table_scroll_box', 'LP_div overflow_y_div', '');
+    let drop_table_scroll_box = addElement(MIN_drop_table_div, 'div', 'MIN_drop_table_scroll_box', 'overflow_y_div', '');
     var MIN_drop_table_value_div = addElement(drop_table_scroll_box, 'div', 'MIN_drop_table_value_div', 'in_overflow_div');
     var drop_value = addElement(MIN_drop_table_value_div, 'div', null, 'drop_value');
     drop_value.innerHTML = '无';
@@ -98,7 +97,7 @@ function set_mining_button(MIN_value_div) {
     MIN_S_button.onclick = function () {
         //开启一轮挖矿，重置挖矿的参数
         let live_plan_manage = global.get_live_plan_manage();
-        let mining_manage = live_plan_manage.get_EC_live_skill_manage('mining_manage');
+        let mining_manage = live_plan_manage.get_LP_live_skill_manage('mining_manage');
         mining_manage.player_start_mining();
         mining_manage.reset_round();
         //开始挖矿按钮切换成停止挖矿
@@ -108,7 +107,7 @@ function set_mining_button(MIN_value_div) {
     //停止挖矿按钮
     MIN_E_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
-        let mining_manage = live_plan_manage.get_EC_live_skill_manage('mining_manage');
+        let mining_manage = live_plan_manage.get_LP_live_skill_manage('mining_manage');
         mining_manage.stop_game_statu();
     };
     // 使用的主动技能变化
@@ -120,7 +119,7 @@ function set_mining_button(MIN_value_div) {
     let MIN_replace_button = MIN_value_div.querySelector('#MIN_replace_button');
     MIN_replace_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
-        let mining_manage = live_plan_manage.get_EC_live_skill_manage('mining_manage');
+        let mining_manage = live_plan_manage.get_LP_live_skill_manage('mining_manage');
         //更换当前挖矿目标
         mining_manage.ore_replace_reborn();
     };

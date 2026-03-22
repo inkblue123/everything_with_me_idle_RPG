@@ -36,7 +36,7 @@ function init_skill_type(enums) {
     enums.life_passive = [
         'life_passive', //
         'material_acquisition', //原料获取
-        'material_processing', //原料加工
+        'material_processing', //合成制造
         'product_usage', //成品使用
         'recycling', //回收利用
     ];

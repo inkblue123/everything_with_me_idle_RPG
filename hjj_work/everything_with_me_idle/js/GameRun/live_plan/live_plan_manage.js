@@ -1,68 +1,91 @@
-import { change_Live_plan_div, change_Explore_collection_div } from '../../Function/show_func.js';
+import { change_Live_plan_div, change_Explore_collection_div, change_Material_handling_div } from '../../Function/show_func.js';
 import { is_Empty_Object } from '../../Function/Function.js';
 import { places } from '../../Data/Place/Place.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { global } from '../../GameRun/global_manage.js';
-import { Logging_manage } from './logging.js';
-import { Fishing_manage } from './fishing.js';
-import { Mining_manage } from './mining.js';
-import { Foraging_manage } from './foraging.js';
-// import { Diving_manage } from './diving.js';
-// import { Archaeology_manage } from './archaeology.js';
-// import { Exploration_manage } from './exploration.js';
+
+import { Logging_manage } from './Explore_collection/logging.js';
+import { Fishing_manage } from './Explore_collection/fishing.js';
+import { Mining_manage } from './Explore_collection/mining.js';
+import { Collect_manage } from './Explore_collection/collect.js';
+import { Diving_manage } from './Explore_collection/diving.js';
+import { Archaeology_manage } from './Explore_collection/archaeology.js';
+import { Exploration_manage } from './Explore_collection/exploration.js';
+
+import { Synthesis_manage } from './Material_handling/synthesis.js';
+import { Cooking_manage } from './Material_handling/cooking.js';
+import { Forging_manage } from './Material_handling/forging.js';
+import { Elixir_alchemy_manage } from './Material_handling/elixir_alchemy.js';
+import { Herbal_bath_manage } from './Material_handling/herbal_bath.js';
+import { Engrave_manage } from './Material_handling/engrave.js';
+import { Alchemy_manage } from './Material_handling/alchemy.js';
+
 //生活技能规划管理对象
 export class Live_plan_manage {
     constructor() {
         this.now_place; //当前地点
-        this.EC_live_plan_class_name = ['logging_manage', 'fishing_manage', 'mining_manage', 'foraging_manage', 'diving_manage', 'archaeology_manage', 'exploration_manage'];
-        this.live_plan_name = ['logging', 'fishing', 'mining', 'foraging', 'diving', 'archaeology', 'exploration'];
-        this.EC_live_plan_min_name = { LGI: 0, FIS: 1, MIN: 2, FAG: 3, DIV: 4, ACL: 5, ELT: 6 };
-        // this.logging_manage = new Logging_manage(); //伐木管理对象
-        // this.fishing_manage = new Fishing_manage(); //钓鱼管理对象
-        // this.mining_manage = new Mining_manage(); //挖矿管理对象
-        // this.foraging_manage = new Foraging_manage(); //采集管理对象
-        // // this.diving_manage = new Diving_manage(); //潜水管理对象
-        // // this.archaeology_manage = new Archaeology_manage(); //考古管理对象
-        // // this.exploration_manage = new Exploration_manage(); //探索管理对象
+        this.EC_live_plan_class_name = ['logging_manage', 'fishing_manage', 'mining_manage', 'collect_manage', 'diving_manage', 'archaeology_manage', 'exploration_manage'];
+        this.EC_live_plan_min_name = { LGI: 0, FIS: 1, MIN: 2, CLT: 3, DIV: 4, ACL: 5, ELT: 6 };
+        this.MH_live_plan_class_name = ['synthesis_manage', 'cooking_manage', 'forging_manage', 'elixir_alchemy_manage', 'herbal_bath_manage', 'engrave_manage', 'alchemy_manage'];
+        this.MH_live_plan_min_name = { SYN: 0, COK: 1, FRG: 2, EXA: 3, HBB: 4, EGV: 5, ACM: 6 };
+        // this.live_plan_name = ['logging', 'fishing', 'mining', 'collect', 'diving', 'archaeology', 'exploration'];
+        // //为药浴界面中的按钮添加交互逻辑
+        // let HBB_value_div = Live_plan.querySelector('#HBB_value_div');
+        // set_herbal_bath_button(HBB_value_div);
+        // //为雕刻界面中的按钮添加交互逻辑
+        // let EGV_value_div = Live_plan.querySelector('#EGV_value_div');
+        // set_engrave_button(EGV_value_div);
+        // //为炼金术界面中的按钮添加交互逻辑
+        // let ACM_value_div = Live_plan.querySelector('#ACM_value_div');
+        // set_alchemy_button(ACM_value_div);
     }
     init() {
         this.logging_manage = new Logging_manage(); //伐木管理对象
         this.fishing_manage = new Fishing_manage(); //钓鱼管理对象
         this.mining_manage = new Mining_manage(); //挖矿管理对象
-        this.foraging_manage = new Foraging_manage(); //采集管理对象
-        // this.diving_manage = new Diving_manage(); //潜水管理对象
-        // this.archaeology_manage = new Archaeology_manage(); //考古管理对象
-        // this.exploration_manage = new Exploration_manage(); //探索管理对象
+        this.collect_manage = new Collect_manage(); //采集管理对象
+        this.diving_manage = new Diving_manage(); //潜水管理对象
+        this.archaeology_manage = new Archaeology_manage(); //考古管理对象
+        this.exploration_manage = new Exploration_manage(); //探索管理对象
+
+        this.synthesis_manage = new Synthesis_manage(); //合成制造管理对象
+        this.cooking_manage = new Cooking_manage(); //烹饪管理对象
+        this.forging_manage = new Forging_manage(); //锻造管理对象
+        this.elixir_alchemy_manage = new Elixir_alchemy_manage(); //炼丹管理对象
+        this.herbal_bath_manage = new Herbal_bath_manage(); //药浴管理对象
+        this.engrave_manage = new Engrave_manage(); //雕刻管理对象
+        this.alchemy_manage = new Alchemy_manage(); //炼金术管理对象
     }
     //对生活技能规划对象进行存档
     save_Live_plan_manage() {
         let Live_plan_save = new Object();
         //获取每个子对象的存档
-        //伐木存档
-        Live_plan_save.logging_save = this.logging_manage.save_logging_manage();
-        //钓鱼存档
-        Live_plan_save.fishing_save = this.fishing_manage.save_fishing_manage();
-        //挖矿存档
-        Live_plan_save.mining_save = this.mining_manage.save_mining_manage();
-        //采集存档
-        Live_plan_save.foraging_save = this.foraging_manage.save_foraging_manage();
-        //潜水存档
-        // Live_plan_save.diving_save = this.diving_manage.save_diving_manage();
-        //考古存档
-        // Live_plan_save.archaeology_save = this.archaeology_manage.save_archaeology_manage();
-        //探索存档
-        // Live_plan_save.exploration_save = this.exploration_manage.save_exploration_manage();
+        Live_plan_save.logging_save = this.logging_manage.save_logging_manage(); //伐木存档
+        Live_plan_save.fishing_save = this.fishing_manage.save_fishing_manage(); //钓鱼存档
+        Live_plan_save.mining_save = this.mining_manage.save_mining_manage(); //挖矿存档
+        Live_plan_save.collect_save = this.collect_manage.save_collect_manage(); //采集存档
+        Live_plan_save.diving_save = this.diving_manage.save_diving_manage(); //潜水存档
+        Live_plan_save.archaeology_save = this.archaeology_manage.save_archaeology_manage(); //考古存档
+        Live_plan_save.exploration_save = this.exploration_manage.save_exploration_manage(); //探索存档
+
+        Live_plan_save.synthesis_save = this.synthesis_manage.save_synthesis_manage(); //合成制造存档
+        Live_plan_save.cooking_save = this.cooking_manage.save_cooking_manage(); //烹饪存档
+        Live_plan_save.forging_save = this.forging_manage.save_forging_manage(); //锻造存档
+        Live_plan_save.elixir_alchemy_save = this.elixir_alchemy_manage.save_elixir_alchemy_manage(); //炼丹存档
+        Live_plan_save.herbal_bath_save = this.herbal_bath_manage.save_herbal_bath_manage(); //药浴存档
+        Live_plan_save.engrave_save = this.engrave_manage.save_engrave_manage(); //雕刻存档
+        Live_plan_save.alchemy_save = this.alchemy_manage.save_alchemy_manage(); //炼金术存档
 
         //保存当前生活技能规划界面展示了哪个大分类
         let EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
-        let SM_div = document.getElementById('SM_div'); //合成制造窗口 Synthetic_manufacturing SM
+        let MH_div = document.getElementById('MH_div'); //原料处理窗口 Material_handling MH
         let EX_LP_name;
         if (EC_div.style.display == '') {
             Live_plan_save.LP_type = 'EC_switch_button';
-            EX_LP_name = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
-        } else if (SM_div.style.display == '') {
-            Live_plan_save.LP_type = 'SM_switch_button';
-            EX_LP_name = ['LGI', 'FIS', 'MIN', 'FAG', 'DIV', 'ACL', 'ELT'];
+            EX_LP_name = ['LGI', 'FIS', 'MIN', 'CLT', 'DIV', 'ACL', 'ELT'];
+        } else if (MH_div.style.display == '') {
+            Live_plan_save.LP_type = 'MH_switch_button';
+            EX_LP_name = ['SYN', 'COK', 'FRG', 'EXA', 'HBB', 'EGV', 'ACM'];
         }
         //保存当前生活技能规划界面展示了哪个具体技能
         for (let key of EX_LP_name) {
@@ -80,39 +103,40 @@ export class Live_plan_manage {
         if (is_Empty_Object(Live_plan_save)) {
             return;
         }
-        //伐木存档
-        this.logging_manage.load_logging_manage(Live_plan_save.logging_save);
-        //钓鱼存档
-        this.fishing_manage.load_fishing_manage(Live_plan_save.fishing_save);
-        //挖矿存档
-        this.mining_manage.load_mining_manage(Live_plan_save.mining_save);
-        //采集存档
-        this.foraging_manage.load_foraging_manage(Live_plan_save.foraging_save);
-        //潜水存档
-        // this.diving_manage.load_diving_manage(Live_plan_save.diving_save);
-        //考古存档
-        // this.archaeology_manage.load_archaeology_manage(Live_plan_save.archaeology_save);
-        //探索存档
-        // this.exploration_manage.load_exploration_manage(Live_plan_save.exploration_save);
+        //探索采集部分技能
+        this.logging_manage.load_logging_manage(Live_plan_save.logging_save); //伐木存档
+        this.fishing_manage.load_fishing_manage(Live_plan_save.fishing_save); //钓鱼存档
+        this.mining_manage.load_mining_manage(Live_plan_save.mining_save); //挖矿存档
+        this.collect_manage.load_collect_manage(Live_plan_save.collect_save); //采集存档
+        this.diving_manage.load_diving_manage(Live_plan_save.diving_save); //潜水存档
+        this.archaeology_manage.load_archaeology_manage(Live_plan_save.archaeology_save); //考古存档
+        this.exploration_manage.load_exploration_manage(Live_plan_save.exploration_save); //探索存档
+        //原料处理部分技能
+        this.synthesis_manage.load_synthesis_manage(Live_plan_save.synthesis_save); //合成制造存档
+        this.cooking_manage.load_cooking_manage(Live_plan_save.cooking_save); //烹饪存档
+        this.forging_manage.load_forging_manage(Live_plan_save.forging_save); //锻造存档
+        this.elixir_alchemy_manage.load_elixir_alchemy_manage(Live_plan_save.elixir_alchemy_save); //炼丹存档
+        this.herbal_bath_manage.load_herbal_bath_manage(Live_plan_save.herbal_bath_save); //药浴存档
+        this.engrave_manage.load_engrave_manage(Live_plan_save.engrave_save); //雕刻存档
+        this.alchemy_manage.load_alchemy_manage(Live_plan_save.alchemy_save); //炼金术存档
 
         // 将生活技能规划界面切换到存档中保存的技能上
         change_Live_plan_div(Live_plan_save.LP_type); //切换到大类
         if (Live_plan_save.LP_type == 'EC_switch_button') {
             var EC_switch_radio_div = document.getElementById('EC_switch_radio_div');
             EC_switch_radio_div.children[0].checked = true; //生活技能规划最上方的分类按钮切换到探索采集
-
             change_Explore_collection_div(Live_plan_save.EX_LP_name);
-            let radio_div = document.getElementById(Live_plan_save.EX_LP_name);
-            radio_div.checked = true;
-        } else {
-            //合成制造部分还没开发，暂时不能跳转，只处理搜索采集类型的子技能
-            var SM_switch_radio_div = document.getElementById('SM_switch_radio_div');
-            SM_switch_radio_div.children[0].checked = true; //生活技能规划最上方的分类按钮切换到合成制造
+        } else if (Live_plan_save.LP_type == 'MH_switch_button') {
+            var MH_switch_radio_div = document.getElementById('MH_switch_radio_div');
+            MH_switch_radio_div.children[0].checked = true; //生活技能规划最上方的分类按钮切换到合成制造
+            change_Material_handling_div(Live_plan_save.EX_LP_name);
         }
+        let radio_div = document.getElementById(Live_plan_save.EX_LP_name);
+        radio_div.checked = true;
     }
     //获取探索采集类生活技能的管理对象
-    get_EC_live_skill_manage(manage_name) {
-        if (!this.EC_live_plan_class_name.includes(manage_name)) {
+    get_LP_live_skill_manage(manage_name) {
+        if (!this.EC_live_plan_class_name.includes(manage_name) && !this.MH_live_plan_class_name.includes(manage_name)) {
             console.log('未知管理对象，无法获取');
         }
         if (is_Empty_Object(this[manage_name])) {
@@ -123,7 +147,7 @@ export class Live_plan_manage {
     //更新当前正在进行的生活技能的数值
     updata_live_plan_game_data(now_GS) {
         if (!enums['live_plan_GS'].includes(now_GS)) {
-            console.log('当前进行的游戏状态不属于生活技能，无法处理');
+            console.log('当前进行的游戏状态%s不属于生活技能，无法处理', now_GS);
             return;
         }
         let manage_name = now_GS + '_manage';
@@ -132,7 +156,7 @@ export class Live_plan_manage {
     //更新当前正在进行的生活技能的界面
     updata_live_plan_game_div(now_GS) {
         if (!enums['live_plan_GS'].includes(now_GS)) {
-            console.log('当前进行的游戏状态不属于生活技能，无法处理');
+            console.log('当前进行的游戏状态%s不属于生活技能，无法处理', now_GS);
             return;
         }
         let manage_name = now_GS + '_manage';
@@ -141,8 +165,18 @@ export class Live_plan_manage {
     //生活界面切换，对切换到的技能界面进行初始化
     init_live_plan_game_div(button_id) {
         let min_name = button_id.substring(0, 3);
-        let i = this.EC_live_plan_min_name[min_name];
-        let manage_name = this.EC_live_plan_class_name[i];
+        let manage_name;
+        const EC_keys = Object.keys(this.EC_live_plan_min_name);
+        const MH_keys = Object.keys(this.MH_live_plan_min_name);
+        if (EC_keys.includes(min_name)) {
+            let i = this.EC_live_plan_min_name[min_name];
+            manage_name = this.EC_live_plan_class_name[i];
+        } else if (MH_keys.includes(min_name)) {
+            let i = this.MH_live_plan_min_name[min_name];
+            manage_name = this.MH_live_plan_class_name[i];
+        } else {
+            console.log('%s按钮调到切换界面函数，未知处理');
+        }
         if (!is_Empty_Object(this[manage_name])) {
             this[manage_name].init_live_plan_game_div();
         }
@@ -161,7 +195,6 @@ export class Live_plan_manage {
         this.stop_now_live_skill();
 
         //探索采集类生活技能
-        // let EC_live_plan_min_name = { LGI: 0, FIS: 1, MIN: 2, FAG: 3, DIV: 4, ACL: 5, ELT: 6 };
         let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
         for (let i = 0; i < 7; i++) {
             if (!places[next_place].live_plan_flag[i]) {
@@ -173,7 +206,13 @@ export class Live_plan_manage {
                 this[this.EC_live_plan_class_name[i]].set_new_place(next_place);
             }
         }
-        //合成制造类生活技能
+        //原料处理类生活技能
+        for (let i = 0; i < 7; i++) {
+            //如果地点可以进行对应技能，更新地点信息
+            if (!is_Empty_Object(this[this.MH_live_plan_class_name[i]])) {
+                this[this.MH_live_plan_class_name[i]].set_new_place(next_place);
+            }
+        }
 
         //当前展示的那一个生活技能需要特别更新
         let EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
@@ -200,7 +239,6 @@ export class Live_plan_manage {
         // this.stop_now_live_skill();
 
         //探索采集类生活技能
-        let EC_live_plan_min_name = { LGI: 0, FIS: 1, MIN: 2, FAG: 3, DIV: 4, ACL: 5, ELT: 6 };
         let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
         for (let i = 0; i < 7; i++) {
             if (!places[next_place].live_plan_flag[i]) {
@@ -212,7 +250,13 @@ export class Live_plan_manage {
                 this[this.EC_live_plan_class_name[i]].set_new_place(next_place);
             }
         }
-        //合成制造类生活技能
+        //原料处理类生活技能
+        for (let i = 0; i < 7; i++) {
+            //如果地点可以进行对应技能，更新地点信息
+            if (!is_Empty_Object(this[this.MH_live_plan_class_name[i]])) {
+                this[this.MH_live_plan_class_name[i]].set_new_place(next_place);
+            }
+        }
 
         // 当前展示的那一个生活技能需要特别更新
         let EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC

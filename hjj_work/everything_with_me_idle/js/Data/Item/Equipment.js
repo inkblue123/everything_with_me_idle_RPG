@@ -43,7 +43,7 @@ function init_Item_Equipment(items) {
     init_logging_tool(items); //伐木工具
     init_fishing_tool(items); //钓鱼工具
     init_mining_tool(items); //挖矿工具
-    init_foraging_tool(items); //采集工具
+    init_collect_tool(items); //采集工具
     init_diving_tool(items); //潜水工具
     init_archaeology_tool(items); //考古工具
     init_exploration_tool(items); //探索工具
@@ -74,7 +74,7 @@ function init_sword(items) {
     items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
     // items[id].init_Item_price('ordinary_coin', 60); //物品价值
     //攻击，精准，暴击率，暴击伤害，攻击速度
-    items[id].init_Equipment_attack_attr('ordinary', 100, 5, 5, 20, -2); //手动设置攻击属性
+    items[id].init_Equipment_attack_attr('ordinary', 100, 5, 5, 20, 1000); //手动设置攻击属性
 }
 //战斧
 function init_battle_axe(items) {
@@ -328,11 +328,11 @@ function init_logging_tool(items) {
 
     id = 'hatchet'; //柴刀
     add_Equipment_object(items, id);
-    items[id].init_Equipment([secon_type, 'foraging_tool'], 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Equipment([secon_type, 'collect_tool'], 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
     items[id].init_Item_price('ordinary_coin', 50); //物品价值
     items[id].set_attr_level('L0', 'attack', secon_type); //调用L0级的攻击属性预设
     items[id].equip_attr['ordinary']['mini_tree_LGI_damage'] = 3;
-    items[id].equip_attr['ordinary']['FAG_chance_ordinary_wood'] = 5;
+    items[id].equip_attr['ordinary']['CLT_chance_ordinary_wood'] = 5;
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     // items[id].init_Equipment_attack_attr('ordinary',3, 5, 10, 50, 2);
 }
@@ -364,9 +364,9 @@ function init_mining_tool(items) {
     // // items[id].init_Item_price('ordinary_coin', 60); //物品价值
 }
 //采集工具
-function init_foraging_tool(items) {
+function init_collect_tool(items) {
     let id;
-    let secon_type = 'foraging_tool';
+    let secon_type = 'collect_tool';
     let attack_interval = -1; //采集工具的攻击间隔为-1
 
     id = 'mowing_sickle'; //割草镰刀
@@ -374,7 +374,7 @@ function init_foraging_tool(items) {
     items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
     items[id].init_Item_price('ordinary_coin', 35); //物品价值
     items[id].set_attr_level('L0', 'attack', secon_type); //调用L0级的攻击属性预设
-    items[id].equip_attr['ordinary']['FAG_chance_all_grass'] = 10;
+    items[id].equip_attr['ordinary']['CLT_chance_all_grass'] = 10;
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
 }
 //潜水工具

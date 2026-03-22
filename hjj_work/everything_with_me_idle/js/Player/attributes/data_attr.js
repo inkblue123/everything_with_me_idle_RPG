@@ -77,10 +77,10 @@ export class Data_attr_manage {
         this.live_plan_attr['LGI_critical_damage'] = 150; //伐木暴击伤害
         this.live_plan_attr['FIS_takebait_attack'] = 1; //钓鱼上钩力
         this.live_plan_attr['FIS_walkfish_attack'] = 3; //钓鱼遛鱼力
-        this.live_plan_attr['FAG_attack'] = 5; //采集力
-        this.live_plan_attr['FAG_interval'] = 5; //采集速度
-        this.live_plan_attr['FAG_luck_chance'] = 0.1; //幸运采集触发概率
-        this.live_plan_attr['FAG_danger_chance'] = 0.07; //涉险采集触发概率
+        this.live_plan_attr['CLT_attack'] = 5; //采集力
+        this.live_plan_attr['CLT_interval'] = 5; //采集速度
+        this.live_plan_attr['CLT_luck_chance'] = 0.1; //幸运采集触发概率
+        this.live_plan_attr['CLT_danger_chance'] = 0.07; //涉险采集触发概率
         this.live_plan_attr['MIN_interval'] = 1; //挖矿基础间隔
         this.live_plan_attr['MIN_attack'] = 3; //挖矿力
         this.live_plan_attr['MIN_critical_chance'] = 5; //挖矿暴击率
@@ -304,7 +304,7 @@ export class Data_attr_manage {
     //汇总玩家身上所有可用主动技能提供的属性
     Summary_buff_attr() {
         this.buff_attr = new Object();
-        let P_buff = player.get_player_buff();
+        let P_buff = player.get_player_buff_manage();
         let buff_end_data_attr = P_buff.get_end_data_attr();
         this.buff_attr = JSON.parse(JSON.stringify(buff_end_data_attr));
     }

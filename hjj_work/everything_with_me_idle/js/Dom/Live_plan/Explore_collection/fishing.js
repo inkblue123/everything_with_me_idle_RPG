@@ -1,5 +1,5 @@
-import { crtElement, addElement, addElement_radio } from '../../Function/Dom_function.js';
-import { global } from '../../GameRun/global_manage.js';
+import { crtElement, addElement, addElement_radio } from '../../../Function/Dom_function.js';
+import { global } from '../../../GameRun/global_manage.js';
 
 //构建钓鱼技能的界面内容
 function make_fishing_div(FIS_value_div) {
@@ -80,7 +80,7 @@ function set_fishing_button(FIS_value_div) {
         global.set_flag('GS_game_statu', 'fishing');
         //开启一轮钓鱼，重置钓鱼的参数
         let live_plan_manage = global.get_live_plan_manage();
-        let fishing_manage = live_plan_manage.get_EC_live_skill_manage('fishing_manage');
+        let fishing_manage = live_plan_manage.get_LP_live_skill_manage('fishing_manage');
         fishing_manage.player_start_fishing();
         fishing_manage.reset_round();
         //开始钓鱼按钮切换成停止钓鱼
@@ -90,7 +90,7 @@ function set_fishing_button(FIS_value_div) {
     //停止钓鱼按钮
     FIS_E_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
-        let fishing_manage = live_plan_manage.get_EC_live_skill_manage('fishing_manage');
+        let fishing_manage = live_plan_manage.get_LP_live_skill_manage('fishing_manage');
         fishing_manage.stop_game_statu();
         fishing_manage.reset_round();
     };

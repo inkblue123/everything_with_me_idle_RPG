@@ -49,22 +49,41 @@ export class Place {
         }
     }
     //添加这个地点满足条件才可联通的其他普通地点
-    add_condition_connect_normal_place(place_id, ...value) {
+    // add_condition_connect_normal_place(place_id, ...value) {
+    //     if (is_Empty_Object(this.condition_connect_normal_place)) {
+    //         this.condition_connect_normal_place = new Object();
+    //     }
+    //     if (value.length < 2 || value.length % 2 != 0) {
+    //         console.log('参数数量错误，至少输入一对条件和条件值');
+    //         return;
+    //     }
+    //     for (let i = 0; i < value.length; i += 2) {
+    //         //输入参数后面每两个参数，一个是条件id，另一个是条件的值
+    //         let status_id = value[i];
+    //         let status_value = value[i + 1];
+    //         let status_obj = new Object();
+    //         status_obj[status_id] = status_value;
+    //         this.condition_connect_normal_place[place_id] = status_obj;
+    //     }
+    // }
+    add_condition_connect_normal_place(place_id, status_id, status_value, status_direction, status_in1, status_in2, status_in3) {
         if (is_Empty_Object(this.condition_connect_normal_place)) {
             this.condition_connect_normal_place = new Object();
         }
-        if (value.length < 2 || value.length % 2 != 0) {
-            console.log('参数数量错误，至少输入一对条件和条件值');
+        if (is_Empty_Object(this.condition_connect_normal_place[place_id])) {
+            this.condition_connect_normal_place[place_id] = new Object();
+        }
+        if (is_Empty_Object(this.condition_connect_normal_place[place_id][status_id])) {
+            this.condition_connect_normal_place[place_id][status_id] = new Object();
+        } else {
+            console.log('定义地点相连条件时出现了重复的条件，后一个条件会覆盖前一个条件，需要验证');
             return;
         }
-        for (let i = 0; i < value.length; i += 2) {
-            //输入参数后面每两个参数，一个是条件id，另一个是条件的值
-            let status_id = value[i];
-            let status_value = value[i + 1];
-            let status_obj = new Object();
-            status_obj[status_id] = status_value;
-            this.condition_connect_normal_place[place_id] = status_obj;
-        }
+        this.condition_connect_normal_place[place_id][status_id].status_value = status_value; //条件需求数值
+        this.condition_connect_normal_place[place_id][status_id].status_direction = status_direction; //当前数值与需求数值关系
+        this.condition_connect_normal_place[place_id][status_id].status_in1 = status_in1; //获取当前数值时可能需要的输入参数
+        this.condition_connect_normal_place[place_id][status_id].status_in2 = status_in2; //获取当前数值时可能需要的输入参数
+        this.condition_connect_normal_place[place_id][status_id].status_in3 = status_in3; //获取当前数值时可能需要的输入参数
     }
     //添加这个地点可以联通的其他战斗地点
     add_connect_combat_place(...args) {
@@ -182,12 +201,12 @@ export class P_normal extends Place {
         this.MIN_reborn_time = reborn_time;
     }
     //设置这个地点的采集相关参数
-    set_foraging_data(defense, energy) {
+    set_collect_data(defense, energy) {
         if (this.live_plan_flag[3] == false) {
             console.log('%s地点不允许采集却设定了采集相关参数');
         }
-        this.FAG_defense = defense; //采集防御
-        this.FAG_energy = energy; //采集时每秒精力消耗
+        this.CLT_defense = defense; //采集防御
+        this.CLT_energy = energy; //采集时每秒精力消耗
     }
     //设置这个地点的潜水相关参数
     set_diving_data() {
@@ -267,12 +286,12 @@ export class P_normal extends Place {
         this.FIS_fishs[id] = obj;
     }
     //设置这个地点采集时可能的产物
-    set_foraging_item(id, chance, rare_flag, max_cumulative_num, cumulative_time, ...args) {
+    set_collect_item(id, chance, rare_flag, max_cumulative_num, cumulative_time, ...args) {
         if (this.live_plan_flag[3] == false) {
             console.log('%s地点不允许采集却设定了采集相关参数');
         }
-        if (is_Empty_Object(this.FAG_item)) {
-            this.FAG_item = new Object();
+        if (is_Empty_Object(this.CLT_item)) {
+            this.CLT_item = new Object();
         }
         let item_obj = new Object();
         if (items[id].main_type.includes('equipment')) {
@@ -298,7 +317,7 @@ export class P_normal extends Place {
             item_obj.cumulative_time = cumulative_time; //多长时间囤积一个，单位是游戏内的分钟
         }
         let item_key = get_item_id_key(item_obj);
-        this.FAG_item[item_key] = item_obj;
+        this.CLT_item[item_key] = item_obj;
     }
 }
 //战斗地点
@@ -486,9 +505,9 @@ export class Area {
         }
     }
     //添加一个在这个区域采集时可能遇到的危险，持续型
-    set_continuous_foraging_danger(data_type, min_time, max_time, min_data, max_data, text_id) {
-        if (is_Empty_Object(this.foraging_danger)) {
-            this.foraging_danger = new Array();
+    set_continuous_collect_danger(data_type, min_time, max_time, min_data, max_data, text_id) {
+        if (is_Empty_Object(this.collect_danger)) {
+            this.collect_danger = new Array();
         }
         let obj = new Object();
         obj.danger_type = 'continuous'; //持续型
@@ -498,12 +517,12 @@ export class Area {
         obj.min_data = min_data; //效果数值最小值
         obj.max_data = max_data; //效果数值最大值
         obj.text_id = text_id; //触发时使用的提示文本（没有实际使用）
-        this.foraging_danger.push(obj);
+        this.collect_danger.push(obj);
     }
     //添加一个在这个区域采集时可能遇到的危险，即刻生效型
-    set_start_foraging_danger(data_type, min_data, max_data, text_id) {
-        if (is_Empty_Object(this.foraging_danger)) {
-            this.foraging_danger = new Array();
+    set_start_collect_danger(data_type, min_data, max_data, text_id) {
+        if (is_Empty_Object(this.collect_danger)) {
+            this.collect_danger = new Array();
         }
         let obj = new Object();
         obj.danger_type = 'start'; //即刻生效型
@@ -511,7 +530,7 @@ export class Area {
         obj.min_data = min_data;
         obj.max_data = max_data;
         obj.text_id = text_id; //触发时使用的提示文本（没有实际使用）
-        this.foraging_danger.push(obj);
+        this.collect_danger.push(obj);
     }
 }
 

@@ -206,7 +206,7 @@ export class Player_energy_manage {
     }
     //判断玩家此刻是否应该获得精力相关的buff
     get_or_delete_energy_buff(front_surface_energy_ratio, after_surface_energy_ratio) {
-        let P_buff = player.get_player_buff();
+        let P_buff = player.get_player_buff_manage();
         if (front_surface_energy_ratio < 25 && 25 < after_surface_energy_ratio) {
             P_buff.delete_buff_attr('extreme_fatigue');
             P_buff.set_buff_attr('fatigue');

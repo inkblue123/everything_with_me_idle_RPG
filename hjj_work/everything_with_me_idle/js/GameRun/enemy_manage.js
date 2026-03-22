@@ -231,9 +231,11 @@ export class Enemy_manage {
         this.now_place_enemy_cumulative = 0; //当前地点积累的怪物数量
         this.kill_enemy_num = 0; //当前地点积累的怪物数量
         this.last_combat_place_data = new Object(); //清空曾经的战斗地点内参数
+        this.now_time = global.get_game_now_time();
     }
     //重置刷怪参数
     reset_enemy_data() {
+        this.now_time = global.get_game_now_time();
         this.last_add_enemy_time = global.get_game_now_time();
         this.last_little_add_enemy_time = 0; //上次触发同场少怪时刷怪的时间
         this.now_place_add_enemy_num = 0;
@@ -273,6 +275,10 @@ export class Enemy_manage {
             }
         }
         return enemy_num;
+    }
+    //获取曾经到过的战斗地点参数
+    get_last_combat_place_data() {
+        return this.last_combat_place_data;
     }
 
     //执行一次刷怪操作
@@ -480,7 +486,10 @@ export class Enemy_manage {
     //获取敌人类部分的游戏存档
     save_enemy_manage() {
         let enemy_save = new Object();
+        this.now_time = global.get_game_now_time();
+        enemy_save.now_time = this.now_time; //当前游戏时间戳
         enemy_save.combat_place_enemys = this.combat_place_enemys; //当前地点内的敌人
+        enemy_save.last_combat_place_data = this.last_combat_place_data; //曾经到过的战斗地点的参数
         return enemy_save;
     }
     //加载敌人类的游戏存档
@@ -488,6 +497,15 @@ export class Enemy_manage {
         if (is_Empty_Object(enemy_save)) {
             return;
         }
+        let now_time = global.get_now_time();
+        //加载曾经到过的战斗地点的参数
+        this.last_combat_place_data = enemy_save.last_combat_place_data;
+        //同步时间
+        for (let place_id in enemy_save.last_combat_place_data) {
+            let save_last_out_time = enemy_save.last_combat_place_data[place_id].last_out_time;
+            this.last_combat_place_data[place_id].last_out_time = now_time - (enemy_save.now_time - save_last_out_time);
+        }
+        //加载当前战斗地点的敌人
         for (let key in this.combat_place_enemys) {
             let field = this.combat_place_enemys[key];
             let save_field = enemy_save.combat_place_enemys[key];
@@ -529,7 +547,8 @@ export class Enemy_manage {
                     return true;
                 }
                 let last_out_time = this.last_combat_place_data[next_place].last_out_time; //上次离开的时间
-                let last_time = (this.now_time - last_out_time) / 1000; //上次离开到现在进入的时间
+                let now_time = global.get_game_now_time();
+                let last_time = (now_time - last_out_time) / 1000; //上次离开到现在进入的时间
                 let cumulative_enemy_num = Math.floor(last_time / places[next_place].cumulative_time); //上次离开到现在这段时间内积累的怪
                 let all_cumulative_num = last_out_enemy_num + cumulative_enemy_num; //目前总共积累了多少怪
                 if (all_cumulative_num >= places[next_place].max_enemy_cumulative * 0.2) {
@@ -556,8 +575,9 @@ export class Enemy_manage {
         let data_obj = new Object();
         //这个地点还剩余的怪的数量等于目前积累的数减去已经杀死的敌人数
         data_obj.last_out_enemy_num = this.now_place_enemy_cumulative - this.kill_enemy_num;
-        if (data_obj.last_out_enemy_num < 0) {
+        if (data_obj.last_out_enemy_num <= 0) {
             data_obj.last_out_enemy_num = 0;
+            data_obj.pass_flag = true;
         }
         data_obj.last_out_time = this.now_time;
         this.last_combat_place_data[this.now_place] = data_obj;

@@ -1,7 +1,10 @@
 import { global } from '../global_manage.js';
 import { player } from '../../Player/Player.js';
+import { places } from '../../Data/Place/Place.js';
+import { is_Empty_Object } from '../../Function/Function.js';
+
 //获取临用游戏状态
-function get_use_game_status(flag_name) {
+function get_use_game_status(flag_name, flag_in1, flag_in2, flag_in3) {
     if (!flag_name.startsWith('UGS_')) {
         console.log('非临用游戏状态，不可调用该接口，%s', flag_name);
         return;
@@ -25,6 +28,12 @@ function get_use_game_status(flag_name) {
             break;
         case 'UGS_PSK_type': //左上角的玩家属性界面中的玩家所有技能界面的过滤条件
             flag_value = get_UGS_PSK_type();
+            break;
+        case 'UGS_pass_road_flag': //获取指定的通道类型战斗地点是否曾通过了
+            flag_value = get_UGS_pass_road_flag(flag_in1);
+            break;
+        case 'UGS_now_MH_name': //获取当前展示的原料处理类生活技能的编号
+            flag_value = get_UGS_now_MH_name(flag_in1);
             break;
 
         default:
@@ -88,7 +97,6 @@ function get_UGS_game_speed() {
     let time_manage = global.get_time_manage();
     return time_manage.get_game_speed();
 }
-
 //临用游戏状态-左上角的玩家属性界面中的玩家所有技能界面的过滤条件
 function get_UGS_PSK_type() {
     const radios = document.querySelectorAll('input[name="PSK_switch"]');
@@ -98,6 +106,59 @@ function get_UGS_PSK_type() {
             return radio.value;
         }
     }
+}
+//临用游戏状态-获取指定的通道类型战斗地点是否曾通过了
+function get_UGS_pass_road_flag(place_id) {
+    if (is_Empty_Object(places[place_id])) {
+        console.log('查询地点%s不存在', place_id);
+        return false;
+    }
+    if (places[place_id].type != 'combat') {
+        console.log('查询地点%s不是战斗地点', place_id);
+        return false;
+    }
+    if (places[place_id].combat_type != 'limited_enemy_road') {
+        console.log('查询地点%s不是通道类型战斗地点', place_id);
+        return false;
+    }
+    let enemy_manage = global.get_enemy_manage();
+    let last_combat_place_data = enemy_manage.get_last_combat_place_data();
+    if (is_Empty_Object(last_combat_place_data[place_id])) {
+        //没有指定地点的缓存信息，所以是没有来过该地点，没有通过
+        return false;
+    } else {
+        if (is_Empty_Object(last_combat_place_data[place_id].pass_flag)) {
+            return false;
+        }
+        return last_combat_place_data[place_id].pass_flag;
+    }
+}
+//临用游戏状态-获取当前展示的原料处理类生活技能的编号
+function get_UGS_now_MH_name() {
+    const Live_plan_div = document.getElementById('Live_plan');
+    if ((Live_plan_div.style.display = '')) {
+        //当前上中位置的窗口展示不是生活技能类
+        return null;
+    }
+
+    const MH_switch_button = document.getElementById('MH_switch_button');
+    if (MH_switch_button.checked != true) {
+        //当前展示的生活技能不是原料处理类
+        return null;
+    }
+    // 寻找当前展示的生活技能
+    let MH_live_plan_name = ['synthesis', 'cooking', 'forging', 'elixir_alchemy', 'herbal_bath', 'engrave', 'alchemy'];
+    let MH_live_plan_min_name = { SYN: 0, COK: 1, FRG: 2, EXA: 3, HBB: 4, EGV: 5, ACM: 6 };
+    let MH_name;
+    const radios = document.querySelectorAll('input[name="MH_switch"]');
+    for (const radio of radios) {
+        if (radio.checked) {
+            let MH_min_name = radio.value.slice(0, 3);
+            MH_name = MH_live_plan_name[MH_live_plan_min_name[MH_min_name]];
+            break;
+        }
+    }
+    return MH_name;
 }
 
 export { get_use_game_status };

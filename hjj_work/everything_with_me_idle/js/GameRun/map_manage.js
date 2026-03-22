@@ -51,6 +51,19 @@ export class Map_manage {
         //移动到初始地点
         // this.set_now_place('game_statr');
     }
+    //获取地图类的游戏存档
+    save_map_manage() {
+        let map_save = new Object();
+        map_save.area_can_show_places = this.area_can_show_places;
+        return map_save;
+    }
+    //加载地图类的游戏存档
+    load_map_manage(map_save) {
+        if (is_Empty_Object(map_save)) {
+            return;
+        }
+        this.area_can_show_places = map_save.area_can_show_places;
+    }
     //在地图界面内“按下鼠标时”的绑定函数
     onMouseDown(e) {
         this.isDragging = true; //允许移动地图内布局
@@ -159,13 +172,15 @@ export class Map_manage {
             this.updatePosition(0, 0);
             //清空旧地点按钮
             this.map_button = new Object();
+            //清除按钮连线
+            this.ctx.clearRect(0, 0, this.map_canvas.width, this.map_canvas.height);
+
             if (is_Empty_Object(maps[this.now_area])) {
                 console.log('%s地点未定义地图信息，无法生成地图', this.now_area);
                 return;
             }
             this.init_map_move_div(); //初始化地图大小和位置
             this.init_map_button(); //初始化新区域内的地点按钮
-            // this.init_map_button_line(); //初始化地点按钮之间的连线
         }
         this.updata_map_button(); //更新现在应该展示的按钮
         this.updata_map_button_line();
@@ -316,12 +331,19 @@ export class Map_manage {
                 this.map_button[place_id].style.display = 'none';
             }
         }
-        //点亮当前地点相连的可移动的其他地点按钮
+
         for (let place_id in this.map_button) {
+            //点亮当前地点相连的可移动的其他地点按钮
             if (connect_place.includes(place_id) || place_id == this.now_place) {
                 this.map_button[place_id].classList.remove('btn-disabled');
             } else {
                 this.map_button[place_id].classList.add('btn-disabled');
+            }
+            //当前地点所在按钮添加外框
+            if (place_id == this.now_place) {
+                this.map_button[place_id].classList.add('btn_nowplace');
+            } else {
+                this.map_button[place_id].classList.remove('btn_nowplace');
             }
         }
     }
@@ -424,10 +446,12 @@ function get_map_button_text(place_id, now_area) {
 function get_connect_place_id(place_id) {
     let connect_place = new Array();
 
-    //可以回到上一个普通区域
-    let place_manage = global.get_place_manage();
-    let last_normal_place_id = place_manage.get_last_normal_place();
-    connect_place.push(last_normal_place_id);
+    //商店和npc地点可以回到上一个普通区域
+    if (places[place_id].type == 'store' || places[place_id].type == 'NPC') {
+        let place_manage = global.get_place_manage();
+        let last_normal_place_id = place_manage.get_last_normal_place();
+        connect_place.push(last_normal_place_id);
+    }
 
     let new_place = places[place_id];
     //无条件可以前往的普通区域
@@ -441,14 +465,8 @@ function get_connect_place_id(place_id) {
         let global_flag_manage = global.get_global_flag_manage();
         for (let next_place_id in new_place.condition_connect_normal_place) {
             let condition = new_place.condition_connect_normal_place[next_place_id];
-            let flag = true;
-            for (let id in condition) {
-                let status = global_flag_manage.get_flag(id); //当前需要判断的游戏状态的内容
-                if (status != condition[id]) {
-                    flag = false;
-                    break;
-                }
-            }
+            //判断相连条件是否满足
+            let flag = global_flag_manage.use_obj_get_flag(condition);
             if (flag) {
                 connect_place.push(next_place_id);
             }

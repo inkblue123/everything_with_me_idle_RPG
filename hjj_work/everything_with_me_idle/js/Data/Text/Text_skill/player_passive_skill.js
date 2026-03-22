@@ -9,7 +9,7 @@ function init_passive_skill(texts) {
     //初始化与钓鱼相关的被动技能的文本
     init_fishing_passive_skill(texts);
     //初始化与采集相关的被动技能的文本
-    init_foraging_passive_skill(texts);
+    init_collect_passive_skill(texts);
 }
 //初始化与战斗相关的被动技能的文本
 function init_combat_passive_skill(texts) {
@@ -53,7 +53,7 @@ function init_fishing_passive_skill(texts) {
     texts[id].skill_desc = '将鱼钩丢到距离鱼不近不远的地方，让鱼可以马上看到鱼饵又不至于吓跑鱼，有助于鱼儿快点上钩';
 }
 //初始化与采集相关的被动技能的文本
-function init_foraging_passive_skill(texts) {
+function init_collect_passive_skill(texts) {
     let id;
 
     id = 'lucky_finder';
@@ -64,7 +64,7 @@ function init_foraging_passive_skill(texts) {
     // add_text_object(texts, id);
     // texts[id].skill_name = '蘑菇鼓包敏锐察觉';
     // texts[id].skill_desc = '蘑菇顶起的鼓包总是有迹可循，善于发现这些鼓包可以找到更多蘑菇，或是找到其他采集物品';
-    id = 'be_careful_with_foraging';
+    id = 'be_careful_with_collect';
     add_text_object(texts, id);
     texts[id].skill_name = '小心采集';
     texts[id].skill_desc = '有些采集物品嵌在石壁里或者埋在深土中，下手轻些才可以完整的取出，有时会有意外收获';

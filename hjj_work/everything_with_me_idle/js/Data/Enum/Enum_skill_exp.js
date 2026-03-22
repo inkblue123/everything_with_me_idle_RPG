@@ -15,8 +15,8 @@ function init_Enum_skill_exp(enums) {
         //钓鱼行为
         bait_fish_num: 'fishing_behavior', //上钩成功次数
         //采集行为
-        FAG_get_item_num: 'foraging_behavior', //采集获得物品数量
-        FAG_get_rare_item_num: 'foraging_behavior', //采集获得稀有物品数量
+        CLT_get_item_num: 'collect_behavior', //采集获得物品数量
+        CLT_get_rare_item_num: 'collect_behavior', //采集获得稀有物品数量
     };
 }
 

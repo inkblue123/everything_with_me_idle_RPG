@@ -130,7 +130,7 @@ function Equipment_type(texts) {
     texts[id].type_name = '挖矿工具';
     texts[id].help_skill = '挖矿';
     texts[id].type_desc = '帮助挖矿的装备';
-    id = 'foraging_tool';
+    id = 'collect_tool';
     add_text_object(texts, id);
     texts[id].type_name = '采集工具';
     texts[id].help_skill = '采集';

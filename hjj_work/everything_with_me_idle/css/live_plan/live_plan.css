@@ -1,7 +1,8 @@
-@import url('./logging.css');
-@import url('./fishing.css');
-@import url('./foraging.css');
-@import url('./mining.css');
+@import url('./Explore_collection/logging.css');
+@import url('./Explore_collection/fishing.css');
+@import url('./Explore_collection/collect.css');
+@import url('./Explore_collection/mining.css');
+@import url('./Material_handling/synthesis.css');
 /* 生活规划总界面 */
 #Live_plan {
     box-sizing: border-box;
@@ -15,30 +16,34 @@
 #Live_plan_switch_div {
     height: 10%;
 }
-/* 生活规划n个子界面的切换按钮 */
-.Live_plan_switch_button {
-    flex: 1;
-    font-size: 15px;
-    border: 1px solid #797691; /* 内框 */
-}
-/* 容纳具体的探索采集合成制造内容的div */
+/* 容纳具体的探索采集原料处理内容的div */
 #Live_plan_value_div {
     height: 90%;
+}
+#EC_scroll_box {
+    /* display: flex; */
+    /* flex-direction: column; */
+    border-right: 1px solid #797691;
+}
+#MH_scroll_box {
+    /* display: flex; */
+    /* flex-direction: column; */
+    border-right: 1px solid #797691;
 }
 /* 探索采集-容纳全部内容的div */
 /* #EC_div {
     background-color: rgb(255, 0, 0);
 } */
 
-/* 合成制造界面-容纳全部内容的div */
-#SM_div {
-    /* background-color: rgb(72, 255, 0); */
-}
+/* 原料处理界面-容纳全部内容的div */
+/* #MH_div {
+    background-color: rgb(72, 255, 0);
+} */
 
-.LP_div {
+/* .LP_div {
     box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
-}
+    border: 1px solid #797691; 
+} */
 /* 掉落品的div */
 .drop_value {
     width: 100%;

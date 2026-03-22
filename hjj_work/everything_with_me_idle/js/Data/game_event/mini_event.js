@@ -123,10 +123,10 @@ function init_mini_event(game_events) {
     game_events[id].add_process_button_thing('first', 'b1', 'delete_buff', 'get_up_buff');
     game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
 
-    id = 'unlock_foraging_logging'; //解锁采集和伐木技能
+    id = 'unlock_collect_logging'; //解锁采集和伐木技能
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
-    game_events[id].set_conditions_appear('unlock_foraging_logging', false);
+    game_events[id].set_conditions_appear('unlock_collect_logging', false);
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1
@@ -144,7 +144,7 @@ function init_mini_event(game_events) {
     game_events[id].set_new_process('process2', 'text9');
     game_events[id].add_process_button('process2', 'b5', 'text10');
     game_events[id].add_process_button_click('process2', 'b5', 'next_process', 'process3');
-    game_events[id].add_process_button_thing('process2', 'b5', 'set_global_flag', 'GS_unlock_foraging', true); //解锁采集技能
+    game_events[id].add_process_button_thing('process2', 'b5', 'set_global_flag', 'GS_unlock_collect', true); //解锁采集技能
     game_events[id].add_process_button_thing('process2', 'b5', 'move_place', 'village_old_woman'); //原地移动一次，刷新界面内的信息，将刚解锁的技能展示出来
     game_events[id].set_new_process('process3', 'text11');
     game_events[id].add_process_button('process3', 'b6', 'text12');
@@ -172,7 +172,7 @@ function init_mini_event(game_events) {
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
     game_events[id].set_conditions_appear('VM_woodshop_study_fishing', false); //事件没做过
-    game_events[id].set_conditions_appear('unlock_foraging_logging', true); //完成了前置任务
+    game_events[id].set_conditions_appear('unlock_collect_logging', true); //完成了前置任务
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1

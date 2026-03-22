@@ -11,16 +11,7 @@
     height: 10%;
     /* background-color: #ffd700; */
 }
-/* 商店n个子界面的切换按钮 */
-.Store_switch_button label {
-    /* flex: 1; */
-    /* padding: 10px 0; */
-    width: 100%;
-    height: 100%;
-    font-size: 15px;
-    box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
-}
+
 #Store_value_div {
     height: 90%;
 }

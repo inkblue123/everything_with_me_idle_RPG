@@ -12,12 +12,6 @@
     height: 10%;
     /* background-color: #ffd700; */
 }
-/* 战斗规划n个子界面的切换按钮 */
-.Combat_plan_switch_button {
-    flex: 1;
-    font-size: 15px;
-    border: 1px solid #797691; /* 内框 */
-}
 /* 容纳具体的背包物品、技能内容的div */
 #Combat_plan_value_div {
     height: 90%;

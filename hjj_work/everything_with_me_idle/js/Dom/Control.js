@@ -132,7 +132,7 @@ function set_Control_func(Control) {
         //这个流程中会获得buff
         if (!is_Empty_Object(process.buff)) {
             for (let buff_id of process.buff) {
-                let P_buff = player.get_player_buff();
+                let P_buff = player.get_player_buff_manage();
                 P_buff.set_buff_attr(buff_id);
             }
         }
@@ -196,14 +196,7 @@ function show_new_normal_place(new_place) {
         let global_flag_manage = global.get_global_flag_manage();
         for (let next_place_id in new_place.condition_connect_normal_place) {
             let condition = new_place.condition_connect_normal_place[next_place_id];
-            let flag = true;
-            for (let id in condition) {
-                let status = global_flag_manage.get_flag(id); //当前需要判断的游戏状态的内容
-                if (status != condition[id]) {
-                    flag = false;
-                    break;
-                }
-            }
+            let flag = global_flag_manage.use_obj_get_flag(condition);
             if (flag) {
                 add_control_button_move(next_place_id, '前往', null);
             }
@@ -318,14 +311,7 @@ function show_new_combat(new_combat) {
         let global_flag_manage = global.get_global_flag_manage();
         for (let next_place_id in new_combat.condition_connect_normal_place) {
             let condition = new_combat.condition_connect_normal_place[next_place_id];
-            let flag = true;
-            for (let id in condition) {
-                let status = global_flag_manage.get_flag(id); //当前需要判断的游戏状态的内容
-                if (status != condition[id]) {
-                    flag = false;
-                    break;
-                }
-            }
+            let flag = global_flag_manage.use_obj_get_flag(condition);
             if (flag) {
                 add_control_button_move(next_place_id, '前往', null);
             }
@@ -436,7 +422,7 @@ function check_condition_appear_behaviors(event_id) {
 //获取商店界面中的批量选择按钮下一个要切换到的数量
 function get_store_next_quantity_num(now_quantity_num) {
     // 批量选择的数量设置如下
-    // 1 2 5 10 20 50 100 200 500 …………
+    // 1 5 10 50 100 500 …………
     // 每按一次按钮，数量就不断向下切换
     // 玩家背包里个数最多的某种物品，数量为y
     // 当批量选择个数大于y时，下一次切换到“一半”，再下一次切换到“全部”，再下一次切换到1
@@ -452,11 +438,11 @@ function get_store_next_quantity_num(now_quantity_num) {
     if (parseInt(now_quantity_num) >= aitem_max_num) {
         return 'half';
     }
-
+    //计算当前数字有多少个0
     let zero_num = 0;
     let x = parseInt(now_quantity_num);
     while (1) {
-        if (zero_num >= 100) {
+        if (zero_num >= 10) {
             console.log('数字计算错误，now_quantity_num的值不正常');
             return '1';
         }
@@ -468,7 +454,9 @@ function get_store_next_quantity_num(now_quantity_num) {
             break;
         }
     }
-    let arrr = [0, 2, 5, 0, 0, 1];
+
+    //基于剩余数字获取下一个要切换到的数
+    let arrr = [0, 5, 0, 0, 0, 1];
     let next_x = arrr[x];
     if (next_x == 0 || next_x == undefined) {
         console.log('数字计算错误，next_x的值不正常');

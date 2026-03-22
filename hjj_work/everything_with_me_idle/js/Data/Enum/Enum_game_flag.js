@@ -26,7 +26,7 @@ function init_game_status(enums) {
         GS_unlock_logging: false, //伐木技能是否解锁
         GS_unlock_fishing: false, //钓鱼技能是否解锁
         GS_unlock_mining: false, //挖矿技能是否解锁
-        GS_unlock_foraging: false, //采集技能是否解锁
+        GS_unlock_collect: false, //采集技能是否解锁
         GS_unlock_diving: false, //潜水技能是否解锁
         GS_unlock_archaeology: false, //考古技能是否解锁
         GS_unlock_exploration: false, //探索技能是否解锁
@@ -35,7 +35,24 @@ function init_game_status(enums) {
     //这里枚举的技能是会写入GS_game_statu游戏状态的，运行时遇到对应的状态就处理相应的逻辑
     id = 'live_plan_GS';
     add_Enum_Array(enums, id);
-    enums[id] = ['logging', 'fishing', 'mining', 'foraging', 'diving', 'archaeology', 'exploration', 'engrave'];
+    enums[id] = [
+        'logging',
+        'fishing',
+        'mining',
+        'collect',
+        'diving',
+        'archaeology',
+        'exploration',
+        'engrave',
+
+        'synthesis',
+        'cooking',
+        'forging',
+        'elixir_alchemy',
+        'herbal_bath',
+        'engrave',
+        'alchemy',
+    ];
 }
 //初始化枚举库中与短期游戏状态参数相关的内容
 function init_short_game_status(enums) {
@@ -84,7 +101,7 @@ function init_game_log_status(enums) {
         'logging', //伐木技能运行时的日志
         'fishing', //钓鱼技能运行时的日志
         'mining', //挖矿技能运行时的日志
-        'foraging', //采集技能运行时的日志
+        'collect', //采集技能运行时的日志
         'diving', //潜水技能运行时的日志
         'archaeology', //考古技能运行时的日志
         'exploration', //探索技能运行时的日志

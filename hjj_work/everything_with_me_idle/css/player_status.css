@@ -21,12 +21,6 @@
     display: flex;
     flex-wrap: nowrap; /* 防止换行 */
 }
-/* 角色状态n个子界面的切换按钮 */
-.player_status_switch_button {
-    flex: 1;
-    font-size: 15px;
-    border: 1px solid #797691; /* 内框 */
-}
 #player_status_value_div {
     height: 90%;
 }
@@ -329,15 +323,6 @@
     justify-content: center;
     align-items: center;
     flex: 1;
-}
-/* 玩家属性展示按钮 */
-.PA_switch_button {
-    width: 50px;
-    height: 50px;
-    background-color: rgb(255, 255, 255);
-    font-size: 15px; /*文本大小*/
-    white-space: pre-wrap; /* 让文本按照换行符换行，同时保留空格 */
-    border: 2px solid #797691; /* 内框 */
 }
 /* 选择装备栏的大div */
 #EQP_switch_div {

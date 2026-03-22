@@ -14,13 +14,6 @@
     box-sizing: border-box;
     /* border-bottom: 1px solid #797691;  */
 }
-.GL_switch_button {
-    flex: 1;
-    font-size: 15px;
-    /* height: 40px; */
-    box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
-}
 /* 游戏日志界面下方容纳具体内容的div */
 #Game_log_value_div {
     height: 90%;

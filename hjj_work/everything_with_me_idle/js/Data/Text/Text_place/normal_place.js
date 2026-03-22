@@ -1,5 +1,7 @@
 import { add_text_object } from '../Text_class.js';
 //所有普通地点的文本
+//文本长度最好不要超过7个字，在地图界面的按钮中，第八个字会换行
+//地点的名称中不要包含“区域”这两个字
 function normal_place_text(texts) {
     //位于测试区域的普通地点
     test_normal_place(texts);
@@ -101,8 +103,8 @@ function village_backhill_normal_place(texts) {
     texts[id].place_desc = '山坡上一片满是碎石的地方，在这里挖矿可以有效的得到石材';
     id = 'FC_Peakarea';
     add_text_object(texts, id);
-    texts[id].place_name = '山顶区域';
-    texts[id].place_desc = '村外后山的山顶区域，没有植被和动物，十分荒凉';
+    texts[id].place_name = '山顶范围';
+    texts[id].place_desc = '村外后山的山顶范围，少有植被和动物，十分荒凉';
 }
 //位于后山洞穴区域的普通地点
 function backhill_cave_normal_place(texts) {

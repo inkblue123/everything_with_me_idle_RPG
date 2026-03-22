@@ -143,34 +143,34 @@ function init_no_normal_attr_name_fishing(texts) {
     texts[id].attr_name = '钓鱼遛鱼力';
 }
 //不是很常规的属性-采集方面的
-function init_no_normal_attr_name_foraging(texts) {
+function init_no_normal_attr_name_collect(texts) {
     let id;
-    id = 'FAG_chance';
+    id = 'CLT_chance';
     add_text_object(texts, id);
     texts[id].attr_name = '采集概率';
-    id = 'FAG_attack';
+    id = 'CLT_attack';
     add_text_object(texts, id);
     texts[id].attr_name = '采集力';
-    id = 'FAG_luck_chance';
+    id = 'CLT_luck_chance';
     add_text_object(texts, id);
     texts[id].attr_name = '幸运采集触发概率';
-    id = 'FAG_danger_chance';
+    id = 'CLT_danger_chance';
     add_text_object(texts, id);
     texts[id].attr_name = '涉险采集触发概率';
-    id = 'FAG_item_add_1_chance';
+    id = 'CLT_item_add_1_chance';
     add_text_object(texts, id);
     texts[id].attr_name = '采集物品数+1概率';
 
     //前缀是采集概率
     //后缀是所有物品子类和一些子类集合
     //这样的属性已经在Data.js中自动定义了，这里可以不需要重复定义
-    // id = 'FAG_chance_all_wood';
+    // id = 'CLT_chance_all_wood';
     // add_text_object(texts, id);
     // texts[id].attr_name = '采集时获得任意木头的概率';
-    // id = 'FAG_chance_ordinary_wood';
+    // id = 'CLT_chance_ordinary_wood';
     // add_text_object(texts, id);
     // texts[id].attr_name = '采集时获得凡木的概率';
-    // id = 'FAG_chance_all_grass';
+    // id = 'CLT_chance_all_grass';
     // add_text_object(texts, id);
     // texts[id].attr_name = '采集时获得任意草的概率';
 }
@@ -185,7 +185,7 @@ function init_Text_attr(texts) {
     //不是很常规的属性-钓鱼方面的
     init_no_normal_attr_name_fishing(texts);
     //不是很常规的属性-采集方面的
-    init_no_normal_attr_name_foraging(texts);
+    init_no_normal_attr_name_collect(texts);
 }
 
 export { init_Text_attr };

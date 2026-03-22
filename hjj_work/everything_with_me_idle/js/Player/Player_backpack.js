@@ -7,11 +7,38 @@ import { texts } from '../Data/Text/Text.js';
 import { player } from './Player.js';
 import { global } from '../GameRun/global_manage.js';
 
+//保存在玩家背包中的物品对象结构
+class item_class {
+    constructor() {
+        //通用属性
+        this.id; //物品id
+        this.num; //物品数量
+        // this.lock; //保护锁
+
+        //武器装备特有属性
+        this.equip_rarity;
+        //消耗品特有属性
+    }
+}
+//保存在玩家物品简要信息的对象结构
+class item_data_class {
+    constructor(item_id) {
+        //通用属性
+        this.id = item_id; //物品id
+        this.all_num = 0; //背包该物品总数量
+        // this.can_use_num; //可以使用的数量
+
+        this.BP_key = new Object(); //该id物品在玩家背包中的key有哪些
+    }
+}
+
 export class Player_backpack {
     constructor() {
-        this.backpack_items = new Object(); //玩家背包所有物品对象
+        this.backpack_items = new Object(); //玩家背包所有物品对象，以物品唯一key为依据
+        this.backpack_items_data = new Object(); //玩家背包物品的简要信息，以物品在数据库中的id为依据
         this.last_BP_switch_type = 'all';
         this.last_all_BP_secon_type = new Array();
+        this.backpack_items = new Object();
     }
     init() {
         //重置背包界面
@@ -25,7 +52,22 @@ export class Player_backpack {
     }
     //加载玩家背包部分的游戏存档
     load_Player_backpack(Player_backpack_save) {
+        if (is_Empty_Object(Player_backpack_save)) {
+            return;
+        }
+        //获取物品存档
         this.backpack_items = Player_backpack_save.backpack_items;
+        //整理物品简要信息
+        for (let item_key in this.backpack_items) {
+            let item_id = this.backpack_items[item_key].id;
+            let item_num = this.backpack_items[item_key].num;
+            if (is_Empty_Object(this.backpack_items_data[item_id])) {
+                this.backpack_items_data[item_id] = new item_data_class(item_id);
+            }
+            this.backpack_items_data[item_id].id = item_id;
+            this.backpack_items_data[item_id].all_num += item_num;
+            this.backpack_items_data[item_id].BP_key[item_key] = item_num;
+        }
         this.updata_BP_value();
     }
 
@@ -41,14 +83,28 @@ export class Player_backpack {
         if (this.backpack_items[item_key] === undefined) {
             //背包没有同key物品，初始化该物品
             this.backpack_items[item_key] = item_obj;
-            return item_obj.num;
+        } else {
+            //背包已有同key物品，只需要增加数量
+            this.backpack_items[item_key].num += item_obj.num;
+        }
+        if (this.backpack_items_data[id] === undefined) {
+            //背包物品简要信息没有同id信息，初始化
+            this.backpack_items_data[id] = new item_data_class(item_id);
+            this.backpack_items_data[id].all_num = item_obj.num;
+            this.backpack_items_data[id].BP_key[item_key] = item_obj.num;
+        } else {
+            //背包物品简要信息已有同id信息，只需要增加数量
+            this.backpack_items_data[id].all_num += item_obj.num;
+            if (is_Empty_Object(this.backpack_items_data[id].BP_key[item_key])) {
+                this.backpack_items_data[id].BP_key[item_key] = item_obj.num;
+            } else {
+                this.backpack_items_data[id].BP_key[item_key] += item_obj.num;
+            }
         }
 
-        //背包已有同key物品，只需要增加数量
-        this.backpack_items[item_key].num += item_obj.num;
         return item_obj.num;
     }
-    //从玩家背包中去掉物品
+    //从玩家背包中去掉指定key物品
     Player_lose_item(item_obj) {
         let id = item_obj.id;
         if (items[id] === undefined) {
@@ -61,16 +117,73 @@ export class Player_backpack {
             //背包没有同key物品，结束
             return 0;
         }
-
-        //背包已有同key物品，减少数量
-        if (this.backpack_items[item_key].num >= item_obj.num) {
-            this.backpack_items[item_key].num -= item_obj.num;
-            return item_obj.num;
-        } else {
-            let num = this.backpack_items[item_key].num;
-            this.backpack_items[item_key].num = 0;
-            return num;
+        if (this.backpack_items_data[id] === undefined) {
+            console.log('去除背包物品时的错误逻辑');
+            return 0;
         }
+        if (this.backpack_items[item_key].num < item_obj.num) {
+            console.log('去除背包物品时数量不足');
+            return 0;
+        }
+        if (this.backpack_items_data[id].all_num < item_obj.num) {
+            console.log('去除背包物品时简要信息数量不足');
+            return 0;
+        }
+        if (this.backpack_items_data[id].BP_key[item_key] < item_obj.num) {
+            console.log('去除背包物品时简要信息数量不足');
+            return 0;
+        }
+
+        let lose_num = 0;
+        //背包已有同key物品，减少数量
+        this.backpack_items[item_key].num -= item_obj.num;
+        lose_num = item_obj.num;
+
+        //在背包物品简要信息里也处理数量
+        this.backpack_items_data[id].all_num -= item_obj.num;
+        this.backpack_items_data[id].BP_key[item_key] -= item_obj.num;
+        if (this.backpack_items_data[id].BP_key[item_key] <= 0) {
+            delete this.backpack_items_data[id].BP_key[item_key];
+        }
+        return lose_num;
+    }
+    //从玩家背包中去掉指定id物品
+    Player_lose_item_data(item_id, num) {
+        let need_lose_num = num;
+        if (is_Empty_Object(this.backpack_items_data[item_id])) {
+            //玩家背包没有对应物品
+            return 0;
+        }
+        if (this.backpack_items_data[item_id].all_num < need_lose_num) {
+            //玩家背包对应物品数量少于需要去掉的数量
+            return 0;
+        }
+        for (let item_key in this.backpack_items_data[item_id].BP_key) {
+            let BP_num = this.backpack_items_data[item_id].BP_key[item_key];
+            if (need_lose_num >= BP_num) {
+                this.backpack_items[item_key].num -= BP_num;
+                this.backpack_items_data[item_id].all_num -= BP_num;
+                this.backpack_items_data[item_id].BP_key[item_key] -= BP_num;
+                need_lose_num -= BP_num;
+            } else {
+                this.backpack_items[item_key].num -= need_lose_num;
+                this.backpack_items_data[item_id].all_num -= need_lose_num;
+                this.backpack_items_data[item_id].BP_key[item_key] -= need_lose_num;
+                need_lose_num = 0;
+            }
+            if (this.backpack_items_data[item_id].BP_key[item_key] <= 0) {
+                delete this.backpack_items_data[item_id].BP_key[item_key];
+            }
+
+            if (need_lose_num <= 0) {
+                break;
+            }
+        }
+        if (need_lose_num > 0) {
+            console.log('去除所有指定id物品之后还不够，理应在前面判0时判断出来，属于异常情况');
+            return 0;
+        }
+        return num;
     }
 
     //更新左下角的背包物品栏中的元素
@@ -84,26 +197,27 @@ export class Player_backpack {
         //获取这次更新后应该激活的分类条件
         let true_BP_switch_type = check_BP_switch_type(now_BP_switch_type, all_BP_secon_type);
         //判断这次更新操作需要更新的部分
-        let updata_mod = get_updata_BP_mod(this.last_BP_switch_type, true_BP_switch_type, this.last_all_BP_secon_type, all_BP_secon_type);
+        // 后来发现如果只有一个物品数量+1了，结果却没法触发更新，所以去掉判断逻辑了，需要另想办法优化更新频率
+        // let updata_mod = get_updata_BP_mod(this.last_BP_switch_type, true_BP_switch_type, this.last_all_BP_secon_type, all_BP_secon_type);
+        // this.last_all_BP_secon_type = all_BP_secon_type;
+        // this.last_BP_switch_type = true_BP_switch_type;
+        // if (updata_mod == 0) {
+        //     //只是按下了左侧分类按钮中的同一个按钮，背包界面元素不需要更新
+        //     return;
+        // } else if (updata_mod == 1) {
+        //     //按下了左侧分类按钮中的另一个按钮，左侧分类按钮不需要清空，右侧物品需要清空
+        //     delete_BP_value_div(); //右侧物品
+        // } else if (updata_mod == 2) {
+        //     //左侧分类按钮数量种类发生变化，所有元素都需要重新生成
+        //     delete_BP_value_div(); //清空背包界面右侧物品
+        //     delete_BP_switch_div(); //清空背包界面左侧分类按钮
+        //     //重新生成背包界面的分类条件按钮
+        //     reset_BP_switch_button(true_BP_switch_type, all_BP_secon_type);
+        // }
 
-        this.last_all_BP_secon_type = all_BP_secon_type;
-        this.last_BP_switch_type = true_BP_switch_type;
-        if (updata_mod == 0) {
-            //只是按下了左侧分类按钮中的同一个按钮，背包界面元素不需要更新
-            return;
-        } else if (updata_mod == 1) {
-            //按下了左侧分类按钮中的另一个按钮，左侧分类按钮不需要清空，右侧物品需要清空
-            delete_BP_value_div(); //右侧物品
-        } else if (updata_mod == 2) {
-            //左侧分类按钮数量种类发生变化，所有元素都需要重新生成
-            delete_BP_value_div(); //清空背包界面右侧物品
-            delete_BP_switch_div(); //清空背包界面左侧分类按钮
-            //重新生成背包界面的分类条件按钮
-            reset_BP_switch_button(true_BP_switch_type, all_BP_secon_type);
-        }
-
-        // delete_BP_value_div(); //右侧物品
-        // delete_BP_switch_div(); //左侧分类按钮
+        delete_BP_value_div(); //右侧物品
+        delete_BP_switch_div(); //左侧分类按钮
+        reset_BP_switch_button(true_BP_switch_type, all_BP_secon_type); //重新生成背包界面的分类条件按钮
 
         //转义物品类别
         let type_switch = BP_switch_type_handle(true_BP_switch_type);
@@ -289,6 +403,7 @@ function get_updata_BP_mod(last_BP_switch_type, now_BP_switch_type, last_all_BP_
         return 1;
     }
 }
+
 //检查之前屏幕上激活的过滤条件在更新后是否适用，返回更新后适用的当前激活过滤条件
 function check_BP_switch_type(last_BP_switch_type, all_BP_secon_type) {
     if (last_BP_switch_type == 'all' || last_BP_switch_type == 'equipment_all' || last_BP_switch_type == 'consumable_all' || last_BP_switch_type == 'material_all') {

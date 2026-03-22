@@ -93,7 +93,7 @@ class Player_P_skill extends Player_skill {
         this.level = 0; //被动技能初始0级，不可用
     }
 }
-
+//玩家技能管理
 export class Player_skills {
     constructor() {
         this.passive_skills = new Object();

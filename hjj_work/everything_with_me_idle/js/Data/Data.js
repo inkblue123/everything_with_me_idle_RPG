@@ -9,7 +9,7 @@ import { init_skills } from './Skill/Skill.js';
 import { texts, init_texts } from './Text/Text.js';
 import { add_text_object } from './Text/Text_class.js';
 import { game_events, init_game_events } from './Game_event/Game_Event.js';
-import { get_uniqueArr } from '../Function/Function.js';
+import { is_Empty_Object, get_uniqueArr } from '../Function/Function.js';
 
 //数据库中内容大部分可以写死定义
 //部分内容需要在游戏内容不断扩展的同时进行填充和更新
@@ -37,8 +37,10 @@ function game_data_init() {
     Enum_attr_init();
     //文本数据库-属性部分的更新
     Text_attr_init();
+    //地图数据库-检查是否有遗漏的地点没有定义地图信息
+    check_map_data();
 }
-//
+//枚举数据库-游戏状态部分的枚举更新
 function Enum_game_status_init() {
     //游戏运行中遇到了事件完成，需要在游戏状态管理里标记，该事件完成了
     //如何知晓这个事件属于主线、支线、挑战、成就，在对应的管理对象里存储
@@ -54,6 +56,7 @@ function Enum_game_status_init() {
         }
     }
 }
+//枚举数据库-物品部分的枚举更新
 function Enum_item_init() {
     //物品有大类，决定物品是装备、消耗品、材料，就三种
     //物品还有小类，决定这个物品具体的类型，比如剑类型，木头类型，食品类型，很多很多小类，而且还会不断扩展
@@ -79,8 +82,16 @@ function Enum_item_init() {
     enums.Equipment_secon_type = get_uniqueArr(enums.Equipment_secon_type);
     enums.Consumable_secon_type = get_uniqueArr(enums.Consumable_secon_type);
     enums.Material_secon_type = get_uniqueArr(enums.Material_secon_type);
-}
 
+    let arr = Object.keys(enums.secon_type_sort); //将拥有的物品的key转换成一个数组
+    for (let secon_type of enums.Item_secon_type) {
+        if (!arr.includes(secon_type)) {
+            console.log('所有物品小类的排序中没有包含%s小类', secon_type);
+            break;
+        }
+    }
+}
+//枚举数据库-属性部分的枚举更新
 function Enum_attr_init() {
     //游戏中有很多属性，攻击、防御、伤害加成、攻击速度、伐木伤害、伐木工具伐木伤害、伐木工具伐木攻速等等
     //其中有些属性，例如伐木工具伐木伤害、战斧伐木伤害、空手伐木伤害、以及所有武器小类后面都加个伐木伤害
@@ -119,7 +130,7 @@ function Enum_attr_init() {
     //前缀是采集概率
     //后缀是所有物品子类和一些子类集合
     //组合效果就是采集时获得凡木的概率、采集时获得蘑菇的概率，采集时获得任意木头的概率这样
-    front = ['FAG_chance'];
+    front = ['CLT_chance'];
     after = JSON.parse(JSON.stringify(enums['Item_secon_type']));
     after.push('all_wood');
     after.push('all_grass');
@@ -149,6 +160,7 @@ function Enum_attr_init() {
     //去重
     enums['need_second_attr'] = get_uniqueArr(enums['need_second_attr']);
 }
+//文本数据库-属性部分的更新
 function Text_attr_init() {
     //游戏中有很多属性，攻击、防御、伤害加成、攻击速度、伐木伤害、伐木工具伐木伤害、伐木工具伐木攻速等等
     //其中有些属性，例如伐木工具伐木伤害、战斧伐木伤害、空手伐木伤害、以及所有武器小类后面都加个伐木伤害
@@ -188,7 +200,7 @@ function Text_attr_init() {
     //前缀是采集概率
     //后缀是所有物品子类和一些子类集合
     //组合效果就是采集时获得凡木的概率、采集时获得蘑菇的概率，采集时获得任意木头的概率这样
-    front = { FAG_chance: '采集时获得' };
+    front = { CLT_chance: '采集时获得' };
     after = JSON.parse(JSON.stringify(enums['Item_secon_type']));
     after.push('all_wood');
     after.push('all_grass');
@@ -214,6 +226,18 @@ function Text_attr_init() {
             let attr_name = texts[after_id].type_name + front[front_id];
             add_text_object(texts, attr_id);
             texts[attr_id].attr_name = attr_name;
+        }
+    }
+}
+//地图数据库-检查是否有遗漏的地点没有定义地图信息
+function check_map_data() {
+    for (let place_id in places) {
+        let area_id = places[place_id].area_id;
+        if (is_Empty_Object(maps[area_id])) {
+            continue;
+        }
+        if (is_Empty_Object(maps[area_id].place_data[place_id])) {
+            console.log('%s区域的%s地点没有在地图数据库中定义地图信息', area_id, place_id);
         }
     }
 }

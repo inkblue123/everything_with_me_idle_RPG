@@ -1,6 +1,5 @@
-import { crtElement, addElement, addElement_radio } from '../../Function/Dom_function.js';
-// import {  } from '../../Function/show_func.js';
-import { global } from '../../GameRun/global_manage.js';
+import { crtElement, addElement, addElement_radio } from '../../../Function/Dom_function.js';
+import { global } from '../../../GameRun/global_manage.js';
 
 //构建伐木技能的界面内容
 function make_logging_div(LGI_value_div) {
@@ -8,7 +7,7 @@ function make_logging_div(LGI_value_div) {
     let LGI_up_div = addElement(LGI_value_div, 'div', 'LGI_up_div', '', '');
     let tree_head_div = addElement(LGI_up_div, 'div', 'tree_head_div', '', '');
     //树的头像
-    let tree_head = addElement(tree_head_div, 'div', 'tree_head', 'LP_div', '');
+    let tree_head = addElement(tree_head_div, 'div', 'tree_head', null, '');
     tree_head.innerHTML = '没有目标';
     //树的生命进度条
     var tree_blood_bar = addElement(tree_head_div, 'div', 'tree_blood_bar', 'progress_bar', '');
@@ -17,9 +16,9 @@ function make_logging_div(LGI_value_div) {
     var tree_blood_number = addElement(tree_blood_bar, 'div', 'tree_blood_number', 'progress_bar_number'); //显示的数字，表示当前精力具体数值
     //掉落物列表
     let LGI_drop_table_div = addElement(LGI_up_div, 'div', 'LGI_drop_table_div', '', '');
-    let LGI_drop_table_head = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_head', 'LP_div', '');
+    let LGI_drop_table_head = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_head', null, '');
     LGI_drop_table_head.innerHTML = '可能的产物';
-    let drop_table_scroll_box = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_scroll_box', 'LP_div overflow_y_div', '');
+    let drop_table_scroll_box = addElement(LGI_drop_table_div, 'div', 'LGI_drop_table_scroll_box', 'overflow_y_div', '');
     var LGI_drop_table_value_div = addElement(drop_table_scroll_box, 'div', 'LGI_drop_table_value_div', 'in_overflow_div');
     var drop_value = addElement(LGI_drop_table_value_div, 'div', null, 'drop_value');
     drop_value.innerHTML = '无';
@@ -72,7 +71,7 @@ function set_logging_button(LGI_value_div) {
         radio.addEventListener('click', function () {
             change_LGI_way(this.id);
             let live_plan_manage = global.get_live_plan_manage();
-            let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
+            let logging_manage = live_plan_manage.get_LP_live_skill_manage('logging_manage');
             logging_manage.updata_logging_way(this.id);
         });
     });
@@ -85,7 +84,7 @@ function set_logging_button(LGI_value_div) {
         global.set_flag('GS_game_statu', 'logging');
         //开启一轮伐木，重置伐木的参数
         let live_plan_manage = global.get_live_plan_manage();
-        let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
+        let logging_manage = live_plan_manage.get_LP_live_skill_manage('logging_manage');
         logging_manage.player_start_logging();
         logging_manage.reset_round();
         //开始伐木按钮切换成停止伐木
@@ -95,7 +94,7 @@ function set_logging_button(LGI_value_div) {
     //停止伐木按钮
     LGI_E_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
-        let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
+        let logging_manage = live_plan_manage.get_LP_live_skill_manage('logging_manage');
         logging_manage.stop_game_statu();
         logging_manage.reset_round();
     };
@@ -103,7 +102,7 @@ function set_logging_button(LGI_value_div) {
     let LGI_R_button = LGI_value_div.querySelector('#LGI_R_button');
     LGI_R_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
-        let logging_manage = live_plan_manage.get_EC_live_skill_manage('logging_manage');
+        let logging_manage = live_plan_manage.get_LP_live_skill_manage('logging_manage');
         //更换当前伐木目标
         logging_manage.reborn_tree();
         //停止当前伐木动作

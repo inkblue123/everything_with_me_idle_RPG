@@ -136,7 +136,7 @@ export class Mini_event {
                 }
             } else if (thing_type == 'delete_buff') {
                 //清除指定buff
-                let P_buff = player.get_player_buff();
+                let P_buff = player.get_player_buff_manage();
                 for (let buff_id of thing_obj[thing_type]) {
                     P_buff.delete_buff_attr(buff_id);
                 }

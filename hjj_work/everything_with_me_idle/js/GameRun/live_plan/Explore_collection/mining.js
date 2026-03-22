@@ -1,11 +1,11 @@
-import { get_random, calculate_num_attr, calculate_speed_attr } from '../../Function/math_func.js';
-import { addElement } from '../../Function/Dom_function.js';
-import { is_Empty_Object, get_uniqueArr, get_item_id_key, get_item_obj } from '../../Function/Function.js';
-import { enemys } from '../../Data/Enemy/Enemy.js';
-import { items } from '../../Data/Item/Item.js';
-import { places } from '../../Data/Place/Place.js';
-import { player } from '../../Player/Player.js';
-import { global } from '../global_manage.js';
+import { get_random, calculate_num_attr, calculate_speed_attr } from '../../../Function/math_func.js';
+import { addElement } from '../../../Function/Dom_function.js';
+import { is_Empty_Object, get_uniqueArr, get_item_id_key, get_item_obj } from '../../../Function/Function.js';
+import { enemys } from '../../../Data/Enemy/Enemy.js';
+import { items } from '../../../Data/Item/Item.js';
+import { places } from '../../../Data/Place/Place.js';
+import { player } from '../../../Player/Player.js';
+import { global } from '../../global_manage.js';
 //挖矿状态
 const MIN_status = Object.freeze({
     NO_MIN: 1, //没有挖矿

@@ -213,4 +213,27 @@ function updata_player_active() {
     updata_player_active_show();
 }
 
-export { updata_attribute_show, updata_player_EQP, updata_player_active_slots_num, updata_player_active_show, updata_player_active, updata_player_active_time_bar };
+//原料处理界面中的配方发生变动，更新相关界面
+function updata_formula_UI_placeholder(scroll_box_id, value_div_id, placeholder_id) {
+    const scroll_box = document.getElementById(scroll_box_id); //可以启动滚动条的父div
+    const value_div = document.getElementById(value_div_id); //填充内容撑出父div滚动条的子div
+    const placeholder = document.getElementById(placeholder_id); //需要显示和隐藏的占位div
+    const scroll_box_Rect = scroll_box.getBoundingClientRect();
+    const value_div_Rect = value_div.getBoundingClientRect();
+    // console.log('value_div_Rect.height = %d,scroll_box_Rect.height = %d', value_div_Rect.height, scroll_box_Rect.height);
+    if (value_div_Rect.height > scroll_box_Rect.height) {
+        placeholder.style.display = '';
+    } else {
+        placeholder.style.display = 'none';
+    }
+}
+
+export {
+    updata_attribute_show, //
+    updata_player_EQP,
+    updata_player_active_slots_num,
+    updata_player_active_show,
+    updata_player_active,
+    updata_player_active_time_bar,
+    updata_formula_UI_placeholder,
+};

@@ -6,6 +6,7 @@ import { Player_worn } from './Player_worn.js';
 import { Player_active_skills_Manage } from './Player_active_skills.js';
 import { Player_skills } from './Player_skill.js';
 import { Player_Buff_Manage } from './Player_buff.js';
+import { Player_formulas_manage } from './Player_formula.js';
 import { global } from '../GameRun/global_manage.js';
 import { items } from '../Data/Item/Item.js';
 
@@ -14,7 +15,7 @@ export class Player_Object {
         //角色属性
         this.player_attributes = new Object();
         //角色buff
-        this.player_buff = new Object();
+        this.player_buff_manage = new Object();
 
         //背包物品
         this.player_backpack = new Object();
@@ -24,6 +25,8 @@ export class Player_Object {
         this.player_skills = new Object();
         //已装载的主动技能
         this.player_ASkills_manage = new Object();
+        //玩家学会的配方
+        this.player_formulas_manage = new Object();
     }
 
     init() {
@@ -31,8 +34,8 @@ export class Player_Object {
         this.player_attributes = new Player_attributes();
         this.player_attributes.init();
         //玩家buff
-        this.player_buff = new Player_Buff_Manage();
-        this.player_buff.init();
+        this.player_buff_manage = new Player_Buff_Manage();
+        this.player_buff_manage.init();
         //玩家背包
         this.player_backpack = new Player_backpack();
         this.player_backpack.init();
@@ -45,6 +48,9 @@ export class Player_Object {
         //初始化主动技能槽
         this.player_ASkills_manage = new Player_active_skills_Manage();
         this.player_ASkills_manage.init();
+        //初始化玩家配方
+        this.player_formulas_manage = new Player_formulas_manage();
+        this.player_formulas_manage.init();
         //更新玩家属性
         this.updata_end_attr();
     }
@@ -57,8 +63,8 @@ export class Player_Object {
     get_player_attributes_player_energy() {
         return this.player_attributes.player_energy;
     }
-    get_player_buff() {
-        return this.player_buff;
+    get_player_buff_manage() {
+        return this.player_buff_manage;
     }
     get_player_backpack() {
         return this.player_backpack;
@@ -78,6 +84,12 @@ export class Player_Object {
     get_player_All_active_skills() {
         return this.player_skills.active_skills;
     }
+    get_player_formulas_manage() {
+        return this.player_formulas_manage;
+    }
+    get_player_formulas(type) {
+        return this.player_formulas_manage.get_player_formulas(type);
+    }
     //给玩家背包添加物品
     Player_get_item(...args) {
         let item_obj;
@@ -91,6 +103,10 @@ export class Player_Object {
             if (items[id].main_type.includes('equipment')) {
                 //物品是装备，args内参数的含义按以下顺序排列：
                 //稀有度
+                if (args[2] == undefined) {
+                    console.log('背包添加装备时没有设置稀有度');
+                    return;
+                }
                 let equip_rarity = args[2];
                 item_obj = get_item_obj(id, num, equip_rarity);
             } else if (items[id].main_type.includes('material')) {
@@ -109,6 +125,8 @@ export class Player_Object {
             global_flag_manage.set_game_log('get_item', item_obj);
             //背包物品变动，刷新背包界面
             this.player_backpack.updata_BP_value();
+            //背包物品变动，刷新生活技能配方界面
+            this.player_formulas_manage.updata_formula_value();
         }
     }
     //给玩家背包添加物品，不触发日志的接口
@@ -140,6 +158,8 @@ export class Player_Object {
         if (ret >= 0) {
             //背包物品变动，刷新背包界面
             this.player_backpack.updata_BP_value();
+            //背包物品变动，刷新生活技能配方界面
+            this.player_formulas_manage.updata_formula_value();
         }
     }
     //从玩家背包里去掉指定物品
@@ -220,7 +240,7 @@ export class Player_Object {
         //玩家被动技能
 
         //玩家buff
-        this.player_buff.run_player_buff();
+        this.player_buff_manage.run_player_buff();
     }
     //游戏运行一帧，计算玩家的战斗相关内容
     run_player_combat() {
@@ -235,7 +255,7 @@ export class Player_Object {
         //玩家属性
         player_save.Player_attr_save = this.player_attributes.save_Player_attributes();
         //玩家buff
-        player_save.Player_buff_save = this.player_buff.save_Player_Buff_attr();
+        player_save.Player_buff_manage_save = this.player_buff_manage.save_Player_Buff_attr();
         //玩家背包物品
         player_save.Player_backpack_save = this.player_backpack.save_Player_backpack();
         //玩家装备栏
@@ -244,17 +264,20 @@ export class Player_Object {
         player_save.Player_skills_save = this.player_skills.save_Player_skills();
         //玩家主动技能类
         player_save.Player_ASkills_manage_save = this.player_ASkills_manage.save_Player_ASkills_manage();
+        //玩家配方
+        player_save.Player_formulas_manage_save = this.player_formulas_manage.save_Player_formulas_manage();
 
         return player_save;
     }
     //加载玩家对象存档
     load_player_class(player_save) {
         this.player_attributes.load_Player_attributes(player_save.Player_attr_save);
-        this.player_buff.load_Player_Buff_attr(player_save.Player_buff_save);
+        this.player_buff_manage.load_Player_Buff_attr(player_save.Player_buff_manage_save);
         this.player_backpack.load_Player_backpack(player_save.Player_backpack_save);
         this.player_worn.load_Player_worn(player_save.Player_worn_save);
         this.player_skills.load_Player_skills(player_save.Player_skills_save);
         this.player_ASkills_manage.load_Player_ASkills_manage(player_save.Player_ASkills_manage_save);
+        this.player_formulas_manage.load_Player_formulas_manage(player_save.Player_formulas_manage_save);
         this.updata_end_attr();
     }
 }

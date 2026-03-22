@@ -209,7 +209,7 @@ function set_equipment_type_attr_Presets(enums) {
         // attack_speed: 'min', //攻击速度最慢
     };
     //采集工具，该工具的战斗属性预设与拳套一致
-    id = 'foraging_tool';
+    id = 'collect_tool';
     add_Enum_Object(enums.equipment_type_attr_Presets, id);
     enums.equipment_type_attr_Presets[id] = {
         attack: 'less', //攻击较低
@@ -386,7 +386,7 @@ function init_Enum_equipment(enums) {
         'spray_gun',
         'logging_tool', //伐木工具
         'mining_tool', //挖矿工具
-        'foraging_tool', //采集工具
+        'collect_tool', //采集工具
         'diving_tool', //潜水工具
     ];
     //哪些装备小类型属于单手装备
@@ -484,7 +484,7 @@ function init_Enum_equipment(enums) {
         'logging_tool', //伐木工具
         'fishing_tool', //钓鱼工具
         'mining_tool', //挖矿工具
-        'foraging_tool', //采集工具
+        'collect_tool', //采集工具
         'diving_tool', //潜水工具
         'archaeology_tool', //考古工具
         'exploration_tool', //探索工具
@@ -496,7 +496,7 @@ function init_Enum_equipment(enums) {
         'logging_tool', //伐木工具
         'fishing_tool', //钓鱼工具
         'mining_tool', //挖矿工具
-        'foraging_tool', //采集工具
+        'collect_tool', //采集工具
         'diving_tool', //潜水工具
         'archaeology_tool', //考古工具
         'exploration_tool', //探索工具
@@ -518,7 +518,7 @@ function init_Enum_equipment(enums) {
         logging_tool: 'melee',
         fishing_tool: 'melee',
         mining_tool: 'melee',
-        foraging_tool: 'melee',
+        collect_tool: 'melee',
         diving_tool: 'melee',
         archaeology_tool: 'melee',
         exploration_tool: 'melee',
