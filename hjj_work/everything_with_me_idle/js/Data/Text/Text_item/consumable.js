@@ -32,6 +32,8 @@ function init_Text_consumable(texts) {
     init_Text_treasure_chest(texts);
     //凡间钱币
     init_Text_ordinary_coin(texts);
+    //书
+    init_Text_book(texts);
 }
 //食材
 function init_Text_ingredient(texts) {
@@ -211,6 +213,15 @@ function init_Text_ordinary_coin(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '金币';
     texts[id].item_desc = '王国内流通的货币，1金币相当于100银币';
+}
+//书
+function init_Text_book(texts) {
+    let id;
+
+    id = 'woodworking_introduction';
+    add_text_object(texts, id);
+    texts[id].item_name = '木工入门手册';
+    texts[id].item_desc = '记载了许多木匠基础操作，以及常用工具的制作方法';
 }
 
 export { init_Text_consumable };

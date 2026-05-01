@@ -30,7 +30,7 @@ function init_Enemy_ore(enemys) {
     enemys[id].set_reward_level_data(1, 20, false); //20权重出现，非特殊
     enemys[id].set_reward_level_attr(1, 0, 0, 0); //属性不变
     enemys[id].set_reward_level_item_array(1, 100); //在等级1创造一个物品队列，掉率100%
-    enemys[id].add_item(1, 0, 'hard_rock', 10, 1, 2); //坚硬岩石
+    enemys[id].add_item(1, 0, 'hard_rock', 10, 2, 1); //坚硬岩石
     //设置等级2
     enemys[id].set_reward_level_data(2, 10, false); //10权重出现，非特殊
     enemys[id].set_reward_level_attr(2, 10, 0, 0); //血量+10
@@ -82,10 +82,10 @@ function init_Enemy_ore(enemys) {
     enemys[id].set_reward_level_data(1, 30, false); //20权重出现，非特殊
     enemys[id].set_reward_level_attr(1, 0, 0, 0); //属性不变
     enemys[id].set_reward_level_item_array(1, 150); //在等级1创造一个物品队列，掉率150%
-    enemys[id].add_item(1, 0, 'highFe_rock', 10, 1, 2); //富铁矿石
-    enemys[id].add_item(1, 0, 'lowFe_rock', 10, 1, 2); //含铁岩石
+    enemys[id].add_item(1, 0, 'highFe_rock', 10, 2, 1); //富铁矿石
+    enemys[id].add_item(1, 0, 'lowFe_rock', 10, 2, 1); //含铁岩石
     enemys[id].set_reward_level_item_array(1, 100); //在等级1创造一个物品队列，掉率100%
-    enemys[id].add_item(1, 1, 'hard_rock', 10, 1, 2); //坚硬岩石
+    enemys[id].add_item(1, 1, 'hard_rock', 10, 2, 1); //坚硬岩石
     //设置等级2
     enemys[id].set_reward_level_data(2, 20, false); //10权重出现，非特殊
     enemys[id].set_reward_level_attr(2, 15, 1, 0); //血量+15，防御+1
@@ -93,7 +93,7 @@ function init_Enemy_ore(enemys) {
     enemys[id].add_item(2, 0, 'low_xuantie_rock', 10, 1, 1); //玄铁碎石
     enemys[id].set_reward_level_item_array(2, 100); //在第2档奖励创造一个物品队列，掉率100%
     enemys[id].add_item(2, 1, 'highFe_rock', 10, 0, 2); //富铁矿石
-    enemys[id].add_item(2, 1, 'lowFe_rock', 10, 1, 2); //含铁岩石
+    enemys[id].add_item(2, 1, 'lowFe_rock', 10, 2, 1); //含铁岩石
 
     id = 'cold_rock_layer'; //硬冷岩层
     add_E_ore_object(enemys, id);
@@ -111,9 +111,9 @@ function init_Enemy_ore(enemys) {
     enemys[id].set_reward_level_data(1, 30, false); //20权重出现，非特殊
     enemys[id].set_reward_level_attr(1, 0, 0, 0); //属性不变
     enemys[id].set_reward_level_item_array(1, 150); //在等级1创造一个物品队列，掉率150%
-    enemys[id].add_item(1, 0, 'lowFe_rock', 10, 1, 2); //含铁岩石
+    enemys[id].add_item(1, 0, 'lowFe_rock', 10, 2, 1); //含铁岩石
     enemys[id].set_reward_level_item_array(1, 100); //在等级1创造一个物品队列，掉率100%
-    enemys[id].add_item(1, 1, 'hard_rock', 10, 1, 2); //坚硬岩石
+    enemys[id].add_item(1, 1, 'hard_rock', 10, 2, 1); //坚硬岩石
     //设置等级2
     enemys[id].set_reward_level_data(2, 20, false); //10权重出现，非特殊
     enemys[id].set_reward_level_attr(2, 15, 1, 0); //血量+15，防御+1

@@ -1,10 +1,25 @@
 import { is_Empty_Object } from '../../Function/Function.js';
-import { addElement } from '../../Function/Dom_function.js';
+import { addElement, get_radio_switch_click_value } from '../../Function/Dom_function.js';
 
 import { texts } from '../../Data/Text/Text.js';
 import { items } from '../../Data/Item/Item.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { P_skills } from '../../Data/Skill/Skill.js';
+import { formulas } from '../../Data/Formula/Formula.js';
+
+// 创建日志函数映射
+const LogFunctions = {
+    get_item: make_get_item_game_log,
+    enemy_attack: make_enemy_attack_game_log,
+    player_attack: make_player_attack_game_log,
+    finish_event: make_finish_event_game_log,
+    unluck_skill: make_unluck_skill_game_log,
+    skill_levelup: make_skill_levelup_game_log,
+    live_skill_run: make_live_skill_run_game_log,
+    collect: make_collect_game_log,
+    save_game: make_save_game_game_log,
+    get_formula: make_get_formula_game_log,
+};
 
 //环形队列
 class CircularQueue {
@@ -140,27 +155,7 @@ export class Game_log_status {
         else if (RA_type == 'RA_other') log_arr = this.other_log.getAllLog();
         //将列表里的信息打印出来
         for (let a_new_log of log_arr) {
-            var new_log_div = addElement(RA_value_div, 'div', null, 'RA_log_div');
-
-            if (a_new_log.log_type == 'get_item') {
-                this.make_get_item_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'enemy_attack') {
-                this.make_enemy_attack_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'player_attack') {
-                this.make_player_attack_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'finish_event') {
-                this.make_finish_event_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'unluck_skill') {
-                this.make_unluck_skill_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'skill_levelup') {
-                this.make_skill_levelup_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'live_skill_run') {
-                this.make_live_skill_run_game_log(new_log_div, a_new_log);
-            } else if (a_new_log.log_type == 'collect') {
-                this.make_collect_game_log(new_log_div, a_new_log);
-            } else {
-                console.log('没有给%s类型的日志定义对应的日志生成函数', a_new_log.log_type);
-            }
+            make_a_game_log(RA_value_div, a_new_log);
         }
         //去除过多的信息
         //单个日志队列只能保存10个信息，并且在展示之前已经清空了原本日志，理论上不会过多
@@ -181,40 +176,14 @@ export class Game_log_status {
         if (!radios.checked) return;
 
         //获取当前流水账功能需要展示的日志类型
-        let RA_type;
-        radios = document.querySelectorAll('input[name="RA_switch"]');
-        for (const radio of radios) {
-            if (radio.checked) {
-                RA_type = radio.value;
-                break;
-            }
-        }
+        let RA_type = get_radio_switch_click_value('RA_switch');
         //把这一帧新增的日志打印到脑海的流水账里
         let RA_value_div = document.getElementById('RA_value_div');
         let new_log_num = this.new_log.getSize();
         for (let i = 0; i < new_log_num; i++) {
             let a_new_log = this.new_log.dequeue();
             if (a_new_log.type == RA_type || RA_type == 'RA_new') {
-                var new_log_div = addElement(RA_value_div, 'div', null, 'RA_log_div');
-                if (a_new_log.log_type == 'get_item') {
-                    this.make_get_item_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'enemy_attack') {
-                    this.make_enemy_attack_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'player_attack') {
-                    this.make_player_attack_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'finish_event') {
-                    this.make_finish_event_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'unluck_skill') {
-                    this.make_unluck_skill_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'skill_levelup') {
-                    this.make_skill_levelup_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'live_skill_run') {
-                    this.make_live_skill_run_game_log(new_log_div, a_new_log);
-                } else if (a_new_log.log_type == 'collect') {
-                    this.make_collect_game_log(new_log_div, a_new_log);
-                } else {
-                    console.log('没有给%s类型的日志定义对应的日志生成函数', a_new_log.log_type);
-                }
+                make_a_game_log(RA_value_div, a_new_log);
             }
         }
         //去除过多的信息
@@ -225,185 +194,223 @@ export class Game_log_status {
             }
         }
     }
-
-    //生成一条敌人攻击的游戏日志
-    make_enemy_attack_game_log(new_log_div, log_obj) {
-        // log_obj.log_value[0];
-        let enemy_id = log_obj.log_value[0];
-        let damage = log_obj.log_value[1] * -1;
-        let damage_type = log_obj.log_value[2];
-        //例句：敌人对我攻击，我受到了1近战伤害
-        let enemy_name = texts[enemy_id].enemy_name;
-        let damage_type_name = texts.damage_type.skill_desc[damage_type];
-        let ch = enemy_name + '对我攻击，造成了' + damage + damage_type_name + '伤害';
-
-        let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-        part1.innerHTML = ch;
+}
+//在日志界面添加一条日志信息
+function make_a_game_log(RA_value_div, a_new_log) {
+    var new_log_div = addElement(RA_value_div, 'div', null, 'RA_log_div');
+    //获取日志对应的函数
+    let func = LogFunctions[a_new_log.log_type];
+    if (typeof func === 'function') {
+        func(new_log_div, a_new_log);
+    } else {
+        console.log('没有给%s类型的日志定义对应的日志生成函数', a_new_log.log_type);
     }
-    //生成一条玩家攻击的游戏日志
-    make_player_attack_game_log(new_log_div, log_obj) {
-        let main_Attack = log_obj.log_value[0];
-        let damage = log_obj.log_value[1];
-        let enemy_id = log_obj.log_value[2];
-        //例句：我使用普通攻击对敌人造成了1近战伤害
-        let skill_id = main_Attack.id;
-        let active_name = texts[skill_id].skill_name;
-        let damage_type = main_Attack.damage_type;
-        let damage_type_name = texts.damage_type.skill_desc[damage_type];
-        let enemy_name = texts[enemy_id].enemy_name;
-        let ch = '我使用' + active_name + '对' + enemy_name + '造成了' + damage + damage_type_name + '伤害';
+}
+
+//生成一条敌人攻击的游戏日志
+function make_enemy_attack_game_log(new_log_div, log_obj) {
+    // log_obj.log_value[0];
+    let enemy_id = log_obj.log_value[0];
+    let damage = log_obj.log_value[1] * -1;
+    let damage_type = log_obj.log_value[2];
+    //例句：敌人对我攻击，我受到了1近战伤害
+    let enemy_name = texts[enemy_id].enemy_name;
+    let damage_type_name = texts.damage_type.skill_desc[damage_type];
+    let ch = enemy_name + '对我攻击，造成了' + damage + damage_type_name + '伤害';
+
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
+}
+//生成一条玩家攻击的游戏日志
+function make_player_attack_game_log(new_log_div, log_obj) {
+    let main_Attack = log_obj.log_value[0];
+    let damage = log_obj.log_value[1];
+    let enemy_id = log_obj.log_value[2];
+    //例句：我使用普通攻击对敌人造成了1近战伤害
+    let skill_id = main_Attack.id;
+    let active_name = texts[skill_id].skill_name;
+    let damage_type = main_Attack.damage_type;
+    let damage_type_name = texts.damage_type.skill_desc[damage_type];
+    let enemy_name = texts[enemy_id].enemy_name;
+    let ch = '我使用' + active_name + '对' + enemy_name + '造成了' + damage + damage_type_name + '伤害';
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
+}
+//生成一条获取物品的游戏日志
+function make_get_item_game_log(new_log_div, log_obj) {
+    let item_obj = log_obj.log_value[0];
+    let id = item_obj.id;
+    let item_name = items[id].name;
+    let num = item_obj.num;
+    let equip_rarity = item_obj.equip_rarity;
+    if (items[id].main_type == 'equipment') {
+        //物品是装备，例句：获得了普通木剑
         let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-        part1.innerHTML = ch;
+        part1.innerHTML = '获得了';
+
+        let part2 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+        let rarity_name = texts[equip_rarity].rarity_name;
+        part2.innerHTML = rarity_name + item_name;
+        part2.style.color = enums[equip_rarity].rarity_color;
+
+        if (num != 1) {
+            let part3 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+            part3.innerHTML = 'x' + num;
+        }
+    } else {
+        //其他物品，例句：获得了1个普通木头
+        let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+        part1.innerHTML = '获得了' + num + '个' + item_name;
+
+        // let part2 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+        // part2.innerHTML = item_name;
     }
-    //生成一条获取物品的游戏日志
-    make_get_item_game_log(new_log_div, log_obj) {
-        let item_obj = log_obj.log_value[0];
-        let id = item_obj.id;
-        let item_name = items[id].name;
-        let num = item_obj.num;
-        let equip_rarity = item_obj.equip_rarity;
-        if (items[id].main_type.includes('equipment')) {
-            //物品是装备，例句：获得了普通木剑
-            let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-            part1.innerHTML = '获得了';
-
-            let part2 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-            let rarity_name = texts[equip_rarity].rarity_name;
-            part2.innerHTML = rarity_name + item_name;
-            part2.style.color = enums[equip_rarity].rarity_color;
-
-            if (num != 1) {
-                let part3 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-                part3.innerHTML = 'x' + num;
+}
+//生成一条玩家完成了某个事件的游戏日志
+function make_finish_event_game_log(new_log_div, log_obj) {
+    let event_id = log_obj.log_value[0];
+    //例句：完成了“周一新手教学”事件
+    let event_name = texts[event_id].event_name;
+    let ch = '完成了"' + event_name + '"';
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
+}
+//生成一条玩家解锁了新的技能的日志
+function make_unluck_skill_game_log(new_log_div, log_obj) {
+    let id = log_obj.log_value[0];
+    // 例句：学会了新的（主动/被动）技能“普通攻击-近战”
+    let type_ch;
+    if (P_skills[id].type == 'Passive') {
+        type_ch = '被动';
+    } else if (P_skills[id].type == 'Active') {
+        type_ch = '主动';
+    }
+    let skill_name = P_skills[id].name;
+    let ch = '学会了新的' + type_ch + '技能"' + skill_name + '"';
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
+}
+//生成一条玩家进行生活技能的日志
+function make_live_skill_run_game_log(new_log_div, log_obj) {
+    let live_run_type = log_obj.log_value[0];
+    let live_skill_id = log_obj.log_value[1];
+    // let run_game_date = log_obj.log_value[2];
+    let live_skill_name = texts[live_skill_id].live_skill_name;
+    let ch;
+    if (live_run_type == 'start') {
+        //例句： X日X时，开始XX
+        // ch = run_game_date.day + '日' + run_game_date.hours + '时，开始' + live_skill_name;
+        //生活技能管理对象里要写日志时还得记一下时间，多少有点麻烦，试试不记时间的
+        ch = '开始' + live_skill_name;
+    } else if (live_run_type == 'no_energy_1') {
+        //例句：感到疲劳，暂停XX，原地休息一会
+        ch = '感到疲劳，暂停' + live_skill_name + '，原地休息一会';
+    } else if (live_run_type == 'no_energy_2') {
+        //例句： 实在没有精力了，暂停XX，原地休息一会
+        ch = '实在没有精力了，暂停' + live_skill_name + '，原地休息一会';
+    } else if (live_run_type == 'max_energy_1') {
+        //例句： 精力恢复好了，继续XX
+        ch = '精力恢复好了，继续' + live_skill_name;
+    } else if (live_run_type == 'max_energy_2') {
+        //例句： 精力恢复满也还是疲劳，停止XX
+        ch = '精力恢复满也还是疲劳，停止' + live_skill_name;
+    }
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
+}
+//生成一条采集时的日志
+function make_collect_game_log(new_log_div, log_obj) {
+    let status = log_obj.log_value[0]; //采集状态
+    let log_type = log_obj.log_value[1]; //该状态内决定日志内容的类型
+    let log_value1 = log_obj.log_value[2]; //该状态内决定日志内容
+    let log_value2 = log_obj.log_value[3]; //该状态内决定日志内容
+    let ch;
+    if (status == 4) {
+        //幸运采集状态枚举是4
+        ch = '触发幸运采集，收获当前地点的一个采集物品';
+    } else if (status == 5) {
+        //涉险采集状态正常运行阶段枚举是5
+        if (log_type == 'start') {
+            ch = '触发涉险采集，如果能度过危险，最后能收获当前地点的一个稀有采集物品';
+        } else if (log_type == 'start_danger') {
+            if (log_value1 == 'use_health_point') {
+                ch = '遭遇危险，生命' + log_value2;
+            } else if (log_value1 == 'use_magic_point') {
+                ch = '遭遇危险，魔力' + log_value2;
+            } else if (log_value1 == 'use_energy_point') {
+                ch = '遭遇危险，表层精力消耗' + log_value2;
+            } else if (log_value1 == 'get_buff') {
+                ch = '遭遇危险，受到' + log_value2 + '的buff影响';
+            } else {
+                console.log('未定义的危险类型%s', log_value1);
+                ch = '遭遇危险，受到未定义类型危险影响';
             }
-        } else {
-            //其他物品，例句：获得了1个普通木头
-            let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-            part1.innerHTML = '获得了' + num + '个' + item_name;
-
-            // let part2 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-            // part2.innerHTML = item_name;
-        }
-    }
-    //生成一条玩家完成了某个事件的游戏日志
-    make_finish_event_game_log(new_log_div, log_obj) {
-        let event_id = log_obj.log_value[0];
-        //例句：完成了“周一新手教学”事件
-        let event_name = texts[event_id].event_name;
-        let ch = '完成了"' + event_name + '"';
-        let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-        part1.innerHTML = ch;
-    }
-    //生成一条玩家解锁了新的技能的日志
-    make_unluck_skill_game_log(new_log_div, log_obj) {
-        let id = log_obj.log_value[0];
-        // 例句：学会了新的（主动/被动）技能“普通攻击-近战”
-        let type_ch;
-        if (P_skills[id].type == 'Passive') {
-            type_ch = '被动';
-        } else if (P_skills[id].type == 'Active') {
-            type_ch = '主动';
-        }
-        let skill_name = P_skills[id].name;
-        let ch = '学会了新的' + type_ch + '技能"' + skill_name + '"';
-        let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-        part1.innerHTML = ch;
-    }
-    //生成一条玩家有技能升级了的日志
-    make_skill_levelup_game_log(new_log_div, log_obj) {
-        let id = log_obj.log_value[0];
-        let up_level = log_obj.log_value[1];
-        let now_level = log_obj.log_value[2];
-        //例句：“普通攻击-近战”提高了1级，目前2级
-        let skill_name = P_skills[id].name;
-        let ch = '"' + skill_name + '"提高了' + up_level + '级，目前' + now_level + '级';
-        let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-        part1.innerHTML = ch;
-    }
-    //生成一条玩家进行生活技能的日志
-    make_live_skill_run_game_log(new_log_div, log_obj) {
-        let live_run_type = log_obj.log_value[0];
-        let live_skill_id = log_obj.log_value[1];
-        // let run_game_date = log_obj.log_value[2];
-        let live_skill_name = texts[live_skill_id].live_skill_name;
-        let ch;
-        if (live_run_type == 'start') {
-            //例句： X日X时，开始XX
-            // ch = run_game_date.day + '日' + run_game_date.hours + '时，开始' + live_skill_name;
-            //生活技能管理对象里要写日志时还得记一下时间，多少有点麻烦，试试不记时间的
-            ch = '开始' + live_skill_name;
-        } else if (live_run_type == 'no_energy_1') {
-            //例句：感到疲劳，暂停XX，原地休息一会
-            ch = '感到疲劳，暂停' + live_skill_name + '，原地休息一会';
-        } else if (live_run_type == 'no_energy_2') {
-            //例句： 实在没有精力了，暂停XX，原地休息一会
-            ch = '实在没有精力了，暂停' + live_skill_name + '，原地休息一会';
-        } else if (live_run_type == 'max_energy_1') {
-            //例句： 精力恢复好了，继续XX
-            ch = '精力恢复好了，继续' + live_skill_name;
-        } else if (live_run_type == 'max_energy_2') {
-            //例句： 精力恢复满也还是疲劳，停止XX
-            ch = '精力恢复满也还是疲劳，停止' + live_skill_name;
-        }
-        let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-        part1.innerHTML = ch;
-    }
-    //生成一条采集时的日志
-    make_collect_game_log(new_log_div, log_obj) {
-        let status = log_obj.log_value[0]; //采集状态
-        let log_type = log_obj.log_value[1]; //该状态内决定日志内容的类型
-        let log_value1 = log_obj.log_value[2]; //该状态内决定日志内容
-        let log_value2 = log_obj.log_value[3]; //该状态内决定日志内容
-        let ch;
-        if (status == 4) {
-            //幸运采集状态枚举是4
-            ch = '触发幸运采集，收获当前地点的一个采集物品';
-        } else if (status == 5) {
-            //涉险采集状态正常运行阶段枚举是5
-            if (log_type == 'start') {
-                ch = '触发涉险采集，如果能度过危险，最后能收获当前地点的一个稀有采集物品';
-            } else if (log_type == 'start_danger') {
-                if (log_value1 == 'use_health_point') {
-                    ch = '遭遇危险，生命' + log_value2;
-                } else if (log_value1 == 'use_magic_point') {
-                    ch = '遭遇危险，魔力' + log_value2;
-                } else if (log_value1 == 'use_energy_point') {
-                    ch = '遭遇危险，表层精力消耗' + log_value2;
-                } else if (log_value1 == 'get_buff') {
-                    ch = '遭遇危险，受到' + log_value2 + '的buff影响';
-                } else {
-                    console.log('未定义的危险类型%s', log_value1);
-                    ch = '遭遇危险，受到未定义类型危险影响';
-                }
-            } else if (log_type == 'continuous_danger') {
-                if (log_value1 == 'use_health_point') {
-                    ch = '遭遇危险，接下来一段时间会消耗生命';
-                } else if (log_value1 == 'use_magic_point') {
-                    ch = '遭遇危险，接下来一段时间会消耗魔力';
-                } else if (log_value1 == 'use_energy_point') {
-                    ch = '遭遇危险，接下来一段时间会消耗表层精力';
-                } else {
-                    console.log('未定义的危险类型%s', log_value1);
-                    ch = '遭遇危险，受到未定义类型危险影响';
-                }
-            }
-        } else if (status == 6) {
-            //涉险采集状态结束阶段枚举是6
-            if (log_type == 'start_no_rare') {
-                ch = '触发涉险采集，但当前地点没有稀有物品，放弃涉险';
-            } else if (log_type == 'start_no_energy') {
-                ch = '触发涉险采集，但当前处于疲劳状态，放弃涉险';
-            } else if (log_type == 'process_danger') {
-                ch = '没能度过危险，涉险采集失败';
-            } else if (log_type == 'process_no_energy') {
-                ch = '没有精力继续了，涉险采集失败';
-            } else if (log_type == 'finish') {
-                ch = '涉险采集完成，收获当前地点的一个稀有采集物品';
+        } else if (log_type == 'continuous_danger') {
+            if (log_value1 == 'use_health_point') {
+                ch = '遭遇危险，接下来一段时间会消耗生命';
+            } else if (log_value1 == 'use_magic_point') {
+                ch = '遭遇危险，接下来一段时间会消耗魔力';
+            } else if (log_value1 == 'use_energy_point') {
+                ch = '遭遇危险，接下来一段时间会消耗表层精力';
+            } else {
+                console.log('未定义的危险类型%s', log_value1);
+                ch = '遭遇危险，受到未定义类型危险影响';
             }
         }
-        let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
-        part1.innerHTML = ch;
+    } else if (status == 6) {
+        //涉险采集状态结束阶段枚举是6
+        if (log_type == 'start_no_rare') {
+            ch = '触发涉险采集，但当前地点没有稀有物品，放弃涉险';
+        } else if (log_type == 'start_no_energy') {
+            ch = '触发涉险采集，但当前处于疲劳状态，放弃涉险';
+        } else if (log_type == 'process_danger') {
+            ch = '没能度过危险，涉险采集失败';
+        } else if (log_type == 'process_no_energy') {
+            ch = '没有精力继续了，涉险采集失败';
+        } else if (log_type == 'finish') {
+            ch = '涉险采集完成，收获当前地点的一个稀有采集物品';
+        }
     }
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
+}
+//生成一条玩家有技能升级了的日志
+function make_skill_levelup_game_log(new_log_div, log_obj) {
+    let id = log_obj.log_value[0];
+    let up_level = log_obj.log_value[1];
+    let now_level = log_obj.log_value[2];
+    //例句：“普通攻击-近战”提高了1级，目前2级
+    let skill_name = P_skills[id].name;
+    let ch = '"' + skill_name + '"提高了' + up_level + '级，目前' + now_level + '级';
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
+}
+//生成一条存档成功的日志
+function make_save_game_game_log(new_log_div, log_obj) {
+    let type = log_obj.log_value[0];
+    //例句：保存成功
+    let ch;
+    if (type == 'auto') {
+        ch = '自动存档成功';
+    } else if (type == 'manual') {
+        ch = '存档成功';
+    }
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
+}
+//生成一条学会了指定配方的日志
+function make_get_formula_game_log(new_log_div, log_obj) {
+    let formula_id = log_obj.log_value[0]; //配方id
+    let study_status = log_obj.log_value[1]; //配方学习状态
+    //例句：学会了在合成制造技能中制造某产物的配方
+    let product_id = formulas[formula_id].product.id; //产物id
+    let product_name = texts[product_id].item_name; //产物名
+    let skill_id = formulas[formula_id].skill; //配方所属技能id
+    let live_skill_name = texts[skill_id].live_skill_name; //配方所属技能id
+
+    let ch = '学会了在 ' + live_skill_name + ' 技能中制造 ' + product_name + ' 的配方';
+    let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
+    part1.innerHTML = ch;
 }
 
 export {};

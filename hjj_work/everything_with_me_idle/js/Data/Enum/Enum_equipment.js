@@ -292,7 +292,7 @@ function set_L0_attr_Presets(enums) {
     enums.equipment_attr_level.L0.survival = {
         health_max: { max: 15, more: 12, normal: 9, less: 6, min: 3 }, //最大血量上限
         magic_max: { max: 15, more: 12, normal: 9, less: 6, min: 3 }, //最大魔力上限
-        energy_max: { max: 15, more: 12, normal: 9, less: 6, min: 3 }, //最大精力上限
+        // energy_max: { max: 15, more: 12, normal: 9, less: 6, min: 3 }, //最大精力上限
     };
     //玩家基础属性预设
     enums.equipment_attr_level.L0.player_base = {
@@ -348,7 +348,7 @@ function set_L1_attr_Presets(enums) {
     enums.equipment_attr_level.L1.survival = {
         health_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 }, //最大血量上限
         magic_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 }, //最大魔力上限
-        energy_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 }, //最大精力上限
+        // energy_max: { max: 25, more: 20, normal: 15, less: 10, min: 5 }, //最大精力上限
     };
     //L1装备的玩家基础属性预设
     enums.equipment_attr_level.L1.player_base = {

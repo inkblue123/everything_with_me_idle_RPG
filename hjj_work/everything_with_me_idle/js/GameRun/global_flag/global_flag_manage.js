@@ -243,6 +243,10 @@ export class Global_flag_manage {
     show_game_log_status(RA_type) {
         this.GL_status.show_game_log_status(RA_type);
     }
+    //调整游戏状态
+    change_GS_game_statu(value) {
+        this.GS_status.change_GS_game_statu(value);
+    }
 
     //玩家行为-击杀敌人记录
     record_kill_enemy_num(main_Attack, enemy) {

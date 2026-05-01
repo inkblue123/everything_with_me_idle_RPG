@@ -253,6 +253,14 @@ export class Player_energy_manage {
             return false;
         }
     }
+    //判断深层精力是否满了
+    judge_deep_energy_max() {
+        if (this.deep_energy_point >= this.deep_energy_max) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //更新精力条
     updata_ENP_bar_div() {

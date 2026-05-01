@@ -1,6 +1,6 @@
 'use strict';
-import { check_Equipment, is_Empty_Object, get_uniqueArr, get_item_id_key } from '../Function/Function.js';
-import { add_show_Tooltip, add_click_Equipment_worn, addElement, addElement_radio } from '../Function/Dom_function.js';
+import { is_Empty_Object, get_uniqueArr, get_item_id_key } from '../Function/Function.js';
+import { add_show_Tooltip, add_click_Equipment_worn, addElement, addElement_radio, add_click_use_consumable, get_radio_switch_click_value } from '../Function/Dom_function.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { texts } from '../Data/Text/Text.js';
@@ -16,8 +16,10 @@ class item_class {
         // this.lock; //保护锁
 
         //武器装备特有属性
-        this.equip_rarity;
+        this.equip_rarity; //稀有度
         //消耗品特有属性
+        this.use_ratio; //针对持续使用消耗品：使用进度
+        this.ex_data; //使用时额外属性
     }
 }
 //保存在玩家物品简要信息的对象结构
@@ -58,6 +60,7 @@ export class Player_backpack {
         //获取物品存档
         this.backpack_items = Player_backpack_save.backpack_items;
         //整理物品简要信息
+        this.backpack_items_data = new Object();
         for (let item_key in this.backpack_items) {
             let item_id = this.backpack_items[item_key].id;
             let item_num = this.backpack_items[item_key].num;
@@ -89,7 +92,7 @@ export class Player_backpack {
         }
         if (this.backpack_items_data[id] === undefined) {
             //背包物品简要信息没有同id信息，初始化
-            this.backpack_items_data[id] = new item_data_class(item_id);
+            this.backpack_items_data[id] = new item_data_class(id);
             this.backpack_items_data[id].all_num = item_obj.num;
             this.backpack_items_data[id].BP_key[item_key] = item_obj.num;
         } else {
@@ -105,14 +108,13 @@ export class Player_backpack {
         return item_obj.num;
     }
     //从玩家背包中去掉指定key物品
-    Player_lose_item(item_obj) {
-        let id = item_obj.id;
+    Player_lose_item(item_key, num) {
+        let id = item_key.split(':')[0];
         if (items[id] === undefined) {
             //添加的物品不在数据库中
             console.log('未定义物品：%s', id);
             return -1;
         }
-        let item_key = get_item_id_key(item_obj);
         if (this.backpack_items[item_key] === undefined) {
             //背包没有同key物品，结束
             return 0;
@@ -121,60 +123,99 @@ export class Player_backpack {
             console.log('去除背包物品时的错误逻辑');
             return 0;
         }
-        if (this.backpack_items[item_key].num < item_obj.num) {
+        if (this.backpack_items[item_key].num < num) {
             console.log('去除背包物品时数量不足');
             return 0;
         }
-        if (this.backpack_items_data[id].all_num < item_obj.num) {
+        if (this.backpack_items_data[id].all_num < num) {
             console.log('去除背包物品时简要信息数量不足');
             return 0;
         }
-        if (this.backpack_items_data[id].BP_key[item_key] < item_obj.num) {
+        if (this.backpack_items_data[id].BP_key[item_key] < num) {
             console.log('去除背包物品时简要信息数量不足');
             return 0;
         }
 
         let lose_num = 0;
         //背包已有同key物品，减少数量
-        this.backpack_items[item_key].num -= item_obj.num;
-        lose_num = item_obj.num;
+        this.backpack_items[item_key].num -= num;
+        lose_num = num;
 
         //在背包物品简要信息里也处理数量
-        this.backpack_items_data[id].all_num -= item_obj.num;
-        this.backpack_items_data[id].BP_key[item_key] -= item_obj.num;
+        this.backpack_items_data[id].all_num -= num;
+        this.backpack_items_data[id].BP_key[item_key] -= num;
         if (this.backpack_items_data[id].BP_key[item_key] <= 0) {
             delete this.backpack_items_data[id].BP_key[item_key];
         }
         return lose_num;
     }
-    //从玩家背包中去掉指定id物品
-    Player_lose_item_data(item_id, num) {
-        let need_lose_num = num;
-        if (is_Empty_Object(this.backpack_items_data[item_id])) {
-            //玩家背包没有对应物品
-            return 0;
-        }
-        if (this.backpack_items_data[item_id].all_num < need_lose_num) {
-            //玩家背包对应物品数量少于需要去掉的数量
-            return 0;
-        }
-        for (let item_key in this.backpack_items_data[item_id].BP_key) {
-            let BP_num = this.backpack_items_data[item_id].BP_key[item_key];
-            if (need_lose_num >= BP_num) {
-                this.backpack_items[item_key].num -= BP_num;
-                this.backpack_items_data[item_id].all_num -= BP_num;
-                this.backpack_items_data[item_id].BP_key[item_key] -= BP_num;
-                need_lose_num -= BP_num;
+    //从玩家背包中去掉为了制作配方所需的指定id物品
+    Player_lose_formula_item(material_id, num) {
+        let need_lose_num = num; //需要去掉的数量
+        let material_type = null; //配方需求
+        let BP_num = 0; //背包已有的数量
+        //分辨配方需求
+        if (enums['all_secon_type'].includes(material_id)) {
+            material_type = 'all_secon_type';
+            BP_num = P_backpack.get_BP_all_secon_type_num(material_id);
+        } else if (enums['Item_secon_type'].includes(material_id)) {
+            material_type = 'Item_secon_type';
+            BP_num = this.get_BP_Item_secon_type_num(material_id);
+        } else if (!is_Empty_Object(items[material_id])) {
+            material_type = 'specific_item';
+            if (is_Empty_Object(this.backpack_items_data[material_id])) {
+                BP_num = 0; //玩家背包没有对应物品
             } else {
-                this.backpack_items[item_key].num -= need_lose_num;
-                this.backpack_items_data[item_id].all_num -= need_lose_num;
-                this.backpack_items_data[item_id].BP_key[item_key] -= need_lose_num;
-                need_lose_num = 0;
+                BP_num = this.backpack_items_data[material_id].all_num;
             }
-            if (this.backpack_items_data[item_id].BP_key[item_key] <= 0) {
-                delete this.backpack_items_data[item_id].BP_key[item_key];
+        } else {
+            console.log('去掉配方的材料需求%s不属于已知类型，无法判断', material_id);
+            return 0;
+        }
+
+        //玩家背包对应物品数量少于需要去掉的数量
+        if (BP_num < need_lose_num) {
+            return 0;
+        }
+
+        //开始去掉物品
+        for (let item_id in this.backpack_items_data) {
+            // 检查物品是否符合要求
+            let check_flag = true;
+            if (material_type == 'all_secon_type') {
+                let secon_type_arr = enums[material_id];
+                let item_secon_type = items[item_id].secon_type;
+                check_flag = secon_type_arr.some((type) => item_secon_type.has(type));
+            } else if (material_type == 'Item_secon_type') {
+                let item_secon_type2 = items[item_id].secon_type;
+                check_flag = item_secon_type2.includes(material_id);
+            } else if (material_type == 'specific_item') {
+                check_flag = item_id === material_id;
+            }
+            if (!check_flag) {
+                continue;
             }
 
+            // 处理该物品的所有实例
+            for (let item_key in this.backpack_items_data[item_id].BP_key) {
+                let item_num = this.backpack_items_data[item_id].BP_key[item_key];
+                let remove_num = Math.min(need_lose_num, item_num);
+
+                // 更新数量
+                // this.updateItemCounts(item_id, item_key, remove_num);
+                this.backpack_items[item_key].num -= remove_num;
+                this.backpack_items_data[item_id].all_num -= remove_num;
+                this.backpack_items_data[item_id].BP_key[item_key] -= remove_num;
+                need_lose_num -= remove_num;
+                // 清理空数据
+                if (this.backpack_items_data[item_id].BP_key[item_key] <= 0) {
+                    delete this.backpack_items_data[item_id].BP_key[item_key];
+                }
+                // this.cleanupItemData(item_id, item_key);
+                if (need_lose_num <= 0) {
+                    break;
+                }
+            }
             if (need_lose_num <= 0) {
                 break;
             }
@@ -189,9 +230,7 @@ export class Player_backpack {
     //更新左下角的背包物品栏中的元素
     updata_BP_value() {
         //缓存上次背包界面激活的分类条件
-        let now_BP_switch_type = get_BP_switch_type();
-        //缓存上次背包界面展示的所有小类
-        // let last_all_BP_secon_type = get_BP_switch_type();
+        let now_BP_switch_type = get_radio_switch_click_value('BP_switch');
         //获取这次需要展示的物品的所有小类
         let all_BP_secon_type = get_all_BP_secon_type(this.backpack_items);
         //获取这次更新后应该激活的分类条件
@@ -224,7 +263,7 @@ export class Player_backpack {
         //获取当前背包物品点击之后要发挥什么用处，正常使用/选择出售
         let click_use_type = get_BP_click_use_type();
         //获取当前背包界面激活的排序条件
-        let BP_sort_type = get_BP_sort_type();
+        let BP_sort_type = get_radio_switch_click_value('BP_sort');
         //获取排序后的玩家所有物品的key集合
         let sort_item_array = this.get_BP_all_item_id_array_sort(BP_sort_type);
 
@@ -236,13 +275,7 @@ export class Player_backpack {
                 if (click_use_type == 'store') {
                     addBP_goods(item_obj);
                 } else {
-                    if (items[id].main_type.includes('equipment')) {
-                        addBP_equipment(item_obj);
-                    } else if (items[id].main_type.includes('material')) {
-                        addBP_item(item_obj);
-                    } else if (items[id].main_type.includes('consumable')) {
-                        addBP_item(item_obj);
-                    }
+                    addBP_item(item_obj);
                 }
             } else {
                 // 玩家拥有的物品不属于当前启动的过滤规则，不显示
@@ -263,6 +296,47 @@ export class Player_backpack {
             }
         }
         return max_num;
+    }
+    //获取当前背包中指定子类合集的物品的数量
+    get_BP_all_secon_type_num(all_secon_type) {
+        if (!enums['all_secon_type'].includes(all_secon_type)) {
+            console.log('%s不是子类合集，无法获取', all_secon_type);
+            return;
+        }
+        let num = 0;
+        let secon_type_arr = enums[all_secon_type];
+        for (let item_id in this.backpack_items_data) {
+            let item_secon_type = new Set(items[item_id].secon_type);
+            //判断secon_type_arr和item_secon_type是否有交集
+            if (secon_type_arr.some((type) => item_secon_type.has(type))) {
+                num += this.backpack_items_data[item_id].all_num;
+            }
+        }
+        return num;
+    }
+    //获取当前背包中指定子类的物品的数量
+    get_BP_Item_secon_type_num(Item_secon_type) {
+        if (!enums['Item_secon_type'].includes(Item_secon_type)) {
+            console.log('%s不是子类，无法获取', Item_secon_type);
+            return;
+        }
+        let num = 0;
+        for (let item_id in this.backpack_items_data) {
+            let item_secon_type = items[item_id].secon_type;
+            //判断secon_type_arr和item_secon_type是否有交集
+            if (item_secon_type.includes(Item_secon_type)) {
+                num += this.backpack_items_data[item_id].all_num;
+            }
+        }
+        return num;
+    }
+    //获取当前背包中指定id的物品的数量
+    get_BP_Item_id_num(Item_id) {
+        if (is_Empty_Object(this.backpack_items_data[Item_id])) {
+            return 0;
+        } else {
+            return this.backpack_items_data[Item_id].all_num;
+        }
     }
     //获取玩家仓库中指定货币的总金额
     get_BP_money_type_num(money_type) {
@@ -341,7 +415,7 @@ export class Player_backpack {
                     sortData[item_key] = 0;
                     continue;
                 }
-                if (items[id].main_type.includes('equipment')) {
+                if (items[id].main_type == 'equipment') {
                     let equip_rarity = this.backpack_items[item_key].equip_rarity;
                     let rarity_place_data = enums[equip_rarity].price_rate;
                     sortData[item_key] = items[id].price[money_type] * rarity_place_data * 0.01;
@@ -369,16 +443,6 @@ function delete_BP_switch_div() {
     BP_CSB_droptable.replaceChildren(); //清空消耗品的过滤选项
     let BP_MTR_droptable = document.getElementById('BP_MTR_droptable');
     BP_MTR_droptable.replaceChildren(); //清空材料的过滤选项
-}
-//获取背包界面激活的过滤条件
-function get_BP_switch_type() {
-    const radios = document.querySelectorAll('input[name="BP_switch"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            // 找到一个选中的按钮后可以结束循环
-            return radio.value;
-        }
-    }
 }
 //判断一次更新操作需要更新的部分
 function get_updata_BP_mod(last_BP_switch_type, now_BP_switch_type, last_all_BP_secon_type, all_BP_secon_type) {
@@ -477,58 +541,53 @@ function Item_type_handle(type_switch, id) {
     }
     return false;
 }
-//向背包界面展示玩家的一种武器装备，点击之后可以穿戴
-function addBP_equipment(item_obj) {
-    let maxStack = items[item_obj.id].maxStack;
+// 向背包物品界面中添加一个物品，根据物品大类设定点击之后的用处
+function addBP_item(item_obj) {
+    let id = item_obj.id;
+    let maxStack = items[id].maxStack;
     let player_item_num = item_obj.num;
+    let name = items[id].name;
 
     while (player_item_num) {
         let BP_value_div = document.getElementById('BP_value_div');
         let aitem_div = addElement(BP_value_div, 'div', null, 'BP_value');
-        //根据装备稀有度调整文字颜色
-        aitem_div.style.color = enums[item_obj.equip_rarity].rarity_color;
-
         let aitem_obj_data = JSON.parse(JSON.stringify(item_obj));
-        let name = items[item_obj.id].name;
+        //设置显示的文本
+        let aitem_ch = '';
         if (maxStack == 1) {
-            aitem_div.innerHTML = name;
+            aitem_ch = name;
             player_item_num -= maxStack;
             aitem_obj_data.num = maxStack;
         } else if (player_item_num >= maxStack) {
-            aitem_div.innerHTML = name + ' x' + maxStack;
+            aitem_ch = name + ' x' + maxStack;
             player_item_num -= maxStack;
             aitem_obj_data.num = maxStack;
         } else {
-            aitem_div.innerHTML = name + ' x' + player_item_num;
+            aitem_ch = name + ' x' + player_item_num;
             aitem_obj_data.num = player_item_num;
             player_item_num = 0;
         }
-        //给背包中的物品添加鼠标移动上去显示提示的效果
-        add_show_Tooltip(aitem_div, 'item', aitem_obj_data);
-        //添加鼠标点击可以穿戴到身上的效果
-        if (item_obj.equip_rarity != 'damaged') {
-            add_click_Equipment_worn(aitem_div, aitem_obj_data);
+        if (items[id].main_type == 'consumable' && items[id].use_type == 'sustain_use') {
+            aitem_ch = aitem_ch + '(' + parseFloat(item_obj.use_ratio.toFixed(0)) + '%)';
         }
-    }
-}
-// 向背包物品界面中添加一个物品
-function addBP_item(item_obj) {
-    let maxStack = items[item_obj.id].maxStack;
-    let player_item_num = item_obj.num;
-    while (player_item_num) {
-        let BP_value_div = document.getElementById('BP_value_div');
-        let aitem_div = addElement(BP_value_div, 'div', null, 'BP_value');
-        //设置显示的文本
-        let name = items[item_obj.id].name;
-        if (player_item_num >= maxStack) {
-            aitem_div.innerHTML = name + ' x' + maxStack;
-            player_item_num -= maxStack;
-        } else {
-            aitem_div.innerHTML = name + ' x' + player_item_num;
-            player_item_num = 0;
-        }
+        aitem_div.innerHTML = aitem_ch;
         //添加鼠标移动上去时展示提示信息的功能
-        add_show_Tooltip(aitem_div, 'item', item_obj);
+        add_show_Tooltip(aitem_div, 'item', aitem_obj_data);
+
+        //根据物品大类添加额外效果
+        if (items[id].main_type == 'equipment') {
+            //根据装备稀有度调整文字颜色
+            aitem_div.style.color = enums[item_obj.equip_rarity].rarity_color;
+            //添加鼠标点击可以穿戴到身上的效果
+            if (item_obj.equip_rarity != 'damaged') {
+                add_click_Equipment_worn(aitem_div, aitem_obj_data);
+            }
+        } else if (items[id].main_type == 'material') {
+            //无
+        } else if (items[id].main_type == 'consumable') {
+            //添加点击之后使用该消耗品的效果
+            add_click_use_consumable(aitem_div, aitem_obj_data);
+        }
     }
 }
 //向背包物品界面中添加一个物品，点击之后进入待出售窗口
@@ -553,7 +612,7 @@ function addBP_goods(item_obj) {
     let BP_value_div = document.getElementById('BP_value_div');
     let aitem_div = addElement(BP_value_div, 'div', null, 'BP_value');
     aitem_div.innerHTML = name + ' x' + can_show_num;
-    if (items[id].main_type.includes('equipment')) {
+    if (items[id].main_type == 'equipment') {
         //根据装备稀有度调整文字颜色
         aitem_div.style.color = enums[item_obj.equip_rarity].rarity_color;
     }
@@ -686,16 +745,6 @@ function get_BP_click_use_type() {
     } else {
         //如果玩家处于其他的地点，背包物品点击之后正常使用
         return 'normal';
-    }
-}
-//获取当前背包界面激活的排序条件
-function get_BP_sort_type() {
-    const radios = document.querySelectorAll('input[name="BP_sort"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            // 找到一个选中的按钮后可以结束循环
-            return radio.value;
-        }
     }
 }
 //货币价值计算器

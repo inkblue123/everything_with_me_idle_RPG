@@ -95,6 +95,7 @@ export class Mini_event {
                     let id = item_obj.id;
                     let num = item_obj.num;
                     let equip_rarity = item_obj.equip_rarity;
+                    // player.Player_get_item(item_obj);
                     player.Player_get_item(id, num, equip_rarity);
                 }
             } else if (thing_type == 'show_div') {
@@ -143,6 +144,9 @@ export class Mini_event {
             } else if (thing_type == 'save_game') {
                 //保存游戏
                 save_game();
+                //添加存档成功的日志
+                let global_flag_manage = global.get_global_flag_manage();
+                global_flag_manage.set_game_log('save_game', 'manual');
             } else {
                 console.log('未知的迷你事件中要做的事：%s，没有开发对应的处理逻辑', thing_type);
             }

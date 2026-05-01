@@ -3,8 +3,10 @@ import { add_text_object } from '../Text_class.js';
 //初始化装备数据库
 function init_Text_equipment(texts) {
     //近战武器
+    init_Text_dagger(texts); //匕首
     init_Text_sword(texts); //剑
     init_Text_battle_axe(texts); //战斧
+
     init_Text_sticks(texts); //棍棒
     init_Text_hammers(texts); //大锤
 
@@ -33,6 +35,15 @@ function init_Text_equipment(texts) {
     init_Text_diving_tool(texts); //潜水工具
     init_Text_archaeology_tool(texts); //考古工具
     init_Text_exploration_tool(texts); //探索工具
+}
+//匕首
+function init_Text_dagger(texts) {
+    let id;
+
+    id = 'wood_dagger';
+    add_text_object(texts, id);
+    texts[id].item_name = '木匕首';
+    texts[id].item_desc = '使用木头制作的匕首，常用于练习匕首的使用技巧，不适合真实战斗';
 }
 //剑
 function init_Text_sword(texts) {

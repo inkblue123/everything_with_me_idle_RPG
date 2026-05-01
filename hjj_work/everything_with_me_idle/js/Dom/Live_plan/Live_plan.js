@@ -267,12 +267,12 @@ function set_Live_plan_button(Live_plan) {
             last_EC_switch = this.id; //更新上一次点击的生活技能界面按钮
 
             //切换游戏状态
-            if (this.id == 'MIN_button') {
-                global.set_flag('GS_game_statu', 'mining');
-            } else {
-                //停止游戏状态
-                global.set_flag('GS_game_statu', 'NULL');
-            }
+            // if (this.id == 'MIN_button') {
+            //     global.set_flag('GS_game_statu', 'mining');
+            // } else {
+            //     //停止游戏状态
+            global.set_flag('GS_game_statu', 'NULL');
+            // }
             //切换界面
             change_Explore_collection_div(this.id);
         });

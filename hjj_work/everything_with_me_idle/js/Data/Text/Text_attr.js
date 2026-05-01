@@ -67,15 +67,30 @@ function init_player_attr(texts) {
     texts[id].attr_name = '移动速度';
     texts[id].min_attr_name = '移速';
 
+    id = 'health_point';
+    add_text_object(texts, id);
+    texts[id].attr_name = '生命';
     id = 'health_max';
     add_text_object(texts, id);
     texts[id].attr_name = '生命上限';
+    id = 'magic_point';
+    add_text_object(texts, id);
+    texts[id].attr_name = '魔力';
     id = 'magic_max';
     add_text_object(texts, id);
     texts[id].attr_name = '魔力上限';
-    id = 'energy_max';
+    id = 'surface_energy_point';
     add_text_object(texts, id);
-    texts[id].attr_name = '精力上限';
+    texts[id].attr_name = '表层精力';
+    id = 'surface_energy_recover';
+    add_text_object(texts, id);
+    texts[id].attr_name = '表层精力恢复速度';
+    id = 'deep_energy_point';
+    add_text_object(texts, id);
+    texts[id].attr_name = '深层精力';
+    id = 'deep_energy_max';
+    add_text_object(texts, id);
+    texts[id].attr_name = '深层精力上限';
 
     id = 'physique';
     add_text_object(texts, id);

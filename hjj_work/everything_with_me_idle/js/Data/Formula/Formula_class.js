@@ -6,6 +6,8 @@ export class Formula {
     constructor(id) {
         this.id = id; //唯一id
         this.initial_flag; //是否初始解锁
+
+        this.type; //配方类型，指定材料或者
         this.skill; //配方归属那个生活技能
         this.skill_min; //配方归属生活技能的哪个子功能下
         this.work_bench = new Array(); //配方所需工作环境
@@ -60,12 +62,16 @@ export class Formula {
         this.product.id = product_id;
         this.product.num = product_num;
         //设置物品的额外属性
-        if (items[product_id].main_type.includes('equipment')) {
+        if (items[product_id].main_type == 'equipment') {
+            if (is_Empty_Object(ex_data)) {
+                console.log('%s配方的产物没有定义额外属性', this.id);
+                return;
+            }
             //物品是装备，产物信息还应该有：稀有度
             this.product.equip_rarity = ex_data;
-        } else if (items[product_id].main_type.includes('material')) {
+        } else if (items[product_id].main_type == 'material') {
             //物品是材料，没有独特属性
-        } else if (items[product_id].main_type.includes('consumable')) {
+        } else if (items[product_id].main_type == 'consumable') {
             //物品是消耗品，产物信息还应该有：暂无
         }
     }

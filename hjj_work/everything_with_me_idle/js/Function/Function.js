@@ -22,14 +22,14 @@ function attr_correct_handle(attr_correct) {
 function check_Equipment(id, equip_rarity) {
     if (items[id] === undefined) {
         //该物品未定义
-        console.log('check_Equipment : 输入的物品是未定义物品,id：%s', id);
+        console.log('输入的物品是未定义物品,id：%s', id);
         return false;
     }
     if (typeof equip_rarity != 'string') {
         console.log('输入的equip_rarity不是一个具体的稀有度字符串');
         return false;
     }
-    if (items[id].main_type.includes('equipment')) {
+    if (items[id].main_type == 'equipment') {
         //稀有度参数校验
         if (items[id].special_flag) {
             if (!enums.special_rarity.includes(equip_rarity)) {
@@ -46,7 +46,7 @@ function check_Equipment(id, equip_rarity) {
         return true;
     } else {
         //该物品不属于装备
-        console.log('check_Equipment:%s不属于装备', id);
+        console.log('%s不属于装备', id);
         return false;
     }
 }
@@ -245,15 +245,33 @@ function get_item_obj(id, num, ...args) {
     item_obj.id = id;
     item_obj.num = num;
     //设置独特属性
-    if (items[id].main_type.includes('equipment')) {
-        //物品是装备，args内参数的含义按以下顺序排列：
-        //稀有度
-        item_obj.equip_rarity = args[0];
-    } else if (items[id].main_type.includes('material')) {
+    if (items[id].main_type == 'equipment') {
+        //物品是装备，args内参数的含义按以下顺序排列：稀有度
+        let equip_rarity = args[0];
+        if (args[0] == undefined) {
+            console.log('获取装备物品对象时没有设置稀有度');
+        } else {
+            if (check_Equipment(id, equip_rarity)) {
+                item_obj.equip_rarity = equip_rarity;
+            } else {
+                item_obj.equip_rarity = 'ordinary';
+            }
+        }
+    } else if (items[id].main_type == 'material') {
         //物品是材料，没有独特属性
-    } else if (items[id].main_type.includes('consumable')) {
-        //物品是消耗品，args内参数的含义按以下顺序排列：
-        // 暂无
+    } else if (items[id].main_type == 'consumable') {
+        //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
+        let use_ratio = args[0];
+        let ex_data = args[0];
+        if (check_Consumable(id, use_ratio, ex_data)) {
+            item_obj.use_ratio = args[0];
+            item_obj.ex_data = args[1];
+        } else {
+            if (items[id].use_attr == 'once_use') {
+            } else if (items[id].use_attr == 'sustain_use') {
+                item_obj.use_ratio = 0;
+            }
+        }
     }
 
     return item_obj;
@@ -262,13 +280,18 @@ function get_item_obj(id, num, ...args) {
 function get_item_id_key(item_obj, length = 16) {
     let id = item_obj.id;
     let item_value = '';
-    if (items[id].main_type.includes('equipment')) {
+    if (items[id].main_type == 'equipment') {
         //装备的独特属性是它的稀有度
         item_value = item_obj.equip_rarity;
-    } else if (items[id].main_type.includes('consumable')) {
-        //消耗品的独特属性有待开发
-        //目前不写，和材料一样空着
-    } else if (items[id].main_type.includes('material')) {
+    } else if (items[id].main_type == 'consumable') {
+        //消耗品的独特属性是使用进度和额外属性
+        if (!is_Empty_Object(item_obj.use_ratio)) {
+            item_value += item_obj.use_ratio;
+        }
+        if (!is_Empty_Object(item_obj.ex_data)) {
+            item_value += JSON.stringify(item_obj.ex_data);
+        }
+    } else if (items[id].main_type == 'material') {
         //材料应该没有独特属性，空着
     }
     //获取物品独特属性哈希值
@@ -296,6 +319,43 @@ function get_random_text(texts_id) {
     }
     return ch;
 }
+//校验输入的参数是否是合法的消耗品信息
+function check_Consumable(id, use_ratio, ex_data) {
+    if (items[id] === undefined) {
+        //该物品未定义
+        console.log('输入的物品是未定义物品,id：%s', id);
+        return false;
+    }
+    if (items[id].main_type == 'consumable') {
+        if (items[id].use_attr == 'once_use') {
+            //一次性使用物品，只应该有额外属性
+            if (typeof ex_data != 'object' && !is_Empty_Object(ex_data)) {
+                console.log('一次性使用消耗品的额外属性异常');
+                return false;
+            }
+            if (!is_Empty_Object(use_ratio)) {
+                console.log('一次性使用消耗品的使用进度异常');
+                return false;
+            }
+        } else if (items[id].use_attr == 'sustain_use') {
+            //持续使用物品，只应该有使用进度
+            if (typeof use_ratio != 'number' && !is_Empty_Object(use_ratio)) {
+                console.log('持续使用消耗品的使用进度异常');
+                return false;
+            }
+            if (!is_Empty_Object(ex_data)) {
+                console.log('持续使用消耗品的额外属性异常');
+                return false;
+            }
+        }
+    } else {
+        //该物品不属于消耗品
+        console.log('%s不属于消耗品', id);
+        return false;
+    }
+    return true;
+}
+
 export {
     check_Equipment,
     is_Empty_Object, //

@@ -241,11 +241,40 @@ function consumable_type(texts) {
     id = 'ordinary_coin';
     add_text_object(texts, id);
     texts[id].type_name = '钱币';
+    id = 'book';
+    add_text_object(texts, id);
+    texts[id].type_name = '书';
+}
+//消耗品大类中的使用方式类型名
+function consumable_use_type(texts) {
+    let id;
+
+    id = 'none';
+    add_text_object(texts, id);
+    texts[id].type_name = '不可点击使用';
+    id = 'sustain_use';
+    add_text_object(texts, id);
+    texts[id].type_name = '点击开始持续使用';
+    id = 'once_use';
+    add_text_object(texts, id);
+    texts[id].type_name = '点击立刻使用';
+    id = 'keep_use';
+    add_text_object(texts, id);
+    texts[id].type_name = '不可点击使用，会在需要时自动消耗';
+    id = 'condition_once_use';
+    add_text_object(texts, id);
+    texts[id].type_name = '满足条件时，点击立刻使用';
+    id = 'condition_sustain_use';
+    add_text_object(texts, id);
+    texts[id].type_name = '满足条件时，点击开始持续使用';
 }
 //材料的类型名称
 function material_type(texts) {
     let id;
 
+    id = 'woodchip';
+    add_text_object(texts, id);
+    texts[id].type_name = '木屑';
     id = 'ordinary_wood';
     add_text_object(texts, id);
     texts[id].type_name = '凡木';
@@ -390,6 +419,21 @@ function store_use_money_type(texts) {
     texts[id].money_type_name = '钱币';
 }
 
+//物品大类名称
+function item_main_type(texts) {
+    let id;
+
+    id = 'equipment';
+    add_text_object(texts, id);
+    texts[id].type_name = '武器装备';
+    id = 'consumable';
+    add_text_object(texts, id);
+    texts[id].type_name = '消耗品';
+    id = 'material';
+    add_text_object(texts, id);
+    texts[id].type_name = '材料物品';
+}
+
 //初始化文本数据库中与类型相关的文本
 function init_Text_type(texts) {
     //武器装备类型描述
@@ -400,6 +444,8 @@ function init_Text_type(texts) {
     Equipment_wearing_position(texts);
     //消耗品大类中的小类描述
     consumable_type(texts);
+    //消耗品大类中的使用方式类型名
+    consumable_use_type(texts);
     //材料类型描述
     material_type(texts);
     //主动技能类型描述
@@ -410,5 +456,7 @@ function init_Text_type(texts) {
     fish_status(texts);
     //商人使用的货币名称
     store_use_money_type(texts);
+    //物品大类名称
+    item_main_type(texts);
 }
 export { init_Text_type };

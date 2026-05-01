@@ -61,36 +61,20 @@ export class Enemy {
         this.item_array.push(obj);
     }
     //给这个敌人添加一个可掉落物品
-    // add_item(item_array_id, item_id, chance, max_num, min_num, equip_rarity) {
-    //     let item_;
-    //     let item_obj = new Object();
-
-    //     item_obj.id = item_id;
-    //     item_obj.chance = chance; //权重
-    //     item_obj.max_num = max_num;
-    //     item_obj.min_num = min_num;
-    //     if (equip_rarity) item_obj.equip_rarity = equip_rarity; //如果是装备，需要定义稀有度
-    //     if (is_Empty_Object(this.item_array[item_array_id])) {
-    //         console.log('未定义%d掉落列表', item_array_id);
-    //         return;
-    //     }
-    //     this.item_array[item_array_id].items[item_id] = item_obj;
-    // }
-    //给这个敌人添加一个可掉落物品
     add_item(item_array_id, item_id, chance, max_num, min_num, ...args) {
         let item_obj;
-        if (items[item_id].main_type.includes('equipment')) {
-            //物品是装备，args内参数的含义按以下顺序排列：
-            //稀有度
+        if (items[item_id].main_type == 'equipment') {
+            //物品是装备，args内参数的含义按以下顺序排列：稀有度
             let equip_rarity = args[0];
             item_obj = get_item_obj(item_id, 1, equip_rarity);
-        } else if (items[item_id].main_type.includes('material')) {
+        } else if (items[item_id].main_type == 'material') {
             item_obj = get_item_obj(item_id, 1);
             //物品是材料，没有独特属性
-        } else if (items[item_id].main_type.includes('consumable')) {
-            //物品是消耗品，args内参数的含义按以下顺序排列：
-            // 暂无
-            item_obj = get_item_obj(item_id, 1);
+        } else if (items[item_id].main_type == 'consumable') {
+            //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
+            let use_ratio = args[0];
+            let ex_data = args[1];
+            item_obj = get_item_obj(item_id, 1, use_ratio, ex_data);
         }
 
         item_obj.chance = chance; //权重
@@ -137,18 +121,18 @@ export class E_tree extends Enemy {
     //给这个敌人添加一个可掉落物品
     add_item(level, item_array_id, item_id, chance, max_num, min_num, ...args) {
         let item_obj = new Object();
-        if (items[item_id].main_type.includes('equipment')) {
-            //物品是装备，args内参数的含义按以下顺序排列：
-            //稀有度
+        if (items[item_id].main_type == 'equipment') {
+            //物品是装备，args内参数的含义按以下顺序排列：稀有度
             equip_rarity = args[0];
             item_obj = get_item_obj(item_id, 1, equip_rarity);
-        } else if (items[item_id].main_type.includes('material')) {
+        } else if (items[item_id].main_type == 'material') {
             item_obj = get_item_obj(item_id, 1);
             //物品是材料，没有独特属性
-        } else if (items[item_id].main_type.includes('consumable')) {
-            //物品是消耗品，args内参数的含义按以下顺序排列：
-            // 暂无
-            item_obj = get_item_obj(item_id, 1);
+        } else if (items[item_id].main_type == 'consumable') {
+            //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
+            let use_ratio = args[0];
+            let ex_data = args[1];
+            item_obj = get_item_obj(item_id, 1, use_ratio, ex_data);
         }
         item_obj.chance = chance; //权重
         item_obj.max_num = max_num;
@@ -216,18 +200,18 @@ export class E_ore extends Enemy {
     //在指定层级指定物品队列里添加一个掉落物
     add_item(level, item_array_id, item_id, chance, max_num, min_num, ...args) {
         let item_obj = new Object();
-        if (items[item_id].main_type.includes('equipment')) {
-            //物品是装备，args内参数的含义按以下顺序排列：
-            //稀有度
+        if (items[item_id].main_type == 'equipment') {
+            //物品是装备，args内参数的含义按以下顺序排列：稀有度
             equip_rarity = args[0];
             item_obj = get_item_obj(item_id, 1, equip_rarity);
-        } else if (items[item_id].main_type.includes('material')) {
+        } else if (items[item_id].main_type == 'material') {
             item_obj = get_item_obj(item_id, 1);
             //物品是材料，没有独特属性
-        } else if (items[item_id].main_type.includes('consumable')) {
-            //物品是消耗品，args内参数的含义按以下顺序排列：
-            // 暂无
-            item_obj = get_item_obj(item_id, 1);
+        } else if (items[item_id].main_type == 'consumable') {
+            //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
+            let use_ratio = args[0];
+            let ex_data = args[1];
+            item_obj = get_item_obj(item_id, 1, use_ratio, ex_data);
         }
         item_obj.chance = chance; //权重
         item_obj.max_num = max_num;

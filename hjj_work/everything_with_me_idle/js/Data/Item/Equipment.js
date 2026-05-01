@@ -53,6 +53,15 @@ function init_dagger(items) {
     let id;
     let secon_type = 'dagger';
     let attack_interval = -1; //匕首的攻击间隔为-1
+
+    id = 'wood_dagger'; //木匕首
+    add_Equipment_object(items, id); //id，物品主要分类
+    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
+    items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
+    items[id].init_Item_price('ordinary_coin', 20); //物品价值
+    //攻击，精准，暴击率，暴击伤害，攻击速度
+    // items[id].init_Equipment_attack_attr('ordinary',5, 5, 5, 20, 2);//手动设置攻击属性
 }
 //剑
 function init_sword(items) {

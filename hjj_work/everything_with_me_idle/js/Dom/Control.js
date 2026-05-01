@@ -1,6 +1,7 @@
 import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
 import { is_Empty_Object } from '../Function/Function.js';
 import { places } from '../Data/Place/Place.js';
+import { items } from '../Data/Item/Item.js';
 import { game_events } from '../Data/Game_event/Game_Event.js';
 import { texts } from '../Data/Text/Text.js';
 import { global } from '../GameRun/global_manage.js';
@@ -136,6 +137,25 @@ function set_Control_func(Control) {
                 P_buff.set_buff_attr(buff_id);
             }
         }
+    };
+    //展示使用消耗品的界面
+    Control.show_use_consumable = function (id, use_ratio) {
+        empty_dom(Place_desc_div); //清空原本描述
+        empty_dom(player_Control_div); //清空原本的可执行操作按钮
+        //展示文本
+        let item_name = items[id].name;
+        let text_ch = '正在使用消耗品 ' + item_name + '<br>';
+        text_ch = text_ch + '进度 ' + use_ratio + ' %';
+        Place_desc_div.innerHTML = text_ch;
+
+        //添加按钮
+        let control_button = addElement(player_Control_div, 'button', null, 'player_Control_button');
+        control_button.innerHTML = '停止使用';
+        control_button.addEventListener('click', function () {
+            //结算当前消耗品的使用情况
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.change_GS_game_statu('NULL');
+        });
     };
 
     //商店交易情况界面中的批量出售按钮，点击之后要更换数字

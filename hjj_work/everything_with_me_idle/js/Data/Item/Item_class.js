@@ -9,7 +9,7 @@ class Item {
         this.name = ''; // 物品名称
         this.desc = ''; // 物品描述
         this.maxStack = 1; // 最大堆叠数量
-        this.main_type = new Array(); //物品大类型
+        this.main_type; //物品大类型
         this.secon_type = new Array(); //物品小类型
         this.price = new Object();
         this.init_Item_name_desc(id);
@@ -65,7 +65,7 @@ class Item {
 class Equipment extends Item {
     constructor(id) {
         super(id);
-        this.main_type.push('equipment');
+        this.main_type = 'equipment';
         this.wearing_position = new Array(); //这件装备能穿戴的位置
         this.two_handed_flag = false; //这件装备是否属于双手武器
         this.special_flag = false; //这件装备是否属于特制装备
@@ -159,10 +159,9 @@ class Equipment extends Item {
     }
     //为这个物品填写穿戴之后可以获得的生存属性
     //最大血量上限，最大魔力上限，最大精力上限
-    init_Equipment_survival_attr(rarity, health_max, magic_max, energy_max) {
+    init_Equipment_survival_attr(rarity, health_max, magic_max) {
         this.equip_attr[rarity]['health_max'] = health_max;
         this.equip_attr[rarity]['magic_max'] = magic_max;
-        this.equip_attr[rarity]['energy_max'] = energy_max;
     }
     //为这个物品填写穿戴之后可以获得的玩家基础属性
     //体格，经脉，魂魄，力量，敏捷，智力，技巧
@@ -269,18 +268,46 @@ class Equipment extends Item {
 class Consumable extends Item {
     constructor(id) {
         super(id);
-        this.main_type.push('consumable');
-        this.consumable_type = new Array(); //这个消耗品的具体类型
+        this.main_type = 'consumable';
+        this.use_type = 'none'; //这个消耗品的使用方式
+        this.sustain_use_data = new Array(); //持续使用型消耗品的参数
+        this.use_attr = new Array(); //这个消耗品的使用效果
     }
     //为这个物品填写消耗品特有的属性
-    init_Consumable(e_type) {
-        this.consumable_type.push(e_type);
+    init_Consumable(use_type) {
+        this.use_type = use_type;
+    }
+    //设置持续使用的参数
+    set_sustain_use_data(id, value) {
+        if (this.use_type != 'sustain_use') {
+            console.log('%s物品不是持续使用类型，却定义了持续使用参数，异常', this.id);
+            return;
+        }
+        let obj = new Object();
+        obj.id = id;
+        obj.value = value;
+        this.sustain_use_data.push(obj);
+    }
+    //为这个物品添加一种使用效果
+    add_use_attr(attr_type, use_ratio, attr_id, attr_value1, attr_value2, attr_value3) {
+        if (this.use_type == 'none') {
+            console.log('%s物品没有定义可用，却定义了使用效果，异常', this.id);
+            return;
+        }
+        let obj = new Object();
+        obj.attr_type = attr_type;
+        obj.use_ratio = use_ratio;
+        obj.attr_id = attr_id;
+        obj.attr_value1 = attr_value1;
+        obj.attr_value2 = attr_value2;
+        obj.attr_value3 = attr_value3;
+        this.use_attr.push(obj);
     }
 }
 class Material extends Item {
     constructor(id) {
         super(id);
-        this.main_type.push('material');
+        this.main_type = 'material';
         this.material_type = new Array(); //这个材料的具体类型
     }
 

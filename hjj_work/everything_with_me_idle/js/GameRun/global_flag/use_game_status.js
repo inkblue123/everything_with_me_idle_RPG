@@ -2,6 +2,7 @@ import { global } from '../global_manage.js';
 import { player } from '../../Player/Player.js';
 import { places } from '../../Data/Place/Place.js';
 import { is_Empty_Object } from '../../Function/Function.js';
+import { get_radio_switch_click_value } from '../../Function/Dom_function.js';
 
 //获取临用游戏状态
 function get_use_game_status(flag_name, flag_in1, flag_in2, flag_in3) {
@@ -44,13 +45,7 @@ function get_use_game_status(flag_name, flag_in1, flag_in2, flag_in3) {
 }
 //临用游戏状态-主动技能规划界面的过滤条件
 function get_UGS_ASP_type() {
-    const radios = document.querySelectorAll('input[name="ASP_switch"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            // 找到一个选中的按钮后可以结束循环
-            return radio.value;
-        }
-    }
+    return get_radio_switch_click_value('ASP_switch');
 }
 //临用游戏状态-当前游戏日期属于村庄轮周的第几日
 function get_UGS_village_barracks_week() {
@@ -84,9 +79,8 @@ function get_UGS_BP_weight() {
 function get_UGS_get_up_time_flag() {
     let time_manage = global.get_time_manage();
     let game_date = time_manage.get_game_date();
-    let last_game_now_time = time_manage.get_last_game_now_time();
-    let last_date = time_manage.judge_game_date(last_game_now_time);
-    if (game_date.hours >= 7 && last_date.hours <= 6) {
+    let last_game_date = time_manage.get_last_game_date();
+    if (game_date.hours >= 7 && last_game_date.hours <= 6) {
         return true;
     }
 
@@ -99,13 +93,7 @@ function get_UGS_game_speed() {
 }
 //临用游戏状态-左上角的玩家属性界面中的玩家所有技能界面的过滤条件
 function get_UGS_PSK_type() {
-    const radios = document.querySelectorAll('input[name="PSK_switch"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            // 找到一个选中的按钮后可以结束循环
-            return radio.value;
-        }
-    }
+    return get_radio_switch_click_value('PSK_switch');
 }
 //临用游戏状态-获取指定的通道类型战斗地点是否曾通过了
 function get_UGS_pass_road_flag(place_id) {
@@ -149,15 +137,10 @@ function get_UGS_now_MH_name() {
     // 寻找当前展示的生活技能
     let MH_live_plan_name = ['synthesis', 'cooking', 'forging', 'elixir_alchemy', 'herbal_bath', 'engrave', 'alchemy'];
     let MH_live_plan_min_name = { SYN: 0, COK: 1, FRG: 2, EXA: 3, HBB: 4, EGV: 5, ACM: 6 };
-    let MH_name;
-    const radios = document.querySelectorAll('input[name="MH_switch"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            let MH_min_name = radio.value.slice(0, 3);
-            MH_name = MH_live_plan_name[MH_live_plan_min_name[MH_min_name]];
-            break;
-        }
-    }
+
+    let MH_switch_name = get_radio_switch_click_value('MH_switch');
+    let MH_min_name = MH_switch_name.slice(0, 3);
+    let MH_name = MH_live_plan_name[MH_live_plan_min_name[MH_min_name]];
     return MH_name;
 }
 

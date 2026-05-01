@@ -22,7 +22,7 @@ export class Map {
         this.area_other_place = other_places;
     }
     //添加区域内一个地点的地图信息
-    add_place_data(place_id, button_flag, x, y) {
+    add_place_data(place_id, button_flag=false, x, y) {
         if (is_Empty_Object(this.place_data[place_id])) {
             this.place_data[place_id] = new Object();
         }

@@ -49,10 +49,29 @@ export class Player_attributes {
     use_energy_point(value) {
         return this.player_energy.use_energy_point(value);
     }
-    //判断精力是否满了
-    //判断表层精力是否满了
-    judge_surface_energy_max() {
-        return this.player_energy.judge_surface_energy_max();
+    //判断指定属性是否满了
+    judge_player_attr_max(id) {
+        if (!enums.need_judge_max_attr.includes(id)) {
+            console.log('%s属性不在enums[need_judge_max_attr]枚举中，无法判断是否满了', id);
+            return;
+        }
+        if (id == 'surface_energy_point') {
+            return this.player_energy.judge_surface_energy_max();
+        } else if (id == 'deep_energy_point') {
+            return this.player_energy.judge_deep_energy_max();
+        } else if (id == 'health_point') {
+            if (this.data_attr.health_point >= this.data_attr.combat_survival_attr['health_max']) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (id == 'magic_point') {
+            if (this.data_attr.magic_point >= this.data_attr.combat_survival_attr['magic_max']) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     //根据id获取数值属性

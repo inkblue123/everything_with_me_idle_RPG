@@ -91,8 +91,11 @@ function set_fishing_button(FIS_value_div) {
     FIS_E_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
         let fishing_manage = live_plan_manage.get_LP_live_skill_manage('fishing_manage');
-        fishing_manage.stop_game_statu();
-        fishing_manage.reset_round();
+        // fishing_manage.stop_game_statu();
+        // fishing_manage.reset_round();
+
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.change_GS_game_statu('NULL');
     };
 }
 export { make_fishing_div, set_fishing_button };

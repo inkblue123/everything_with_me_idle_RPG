@@ -1,4 +1,6 @@
 import { updata_attribute_show, updata_player_active_time_bar } from '../Function/Updata_func.js';
+import { save_game, save_game_show_tip, delete_save_show_tip, load_save_show_tip } from '../LoadAndSave/load.js';
+
 import { player } from '../Player/Player.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_manage.js';
@@ -23,7 +25,8 @@ function game_loop() {
     updata_game_data();
     //更新这一帧的新的游戏画面
     updata_game_div();
-
+    //检测执行定时任务
+    updata_timing_game_data();
 
     Time_manage.updata_FPS_end();
     //一帧运行完毕，睡眠一段时间，保证游戏一秒运行帧数次
@@ -73,7 +76,13 @@ function updata_game_data() {
         //当前处于生活技能状态，更新数值
         let live_plan_manage = global.get_live_plan_manage();
         live_plan_manage.updata_live_plan_game_data(now_GS);
+    } else if (now_GS == 'use_continuous') {
+        //当前正在使用消耗品，更新相关数值
+        let consumable_manage = global.get_consumable_manage();
+        consumable_manage.updata_sustain_use_consumable();
     }
+
+    //需要定时更新的游戏内容
 
     //经验结算
     let exp_manage = global.get_exp_manage();
@@ -103,6 +112,50 @@ function updata_game_div() {
     P_attr.updata_HP_MP_ENP_div();
     //玩家属性显示更新
     updata_attribute_show();
+}
+//更新需要定时变化的游戏内容
+function updata_timing_game_data() {
+    let Time_manage = global.get_time_manage();
+    let time_node = Time_manage.get_time_node();
+    if (time_node.minutes) {
+        //现实时间每秒，游戏内每分钟触发一次
+        reborn_mining_ore_timing_func();
+    }
+    if (time_node.hours) {
+        //现实时间每分钟，游戏内每小时触发一次
+    }
+    if (time_node.day) {
+        //现实时间每24分钟，游戏内每天触发一次
+
+        save_game_timing_func(); //定时存档
+    }
+    if (time_node.month) {
+        //现实时间每12小时，游戏内每月触发一次
+    }
+    if (time_node.year) {
+        //现实时间每6天，游戏内每年触发一次
+    }
+}
+//定时尝试恢复挖矿的目标
+function reborn_mining_ore_timing_func() {
+    let now_GS = global.get_flag('GS_game_statu');
+    if (now_GS == 'mining') {
+        //当前处于挖矿状态，挖矿中的由挖矿系统自己处理
+        return;
+    }
+
+    let live_plan_manage = global.get_live_plan_manage();
+    let Mining_manage = live_plan_manage.get_LP_live_skill_manage('mining_manage');
+    Mining_manage.ore_death_reborn();
+}
+
+//定时自动存档任务
+function save_game_timing_func() {
+    //保存游戏
+    save_game();
+    //添加存档成功的日志
+    let global_flag_manage = global.get_global_flag_manage();
+    global_flag_manage.set_game_log('save_game', 'auto');
 }
 
 export { updata_game_data, start_game_loop };

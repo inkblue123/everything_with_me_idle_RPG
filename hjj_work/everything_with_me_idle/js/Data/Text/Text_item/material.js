@@ -2,6 +2,7 @@ import { add_text_object } from '../Text_class.js';
 
 function init_Text_material(texts) {
     //木头系列
+    init_Text_woodchip(texts); //木屑
     init_Text_ordinary_wood(texts); //凡木
     init_Text_spirit_wood(texts); //灵木
     //草系列
@@ -28,6 +29,32 @@ function init_Text_material(texts) {
     //丹药精华
     init_Text_elixir_essence(texts);
 }
+
+//木屑的文本
+function init_Text_woodchip(texts) {
+    let id;
+
+    id = 'Oak_woodchip';
+    add_text_object(texts, id);
+    texts[id].item_name = '橡树木屑';
+    texts[id].item_desc = '一堆橡木的碎片，伐木时如果砍的太碎了，那就只能获得木屑了';
+    id = 'Willow_woodchip';
+    add_text_object(texts, id);
+    texts[id].item_name = '柳树木屑';
+    texts[id].item_desc = '一堆柳木碎屑，它所在的木头应该遭受了难以想象的折磨，才会变得如此细碎';
+    id = 'birch_woodchip';
+    add_text_object(texts, id);
+    texts[id].item_name = '桦树木屑';
+    texts[id].item_desc = '一堆桦木碎屑，在开采加工桦树时容易获得';
+    id = 'pine_woodchip';
+    add_text_object(texts, id);
+    texts[id].item_name = '松树木屑';
+    texts[id].item_desc = '一堆松木碎屑，在开采加工松树时容易获得';
+    id = 'fir_woodchip';
+    add_text_object(texts, id);
+    texts[id].item_name = '杉树木屑';
+    texts[id].item_desc = '一堆杉木碎屑，在开采加工杉树时容易获得';
+}
 //凡木的文本
 function init_Text_ordinary_wood(texts) {
     let id;
@@ -36,42 +63,22 @@ function init_Text_ordinary_wood(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '橡树原木';
     texts[id].item_desc = '一块足够大的橡树原木，可以进行加工，有效率的伐木才能获得更多的原木，而不是木屑';
-    id = 'Oak_woodchip';
-    add_text_object(texts, id);
-    texts[id].item_name = '橡树木屑';
-    texts[id].item_desc = '一堆橡木的碎片，伐木时如果砍的太碎了，那就只能获得木屑了';
     id = 'Willow_logs';
     add_text_object(texts, id);
     texts[id].item_name = '柳树原木';
     texts[id].item_desc = '一块足够大的柳树原木';
-    id = 'Willow_woodchip';
-    add_text_object(texts, id);
-    texts[id].item_name = '柳树木屑';
-    texts[id].item_desc = '一堆柳木碎屑，它所在的木头应该遭受了难以想象的折磨，才会变得如此细碎';
     id = 'birch_logs';
     add_text_object(texts, id);
     texts[id].item_name = '桦树原木';
     texts[id].item_desc = '一块足够大的桦树原木';
-    id = 'birch_woodchip';
-    add_text_object(texts, id);
-    texts[id].item_name = '桦树木屑';
-    texts[id].item_desc = '一堆桦木碎屑，在开采加工桦树时容易获得';
     id = 'pine_logs';
     add_text_object(texts, id);
     texts[id].item_name = '松树原木';
     texts[id].item_desc = '一块足够大的松树原木';
-    id = 'pine_woodchip';
-    add_text_object(texts, id);
-    texts[id].item_name = '松树木屑';
-    texts[id].item_desc = '一堆松木碎屑，在开采加工松树时容易获得';
     id = 'fir_logs';
     add_text_object(texts, id);
     texts[id].item_name = '杉树原木';
     texts[id].item_desc = '一块足够大的杉树原木';
-    id = 'fir_woodchip';
-    add_text_object(texts, id);
-    texts[id].item_name = '杉树木屑';
-    texts[id].item_desc = '一堆杉木碎屑，在开采加工杉树时容易获得';
 
     id = 'decayed_wood';
     add_text_object(texts, id);
@@ -295,6 +302,10 @@ function init_Text_wood_parts(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '柳木板';
     texts[id].item_desc = '用柳木制成的完整木板，保留了柳木的纹理，要是拿它去做一些形状不合适的物品岂不是浪费了纹路？所以用处比普通木板少';
+    id = 'birch_board';
+    add_text_object(texts, id);
+    texts[id].item_name = '桦木板';
+    texts[id].item_desc = '用桦木制成的完整木板，保留了桦木的纹理，是很常用的好材料';
 }
 //铁质零件的文本
 function init_Text_iron_parts(texts) {

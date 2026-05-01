@@ -95,6 +95,8 @@ function set_mining_button(MIN_value_div) {
     let MIN_E_button = MIN_value_div.querySelector('#MIN_E_button');
     //开始挖矿按钮
     MIN_S_button.onclick = function () {
+        //开启伐木状态
+        global.set_flag('GS_game_statu', 'mining');
         //开启一轮挖矿，重置挖矿的参数
         let live_plan_manage = global.get_live_plan_manage();
         let mining_manage = live_plan_manage.get_LP_live_skill_manage('mining_manage');
@@ -106,9 +108,8 @@ function set_mining_button(MIN_value_div) {
     };
     //停止挖矿按钮
     MIN_E_button.onclick = function () {
-        let live_plan_manage = global.get_live_plan_manage();
-        let mining_manage = live_plan_manage.get_LP_live_skill_manage('mining_manage');
-        mining_manage.stop_game_statu();
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.change_GS_game_statu('NULL');
     };
     // 使用的主动技能变化
     let MIN_M_UseAPS_select = MIN_value_div.querySelector('#MIN_M_UseAPS_select');
@@ -134,7 +135,7 @@ function get_MIN_use_CSB() {
             continue;
         }
         let item_id = BP_all_item[item_key].id;
-        if (items[item_id].main_type.includes('consumable')) {
+        if (items[item_id].main_type == 'consumable') {
             options[item_key] = items[item_id].name;
             // options.push(item_id);
         }

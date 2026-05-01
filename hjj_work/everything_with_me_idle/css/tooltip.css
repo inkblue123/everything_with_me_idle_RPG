@@ -87,12 +87,12 @@
     position: relative;
 }
 /* 第2n + 1个元素左右都画线 */
-.lable_end .table_2_value:nth-child(2n + 1) {
+.page_columns_11 .table_2_value:nth-child(2n + 1) {
     border-inline: 1px solid darkgrey;
 }
 /* 第2n + 1个元素左右都画线 */
-.lable_end .table_2_value:nth-child(1),
-.lable_end .table_2_value:nth-child(2) {
+.page_columns_11 .table_2_value:nth-child(1),
+.page_columns_11 .table_2_value:nth-child(2) {
     border-top: 1px solid darkgrey;
 }
 /* 每行3列表格布局中的每个元素 */

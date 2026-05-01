@@ -30,6 +30,13 @@ function init_game_status(enums) {
         GS_unlock_diving: false, //潜水技能是否解锁
         GS_unlock_archaeology: false, //考古技能是否解锁
         GS_unlock_exploration: false, //探索技能是否解锁
+        GS_unlock_synthesis: true, //合成制造技能是否解锁
+        GS_unlock_cooking: false, //烹饪技能是否解锁
+        GS_unlock_forging: false, //锻造技能是否解锁
+        GS_unlock_elixir_alchemy: false, //炼丹技能是否解锁
+        GS_unlock_herbal_bath: false, //药浴技能是否解锁
+        GS_unlock_engrave: false, //雕刻技能是否解锁
+        GS_unlock_alchemy: false, //炼金术技能是否解锁
     };
     //生活技能枚举
     //这里枚举的技能是会写入GS_game_statu游戏状态的，运行时遇到对应的状态就处理相应的逻辑
@@ -105,6 +112,7 @@ function init_game_log_status(enums) {
         'diving', //潜水技能运行时的日志
         'archaeology', //考古技能运行时的日志
         'exploration', //探索技能运行时的日志
+        'get_formula', //学会配方
     ];
     id = 'other_log_type'; //属于其他部分的游戏日志
     add_Enum_Array(enums, id);
@@ -112,6 +120,7 @@ function init_game_log_status(enums) {
         'finish_event', //完成了某个事件
         'unluck_skill', //解锁了新的技能
         'skill_levelup', //技能升级
+        'save_game', //存档成果
     ];
 }
 //初始化枚举库中与游戏设置相关的内容

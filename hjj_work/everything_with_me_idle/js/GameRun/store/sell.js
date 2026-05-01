@@ -129,7 +129,7 @@ export class Sell_Manage {
         let maxStack = items[id].maxStack; //物品堆叠数
         let sell_price = 0; //要出售的物品的总价
         //针对装备的稀有度，重算价值和堆叠数
-        if (items[id].main_type.includes('equipment')) {
+        if (items[id].main_type == 'equipment') {
             let equip_rarity = item_obj.equip_rarity;
             let rarity_place_data = enums[equip_rarity].price_rate;
             base_price = base_price * rarity_place_data * 0.01;
@@ -211,7 +211,7 @@ export class Sell_Manage {
             let aitem_div = addElement(sell_value_div, 'div', null, 'sell_buy_value');
             let name = items[id].name;
             aitem_div.innerHTML = name + ' x' + sell_good_obj.num;
-            if (items[id].main_type.includes('equipment')) {
+            if (items[id].main_type == 'equipment') {
                 //根据装备稀有度调整文字颜色
                 aitem_div.style.color = enums[sell_good_obj.equip_rarity].rarity_color;
             }
@@ -256,7 +256,8 @@ export class Sell_Manage {
                 continue;
             }
             //从玩家背包中去掉这个物品
-            player.Player_lose_item(this.player_sell_goods[item_key]);
+            let num = this.player_sell_goods[item_key].num;
+            player.Player_lose_item(item_key, num);
             //放入回购列表
             buyback_manage.add_store_Item_buy_back_goods(this.player_sell_goods[item_key]);
         }

@@ -76,8 +76,8 @@ function set_collect_button(CLT_value_div) {
     CLT_E_button.onclick = function () {
         let live_plan_manage = global.get_live_plan_manage();
         let collect_manage = live_plan_manage.get_LP_live_skill_manage('collect_manage');
-        collect_manage.stop_game_statu(); // 停止采集状态
-        collect_manage.reset_round(); //重置一轮采集的参数
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.change_GS_game_statu('NULL');
     };
 
     //幸运采集按钮

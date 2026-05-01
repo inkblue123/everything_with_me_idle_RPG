@@ -81,6 +81,11 @@ function init_village_backhill_normal_place(places) {
     places[id].add_condition_connect_normal_place('forest_edge_road', 'unlock_collect_logging', true, '='); //完成了指定事件才允许进入外层森林通道
     places[id].add_place_NPC('village_old_woman');
     // places[id].add_connect_normal_place('village_square', 'cemetery', 'logged_forest', 'forest_edge_road');
+    // places[id].set_live_plan_flag(9); //当前地点可以执行的生活技能
+    // places[id].set_logging_data(5); //这个地点的伐木相关参数，树的复活时间5秒
+    // places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树
+    // places[id].set_collect_data(100, 1); //这个地点的采集相关参数，采集防御力100点
+    // places[id].set_collect_item('red_berry', 100, false); //这个地点可采集的物品，红浆果
 
     id = 'logged_forest'; //已开荒的林区
     add_normal_Place(places, id, area);
@@ -151,8 +156,8 @@ function init_village_backhill_normal_place(places) {
 
     id = 'forest_edge'; //外层森林
     add_normal_Place(places, id, area);
-    // places[id].add_connect_normal_place('VBH_rest_location', 'cave_inlet', 'forest_core_road', 'FE_woodland', 'FE_pond'); //测试
-    places[id].add_connect_normal_place('VBH_rest_location', 'cave_inlet', 'forest_core', 'FE_woodland', 'FE_pond');
+    places[id].add_connect_normal_place('VBH_rest_location', 'cave_inlet', 'forest_core_road', 'FE_woodland', 'FE_pond'); //测试
+    // places[id].add_connect_normal_place('VBH_rest_location', 'cave_inlet', 'forest_core', 'FE_woodland', 'FE_pond');
     places[id].set_live_plan_flag(9); //当前地点可以执行的生活技能
     places[id].set_logging_data(5); //这个地点的伐木相关参数，树的复活时间5秒
     places[id].set_logging_tree('bushes', 10, false); //这个地点可刷的树，灌木丛

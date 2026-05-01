@@ -1,5 +1,5 @@
 import { crtElement, addElement, addElement_radio, addElement_select } from '../Function/Dom_function.js';
-import { save_game, save_game_show_tip, save_game_show_object_tip, delete_save_show_tip, load_save_show_tip } from '../LoadAndSave/load.js';
+import { save_game, save_game_show_tip, delete_save_show_tip, load_save_show_tip } from '../LoadAndSave/load.js';
 import { show_dropdown_table } from '../Function/show_func.js';
 import { global } from '../GameRun/global_manage.js';
 import { make_test_div, set_test_button } from './Game_log_test.js';
@@ -319,6 +319,9 @@ function set_mind_button(Game_log) {
             save_game();
             //弹出含有当前存档的提示框
             save_game_show_tip();
+            //添加存档成功的日志
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('save_game', 'manual');
         };
         //导入存档
         let OP_game_Load_button = Game_log.querySelector('#OP_game_Load_button');

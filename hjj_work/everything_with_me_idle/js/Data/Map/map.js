@@ -113,7 +113,7 @@ function init_village_backhill_map(maps) {
     place_id = 'forest_edge_road'; //通往森林外围的道路
     maps[area_id].add_place_data(place_id, true, 100, 180);
     place_id = 'forest_core_road'; //通往内层森林的道路
-    maps[area_id].add_place_data(place_id, 460, 430);
+    maps[area_id].add_place_data(place_id, true, 460, 430);
 
     //普通地点
     place_id = 'VBH_rest_location'; //村外歇脚处

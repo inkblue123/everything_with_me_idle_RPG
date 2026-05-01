@@ -39,15 +39,15 @@ function make_Combat_plan_div(Combat_plan) {
             addElement_radio(BP_ALL_radio_div, 'BP_all', 'BP_switch', 'all', '全部');
             //默认激活"全部"过滤条件
             BP_ALL_radio_div.children[0].checked = true;
-            // 武器装备 equipment
+            // 武器装备 equipment EQP
             var BP_EQP_radio_div = addElement(BP_switch_div, 'div', 'BP_EQP_radio_div', 'radio_div switch_radio_div_1');
             addElement_radio(BP_EQP_radio_div, 'BP_EQP_button', 'BP_1_switch', 'BP_EQP_button', '武器装备');
             var BP_EQP_droptable = addElement(BP_switch_div, 'div', 'BP_EQP_droptable', 'dropdown_table');
-            //消耗品 consumable
+            //消耗品 consumable CSB
             var BP_CSB_radio_div = addElement(BP_switch_div, 'div', 'BP_CSB_radio_div', 'radio_div switch_radio_div_1');
             addElement_radio(BP_CSB_radio_div, 'BP_CSB_button', 'BP_1_switch', 'BP_CSB_button', '消耗品');
             var BP_CSB_droptable = addElement(BP_switch_div, 'div', 'BP_CSB_droptable', 'dropdown_table');
-            //材料 Material
+            //材料 Material MTR
             var BP_MTR_radio_div = addElement(BP_switch_div, 'div', 'BP_MTR_radio_div', 'radio_div switch_radio_div_1');
             addElement_radio(BP_MTR_radio_div, 'BP_MTR_button', 'BP_1_switch', 'BP_MTR_button', '材料物品');
             var BP_MTR_droptable = addElement(BP_switch_div, 'div', 'BP_MTR_droptable', 'dropdown_table');

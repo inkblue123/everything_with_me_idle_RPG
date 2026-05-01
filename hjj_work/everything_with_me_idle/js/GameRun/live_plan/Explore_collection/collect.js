@@ -108,6 +108,13 @@ export class Collect_manage {
     set_new_place(now_place) {
         this.now_place = now_place;
         this.now_time = global.get_game_now_time();
+
+        // 伐木、钓鱼、挖矿、采集、潜水、考古、探索，地点的生活技能可用标记第3个是采集
+        //如果当前地点不能采集，不需要更新后续
+        if (!places[now_place].live_plan_flag[3]) {
+            return;
+        }
+
         //到达新地点，先初始化可采集物品列表
         this.init_collect_place_show_drop();
         //到达新地点，需要展示新地点的可采集物品
@@ -318,7 +325,6 @@ export class Collect_manage {
             return;
         }
         //停止采集
-        global.set_flag('GS_game_statu', 'NULL');
         this.now_CLT_status = CLT_status.NO_CLT;
         //重置按钮
         const CLT_S_button = document.getElementById('CLT_S_button');
@@ -430,7 +436,7 @@ export class Collect_manage {
     //更新休息状态的数值
     updata_rest_CLT_data() {
         let P_attr = player.get_player_attributes();
-        if (!P_attr.judge_surface_energy_max()) {
+        if (!P_attr.judge_player_attr_max('surface_energy_point')) {
             return;
         }
         //精力回满时，切换到其他状态
@@ -635,7 +641,7 @@ export class Collect_manage {
             let item_obj = new Object();
             item_obj.id = data_obj.id;
             item_obj.num = 1;
-            if (items[data_obj.id].main_type.includes('equipment')) {
+            if (items[data_obj.id].main_type == 'equipment') {
                 //如果掉落的是装备，还需要记录稀有度
                 item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
             }
@@ -739,7 +745,7 @@ export class Collect_manage {
             let item_obj = new Object();
             item_obj.id = data_obj.id;
             item_obj.num = get_true_drop_item_num(this.player_end_attr);
-            if (items[data_obj.id].main_type.includes('equipment')) {
+            if (items[data_obj.id].main_type == 'equipment') {
                 //如果掉落的是装备，还需要记录稀有度
                 item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
             }
@@ -754,7 +760,7 @@ export class Collect_manage {
             let item_obj = new Object();
             item_obj.id = data_obj.id;
             item_obj.num = get_true_drop_item_num(this.player_end_attr);
-            if (items[data_obj.id].main_type.includes('equipment')) {
+            if (items[data_obj.id].main_type == 'equipment') {
                 //如果掉落的是装备，还需要记录稀有度
                 item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
             }
@@ -996,7 +1002,7 @@ export class Collect_manage {
                 }
                 let CLT_drop_value = addElement(CLT_have_show_value_div, 'div', null, 'CLT_drop_value');
                 let id = item_key.split(':')[0];
-                if (items[id].main_type.includes('equipment')) {
+                if (items[id].main_type == 'equipment') {
                     //如果掉落的是装备，改变字体颜色变成稀有度的颜色
                     CLT_drop_value.style.color = hex2Rgba(enums[equip_rarity].rarity_color, alpha);
                 }
@@ -1041,26 +1047,6 @@ export class Collect_manage {
     }
     //更新游戏界面上的采集概率展示
     updata_CLT_chance_show() {
-        let EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
-        // if (EC_div.style.display != '') {
-        //     //当前不处于搜索采集窗口内，不需要更新
-        //     return;
-        // }
-        // let EC_skill;
-        // let radios = document.querySelectorAll('input[name="EC_switch"]');
-        // // 找到当前激活的生活技能
-        // for (const radio of radios) {
-        //     if (radio.checked) {
-        //         EC_skill = radio.value;
-        //         break;
-        //     }
-        // }
-        // EC_skill = EC_skill.substring(0, 3);
-        // if (EC_skill != 'CLT') {
-        //     //当前展示的窗口不是采集，不需要更新
-        //     return;
-        // }
-
         let CLT_chance = this.get_CLT_chance();
         let max_CLT_chance = this.get_max_CLT_chance();
 
@@ -1349,11 +1335,11 @@ function CLT_chance_type_handle(attr_id) {
         type_switch.push(CLT_chance_type);
     } else {
         //属性针对的是几种小类
-        if (is_Empty_Object(enums[attr_id])) {
-            console.log('%s属性没有在枚举库中定义', attr_id);
+        if (is_Empty_Object(enums[CLT_chance_type])) {
+            console.log('%s属性没有在枚举库中定义', CLT_chance_type);
             return type_switch;
         }
-        type_switch = enums[attr_id];
+        type_switch = enums[CLT_chance_type];
     }
     return type_switch;
 }

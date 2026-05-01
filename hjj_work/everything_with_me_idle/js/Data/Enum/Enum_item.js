@@ -1,6 +1,15 @@
 import { add_Enum_Array, add_Enum_Object } from './Enum_class.js';
 //初始化枚举库中与物品相关的内容
 function init_Enum_item(enums) {
+    //物品类型枚举
+    init_item_type(enums);
+    //商店涉及到的物品类型
+    init_store_item_type(enums);
+    //以“任意**”为名的物品小类集合
+    init_item_all_type(enums);
+}
+//枚举类中涉及到物品类型的部分
+function init_item_type(enums) {
     let id;
     //物品可能的大类
     id = 'Item_main_type';
@@ -85,10 +94,12 @@ function init_Enum_item(enums) {
         bait: 140, //鱼饵
         treasure_chest: 150, //宝箱
         ordinary_coin: 160, //钱币
+        book: 170, //书
 
         //材料大类
         ordinary_wood: 201, //凡木
         spirit_wood: 202, //灵木
+        woodchip: 203, //凡木
         spirit_grass: 210, //灵草
         ordinary_mushroom: 220, //普通蘑菇
         rare_mushroom: 221, //稀有蘑菇
@@ -103,29 +114,42 @@ function init_Enum_item(enums) {
         refined_seasoning: 270, //精制调味料
         elixir_essence: 271, //丹药精华
     };
-
+}
+//枚举类中涉及到商店的物品类型
+function init_store_item_type(enums) {
+    let id;
     //购买出售物品时，这些小类中的物品不会涨价和贬值
     id = 'preserve_value_secon_type';
     add_Enum_Array(enums, id);
     enums[id] = [
         'ordinary_coin', //凡间钱币
     ];
+}
+//枚举类中涉及到“任意”的物品小类
+function init_item_all_type(enums) {
+    let id;
 
-    //采集时提到的任意木头是指哪些小类
-    id = 'CLT_chance_all_wood';
+    id = 'all_secon_type'; //带有“任意”字样的小类合集有哪些
+    add_Enum_Array(enums, id);
+    enums[id] = [
+        'all_wood', //任意木头
+        'all_grass', //任意草
+        'all_mushroom', //任意蘑菇
+    ];
+    id = 'all_wood'; //任意木头
     add_Enum_Array(enums, id);
     enums[id] = [
         'ordinary_wood', //凡木
         'spirit_wood', //灵木
     ];
-    //采集时提到的任意草是指哪些小类
-    id = 'CLT_chance_all_grass';
+
+    id = 'all_grass'; //任意草
     add_Enum_Array(enums, id);
     enums[id] = [
         'spirit_grass', //灵草
     ];
-    //采集时提到的任意蘑菇是指哪些小类
-    id = 'CLT_chance_all_mushroom';
+
+    id = 'all_mushroom'; //任意蘑菇
     add_Enum_Array(enums, id);
     enums[id] = [
         'ordinary_mushroom', //普通蘑菇

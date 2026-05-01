@@ -331,7 +331,7 @@ export class Combat_manage {
                 let item_obj = new Object();
                 item_obj.id = data_obj.id;
                 item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
-                if (items[data_obj.id].main_type.includes('equipment')) {
+                if (items[data_obj.id].main_type == 'equipment') {
                     //如果掉落的是装备，还需要记录稀有度
                     item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
                 }

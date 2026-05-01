@@ -1,6 +1,6 @@
 import { get_random, calculate_num_attr, calculate_speed_attr } from '../../../Function/math_func.js';
 import { addElement } from '../../../Function/Dom_function.js';
-import { is_Empty_Object, get_uniqueArr, get_item_id_key, get_item_obj } from '../../../Function/Function.js';
+import { is_Empty_Object, get_uniqueArr, get_item_id_key } from '../../../Function/Function.js';
 import { enemys } from '../../../Data/Enemy/Enemy.js';
 import { items } from '../../../Data/Item/Item.js';
 import { places } from '../../../Data/Place/Place.js';
@@ -163,7 +163,7 @@ class Ore_manage {
                 let item_obj = new Object();
                 item_obj.id = data_obj.id;
                 item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
-                if (items[data_obj.id].main_type.includes('equipment')) {
+                if (items[data_obj.id].main_type == 'equipment') {
                     //如果掉落的是装备，还需要记录稀有度
                     item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
                 }
@@ -246,8 +246,14 @@ export class Mining_manage {
         this.now_place = now_place;
         this.now_time = global.get_game_now_time();
 
-        //更新一遍当前地点的重要缓存数据
+        // 伐木、钓鱼、挖矿、采集、潜水、考古、探索，地点的生活技能可用标记第2个是挖矿
+        //如果当前地点不能挖矿，不需要更新后续
+        if (!places[now_place].live_plan_flag[2]) {
+            return;
+        }
+
         if (is_Empty_Object(this.MIN_place_ores[this.now_place])) {
+            //更新一遍当前地点的重要缓存数据
             //没有当前地点的缓存，所以是第一次到达该地点，刷新一个矿石
             this.reborn_ore();
             //获取当前矿石信息，保存到地点缓存里
@@ -271,8 +277,8 @@ export class Mining_manage {
     //地点变化时，对挖矿界面特殊更新
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_super_game_div(next_place) {
-        //地点的生活技能可用标记第0个是挖矿
-        // 挖矿、钓鱼、挖矿、采集、潜水、考古、探索
+        //地点的生活技能可用标记第2个是挖矿
+        // 伐木、钓鱼、挖矿、采集、潜水、考古、探索
         if (places[next_place].live_plan_flag[2]) {
             //新地点可以挖矿，根据当前挖矿状态调整界面
             if (this.now_MIN_status == MIN_status.NO_MIN || this.now_MIN_status == MIN_status.R_ORE_NO_MIN) {
@@ -318,7 +324,7 @@ export class Mining_manage {
                 console.log('矿石活着且状态错误');
             }
         } else {
-            //矿石死了
+            // 矿石死了
             if (this.now_MIN_status == MIN_status.REST_MIN || this.now_MIN_status == MIN_status.R_ORE_NO_MIN || this.now_MIN_status == MIN_status.R_ORE_MIN) {
                 //进入复活逻辑
                 this.ore_death_reborn();
@@ -405,6 +411,10 @@ export class Mining_manage {
         //重置玩家攻击进度条
         let player_mining_bar = document.getElementById('MIN_D_bar');
         player_mining_bar.children[0].children[0].style.width = '0%';
+        //重置矿石复活进度条
+        let ore_reborn_bar = document.getElementById('MIN_MR_bar');
+        ore_reborn_bar.children[0].children[0].style.width = '0%';
+
         //重置回合
         this.reset_round();
     }
@@ -528,6 +538,15 @@ export class Mining_manage {
     }
     //矿石死亡时的复活逻辑
     ore_death_reborn() {
+        //当前地点不能挖矿，不需要处理
+        if (!places[this.now_place].live_plan_flag[2]) {
+            return;
+        }
+        //矿石活着，不需要复活
+        if (this.ore_manage.get_ore_statu()) {
+            return;
+        }
+        this.now_time = global.get_game_now_time();
         let reborn_time = places[this.now_place].MIN_reborn_time; //当前地点规定的矿石复活时间
         let ore_death_time = this.ore_manage.death_time; //上一个矿石死亡的时间
 
@@ -563,6 +582,10 @@ export class Mining_manage {
         //     //没有当前地点的缓存，所以是第一次到达该地点，刷新一个矿石
         //     this.reborn_ore();
         // }
+        //当前地点不能挖矿，不需要处理
+        if (!places[this.now_place].live_plan_flag[2]) {
+            return;
+        }
         //获取当前矿石信息，保存到地点缓存里
         let obj = this.ore_manage.get_ore_data();
         this.MIN_place_ores[this.now_place] = obj;
@@ -703,7 +726,7 @@ export class Mining_manage {
             //精力不足且挖矿在一个矿石挖矿完成时自动切换成休息
         } else if (this.now_MIN_status == MIN_status.REST_MIN) {
             //精力不足且休息状态在精力回满的时候切换到其他挖矿状态
-            if (P_attr.judge_surface_energy_max()) {
+            if (P_attr.judge_player_attr_max('surface_energy_point')) {
                 let global_flag_manage = global.get_global_flag_manage();
                 if (surface_energy_ratio >= 50) {
                     //精力充足
@@ -731,7 +754,7 @@ export class Mining_manage {
         let P_attr = player.get_player_attributes();
         let surface_energy_ratio = P_attr.get_data_attr('surface_energy_ratio');
         //精力是否满了
-        let energy_max = P_attr.judge_surface_energy_max();
+        let energy_max_flag = P_attr.judge_player_attr_max('surface_energy_point');
         //矿石存活状态
         let ore_statu = this.ore_manage.get_ore_statu();
         //更新前的挖矿状态
@@ -806,7 +829,7 @@ export class Mining_manage {
         //刷新复活一个矿石
         if (func_type == 'reborn_ore') {
             //重刷矿石的结束时，根据当前状态调到新状态
-            if (this.now_MIN_status == MIN_status.NO_MIN || this.now_MIN_status == MIN_status.ENERGY_MIN || this.now_MIN_status == MIN_status.NO_ENERGY_MIN) {
+            if (this.now_MIN_status == MIN_status.ENERGY_MIN || this.now_MIN_status == MIN_status.NO_ENERGY_MIN) {
                 console.log('挖矿状态错误');
             } else if (this.now_MIN_status == MIN_status.REST_MIN) {
             } else if (this.now_MIN_status == MIN_status.R_ORE_NO_MIN) {
@@ -831,7 +854,7 @@ export class Mining_manage {
                 //精力不足且挖矿在一个矿石挖矿完成时自动切换成休息
             } else if (this.now_MIN_status == MIN_status.REST_MIN) {
                 //精力不足且休息状态在精力回满的时候切换到其他挖矿状态
-                if (energy_max) {
+                if (energy_max_flag) {
                     let global_flag_manage = global.get_global_flag_manage();
                     if (surface_energy_ratio >= 50) {
                         this.now_MIN_status = MIN_status.ENERGY_MIN; //正在挖矿并且精力充足

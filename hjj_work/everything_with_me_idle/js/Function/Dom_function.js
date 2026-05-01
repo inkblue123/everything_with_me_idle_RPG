@@ -5,6 +5,7 @@ import { P_skills } from '../Data/Skill/Skill.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 import { updata_player_EQP, updata_player_active } from './Updata_func.js';
+import { get_item_id_key, is_Empty_Object } from './Function.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
     let newdom = document.createElement(elem);
@@ -157,8 +158,9 @@ function add_show_Tooltip(target_div, tip_type, tip_value) {
 function add_click_Equipment_worn(target_div, item_data) {
     target_div.addEventListener('click', () => {
         //从玩家背包中去掉要穿戴的物品
-        let ret = player.Player_lose_item(item_data);
-        if (ret <= 0) return;
+        let item_key = get_item_id_key(item_data);
+        let ret = player.Player_lose_item(item_key, item_data.num);
+        if (!ret) return;
         //切换到当前激活的装备栏
         let P_worn = player.get_player_worn();
         P_worn.show_active_EQP();
@@ -180,6 +182,23 @@ function add_click_Equipment_worn(target_div, item_data) {
         //关闭提示窗
         let tooltip = document.getElementById('tooltip');
         tooltip.CloseTip(); //清空小窗口
+    });
+}
+//  向目标组件添加鼠标点击使用消耗品的功能
+function add_click_use_consumable(target_div, item_data) {
+    let id = item_data.id;
+    let use_type = items[id].use_type;
+    //先判断这个消耗品的使用效果
+    if (use_type == 'none' || use_type == 'keep_use') {
+        //这两种类型的消耗品不能主动点击使用，不需要绑定点击效果
+        return;
+    }
+    target_div.addEventListener('click', () => {
+        let consumable_manage = global.get_consumable_manage();
+        consumable_manage.use_consumable(item_data);
+        //关闭提示窗
+        // let tooltip = document.getElementById('tooltip');
+        // tooltip.CloseTip(); //清空小窗口
     });
 }
 // 向目标组件添加鼠标点击后从装备栏里卸下的的功能
@@ -308,21 +327,20 @@ function start_magic_animation(div_id, text) {
     requestAnimationFrame(animate);
 }
 
-//重新生成战斗界面的玩家主动技能部分
-function delete_player_active_div() {
-    let player_active_div = document.getElementById('player_active_div');
-    player_active_div.replaceChildren(); //清空现有主动技能槽内容
-    for (let i = 0; i < 9; i++) {
-        var player_active = addElement(player_active_div, 'div', null, 'player_active');
-        addElement(player_active, 'div', null, 'player_active_text');
+//获取指定多选框中已选择按钮的内容
+function get_radio_switch_click_value(radio_switch_id) {
+    let select_id = 'input[name="' + radio_switch_id + '"]';
+    const radios = document.querySelectorAll(select_id);
+    if (is_Empty_Object(radios)) {
+        console.log('指定多选框%s获取异常', radio_switch_id);
+        return;
     }
-}
-//重新生成左下战斗规划界面中战斗规划界面的主动技能展示部分
-function delete_active_show_div() {
-    let active_show_div = document.getElementById('active_show_div');
-    active_show_div.replaceChildren(); //清空现有内容
-    for (let i = 0; i < 9; i++) {
-        addElement(active_show_div, 'div', null, 'active_show_value');
+
+    for (const radio of radios) {
+        if (radio.checked) {
+            // 找到一个选中的按钮后可以结束循环
+            return radio.value;
+        }
     }
 }
 
@@ -338,9 +356,9 @@ export {
     add_click_Equipment_worn_remove,
     add_click_Active_skill_worn,
     add_click_Active_skill_worn_remove,
+    add_click_use_consumable,
     hide_div,
     Gradient_div,
-    delete_player_active_div,
-    delete_active_show_div,
     start_magic_animation,
+    get_radio_switch_click_value,
 };

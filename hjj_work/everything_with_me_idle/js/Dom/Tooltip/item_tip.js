@@ -2,9 +2,11 @@ import { addElement } from '../../Function/Dom_function.js';
 import { get_object_only_key, is_Empty_Object } from '../../Function/Function.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { items } from '../../Data/Item/Item.js';
+import { formulas } from '../../Data/Formula/Formula.js';
 import { texts } from '../../Data/Text/Text.js';
 import { global } from '../../GameRun/global_manage.js';
 import { TOOLTIP_WIDTH } from './Tooltip.js';
+import { player } from '../../Player/Player.js';
 
 //传入玩家的一个物品拷贝对象，展示这个物品的详细信息
 function init_item_tip(tip_type, item_obj) {
@@ -13,13 +15,15 @@ function init_item_tip(tip_type, item_obj) {
         return false; //异常物品，中止展示
     }
     //根据物品的大类别，追加展示额外的信息
-    if (items[item_obj.id].main_type.includes('equipment')) {
-        show_equipment(tip_type, item_obj);
-    } else if (items[item_obj.id].main_type.includes('material')) {
-        show_material(tip_type, item_obj);
-    } else if (items[item_obj.id].main_type.includes('consumable')) {
-        show_consumable(tip_type, item_obj);
+    if (items[item_obj.id].main_type == 'equipment') {
+        show_equipment(item_obj);
+    } else if (items[item_obj.id].main_type == 'material') {
+        show_material(item_obj);
+    } else if (items[item_obj.id].main_type == 'consumable') {
+        show_consumable(item_obj);
     }
+    //追加展示物品价值
+    show_item_price(tip_type, item_obj);
 }
 //展示物品的名称和描述
 function show_item_name_description(item_obj) {
@@ -34,7 +38,7 @@ function show_item_name_description(item_obj) {
         return false;
     }
     let label = addElement(Tooltip, 'div', null, 'lable_down');
-    if (items[item_obj.id].main_type.includes('equipment')) {
+    if (items[item_obj.id].main_type == 'equipment') {
         //为装备的名称上色
         let equip_rarity = item_obj.equip_rarity;
         label.style.color = enums[equip_rarity].rarity_color;
@@ -45,22 +49,17 @@ function show_item_name_description(item_obj) {
     return true;
 }
 //针对武器装备，追加展示稀有度，详细类型，可装备位置
-function show_equipment(tip_type, item_obj) {
+function show_equipment(item_obj) {
     //装备类型详情展示
     show_equipment_type(item_obj);
     if (item_obj.equip_rarity == 'damaged') {
         //展示的物品是破损稀有度的装备，属于装备的内容已经展示完毕
-        //接下来展示其他内容
-        //追加展示物品价值
-        show_item_price(tip_type, item_obj);
         return;
     }
     //展示可装备位置
     show_equipment_wearing_position(item_obj);
     //装备属性
     show_equipment_attr(item_obj);
-    //追加展示物品价值
-    show_item_price(tip_type, item_obj);
 
     return true;
 }
@@ -141,9 +140,9 @@ function show_equipment_wearing_position(item_obj) {
 }
 //追加展示装备属性
 function show_equipment_attr(item_obj) {
-    let Tooltip = document.getElementById('tooltip');
     let id = item_obj.id;
     let rarity = item_obj.equip_rarity;
+    let Tooltip = document.getElementById('tooltip');
     let attr_div = addElement(Tooltip, 'div', null, 'page_columns_111');
     let no_normal_attr_flag = false;
     let no_normal_attr_ch = '';
@@ -247,38 +246,148 @@ function get_table_attr_value_ch(attr_id, attr_data, item_obj) {
     return ch;
 }
 
-//针对消耗品，追加展示类型
-function show_consumable(tip_type, item_obj) {
-    //材料类型详情展示
-    show_secon_type(item_obj);
-    //追加展示物品价值
-    show_item_price(tip_type, item_obj);
+//针对消耗品，追加展示其他属性
+function show_consumable(item_obj) {
+    let id = item_obj.id;
+    let use_type = items[id].use_type;
+    //消耗品的类型详情展示
+    show_consumable_type(item_obj);
+
+    if (use_type == 'condition_once_use' || use_type == 'condition_sustain_use') {
+        //追加展示消耗品的使用条件
+        // show_use_condition(item_obj);
+    }
+    //展示使用效果
+    show_consumable_use_data(item_obj);
+    if (use_type == 'sustain_use' || use_type == 'condition_sustain_use') {
+        //追加展示消耗品的持续使用需求
+        // show_sustain_use_data(item_obj);
+    }
+
     return true;
+}
+//追加展示消耗品的小类和使用方式
+function show_consumable_type(item_obj) {
+    let Tooltip = document.getElementById('tooltip');
+    let type_and_use_div = addElement(Tooltip, 'div', null, 'TLV_div');
+
+    let consumable_type_div = addElement(type_and_use_div, 'div', null, 'TLV_div');
+    let C_type_name = addElement(consumable_type_div, 'div', null, 'TLV_left');
+    C_type_name.innerHTML = '消耗品类型：';
+    let C_type_value = addElement(consumable_type_div, 'div', null, 'TLV_right');
+
+    let C_use_div = addElement(type_and_use_div, 'div', null, 'lable_end');
+    let use_type = items[item_obj.id].use_type;
+    C_use_div.innerHTML = texts[use_type].type_name;
+
+    let type_ch = '';
+    if (is_Empty_Object(items[item_obj.id].secon_type)) {
+        type_ch = '未定义材料类型';
+    } else {
+        let type_num = items[item_obj.id].secon_type.length;
+        if (type_num == 0) {
+            type_ch = '错误材料类型';
+        } else if (type_num == 1) {
+            //单种类
+            let m_type = items[item_obj.id].secon_type[0]; //获取这唯一的材料类型
+            type_ch = texts[m_type].type_name; //获取类型名称
+        } else if (type_num > 1) {
+            //复合类型材料
+            for (let m_type of items[item_obj.id].secon_type) {
+                type_ch = type_ch + texts[m_type].type_name + '、';
+            }
+            type_ch = type_ch.substring(0, type_ch.length - 1);
+        }
+    }
+    C_type_value.innerHTML = type_ch;
+}
+//追加展示消耗品的使用效果
+function show_consumable_use_data(item_obj) {
+    let id = item_obj.id;
+    let use_type = items[id].use_type;
+    let Tooltip = document.getElementById('tooltip');
+    if (use_type == 'sustain_use' || use_type == 'condition_sustain_use') {
+        let use_ratio_div = addElement(Tooltip, 'div', null, 'lable_up');
+        let use_ratio_ch = '当前使用进度' + item_obj.use_ratio + '%';
+        use_ratio_div.innerHTML = use_ratio_ch;
+
+        let use_attr_div = addElement(Tooltip, 'div', null, 'page_columns_11');
+        for (let attr_obj of items[id].use_attr) {
+            let TLV_div = addElement(use_attr_div, 'div', null, 'table_2_value');
+            if (attr_obj.attr_type == 'get_formula') {
+                let P_formula = player.get_player_formulas_manage();
+                let study_status = P_formula.get_formula_study_status(attr_obj.attr_id);
+
+                if (study_status == 'know') {
+                    //已经获得的配方，可以展示
+                    let attr_ch = attr_obj.use_ratio + '%：已学会';
+                    let item_name = formulas[attr_obj.attr_id].product.id;
+                    attr_ch = attr_ch + items[item_name].name + '的制作配方';
+                    TLV_div.innerHTML = attr_ch;
+                } else {
+                    if (attr_obj.use_ratio < item_obj.use_ratio) {
+                        //已经获得的效果，可以展示
+                        let attr_ch = attr_obj.use_ratio + '%：已学会';
+                        let item_name = formulas[attr_obj.attr_id].product.id;
+                        attr_ch = attr_ch + items[item_name].name + '的制作配方';
+                        TLV_div.innerHTML = attr_ch;
+                    } else {
+                        let attr_ch = attr_obj.use_ratio + '%：？？？';
+                        TLV_div.innerHTML = attr_ch;
+                        break;
+                    }
+                }
+            }
+        }
+    } else {
+        let use_attr_div = addElement(Tooltip, 'div', null, 'page_columns_111');
+        for (let attr_obj of items[id].use_attr) {
+            if (attr_obj.attr_type == 'get_attr') {
+                let TLV_div = addElement(use_attr_div, 'div', null, 'table_3_value');
+                // 属性名称
+                let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
+                T_name.innerHTML = texts[attr_obj.attr_id].attr_name;
+                //属性数值
+                let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
+                T_value.innerHTML = get_table_attr_value_ch(attr_obj.attr_id, attr_obj.attr_value1, item_obj);
+            }
+        }
+    }
+}
+//追加展示消耗品的持续使用需求
+function show_sustain_use_data(item_obj) {
+    let id = item_obj.id;
+    let Tooltip = document.getElementById('tooltip');
+    let use_attr_div = addElement(Tooltip, 'div', null, 'page_columns_111');
+    for (let attr_obj of items[id].use_attr) {
+        if (attr_obj.attr_type == 'get_attr') {
+            let TLV_div = addElement(use_attr_div, 'div', null, 'table_3_value');
+            // 属性名称
+            let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
+            T_name.innerHTML = texts[attr_obj.attr_id].attr_name;
+            //属性数值
+            let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
+            T_value.innerHTML = get_table_attr_value_ch(attr_obj.attr_id, attr_obj.attr_value, item_obj);
+        }
+    }
 }
 
 //针对材料，追加展示材料类型，
-function show_material(tip_type, item_obj) {
+function show_material(item_obj) {
     //材料类型详情展示
-    show_secon_type(item_obj);
-    //追加展示物品价值
-    show_item_price(tip_type, item_obj);
+    show_material_type(item_obj);
+
     //材料来源和用处展示
     // show_material_source_use(item_obj);
 
     return true;
 }
 //追加展示物品小类详情
-function show_secon_type(item_obj) {
+function show_material_type(item_obj) {
     let Tooltip = document.getElementById('tooltip');
     let TLV_div = addElement(Tooltip, 'div', null, 'TLV_div');
     let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
-    if (items[item_obj.id].main_type.includes('equipment')) {
-        T_name.innerHTML = '装备类型';
-    } else if (items[item_obj.id].main_type.includes('material')) {
-        T_name.innerHTML = '材料类型';
-    } else if (items[item_obj.id].main_type.includes('consumable')) {
-        T_name.innerHTML = '消耗品类型';
-    }
+    T_name.innerHTML = '材料类型';
     let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
     //从大类里查找属于这个材料的分类
 

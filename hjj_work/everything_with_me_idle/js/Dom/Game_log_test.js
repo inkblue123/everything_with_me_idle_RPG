@@ -1,10 +1,12 @@
 import { crtElement, addElement, addElement_radio, addElement_select } from '../Function/Dom_function.js';
 import { updata_formula_UI_placeholder } from '../Function/Updata_func.js';
+import { is_Empty_Object } from '../Function/Function.js';
 import { save_game, save_game_show_object_tip } from '../LoadAndSave/load.js';
 import { P_skills } from '../Data/Skill/Skill.js';
 import { items } from '../Data/Item/Item.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
+import { get_item_id_key } from '../Function/Function.js';
 
 //生成测试部分界面
 function make_test_div(TS_div) {
@@ -114,14 +116,14 @@ function make_test_div(TS_div) {
         {
             var TS_value2_scroll_box = addElement(TS_div, 'div', 'TS_value2_scroll_box', 'overflow_y_div', 'none');
             var TS_value2_div = addElement(TS_value2_scroll_box, 'div', 'TS_value2_div', 'in_overflow_div');
-            //设置-测试2-地图功能测试
+            //测试2-地图功能测试
             var TS2_Map_div = addElement(TS_value2_div, 'div', 'TS2_Map_div', 'OP_TLV_div');
             var TS2_Map_lable = addElement(TS2_Map_div, 'div', 'TS2_Map_lable', 'OP_T2_div');
             TS2_Map_lable.innerHTML = '地图功能测试';
             var TS2_Map_value = addElement(TS2_Map_div, 'div', 'TS2_Map_value', 'OP_V_div');
             var TS2_MapSize_button = addElement(TS2_Map_value, 'button', 'TS2_MapSize_button', 'OP_button');
             TS2_MapSize_button.innerHTML = '地图大小测试';
-            //设置-测试2-制造配方测试
+            //测试2-制造配方测试
             var TS2_Makeformula_div = addElement(TS_value2_div, 'div', 'TS2_Makeformula_div', 'OP_TLV_div');
             var TS2_Makeformula_lable = addElement(TS2_Makeformula_div, 'div', 'TS2_Makeformula_lable', 'OP_T2_div');
             TS2_Makeformula_lable.innerHTML = '制造配方测试';
@@ -130,6 +132,13 @@ function make_test_div(TS_div) {
             TS2_Addformula_button.innerHTML = '添加';
             var TS2_Deleteformula_button = addElement(TS2_Addformula_value, 'button', 'TS2_Deleteformula_button', 'OP_button');
             TS2_Deleteformula_button.innerHTML = '删除';
+            //测试2-校验玩家背包物品
+            var TS2_check_player_backpack_div = addElement(TS_value2_div, 'div', 'TS2_check_player_backpack_div', 'OP_TLV_div');
+            var TS2_check_player_backpack_lable = addElement(TS2_check_player_backpack_div, 'div', 'TS2_check_player_backpack_lable', 'OP_T2_div');
+            TS2_check_player_backpack_lable.innerHTML = '校验玩家背包物品';
+            var TS2_check_player_backpack_value = addElement(TS2_check_player_backpack_div, 'div', 'TS2_check_player_backpack_value', 'OP_V_div');
+            var TS2_check_player_backpack_button = addElement(TS2_check_player_backpack_value, 'button', 'TS2_check_player_backpack_button', 'OP_button');
+            TS2_check_player_backpack_button.innerHTML = '校验';
         }
     }
 }
@@ -246,6 +255,9 @@ function set_test_button(Game_log) {
             save_game();
             //弹出含有当前存档的提示框
             save_game_show_object_tip();
+            //添加存档成功的日志
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.set_game_log('save_game', 'manual');
         };
     }
     //测试2部分按钮
@@ -266,7 +278,7 @@ function set_test_button(Game_log) {
             var formula_value_r = addElement(formula_value, 'div', null, 'formula_value_r');
             formula_value_r.innerHTML = '产物A x1';
             //配方数量变化，根据滚动条更新占位图标
-            updata_formula_UI_placeholder('SYN_MK_formula_scroll_box', 'SYN_MK_formula_value_div', 'SYN_MK_rt3');
+            updata_formula_UI_placeholder('SYN_MK_formula_scroll_box', 'SYN_MK_formula_value_div', 'SYN_MK_formula_title_3');
         };
         //制造配方测试--删除
         let TS2_Deleteformula_button = Game_log.querySelector('#TS2_Deleteformula_button');
@@ -276,7 +288,12 @@ function set_test_button(Game_log) {
                 SYN_MK_formula_value_div.removeChild(SYN_MK_formula_value_div.firstChild);
             }
             //配方数量变化，根据滚动条更新占位图标
-            updata_formula_UI_placeholder('SYN_MK_formula_scroll_box', 'SYN_MK_formula_value_div', 'SYN_MK_rt3');
+            updata_formula_UI_placeholder('SYN_MK_formula_scroll_box', 'SYN_MK_formula_value_div', 'SYN_MK_formula_title_3');
+        };
+        //校验玩家背包物品
+        let TS2_check_player_backpack_button = Game_log.querySelector('#TS2_check_player_backpack_button');
+        TS2_check_player_backpack_button.onclick = function () {
+            check_player_backpack();
         };
     }
 }
@@ -379,13 +396,69 @@ function give_player_item() {
 // 批量给予物品
 function give_player_all_item() {
     for (let id in items) {
-        if (items[id].main_type.includes('equipment')) {
+        if (items[id].main_type == 'equipment') {
             player.Player_get_item(id, 1, 'ordinary');
-        } else if (items[id].main_type.includes('consumable')) {
+        } else if (items[id].main_type == 'consumable') {
             player.Player_get_item(id, 1);
-        } else if (items[id].main_type.includes('material')) {
+        } else if (items[id].main_type == 'material') {
             player.Player_get_item(id, 1);
         }
     }
+}
+//校验玩家背包物品
+function check_player_backpack() {
+    let flag = true;
+    let P_backpack = player.get_player_backpack();
+    for (let old_key in P_backpack.backpack_items) {
+        let item_obj = P_backpack.backpack_items[old_key];
+        //清空这个对象的所有空属性
+        for (let id in item_obj) {
+            if (item_obj[id] === undefined) {
+                delete item_obj[id];
+            }
+        }
+        //确认key情况
+        let item_key = get_item_id_key(item_obj);
+        if (old_key == item_key) {
+            //物品key一样，没有问题
+            continue;
+        }
+        flag = false;
+        console.log('背包物品%s应该为%s', old_key, item_key);
+        //物品key不一样，去掉原物品，新增新物品
+        delete P_backpack.backpack_items[old_key];
+        P_backpack.backpack_items[item_key] = item_obj;
+    }
+    if (flag) {
+        console.log('背包物品无误');
+        return;
+    }
+
+    class item_data_class {
+        constructor(item_id) {
+            //通用属性
+            this.id = item_id; //物品id
+            this.all_num = 0; //背包该物品总数量
+            // this.can_use_num; //可以使用的数量
+
+            this.BP_key = new Object(); //该id物品在玩家背包中的key有哪些
+        }
+    }
+
+    //重新加载物品简要信息
+    P_backpack.backpack_items_data = new Object();
+    for (let item_key in P_backpack.backpack_items) {
+        let item_id = P_backpack.backpack_items[item_key].id;
+        let item_num = P_backpack.backpack_items[item_key].num;
+        if (is_Empty_Object(P_backpack.backpack_items_data[item_id])) {
+            P_backpack.backpack_items_data[item_id] = new item_data_class(item_id);
+        }
+        P_backpack.backpack_items_data[item_id].id = item_id;
+        P_backpack.backpack_items_data[item_id].all_num += item_num;
+        P_backpack.backpack_items_data[item_id].BP_key[item_key] = item_num;
+    }
+    //刷新
+    P_backpack.updata_BP_value();
+    console.log('背包物品修复完成');
 }
 export { make_test_div, set_test_button };

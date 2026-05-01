@@ -19,10 +19,10 @@ function init_game() {
 
     if (save_str) {
         //base64解密
-        console.log('%s', save_str);
+        // console.log('%s', save_str);
         save_str = b64_to_utf8(save_str);
         //把字符串转换成存档对象
-        console.log('%s', save_str);
+        // console.log('%s', save_str);
         let save_obj = JSON.parse(save_str);
         //用存档对象里的内容加载游戏
         player.load_player_class(save_obj.player_save);
@@ -49,9 +49,9 @@ function save_game() {
     //存储到浏览器内存中
     window.localStorage.setItem('v0.1', save_str);
 
-    //将存档输出到提示框中，弹窗显示出来
-    // let tooltip = document.getElementById('tooltip');
-    // tooltip.InitTip('save_game', save_str);
+    //游戏日志里提示保存成功
+    // let global_flag_manage = global.get_global_flag_manage();
+    // global_flag_manage.set_game_log('save_game', event_id);
 }
 //导出存档功能-弹窗并将玩家的加密存档输出到弹窗中
 function save_game_show_tip() {

@@ -177,7 +177,7 @@ export class Mini_event extends Game_Event {
                 aitem.id = id;
                 aitem.num = num;
 
-                if (items[id].main_type.includes('equipment')) {
+                if (items[id].main_type == 'equipment') {
                     aitem.equip_rarity = thing_value[i + 2];
                     i += 3;
                 } else {

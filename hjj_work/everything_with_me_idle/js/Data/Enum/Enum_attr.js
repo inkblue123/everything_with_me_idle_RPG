@@ -47,7 +47,6 @@ function init_Enum_attr(enums) {
     enums[id] = [
         'health_max', //最大血量上限
         'magic_max', //最大魔力上限
-        'energy_max', //最大精力上限
     ];
     //精力相关属性
     id = 'energy_attr';
@@ -122,7 +121,6 @@ function init_Enum_attr(enums) {
         'move_speed', //移动速度
         'health_max', //最大血量上限
         'magic_max', //最大魔力上限
-        'energy_max', //最大精力上限
         'physique', //体格
         'Meridians', //经脉
         'soul', //魂魄
@@ -130,6 +128,16 @@ function init_Enum_attr(enums) {
         'agile', //敏捷
         'intelligence', //智力
         'technique', //技巧
+    ];
+
+    //会有满的概念的属性
+    id = 'need_judge_max_attr';
+    add_Enum_Array(enums, id);
+    enums[id] = [
+        'health_point', //血量
+        'magic_point', //魔力
+        'surface_energy_point', //表层精力当前值
+        'deep_energy_point', //深层精力当前值
     ];
 }
 

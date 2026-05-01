@@ -1,61 +1,32 @@
 import { crtElement, addElement } from '../Function/Dom_function.js';
-import { get_item_obj } from '../Function/Function.js';
-import { get_random } from '../Function/math_func.js';
-import { save_game, save_game_show_tip, delete_save, load_save, load_save_show_tip } from '../LoadAndSave/load.js';
 import { player } from '../Player/Player.js';
-import { P_skills } from '../Data/Skill/Skill.js';
 import { global } from '../GameRun/global_manage.js';
 
 //创建处于整个游戏下发的设置界面
 function create_Option() {
     let option_page = crtElement('div', 'option_page', null, '');
     make_option_page_test_div(option_page);
-    // make_option_page_div(option_page);
-    // set_option_page_button(option_page);
     return option_page;
 }
 //生成测试用的按钮
 function make_option_page_test_div(option_page) {
     let button_div;
 
-    //  button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '进入测试战斗地点';
-    // button_div.onclick = function () {
-    //     let place_manage = global.get_place_manage();
-    //     place_manage.set_now_place('test_combat1');
-    // };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '血量设0';
-    // button_div.onclick = function () {
-    //     let P_attr = player.get_player_attributes();
-    //     P_attr.set_data_attr('health_point', 0);
-    // };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '精力设0';
-    // button_div.onclick = function () {
-    //     let P_attr = player.get_player_attributes();
-    //     P_attr.set_data_attr('surface_energy_point', 0);
-    // };
-    //  button_div = addElement(option_page, 'button');
-    // button_div0.innerHTML = '杀光通道的敌人';
-    // button_div0.onclick = function () {
-    //     let enemy_manage = global.get_enemy_manage();
-    //     enemy_manage.add_kill_enemy_num(99);
-    // };
     button_div = addElement(option_page, 'button');
     button_div.innerHTML = '物品测试';
     button_div.onclick = function () {
         give_player_item();
     };
-    // button_div = addElement(option_page, 'button');
-    // button_div.innerHTML = '技能测试';
-    // button_div.onclick = function () {
-    //     player_skill_test();
-    // };
     button_div = addElement(option_page, 'button');
     button_div.innerHTML = 'css特效测试';
     button_div.onclick = function () {
-        startMagicAnimation();
+        // startMagicAnimation();
+        let Details_div = document.getElementById('test6');
+        Details_div.children[0].checked = true; //初始激活该按钮
+        Details_div.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+        });
     };
     button_div = addElement(option_page, 'button');
     button_div.innerHTML = '随机数测试';
@@ -66,30 +37,6 @@ function make_option_page_test_div(option_page) {
     };
 }
 
-//暂停游戏
-function stop_game_speed() {
-    let time_manage = global.get_time_manage();
-    time_manage.set_game_speed_num('global', 0);
-}
-//恢复游戏
-function start_game_speed() {
-    let time_manage = global.get_time_manage();
-    time_manage.set_game_speed_num('global', 1);
-}
-
-//切换商店界面和生活规划界面
-function change_store_liveplan_div() {
-    const Live_plan_div = document.getElementById('Live_plan');
-    const Store_div = document.getElementById('Store');
-
-    if (Live_plan_div.style.display == '') {
-        Live_plan_div.style.display = 'none';
-        Store_div.style.display = '';
-    } else {
-        Live_plan_div.style.display = '';
-        Store_div.style.display = 'none';
-    }
-}
 // 物品测试
 function give_player_item() {
     player.Player_get_item('Oak_logs', 10);

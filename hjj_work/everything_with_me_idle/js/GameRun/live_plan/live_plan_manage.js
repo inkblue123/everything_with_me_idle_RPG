@@ -1,5 +1,6 @@
 import { change_Live_plan_div, change_Explore_collection_div, change_Material_handling_div } from '../../Function/show_func.js';
 import { is_Empty_Object } from '../../Function/Function.js';
+import { get_radio_switch_click_value } from '../../Function/Dom_function.js';
 import { places } from '../../Data/Place/Place.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { global } from '../../GameRun/global_manage.js';
@@ -12,7 +13,7 @@ import { Diving_manage } from './Explore_collection/diving.js';
 import { Archaeology_manage } from './Explore_collection/archaeology.js';
 import { Exploration_manage } from './Explore_collection/exploration.js';
 
-import { Synthesis_manage } from './Material_handling/synthesis.js';
+import { Synthesis_manage } from './Material_handling/synthesis/synthesis.js';
 import { Cooking_manage } from './Material_handling/cooking.js';
 import { Forging_manage } from './Material_handling/forging.js';
 import { Elixir_alchemy_manage } from './Material_handling/elixir_alchemy.js';
@@ -59,6 +60,7 @@ export class Live_plan_manage {
     //对生活技能规划对象进行存档
     save_Live_plan_manage() {
         let Live_plan_save = new Object();
+        Live_plan_save.now_place = this.now_place;
         //获取每个子对象的存档
         Live_plan_save.logging_save = this.logging_manage.save_logging_manage(); //伐木存档
         Live_plan_save.fishing_save = this.fishing_manage.save_fishing_manage(); //钓鱼存档
@@ -92,7 +94,7 @@ export class Live_plan_manage {
             let div_id = key + '_value_div';
             let div = document.getElementById(div_id);
             if (div.style.display == '') {
-                Live_plan_save.EX_LP_name = key + '_button';
+                Live_plan_save.EX_LP_name = key;
                 break;
             }
         }
@@ -103,6 +105,7 @@ export class Live_plan_manage {
         if (is_Empty_Object(Live_plan_save)) {
             return;
         }
+        Live_plan_save.now_place = 'village_home';
         //探索采集部分技能
         this.logging_manage.load_logging_manage(Live_plan_save.logging_save); //伐木存档
         this.fishing_manage.load_fishing_manage(Live_plan_save.fishing_save); //钓鱼存档
@@ -121,17 +124,24 @@ export class Live_plan_manage {
         this.alchemy_manage.load_alchemy_manage(Live_plan_save.alchemy_save); //炼金术存档
 
         // 将生活技能规划界面切换到存档中保存的技能上
+        let EX_LP_button_name = Live_plan_save.EX_LP_name + '_button';
         change_Live_plan_div(Live_plan_save.LP_type); //切换到大类
         if (Live_plan_save.LP_type == 'EC_switch_button') {
             var EC_switch_radio_div = document.getElementById('EC_switch_radio_div');
             EC_switch_radio_div.children[0].checked = true; //生活技能规划最上方的分类按钮切换到探索采集
-            change_Explore_collection_div(Live_plan_save.EX_LP_name);
+            change_Explore_collection_div(EX_LP_button_name);
+            let i = this.EC_live_plan_min_name[Live_plan_save.EX_LP_name];
+            let manage_name = this.EC_live_plan_class_name[i];
+            this[manage_name].updata_super_game_div(Live_plan_save.now_place);
         } else if (Live_plan_save.LP_type == 'MH_switch_button') {
             var MH_switch_radio_div = document.getElementById('MH_switch_radio_div');
             MH_switch_radio_div.children[0].checked = true; //生活技能规划最上方的分类按钮切换到合成制造
-            change_Material_handling_div(Live_plan_save.EX_LP_name);
+            change_Material_handling_div(EX_LP_button_name);
+            let i = this.MH_live_plan_min_name[Live_plan_save.EX_LP_name];
+            let manage_name = this.MH_live_plan_class_name[i];
+            this[manage_name].updata_super_game_div(Live_plan_save.now_place);
         }
-        let radio_div = document.getElementById(Live_plan_save.EX_LP_name);
+        let radio_div = document.getElementById(EX_LP_button_name);
         radio_div.checked = true;
     }
     //获取探索采集类生活技能的管理对象
@@ -191,16 +201,17 @@ export class Live_plan_manage {
     }
     //地点更新，给各个技能对象更新地点信息
     set_new_place(next_place) {
+        this.now_place = next_place;
         //无论当前正在进行什么生活技能，移动地点之后都要停止
         this.stop_now_live_skill();
 
         //探索采集类生活技能
         let live_plan_ch = ['伐木', '钓鱼', '挖矿', '采集', '潜水', '考古', '探索'];
         for (let i = 0; i < 7; i++) {
-            if (!places[next_place].live_plan_flag[i]) {
-                // 不可进行对应技能，不用更新
-                continue;
-            }
+            // if (!places[next_place].live_plan_flag[i]) {
+            //     // 不可进行对应技能，不用更新
+            //     continue;
+            // }
             //如果地点可以进行对应技能，更新地点信息
             if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]])) {
                 this[this.EC_live_plan_class_name[i]].set_new_place(next_place);
@@ -217,19 +228,21 @@ export class Live_plan_manage {
         //当前展示的那一个生活技能需要特别更新
         let EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
         if (EC_div.style.display == '') {
-            let EC_skill;
-            let radios = document.querySelectorAll('input[name="EC_switch"]');
             // 找到当前激活的生活技能
-            for (const radio of radios) {
-                if (radio.checked) {
-                    EC_skill = radio.value;
-                    break;
-                }
-            }
+            let EC_skill = get_radio_switch_click_value('EC_switch');
             EC_skill = EC_skill.substring(0, 3);
             let i = this.EC_live_plan_min_name[EC_skill];
             if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]])) {
                 this[this.EC_live_plan_class_name[i]].updata_super_game_div(next_place);
+            }
+        }
+        let MH_div = document.getElementById('MH_div'); //原料处理窗口 Material_handling MH
+        if (MH_div.style.display == '') {
+            let MH_skill = get_radio_switch_click_value('MH_switch');
+            MH_skill = MH_skill.substring(0, 3);
+            let i = this.MH_live_plan_min_name[MH_skill];
+            if (!is_Empty_Object(this[this.MH_live_plan_min_name[i]])) {
+                this[this.MH_live_plan_min_name[i]].updata_super_game_div(next_place);
             }
         }
     }
@@ -261,19 +274,22 @@ export class Live_plan_manage {
         // 当前展示的那一个生活技能需要特别更新
         let EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
         if (EC_div.style.display == '') {
-            let EC_skill;
-            let radios = document.querySelectorAll('input[name="EC_switch"]');
             // 找到当前激活的生活技能
-            for (const radio of radios) {
-                if (radio.checked) {
-                    EC_skill = radio.value;
-                    break;
-                }
-            }
+            let EC_skill = get_radio_switch_click_value('EC_switch');
             EC_skill = EC_skill.substring(0, 3);
             let i = this.EC_live_plan_min_name[EC_skill];
             if (!is_Empty_Object(this[this.EC_live_plan_class_name[i]])) {
                 this[this.EC_live_plan_class_name[i]].updata_super_game_div(next_place);
+            }
+        }
+        let MH_div = document.getElementById('MH_div'); //原料处理窗口 Material_handling MH
+        if (MH_div.style.display == '') {
+            // 找到当前激活的生活技能
+            let MH_skill = get_radio_switch_click_value('MH_switch');
+            MH_skill = MH_skill.substring(0, 3);
+            let i = this.MH_live_plan_min_name[MH_skill];
+            if (!is_Empty_Object(this[this.MH_live_plan_min_name[i]])) {
+                this[this.MH_live_plan_min_name[i]].updata_super_game_div(next_place);
             }
         }
     }

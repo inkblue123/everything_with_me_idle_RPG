@@ -192,7 +192,7 @@ export class Buy_Manage {
         }
 
         //针对装备的稀有度，重算价值
-        if (items[id].main_type.includes('equipment')) {
+        if (items[id].main_type == 'equipment') {
             let equip_rarity = item_obj.equip_rarity;
             let rarity_place_data = enums[equip_rarity].price_rate;
             base_price = base_price * rarity_place_data * 0.01;
@@ -290,7 +290,7 @@ export class Buy_Manage {
         }
 
         //针对装备的稀有度，重算价值
-        if (items[id].main_type.includes('equipment')) {
+        if (items[id].main_type == 'equipment') {
             let equip_rarity = item_obj.equip_rarity;
             let rarity_place_data = enums[equip_rarity].price_rate;
             base_price = base_price * rarity_place_data * 0.01;
@@ -358,7 +358,7 @@ export class Buy_Manage {
             let aitem_div = addElement(normalbuy_value_div, 'div', null, 'sell_buy_value');
             let name = items[id].name;
             aitem_div.innerHTML = name + ' x' + buy_good_obj.num;
-            if (items[id].main_type.includes('equipment')) {
+            if (items[id].main_type == 'equipment') {
                 //根据装备稀有度调整文字颜色
                 aitem_div.style.color = enums[buy_good_obj.equip_rarity].rarity_color;
             }

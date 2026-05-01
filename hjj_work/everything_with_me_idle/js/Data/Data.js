@@ -86,7 +86,7 @@ function Enum_item_init() {
     let arr = Object.keys(enums.secon_type_sort); //将拥有的物品的key转换成一个数组
     for (let secon_type of enums.Item_secon_type) {
         if (!arr.includes(secon_type)) {
-            console.log('所有物品小类的排序中没有包含%s小类', secon_type);
+            console.log('所有物品小类enum[Item_secon_type]的排序中没有包含%s小类', secon_type);
             break;
         }
     }
@@ -201,10 +201,8 @@ function Text_attr_init() {
     //后缀是所有物品子类和一些子类集合
     //组合效果就是采集时获得凡木的概率、采集时获得蘑菇的概率，采集时获得任意木头的概率这样
     front = { CLT_chance: '采集时获得' };
-    after = JSON.parse(JSON.stringify(enums['Item_secon_type']));
-    after.push('all_wood');
-    after.push('all_grass');
-    after.push('all_mushroom');
+    after = JSON.parse(JSON.stringify(enums['Item_secon_type'])); //所有小类
+    after = after.concat(enums['all_secon_type']); //所有小类合集
     for (let front_id in front) {
         for (let after_id of after) {
             let attr_id = front_id + '_' + after_id;

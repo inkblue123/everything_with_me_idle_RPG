@@ -299,8 +299,8 @@ function show_passive_skill_rewards(div, rewards) {
         rewards_div.innerHTML = attr_ch;
     } else {
         //如果有多条属性，就每行两个依次往下排列
-        let rewards_div = addElement(div, 'div', null, 'lable_end');
-        // let rewards_div = addElement(div, 'div', null, 'page_columns_11');
+        // let rewards_div = addElement(div, 'div', null, 'lable_end');
+        let rewards_div = addElement(div, 'div', null, 'page_columns_11');
         for (let reward_obj of rewards) {
             let attr_div = addElement(rewards_div, 'div', null, 'table_2_value');
 

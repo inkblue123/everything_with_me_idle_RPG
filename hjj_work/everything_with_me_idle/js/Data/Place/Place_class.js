@@ -294,18 +294,18 @@ export class P_normal extends Place {
             this.CLT_item = new Object();
         }
         let item_obj = new Object();
-        if (items[id].main_type.includes('equipment')) {
-            //物品是装备，args内参数的含义按以下顺序排列：
-            //稀有度
+        if (items[id].main_type == 'equipment') {
+            //物品是装备，args内参数的含义按以下顺序排列：稀有度
             let equip_rarity = args[0];
             item_obj = get_item_obj(id, 1, equip_rarity);
-        } else if (items[id].main_type.includes('material')) {
+        } else if (items[id].main_type == 'material') {
             item_obj = get_item_obj(id, 1);
             //物品是材料，没有独特属性
-        } else if (items[id].main_type.includes('consumable')) {
-            //物品是消耗品，args内参数的含义按以下顺序排列：
-            // 暂无
-            item_obj = get_item_obj(id, 1);
+        } else if (items[id].main_type == 'consumable') {
+            //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
+            let use_ratio = args[0];
+            let ex_data = args[1];
+            item_obj = get_item_obj(id, 1, use_ratio, ex_data);
         }
         item_obj.chance = chance; //物品掉落权重
         item_obj.rare_flag = rare_flag; //物品是否属于稀有物品
@@ -438,7 +438,7 @@ export class P_store extends Place {
     //给这个商人新增一种商品
     add_goods(id, type, inventory, rise_num, rise_data, replenish_time, replenish_num, ...args) {
         let good_obj = new Object();
-        if (items[id].main_type.includes('equipment')) {
+        if (items[id].main_type == 'equipment') {
             //物品是装备，args内参数的含义按以下顺序排列：
             //稀有度
             let equip_rarity = args[0];
@@ -446,13 +446,14 @@ export class P_store extends Place {
                 console.log('装备商品没有定义稀有度');
             }
             good_obj = get_item_obj(id, 1, equip_rarity);
-        } else if (items[id].main_type.includes('material')) {
+        } else if (items[id].main_type == 'material') {
             good_obj = get_item_obj(id, 1);
             //物品是材料，没有独特属性
-        } else if (items[id].main_type.includes('consumable')) {
-            //物品是消耗品，args内参数的含义按以下顺序排列：
-            // 暂无
-            good_obj = get_item_obj(id, 1);
+        } else if (items[id].main_type == 'consumable') {
+            //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
+            let use_ratio = args[0];
+            let ex_data = args[1];
+            good_obj = get_item_obj(id, 1, use_ratio, ex_data);
         }
 
         good_obj.inventory = inventory; //这个商品最大库存

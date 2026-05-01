@@ -23,6 +23,8 @@ export class Data_attr_manage {
         this.player_base_attr = new Object();
         //生活技能属性
         this.live_plan_attr = new Object();
+        //使用消耗品时的消耗速度
+        this.use_consumable_speed = new Object();
 
         //玩家所有基础属性汇总，实质上是上面所有部分的总和
         this.player_attr = new Object();
@@ -61,7 +63,7 @@ export class Data_attr_manage {
         //战斗生存属性初始化
         this.combat_survival_attr['health_max'] = 100; //最大血量上限
         this.combat_survival_attr['magic_max'] = 100; //最大魔力上限
-        this.combat_survival_attr['energy_max'] = 100; //最大精力上限
+        // this.combat_survival_attr['energy_max'] = 100; //最大精力上限
         //角色基础属性初始化
         this.player_base_attr['physique'] = 10; //体格
         this.player_base_attr['Meridians'] = 10; //经脉
@@ -85,6 +87,11 @@ export class Data_attr_manage {
         this.live_plan_attr['MIN_attack'] = 3; //挖矿力
         this.live_plan_attr['MIN_critical_chance'] = 5; //挖矿暴击率
         this.live_plan_attr['MIN_critical_damage'] = 150; //挖矿暴击伤害
+        //角色使用消耗品的属性消耗速度
+        this.use_consumable_speed['UCSB_health_point'] = 1; //
+        this.use_consumable_speed['UCSB_magic_point'] = 1;
+        this.use_consumable_speed['UCSB_surface_energy_point'] = 1;
+        this.use_consumable_speed['UCSB_deep_energy_point'] = 1;
 
         //汇总
         this.prevObjects['player_attr'] = JSON.parse(JSON.stringify(this.player_attr));
@@ -189,6 +196,13 @@ export class Data_attr_manage {
                 this.player_attr[id] = 0;
             }
             this.player_attr[id] += this.live_plan_attr[id];
+        }
+        //初始角色使用消耗品的属性消耗速度
+        for (let id in this.use_consumable_speed) {
+            if (is_Empty_Object(this.player_attr[id])) {
+                this.player_attr[id] = 0;
+            }
+            this.player_attr[id] += this.use_consumable_speed[id];
         }
     }
     //汇总穿戴的装备上的属性加成
@@ -330,7 +344,7 @@ export class Data_attr_manage {
         // 玩家属性变化，更新到最终属性里
         this.updata_Player_attr();
     }
-    //根据id改变玩家属性，只允许改变血量蓝量精力的当前值
+    //根据id改变玩家属性，目前只允许改变血量蓝量精力的当前值
     change_data_attr(id, value) {
         if (id == 'health_point') {
             this.health_point += value;
@@ -347,12 +361,13 @@ export class Data_attr_manage {
                 this.magic_point = this.end_data_attr['magic_max'];
             }
         } else if (id == 'energy_point') {
-            this.energy_point += value;
-            if (this.energy_point < 0) {
-                this.energy_point = 0;
-            } else if (this.energy_point > this.end_data_attr['energy_max']) {
-                this.energy_point = this.end_data_attr['energy_max'];
-            }
+            // this.energy_point += value;
+            // if (this.energy_point < 0) {
+            //     this.energy_point = 0;
+            // } else if (this.energy_point > this.end_data_attr['energy_max']) {
+            //     this.energy_point = this.end_data_attr['energy_max'];
+            // }
+            console.log('不应该调用这里');
         }
     }
     //根据id获取属性

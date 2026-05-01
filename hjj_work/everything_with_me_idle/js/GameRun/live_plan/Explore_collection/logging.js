@@ -1,6 +1,6 @@
 import { get_random, calculate_num_attr, calculate_speed_attr } from '../../../Function/math_func.js';
 import { addElement } from '../../../Function/Dom_function.js';
-import { is_Empty_Object, get_uniqueArr, get_item_id_key, get_item_obj } from '../../../Function/Function.js';
+import { is_Empty_Object, get_uniqueArr, get_item_id_key } from '../../../Function/Function.js';
 import { enemys } from '../../../Data/Enemy/Enemy.js';
 import { items } from '../../../Data/Item/Item.js';
 import { places } from '../../../Data/Place/Place.js';
@@ -109,7 +109,7 @@ class Tree_manage {
                 let item_obj = new Object();
                 item_obj.id = data_obj.id;
                 item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
-                if (items[data_obj.id].main_type.includes('equipment')) {
+                if (items[data_obj.id].main_type == 'equipment') {
                     //如果掉落的是装备，还需要记录稀有度
                     item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
                 }
@@ -220,6 +220,12 @@ export class Logging_manage {
     set_new_place(now_place) {
         this.now_place = now_place;
         this.now_time = global.get_game_now_time();
+
+        //如果当前地点不能伐木，不需要更新后续
+        if (!places[now_place].live_plan_flag[0]) {
+            return;
+        }
+
         //更新一遍当前地点的重要缓存数据
         this.updata_LGI_place_data();
         //进入新地点，无条件重刷一棵树
@@ -259,6 +265,8 @@ export class Logging_manage {
         if (this.now_LGI_status == LGI_status.NO_LGI) {
             //当前没有伐木，却进入了伐木逻辑，属于错误情况
             console.log('伐木状态为无，游戏状态为伐木，状态冲突');
+            let global_flag_manage = global.get_global_flag_manage();
+            global_flag_manage.change_GS_game_statu('NULL');
             return;
         }
 
@@ -346,7 +354,6 @@ export class Logging_manage {
             return;
         }
         //停止伐木
-        global.set_flag('GS_game_statu', 'NULL');
         this.now_LGI_status = LGI_status.NO_LGI;
         //重置按钮
         const LGI_S_button = document.getElementById('LGI_S_button');
@@ -399,6 +406,8 @@ export class Logging_manage {
         }
         let global_flag_manage = global.get_global_flag_manage();
         global_flag_manage.set_game_log('live_skill_run', 'start', 'logging');
+
+        this.reset_round();
     }
     //伐木模式切换，更新数值
     updata_logging_way(now_way) {
@@ -753,7 +762,7 @@ export class Logging_manage {
             //精力不足且伐木在一棵树伐木完成时自动切换成休息
         } else if (this.now_LGI_status == LGI_status.REST_LGI) {
             //精力不足且休息状态在精力回满的时候切换到其他伐木状态
-            if (P_attr.judge_surface_energy_max()) {
+            if (P_attr.judge_player_attr_max('surface_energy_point')) {
                 let global_flag_manage = global.get_global_flag_manage();
                 if (surface_energy_ratio >= 50) {
                     //精力充足

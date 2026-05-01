@@ -31,11 +31,12 @@ function init_Item_Consumable(items) {
     init_bait(items);
     //探索消耗品
     init_exploration_consumable(items);
-
-    //宝箱
-    init_treasure_chest(items);
     //凡间钱币
     init_ordinary_coin(items);
+    //宝箱
+    init_treasure_chest(items);
+    //书
+    init_book(items);
 }
 //食材
 function init_ingredient(items) {
@@ -44,14 +45,20 @@ function init_ingredient(items) {
 
     id = 'red_berry'; //红浆果
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用
+    items[id].add_use_attr('get_attr', null, 'health_point', 1);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'yellow_berry'; //黄浆果
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用
+    items[id].add_use_attr('get_attr', null, 'surface_energy_point', 1);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'black_berry'; //黑浆果
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用
+    items[id].add_use_attr('get_attr', null, 'magic_point', 1);
     items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
 }
@@ -227,6 +234,27 @@ function init_ordinary_coin(items) {
     add_Consumable_object(items, id);
     items[id].init_Item_other(500, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 10000); //物品价值
+}
+//书
+function init_book(items) {
+    let id;
+    let secon_type = 'book'; //消耗品大类中的书小类
+
+    id = 'woodworking_introduction'; //木工入门手册
+    add_Consumable_object(items, id);
+    items[id].init_Consumable('sustain_use'); //持续使用
+    items[id].set_sustain_use_data('time', 20); //
+    items[id].add_use_attr('get_formula', 10, 'SYN_wood_helmet_1'); //10%进度时获得配方
+    items[id].add_use_attr('get_formula', 20, 'SYN_wood_chest_armor_1'); //20%进度时获得配方
+    items[id].add_use_attr('get_formula', 30, 'SYN_wood_leg_armor_1'); //30%进度时获得配方
+    items[id].add_use_attr('get_formula', 40, 'SYN_wood_shoes_1'); //40%进度时获得配方
+    items[id].add_use_attr('get_formula', 50, 'SYN_wood_sticks_1'); //50%进度时获得配方
+    items[id].add_use_attr('get_formula', 60, 'SYN_wood_hammers_1'); //60%进度时获得配方
+    items[id].add_use_attr('get_formula', 70, 'SYN_wood_sword_1'); //70%进度时获得配方
+    items[id].add_use_attr('get_formula', 80, 'SYN_wood_battle_axe_1'); //80%进度时获得配方
+    items[id].add_use_attr('get_formula', 90, 'SYN_wood_dagger_1'); //90%进度时获得配方
+    items[id].init_Item_other(1, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 100); //物品价值
 }
 
 export { init_Item_Consumable };

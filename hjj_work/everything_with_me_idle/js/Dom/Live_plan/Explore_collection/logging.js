@@ -86,17 +86,14 @@ function set_logging_button(LGI_value_div) {
         let live_plan_manage = global.get_live_plan_manage();
         let logging_manage = live_plan_manage.get_LP_live_skill_manage('logging_manage');
         logging_manage.player_start_logging();
-        logging_manage.reset_round();
         //开始伐木按钮切换成停止伐木
         LGI_S_button.style.display = 'none';
         LGI_E_button.style.display = '';
     };
     //停止伐木按钮
     LGI_E_button.onclick = function () {
-        let live_plan_manage = global.get_live_plan_manage();
-        let logging_manage = live_plan_manage.get_LP_live_skill_manage('logging_manage');
-        logging_manage.stop_game_statu();
-        logging_manage.reset_round();
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.change_GS_game_statu('NULL');
     };
     //更换伐木目标按钮
     let LGI_R_button = LGI_value_div.querySelector('#LGI_R_button');
@@ -106,7 +103,8 @@ function set_logging_button(LGI_value_div) {
         //更换当前伐木目标
         logging_manage.reborn_tree();
         //停止当前伐木动作
-        logging_manage.stop_game_statu();
+        let global_flag_manage = global.get_global_flag_manage();
+        global_flag_manage.change_GS_game_statu('NULL');
     };
 }
 //按下伐木界面的伐木策略按钮之后，切换界面显示

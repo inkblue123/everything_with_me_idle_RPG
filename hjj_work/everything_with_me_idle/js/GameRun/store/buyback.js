@@ -1,4 +1,4 @@
-import { add_show_Tooltip, addElement, addElement_radio } from '../../Function/Dom_function.js';
+import { add_show_Tooltip, addElement, addElement_radio, get_radio_switch_click_value } from '../../Function/Dom_function.js';
 import { is_Empty_Object, get_uniqueArr, get_item_id_key } from '../../Function/Function.js';
 import { format_numbers } from '../../Function/math_func.js';
 import { items } from '../../Data/Item/Item.js';
@@ -114,7 +114,7 @@ export class BuyBack_Manage {
     //更新当前商店的回购商品界面内容
     updata_store_IBB_value_div() {
         // 缓存上次商品回购界面激活的分类条件
-        let last_IBB_switch_type = get_store_IBB_switch_type();
+        let last_IBB_switch_type = get_radio_switch_click_value('IBB_switch');
         //清空商品界面的所有元素
         delete_store_IBB_div();
         //获取这次需要展示的物品的所有小类
@@ -127,7 +127,7 @@ export class BuyBack_Manage {
         //转义物品类别
         let type_switch = item_switch_type_handle(now_IBB_switch_type);
         //获取当前商店界面激活的排序条件
-        let IBB_sort_type = get_IBB_sort_type();
+        let IBB_sort_type = get_radio_switch_click_value('IBB_sort');
         //获取排序后的玩家所有物品的key集合
         let sort_item_array = get_all_item_id_array_sort(IBB_sort_type, Item_buy_back_list);
 
@@ -162,7 +162,7 @@ export class BuyBack_Manage {
         }
         let IBB_value_div = document.getElementById('IBB_value_div');
         let aitem_div = addElement(IBB_value_div, 'div', null, 'goods_value');
-        if (items[good_item.id].main_type.includes('equipment')) {
+        if (items[good_item.id].main_type == 'equipment') {
             //根据装备稀有度调整文字颜色
             aitem_div.style.color = enums[good_item.equip_rarity].rarity_color;
         }
@@ -290,7 +290,7 @@ export class BuyBack_Manage {
         let maxStack = items[id].maxStack; //物品堆叠数
         let buyback_price = 0; //要出售的物品的总价
         //针对装备的稀有度，重算价值和堆叠数
-        if (items[id].main_type.includes('equipment')) {
+        if (items[id].main_type == 'equipment') {
             let equip_rarity = item_obj.equip_rarity;
             let rarity_place_data = enums[equip_rarity].price_rate;
             base_price = base_price * rarity_place_data * 0.01;
@@ -367,7 +367,7 @@ export class BuyBack_Manage {
             let aitem_div = addElement(buyback_value_div, 'div', null, 'sell_buy_value');
             let name = items[id].name;
             aitem_div.innerHTML = name + ' x' + good_obj.num;
-            if (items[id].main_type.includes('equipment')) {
+            if (items[id].main_type == 'equipment') {
                 //根据装备稀有度调整文字颜色
                 aitem_div.style.color = enums[good_obj.equip_rarity].rarity_color;
             }
@@ -447,16 +447,6 @@ export class BuyBack_Manage {
         this.buyback_price[this.money_type] = 0;
         //清空待购买界面
         this.updata_buyback_value_div();
-    }
-}
-//获取商店回购界面中激活的过滤条件
-function get_store_IBB_switch_type() {
-    const radios = document.querySelectorAll('input[name="IBB_switch"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            // 找到一个选中的按钮后可以结束循环
-            return radio.value;
-        }
     }
 }
 //清空中上商店回购界面的所有元素
@@ -620,16 +610,6 @@ function item_switch_type_handle(item_switch_type) {
     }
 
     return item_types;
-}
-//获取当前商店界面激活的排序条件
-function get_IBB_sort_type() {
-    const radios = document.querySelectorAll('input[name="IBB_sort"]');
-    for (const radio of radios) {
-        if (radio.checked) {
-            // 找到一个选中的按钮后可以结束循环
-            return radio.value;
-        }
-    }
 }
 //根据排序方式，对物品队列进行排序，获得排序后的物品id集合
 function get_all_item_id_array_sort(sort_type, Item_buy_back_goods) {

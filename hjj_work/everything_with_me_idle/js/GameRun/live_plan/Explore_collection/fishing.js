@@ -199,6 +199,12 @@ export class Fishing_manage {
         this.now_time = global.get_game_now_time();
         this.FIS_tip_break_order_time = this.now_time; //钓鱼提示文本随机破序时间初始化
 
+        // 伐木、钓鱼、挖矿、采集、潜水、考古、探索，地点的生活技能可用标记第1个是钓鱼
+        //如果当前地点不能钓鱼，不需要更新后续
+        if (!places[now_place].live_plan_flag[1]) {
+            return;
+        }
+
         //更新一遍当前地点的重要缓存数据
         this.updata_FIS_place_rare_fishs();
         //初始化地点的可钓鱼对象列表
@@ -366,7 +372,6 @@ export class Fishing_manage {
             return;
         }
         //停止钓鱼
-        global.set_flag('GS_game_statu', 'NULL'); //游戏状态设定为空
         this.now_FIS_status = FIS_status.NO_FIS; //将钓鱼状态切换到空
         if (this.last_FIS_status != this.now_FIS_status) {
             this.FIS_status_flag = true;
@@ -704,7 +709,7 @@ export class Fishing_manage {
     //更新钓鱼休息阶段的数值
     updata_rest_FIS_data() {
         let P_attr = player.get_player_attributes();
-        if (!P_attr.judge_surface_energy_max()) {
+        if (!P_attr.judge_player_attr_max('surface_energy_point')) {
             return;
         }
         //精力回满时，切换到其他状态
@@ -750,7 +755,7 @@ export class Fishing_manage {
                 let item_obj = new Object();
                 item_obj.id = data_obj.id;
                 item_obj.num = get_random(data_obj.min_num, data_obj.max_num); //这次掉落的数量
-                if (items[item_obj.id].main_type.includes('equipment')) {
+                if (items[item_obj.id].main_type == 'equipment') {
                     //如果掉落的是装备，还需要记录稀有度
                     item_obj.equip_rarity = data_obj.equip_rarity; //掉落的装备的稀有度;
                 }
@@ -797,14 +802,14 @@ export class Fishing_manage {
 
         if (this.now_FIS_status == FIS_status.NO_FIS) {
             //当前没有钓鱼
-            let now_GS = global.get_flag('GS_game_statu');
-            if (now_GS == 'fishing') {
-                //开始钓鱼后不应该运行这个逻辑
-                console.log('开始钓鱼后不应该运行到这个逻辑，错误情况');
-            } else {
-                //停止钓鱼时会运行到这里，逻辑是正常的，为了避免后续判空报错，在这里给ch填一个符号
-                ch = ' ';
-            }
+            // let now_GS = global.get_flag('GS_game_statu');
+            // if (now_GS == 'fishing') {
+            //     //开始钓鱼后不应该运行这个逻辑
+            //     console.log('开始钓鱼后不应该运行到这个逻辑，错误情况');
+            // } else {
+            //停止钓鱼时会运行到这里，逻辑是正常的，为了避免后续判空报错，在这里给ch填一个符号
+            ch = ' ';
+            // }
         } else if (this.now_FIS_status == FIS_status.WAIT_FIS) {
             //当前处于等鱼上钩阶段
             if (this.player_end_attr['weapon_type'].includes('fishing_tool')) {
@@ -944,7 +949,7 @@ export class Fishing_manage {
                     continue;
                 }
                 let CLT_drop_value = addElement(FIS_drop_table_value_div, 'div', null, 'drop_value');
-                if (items[id].main_type.includes('equipment')) {
+                if (items[id].main_type == 'equipment') {
                     //如果掉落的是装备，改变字体颜色变成稀有度的颜色
                     CLT_drop_value.style.color = hex2Rgba(enums[equip_rarity].rarity_color, alpha);
                 }

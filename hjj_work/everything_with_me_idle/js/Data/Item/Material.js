@@ -5,6 +5,7 @@ function init_Item_Material(items) {
     //测试物品
     // init_test_item(items)
     //木头系列
+    init_woodchip(items); //木屑
     init_ordinary_wood(items); //凡木
     init_spirit_wood(items); //灵木
     //草系列
@@ -40,7 +41,32 @@ function init_Item_Material(items) {
 //     add_Material_object(items, id);
 //     items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
 // }
+//木屑
+function init_woodchip(items) {
+    let id;
+    let secon_type = 'woodchip'; //材料大类中的凡木小类
 
+    id = 'Oak_woodchip'; //橡树木屑
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 1); //物品价值
+    id = 'Willow_woodchip'; //柳树木屑
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 1); //物品价值
+    id = 'birch_woodchip'; //桦树木屑
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 1); //物品价值
+    id = 'pine_woodchip'; //松树木屑
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 2); //物品价值
+    id = 'fir_woodchip'; //杉树木屑
+    add_Material_object(items, id);
+    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 3); //物品价值
+}
 //凡木
 function init_ordinary_wood(items) {
     let id;
@@ -50,44 +76,22 @@ function init_ordinary_wood(items) {
     add_Material_object(items, id);
     items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
-    id = 'Oak_woodchip'; //橡树木屑
-    add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
-    items[id].init_Item_price('ordinary_coin', 1); //物品价值
-
     id = 'Willow_logs'; //柳树原木
     add_Material_object(items, id);
     items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 6); //物品价值
-    id = 'Willow_woodchip'; //柳树木屑
-    add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
-    items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'birch_logs'; //桦树原木
     add_Material_object(items, id);
     items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 9); //物品价值
-    id = 'birch_woodchip'; //桦树木屑
-    add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
-    items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'pine_logs'; //松树原木
     add_Material_object(items, id);
     items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 15); //物品价值
-    id = 'pine_woodchip'; //松树木屑
-    add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
-    items[id].init_Item_price('ordinary_coin', 2); //物品价值
     id = 'fir_logs'; //杉树原木
     add_Material_object(items, id);
     items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 25); //物品价值
-    id = 'fir_woodchip'; //杉树木屑
-    add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
-    items[id].init_Item_price('ordinary_coin', 3); //物品价值
-
     id = 'decayed_wood'; //朽木
     add_Material_object(items, id);
     items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
@@ -324,16 +328,20 @@ function init_wood_parts(items) {
 
     id = 'normal_board'; //普通木板
     add_Material_object(items, id);
-    items[id].init_Item_other(3, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
     id = 'Oak_board'; //橡木板
     add_Material_object(items, id);
-    items[id].init_Item_other(3, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 12); //物品价值
     id = 'Willow_board'; //柳木板
     add_Material_object(items, id);
-    items[id].init_Item_other(3, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 14); //物品价值
+    id = 'birch_board'; //桦木板
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 18); //物品价值
 }
 //铁质零件
 function init_iron_parts(items) {

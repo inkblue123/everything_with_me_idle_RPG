@@ -87,8 +87,8 @@ export class Player_Object {
     get_player_formulas_manage() {
         return this.player_formulas_manage;
     }
-    get_player_formulas(type) {
-        return this.player_formulas_manage.get_player_formulas(type);
+    get_player_skill_formulas(type) {
+        return this.player_formulas_manage.get_player_skill_formulas(type);
     }
     //给玩家背包添加物品
     Player_get_item(...args) {
@@ -100,22 +100,18 @@ export class Player_Object {
             // 有多个参数，输入的是物品的id、数量、稀有度等等信息，需要转换成物品对象
             let id = args[0];
             let num = args[1];
-            if (items[id].main_type.includes('equipment')) {
-                //物品是装备，args内参数的含义按以下顺序排列：
-                //稀有度
-                if (args[2] == undefined) {
-                    console.log('背包添加装备时没有设置稀有度');
-                    return;
-                }
+            if (items[id].main_type == 'equipment') {
+                //物品是装备，args内参数的含义按以下顺序排列：稀有度
                 let equip_rarity = args[2];
                 item_obj = get_item_obj(id, num, equip_rarity);
-            } else if (items[id].main_type.includes('material')) {
+            } else if (items[id].main_type == 'material') {
                 item_obj = get_item_obj(id, num);
                 //物品是材料，没有独特属性
-            } else if (items[id].main_type.includes('consumable')) {
-                //物品是消耗品，args内参数的含义按以下顺序排列：
-                //暂无
-                item_obj = get_item_obj(id, num);
+            } else if (items[id].main_type == 'consumable') {
+                //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
+                let use_ratio = args[2];
+                let ex_data = args[3];
+                item_obj = get_item_obj(id, num, use_ratio, ex_data);
             }
         }
         let ret = this.player_backpack.Player_get_item(item_obj);
@@ -139,18 +135,18 @@ export class Player_Object {
             // 有多个参数，输入的是物品的id、数量、稀有度等等信息，需要转换成物品对象
             let id = args[0];
             let num = args[1];
-            if (items[id].main_type.includes('equipment')) {
-                //物品是装备，args内参数的含义按以下顺序排列：
-                //稀有度
+            if (items[id].main_type == 'equipment') {
+                //物品是装备，args内参数的含义按以下顺序排列：稀有度
                 let equip_rarity = args[2];
                 item_obj = get_item_obj(id, num, equip_rarity);
-            } else if (items[id].main_type.includes('material')) {
+            } else if (items[id].main_type == 'material') {
                 item_obj = get_item_obj(id, num);
                 //物品是材料，没有独特属性
-            } else if (items[id].main_type.includes('consumable')) {
-                //物品是消耗品，args内参数的含义按以下顺序排列：
-                //暂无
-                item_obj = get_item_obj(id, num);
+            } else if (items[id].main_type == 'consumable') {
+                //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
+                let use_ratio = args[2];
+                let ex_data = args[3];
+                item_obj = get_item_obj(item_id, 1, use_ratio, ex_data);
             }
         }
 
@@ -163,30 +159,20 @@ export class Player_Object {
         }
     }
     //从玩家背包里去掉指定物品
-    Player_lose_item(...args) {
-        let item_obj;
-        if (typeof args[0] == 'object') {
-            //输入的是一个物品对象，不需要额外处理
-            item_obj = args[0];
-        } else {
-            // 有多个参数，输入的是物品的id、数量、稀有度等等信息，需要转换成物品对象
-            let id = args[0];
-            let num = args[1];
-            if (items[id].main_type.includes('equipment')) {
-                //物品是装备，args内参数的含义按以下顺序排列：
-                //稀有度
-                let equip_rarity = args[2];
-                item_obj = get_item_obj(id, num, equip_rarity);
-            } else if (items[id].main_type.includes('material')) {
-                item_obj = get_item_obj(id, num);
-                //物品是材料，没有独特属性
-            } else if (items[id].main_type.includes('consumable')) {
-                //物品是消耗品，args内参数的含义按以下顺序排列：
-                //暂无
-                item_obj = get_item_obj(id, num);
-            }
+    Player_lose_item(item_key, num) {
+        if (num <= 0) {
+            console.log('去掉物品时数量异常');
+            return false;
         }
-        this.player_backpack.Player_lose_item(item_obj);
+        let ret = this.player_backpack.Player_lose_item(item_key, num);
+        if (ret <= 0) {
+            return false;
+        } else if (ret == num) {
+            return true;
+        } else {
+            console.log('去掉物品时结果异常');
+            return false;
+        }
     }
 
     //穿戴一件装备
@@ -232,6 +218,8 @@ export class Player_Object {
         this.player_ASkills_manage.updata_player_data(end_data_attr); //战斗方面属性更新
         let live_plan_manage = global.get_live_plan_manage();
         live_plan_manage.updata_player_data(end_data_attr); //生活技能属性更新
+        let consumable_manage = global.get_consumable_manage();
+        consumable_manage.updata_player_data(end_data_attr); //消耗品使用属性更新
     }
     //游戏运行一帧，计算玩家常态数值变化内容
     run_player_normal() {

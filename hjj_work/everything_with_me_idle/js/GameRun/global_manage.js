@@ -5,6 +5,7 @@ import { Enemy_manage } from './enemy_manage.js';
 import { Combat_manage } from './combat_manage.js';
 import { Exp_manage } from './exp_manage.js';
 import { Map_manage } from './map_manage.js';
+import { Consumable_Manage } from './consumable_manage.js';
 import { Game_event_manage } from './game_event/game_event_manage.js';
 import { Global_flag_manage } from './global_flag/global_flag_manage.js';
 import { Live_plan_manage } from './live_plan/live_plan_manage.js';
@@ -24,6 +25,7 @@ class Global_manage {
         this.live_plan_manage; //生活技能管理类
         this.store_manage; //交易和商店管理类
         this.map_manage; //交易和商店管理类
+        this.consumable_manage; //消耗品管理类
     }
     init() {
         //获取配置
@@ -47,6 +49,7 @@ class Global_manage {
         this.game_event_manage = new Game_event_manage(); //游戏事件管理类
         // this.game_event_manage.init();
         this.store_manage = new Store_manage(); //交易和商店管理类
+        this.consumable_manage = new Consumable_Manage(); //消耗品管理类
     }
     init_config() {
         //
@@ -86,6 +89,9 @@ class Global_manage {
     }
     get_map_manage() {
         return this.map_manage;
+    }
+    get_consumable_manage() {
+        return this.consumable_manage;
     }
     //对外提供一些常用功能的接口
     updata_time_manage() {
