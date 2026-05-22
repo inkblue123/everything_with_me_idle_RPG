@@ -218,10 +218,14 @@ function init_Text_ordinary_coin(texts) {
 function init_Text_book(texts) {
     let id;
 
-    id = 'woodworking_introduction';
+    id = 'woodworking_introduction_1';
     add_text_object(texts, id);
-    texts[id].item_name = '木工入门手册';
-    texts[id].item_desc = '记载了许多木匠基础操作，以及常用工具的制作方法';
+    texts[id].item_name = '木工入门手册1';
+    texts[id].item_desc = '记载了许多木匠基础操作，以及常用工具的制作方法，这是系列的第一本';
+    id = 'woodworking_introduction_2';
+    add_text_object(texts, id);
+    texts[id].item_name = '木工入门手册2';
+    texts[id].item_desc = '记载了许多木匠基础操作，以及常用工具的制作方法，这是系列的第二本';
 }
 
 export { init_Text_consumable };

@@ -30,6 +30,9 @@ function init_village_store(places) {
     places[id].add_goods('copper_coin', 'fixed', 'infinite', null, null, null, null);
     //银币，固定商品，库存10，不会涨价，两天补一次货，每次补4个
     places[id].add_goods('sliver_coin', 'fixed', 10, null, null, 2880, 4);
+    //木工入门手册，固定商品，库存1，不会涨价，两天补一次货，每次补1个
+    places[id].add_goods('woodworking_introduction_1', 'fixed', 1, null, null, 2880, 1, 0);
+    places[id].add_goods('woodworking_introduction_2', 'fixed', 1, null, null, 2880, 1, 0);
     //竹鱼竿，固定商品，库存10，不会涨价，两天补一次货，每次补2个
     // places[id].add_goods('Bamboo_fishing_rod', 'fixed', 10, null, null, 60, 2, 'ordinary');
     places[id].add_goods('Bamboo_fishing_rod', 'fixed', 10, null, null, 2880, 2, 'ordinary');

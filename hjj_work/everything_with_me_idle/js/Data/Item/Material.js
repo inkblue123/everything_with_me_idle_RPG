@@ -25,8 +25,8 @@ function init_Item_Material(items) {
     //石头与矿石系列
     init_rock(items); //石头
     //加工零件系列
-    init_wood_parts(items); //木制零件
-    init_iron_parts(items); //铁制零件
+    init_wood_board(items); //木板
+    init_metal_parts(items); //金属零件
     //精制调味料
     init_refined_seasoning(items);
     //丹药精华
@@ -321,10 +321,10 @@ function init_rock(items) {
     //精金，灼炎石，地龙须碎，寒冰玉，枯荣石，繁花石
 }
 
-//木制零件
-function init_wood_parts(items) {
+//木板
+function init_wood_board(items) {
     let id;
-    let secon_type = 'wood_parts'; //材料大类中的木制零件小类
+    let secon_type = 'wood_board'; //材料大类中的木制零件小类
 
     id = 'normal_board'; //普通木板
     add_Material_object(items, id);
@@ -343,15 +343,20 @@ function init_wood_parts(items) {
     items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 18); //物品价值
 }
-//铁质零件
-function init_iron_parts(items) {
+//金属零件
+function init_metal_parts(items) {
     let id;
-    let secon_type = 'iron_parts'; //材料大类中的铁质零件小类
+    let secon_type = 'metal_parts'; //材料大类中的金属零件小类
 
     id = 'iron_waste'; //铁质废品
     add_Material_object(items, id);
     items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
+
+    id = 'iron_parts'; //铁质零件
+    add_Material_object(items, id);
+    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 10); //物品价值
 
     id = 'iron_ingot'; //铁锭
     add_Material_object(items, id);

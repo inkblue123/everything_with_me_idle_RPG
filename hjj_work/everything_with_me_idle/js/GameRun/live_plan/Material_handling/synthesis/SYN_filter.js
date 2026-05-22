@@ -161,6 +161,11 @@ function get_SYN_FL_show_value(SYN_FL_N_type, SYN_FL_P_type, SYN_FL_C) {
 
     let P_SYN_formulas = player.get_player_skill_formulas('SYN'); //玩家的合成制造配方
     for (let formula_id in P_SYN_formulas) {
+        //排除工作台升级配方
+        if (formulas[formula_id].skill_min.includes('SYN_EN')) {
+            continue;
+        }
+
         if (SYN_FL_N_type == 'SYN_FL_N_T_A') {
             //要展示所有配方的需求物品
             for (let formula_material of formulas[formula_id].material) {

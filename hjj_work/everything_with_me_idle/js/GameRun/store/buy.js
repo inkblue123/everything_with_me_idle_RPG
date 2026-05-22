@@ -348,6 +348,7 @@ export class Buy_Manage {
     updata_buy_value_div() {
         let normalbuy_value_div = document.getElementById('normalbuy_value_div');
         normalbuy_value_div.replaceChildren(); //清空现有待购买物品界面
+
         for (let item_key in this.player_buy_goods) {
             let buy_good_obj = this.player_buy_goods[item_key];
             let id = buy_good_obj.id;
@@ -385,6 +386,8 @@ export class Buy_Manage {
             this.updata_buy_value_div();
             //更新交易结果界面
             store_manage.updata_trade_result_div();
+            //刷新商店商品列表界面信息
+            store_manage.updata_store_PL_value_div();
 
             //关闭提示窗
             if (all_flag) {

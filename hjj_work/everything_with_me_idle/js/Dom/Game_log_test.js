@@ -339,20 +339,20 @@ function finish_now_challenge() {
 }
 //逐渐解锁生活技能
 function unlock_live_plan_skill() {
-    if (!global.get_flag('GS_unlock_collect')) {
-        global.set_flag('GS_unlock_collect', true);
-    } else if (!global.get_flag('GS_unlock_fishing')) {
-        global.set_flag('GS_unlock_fishing', true);
-    } else if (!global.get_flag('GS_unlock_mining')) {
-        global.set_flag('GS_unlock_mining', true);
-    } else if (!global.get_flag('GS_unlock_logging')) {
-        global.set_flag('GS_unlock_logging', true);
-    } else if (!global.get_flag('GS_unlock_diving')) {
-        global.set_flag('GS_unlock_diving', true);
-    } else if (!global.get_flag('GS_unlock_archaeology')) {
-        global.set_flag('GS_unlock_archaeology', true);
-    } else if (!global.get_flag('GS_unlock_exploration')) {
-        global.set_flag('GS_unlock_exploration', true);
+    if (!global.get_flag('GS_unlock_CLT')) {
+        global.set_flag('GS_unlock_CLT', true);
+    } else if (!global.get_flag('GS_unlock_FIS')) {
+        global.set_flag('GS_unlock_FIS', true);
+    } else if (!global.get_flag('GS_unlock_MIN')) {
+        global.set_flag('GS_unlock_MIN', true);
+    } else if (!global.get_flag('GS_unlock_LGI')) {
+        global.set_flag('GS_unlock_LGI', true);
+    } else if (!global.get_flag('GS_unlock_DIV')) {
+        global.set_flag('GS_unlock_DIV', true);
+    } else if (!global.get_flag('GS_unlock_ACL')) {
+        global.set_flag('GS_unlock_ACL', true);
+    } else if (!global.get_flag('GS_unlock_ELT')) {
+        global.set_flag('GS_unlock_ELT', true);
     }
     //移动到当前位置，触发刷新界面的逻辑
     let place_manage = global.get_place_manage();

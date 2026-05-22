@@ -1,6 +1,7 @@
 import { is_Empty_Object } from '../../Function/Function.js';
 import { texts } from '../Text/Text.js';
 import { items } from '../Item/Item.js';
+import { enums } from '../Enum/Enum.js';
 //配方数据库
 export class Formula {
     constructor(id) {
@@ -16,7 +17,7 @@ export class Formula {
     }
 
     //设置配方基本参数
-    init_formula_data(initial_flag, skill, skill_min) {
+    init_formula_data(initial_flag, skill, ...skill_min) {
         this.initial_flag = initial_flag;
         this.skill = skill;
         this.skill_min = skill_min;
@@ -60,19 +61,25 @@ export class Formula {
     //设置这个配方的产出
     set_formula_product(product_id, product_num, ex_data) {
         this.product.id = product_id;
-        this.product.num = product_num;
-        //设置物品的额外属性
-        if (items[product_id].main_type == 'equipment') {
-            if (is_Empty_Object(ex_data)) {
-                console.log('%s配方的产物没有定义额外属性', this.id);
-                return;
+        if (check_work_bench_id(product_id)) {
+            //产出是工作环境
+            this.product.next_level = product_num;
+        } else if (!is_Empty_Object(items[product_id])) {
+            //产出是某种物品
+            this.product.num = product_num;
+            //设置物品的额外属性
+            if (items[product_id].main_type == 'equipment') {
+                if (is_Empty_Object(ex_data)) {
+                    console.log('%s配方的产物没有定义额外属性', this.id);
+                    return;
+                }
+                //物品是装备，产物信息还应该有：稀有度
+                this.product.equip_rarity = ex_data;
+            } else if (items[product_id].main_type == 'material') {
+                //物品是材料，没有独特属性
+            } else if (items[product_id].main_type == 'consumable') {
+                //物品是消耗品，产物信息还应该有：暂无
             }
-            //物品是装备，产物信息还应该有：稀有度
-            this.product.equip_rarity = ex_data;
-        } else if (items[product_id].main_type == 'material') {
-            //物品是材料，没有独特属性
-        } else if (items[product_id].main_type == 'consumable') {
-            //物品是消耗品，产物信息还应该有：暂无
         }
     }
 }
@@ -82,6 +89,24 @@ function add_Formula_object(formulas, newid) {
     } else {
         console.log('创建formulas[%s]时已有同名对象，需要确认是否会清空原有内容', newid);
     }
+}
+function check_work_bench_id(id) {
+    if (enums['all_SYN_work_bench'].includes(id)) {
+        return true;
+    } else if (enums['all_COK_work_bench'].includes(id)) {
+        return true;
+    } else if (enums['all_FRG_work_bench'].includes(id)) {
+        return true;
+    } else if (enums['all_EXA_work_bench'].includes(id)) {
+        return true;
+    } else if (enums['all_HBB_work_bench'].includes(id)) {
+        return true;
+    } else if (enums['all_EGV_work_bench'].includes(id)) {
+        return true;
+    } else if (enums['all_ACM_work_bench'].includes(id)) {
+        return true;
+    }
+    return false;
 }
 
 export { add_Formula_object };

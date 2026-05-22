@@ -308,12 +308,12 @@ function material_type(texts) {
     id = 'rock';
     add_text_object(texts, id);
     texts[id].type_name = '岩石';
-    id = 'wood_parts';
+    id = 'wood_board';
     add_text_object(texts, id);
-    texts[id].type_name = '木制零件';
-    id = 'iron_parts';
+    texts[id].type_name = '木板';
+    id = 'metal_parts';
     add_text_object(texts, id);
-    texts[id].type_name = '铁质零件';
+    texts[id].type_name = '金属零件';
     id = 'refined_seasoning';
     add_text_object(texts, id);
     texts[id].type_name = '精制调味料';

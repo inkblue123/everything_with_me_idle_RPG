@@ -25,7 +25,11 @@
 }
 
 /* 脑海-流水账内容的div */
+#RA_value_scroll_box {
+    width: 100%;
+}
 #RA_value_div {
+    width: 100%;
     background-color: #ffffff;
 }
 .RA_log_div {

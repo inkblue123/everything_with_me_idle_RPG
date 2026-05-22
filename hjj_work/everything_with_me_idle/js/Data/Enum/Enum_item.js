@@ -109,8 +109,8 @@ function init_item_type(enums) {
         bone: 242, //骨头
         raw_meat: 243, //生肉
         rock: 250, //岩石
-        wood_parts: 260, //木制零件
-        iron_parts: 261, //铁质零件
+        wood_board: 260, //木板
+        metal_parts: 261, //金属零件
         refined_seasoning: 270, //精制调味料
         elixir_essence: 271, //丹药精华
     };

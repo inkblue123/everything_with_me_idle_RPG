@@ -147,6 +147,21 @@ export class Mini_event {
                 //添加存档成功的日志
                 let global_flag_manage = global.get_global_flag_manage();
                 global_flag_manage.set_game_log('save_game', 'manual');
+            } else if (thing_type == 'get_formula') {
+                //解锁配方
+                let P_formula = player.get_player_formulas_manage();
+                for (let formula_id of thing_obj[thing_type]) {
+                    P_formula.Player_get_formula(formula_id, 'know');
+                }
+            } else if (thing_type == 'get_work_bench') {
+                //获得工作环境等级
+                let live_skill_manage = global.get_live_plan_manage();
+                for (let obj of thing_obj[thing_type]) {
+                    let place_id = obj.place_id; //要修改的地点
+                    let work_bench_id = obj.work_bench_id; //要修改的工作环境id
+                    let level = obj.level; //要修改到的等级
+                    live_skill_manage.set_place_work_bench(place_id, work_bench_id, level);
+                }
             } else {
                 console.log('未知的迷你事件中要做的事：%s，没有开发对应的处理逻辑', thing_type);
             }

@@ -20,7 +20,7 @@ function init_item_tip(tip_type, item_obj) {
     } else if (items[item_obj.id].main_type == 'material') {
         show_material(item_obj);
     } else if (items[item_obj.id].main_type == 'consumable') {
-        show_consumable(item_obj);
+        show_consumable(tip_type, item_obj);
     }
     //追加展示物品价值
     show_item_price(tip_type, item_obj);
@@ -247,7 +247,7 @@ function get_table_attr_value_ch(attr_id, attr_data, item_obj) {
 }
 
 //针对消耗品，追加展示其他属性
-function show_consumable(item_obj) {
+function show_consumable(tip_type, item_obj) {
     let id = item_obj.id;
     let use_type = items[id].use_type;
     //消耗品的类型详情展示
@@ -308,7 +308,7 @@ function show_consumable_use_data(item_obj) {
     let Tooltip = document.getElementById('tooltip');
     if (use_type == 'sustain_use' || use_type == 'condition_sustain_use') {
         let use_ratio_div = addElement(Tooltip, 'div', null, 'lable_up');
-        let use_ratio_ch = '当前使用进度' + item_obj.use_ratio + '%';
+        let use_ratio_ch = '该物品当前使用进度' + item_obj.use_ratio + '%';
         use_ratio_div.innerHTML = use_ratio_ch;
 
         let use_attr_div = addElement(Tooltip, 'div', null, 'page_columns_11');
@@ -317,25 +317,36 @@ function show_consumable_use_data(item_obj) {
             if (attr_obj.attr_type == 'get_formula') {
                 let P_formula = player.get_player_formulas_manage();
                 let study_status = P_formula.get_formula_study_status(attr_obj.attr_id);
+                let show_flag;
 
                 if (study_status == 'know') {
                     //已经获得的配方，可以展示
-                    let attr_ch = attr_obj.use_ratio + '%：已学会';
-                    let item_name = formulas[attr_obj.attr_id].product.id;
-                    attr_ch = attr_ch + items[item_name].name + '的制作配方';
-                    TLV_div.innerHTML = attr_ch;
+                    show_flag = true;
                 } else {
                     if (attr_obj.use_ratio < item_obj.use_ratio) {
                         //已经获得的效果，可以展示
-                        let attr_ch = attr_obj.use_ratio + '%：已学会';
-                        let item_name = formulas[attr_obj.attr_id].product.id;
-                        attr_ch = attr_ch + items[item_name].name + '的制作配方';
-                        TLV_div.innerHTML = attr_ch;
+                        show_flag = true;
                     } else {
-                        let attr_ch = attr_obj.use_ratio + '%：？？？';
-                        TLV_div.innerHTML = attr_ch;
-                        break;
+                        show_flag = false;
                     }
+                }
+
+                if (show_flag) {
+                    let attr_ch = attr_obj.use_ratio + '%：已学会';
+                    let product_id = formulas[attr_obj.attr_id].product.id;
+                    if (!is_Empty_Object(enums['all_work_bench'][product_id])) {
+                        //产出是工作环境
+                        let level = formulas[attr_obj.attr_id].product.next_level;
+                        attr_ch = attr_ch + level + '级' + texts[product_id].work_bench_name + '的配方';
+                    } else if (!is_Empty_Object(items[product_id])) {
+                        //产出是某种物品
+                        attr_ch = attr_ch + items[product_id].name + '的制作配方';
+                    }
+                    TLV_div.innerHTML = attr_ch;
+                } else {
+                    let attr_ch = attr_obj.use_ratio + '%：？？？';
+                    TLV_div.innerHTML = attr_ch;
+                    break;
                 }
             }
         }

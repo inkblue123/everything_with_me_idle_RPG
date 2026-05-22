@@ -241,6 +241,21 @@ export class Mini_event extends Game_Event {
         } else if (thing_type == 'save_game') {
             //保存游戏
             thing_obj[thing_type] = true;
+        } else if (thing_type == 'get_formula') {
+            //解锁配方
+            for (let i = 0; i < thing_value.length; i++) {
+                let formula_id = thing_value[i];
+                thing_obj[thing_type].push(formula_id);
+            }
+        } else if (thing_type == 'get_work_bench') {
+            //获得工作环境等级
+            for (let i = 0; i < thing_value.length; i += 3) {
+                let obj = new Object();
+                obj.place_id = thing_value[i]; //要修改的地点
+                obj.work_bench_id = thing_value[i + 1]; //要修改的工作环境id
+                obj.level = thing_value[i + 2]; //要修改到的等级
+                thing_obj[thing_type].push(obj);
+            }
         } else {
             console.log('未知的迷你事件中要做的事：%s，没有开发对应的处理逻辑', thing_type);
         }

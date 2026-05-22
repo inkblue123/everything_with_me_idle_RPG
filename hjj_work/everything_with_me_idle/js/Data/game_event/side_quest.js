@@ -10,7 +10,7 @@ function init_side_quest(game_events) {
     game_events[id].set_finish_condition('EE_VM_woodshop_study_fishing', true); //向木工坊老板询问如何钓鱼
     // game_events[id].set_finish_condition('PKL_EnemyId_Training_Dummy', 3); //击杀3个训练草人
     //完成奖励
-    game_events[id].set_finish_reward('game_flag', 'GS_unlock_fishing', true);
+    game_events[id].set_finish_reward('game_flag', 'GS_unlock_FIS', true);
     game_events[id].set_finish_reward('game_flag', 'study_fishing', true);
 
     id = 'study_mining'; //学会挖矿
@@ -20,7 +20,7 @@ function init_side_quest(game_events) {
     // game_events[id].set_finish_condition('CCCC', true);//通过铁匠铺老板的力量测试
     game_events[id].set_finish_condition('PKL_EnemyId_Training_Dummy', 10); //击杀3个训练草人
     //完成奖励
-    game_events[id].set_finish_reward('game_flag', 'GS_unlock_mining', true);
+    game_events[id].set_finish_reward('game_flag', 'GS_unlock_MIN', true);
     game_events[id].set_finish_reward('game_flag', 'study_mining', true);
 }
 

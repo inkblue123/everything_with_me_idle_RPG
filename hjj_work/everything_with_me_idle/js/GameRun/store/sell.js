@@ -237,6 +237,7 @@ export class Sell_Manage {
             //物品变化，更新相关界面
             this.updata_sell_value_div();
             store_manage.updata_trade_result_div();
+            // store_manage.updata_trade_result_div();
             let P_backpack = player.get_player_backpack();
             P_backpack.updata_BP_value();
 

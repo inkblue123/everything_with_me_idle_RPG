@@ -1,4 +1,5 @@
 import { crtElement, addElement, addElement_radio } from '../../../Function/Dom_function.js';
+import { change_SYN_EN_div } from '../../../GameRun/live_plan/Material_handling/synthesis/SYN_environment.js';
 import { global } from '../../../GameRun/global_manage.js';
 
 var last_SYN_switch = 'SYN_MK';
@@ -323,7 +324,74 @@ function make_SYN_FM_value_div(SYN_FM_value_div) {
 //合成制造第四个子界面，配方研究界面
 function make_SYN_RS_value_div(SYN_RS_value_div) {}
 //合成制造第五个子界面，工作环境界面
-function make_SYN_EN_value_div(SYN_EN_value_div) {}
+function make_SYN_EN_value_div(SYN_EN_value_div) {
+    //顶部说明
+    let SYN_EN_title_div = addElement(SYN_EN_value_div, 'div', 'SYN_EN_title_div', '', '');
+    SYN_EN_title_div.innerHTML = '当前地点用于 合成制造 技能的工作环境';
+    let SYN_EN_detail_div = addElement(SYN_EN_value_div, 'div', 'SYN_EN_detail_div', '', '');
+
+    //左侧的各种工作环境选择按钮
+    let SYN_EN_left_div = addElement(SYN_EN_detail_div, 'div', 'SYN_EN_left_div', '', '');
+    // for (let i = 0; i < 3; i++) {
+    var SYN_EN_add_button = addElement(SYN_EN_left_div, 'div', 'SYN_EN_add_button', 'radio_div switch_radio_div_1');
+    addElement_radio(SYN_EN_add_button, 'SYN_EN_ADD_switch_button', 'SYN_EN_switch', 'SYN_EN_ADD', '新增工作环境');
+    SYN_EN_add_button.children[0].checked = true; //初始激活该按钮
+    // }
+
+    //右侧详情
+    let SYN_EN_right_div = addElement(SYN_EN_detail_div, 'div', 'SYN_EN_right_div', '', '');
+
+    //详情上半部分
+    let SYN_EN_Rup_div = addElement(SYN_EN_right_div, 'div', 'SYN_EN_Rup_div', '', '');
+    //左边当前工作环境
+    let SYN_EN_Rup_now_div = addElement(SYN_EN_Rup_div, 'div', 'SYN_EN_Rup_now_div', 'SYN_EN_Rup_son_div', '');
+    let SYN_EN_Rup_now_title = addElement(SYN_EN_Rup_now_div, 'div', 'SYN_EN_Rup_now_title', 'SYN_EN_Rup_title', '');
+    SYN_EN_Rup_now_title.innerHTML = '当前';
+    let SYN_EN_Rup_now_name = addElement(SYN_EN_Rup_now_div, 'div', 'SYN_EN_Rup_now_name', 'SYN_EN_Rup_name', '');
+    SYN_EN_Rup_now_name.innerHTML = '无';
+    let SYN_EN_Rup_now_desc = addElement(SYN_EN_Rup_now_div, 'div', 'SYN_EN_Rup_now_desc', 'SYN_EN_Rup_desc', '');
+    SYN_EN_Rup_now_desc.innerHTML = '没有工作环境';
+    //右边下一级工作环境
+    let SYN_EN_Rup_next_div = addElement(SYN_EN_Rup_div, 'div', 'SYN_EN_Rup_next_div', 'SYN_EN_Rup_son_div', '');
+    let SYN_EN_Rup_next_title = addElement(SYN_EN_Rup_next_div, 'div', 'SYN_EN_Rup_next_title', 'SYN_EN_Rup_title', '');
+    SYN_EN_Rup_next_title.innerHTML = '下一级';
+    let SYN_EN_Rup_next_name = addElement(SYN_EN_Rup_next_div, 'div', 'SYN_EN_Rup_next_name', 'SYN_EN_Rup_name', '');
+    SYN_EN_Rup_next_name.innerHTML = '无';
+    let SYN_EN_Rup_next_desc = addElement(SYN_EN_Rup_next_div, 'div', 'SYN_EN_Rup_next_desc', 'SYN_EN_Rup_desc', '');
+    SYN_EN_Rup_next_desc.innerHTML = '选择要搭建的<br>   工作环境';
+    //中间的箭头
+    let SYN_EN_Rup_arrow_div = addElement(SYN_EN_Rup_div, 'div', 'SYN_EN_Rup_arrow_div', '', '');
+    SYN_EN_Rup_arrow_div.innerHTML = '➤';
+
+    //详情中部
+    let SYN_EN_Rin_div = addElement(SYN_EN_right_div, 'div', 'SYN_EN_Rin_div', '', '');
+    let SYN_EN_Rin_title = addElement(SYN_EN_Rin_div, 'div', 'SYN_EN_Rin_title', '', '');
+    SYN_EN_Rin_title.innerHTML = '材料需求';
+
+    let SYN_EN_Rin_div_scroll_box = addElement(SYN_EN_Rin_div, 'div', 'SYN_EN_Rin_div_scroll_box', 'overflow_y_div', '');
+    var SYN_EN_Rin_value_div = addElement(SYN_EN_Rin_div_scroll_box, 'div', 'SYN_EN_Rin_value_div', 'in_overflow_div');
+    for (let i = 0; i < 20; i++) {
+        var SYN_EN_value = addElement(SYN_EN_Rin_value_div, 'div', null, 'SYN_EN_value');
+        SYN_EN_value.innerHTML = '材料A（1/10）' + i;
+    }
+
+    //详情下部
+    let SYN_EN_Rdown_div = addElement(SYN_EN_right_div, 'div', 'SYN_EN_Rdown_div', '', '');
+    let SYN_EN_rechoice_button = addElement(SYN_EN_Rdown_div, 'button', 'SYN_EN_rechoice_button', 'LP_button', '');
+    SYN_EN_rechoice_button.innerHTML = '重选';
+    let SYN_EN_set_button = addElement(SYN_EN_Rdown_div, 'button', 'SYN_EN_set_button', 'LP_button', '');
+    SYN_EN_set_button.innerHTML = '制造';
+
+    //选择将要新增的工作环境
+    let SYN_EN_add_choice_div = addElement(SYN_EN_right_div, 'div', 'SYN_EN_add_choice_div', '', 'none');
+    let SYN_EN_add_choice_title = addElement(SYN_EN_add_choice_div, 'div', 'SYN_EN_add_choice_title', '', '');
+    SYN_EN_add_choice_title.innerHTML = '选择要建造的工作环境';
+    let SYN_EN_add_choice_value = addElement(SYN_EN_add_choice_div, 'div', 'SYN_EN_add_choice_value', '', '');
+    for (let i = 0; i < 2; i++) {
+        var SYN_EN_add_choice_button = addElement(SYN_EN_add_choice_value, 'button', 'SYN_EN_add_button', 'LP_button');
+        SYN_EN_add_choice_button.innerHTML = '工作台' + i;
+    }
+}
 
 //为合成制造界面中的按钮添加交互逻辑
 function set_synthesis_button(Live_plan) {
@@ -398,7 +466,7 @@ function set_SYN_make_button(SYN_value_div) {
     let SYN_MK_FD_P_make_button = SYN_value_div.querySelector('#SYN_MK_FD_P_make_button');
     SYN_MK_FD_P_make_button.addEventListener('click', function () {
         let live_plan_manage = global.get_live_plan_manage();
-        live_plan_manage.updata_live_plan_game_data('synthesis');
+        live_plan_manage.updata_live_plan_data('synthesis');
     });
 }
 //为合成制造第二个子界面，配方筛选的筛选界面中的按钮添加交互逻辑
@@ -488,13 +556,24 @@ function set_SYN_filter_make_button(SYN_value_div) {
     let SYN_FM_FD_P_make_button = SYN_value_div.querySelector('#SYN_FM_FD_P_make_button');
     SYN_FM_FD_P_make_button.addEventListener('click', function () {
         let live_plan_manage = global.get_live_plan_manage();
-        live_plan_manage.updata_live_plan_game_data('synthesis');
+        live_plan_manage.updata_live_plan_data('synthesis');
     });
 }
 //为合成制造第四个子界面，配方研究中的按钮添加交互逻辑
 function set_SYN_research_button(SYN_value_div) {}
 //为合成制造第五个子界面，工作环境中的按钮添加交互逻辑
-function set_SYN_environment_button(SYN_value_div) {}
+function set_SYN_environment_button(SYN_value_div) {
+    //重新回到选择搭建工作环境界面按钮
+    let SYN_EN_rechoice_button = SYN_value_div.querySelector('#SYN_EN_rechoice_button');
+    SYN_EN_rechoice_button.addEventListener('click', function () {
+        change_SYN_EN_div('choice_work_bench');
+    });
+    let SYN_EN_set_button = SYN_value_div.querySelector('#SYN_EN_set_button');
+    SYN_EN_set_button.addEventListener('click', function () {
+        let live_plan_manage = global.get_live_plan_manage();
+        live_plan_manage.updata_live_plan_data('synthesis');
+    });
+}
 
 //获取原料处理界面中的批量选择按钮下一个要切换到的数量
 function get_SYN_next_quantity_num(now_quantity_num) {

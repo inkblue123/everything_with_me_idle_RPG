@@ -1,5 +1,6 @@
 import { add_show_Tooltip, addElement, addElement_radio, get_radio_switch_click_value } from '../../Function/Dom_function.js';
 import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
+import { show_dropdown_table } from '../../Function/show_func.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
 import { enums } from '../../Data/Enum/Enum.js';
@@ -26,10 +27,18 @@ export class Store_manage {
     //对商店管理类存档
     save_Store_manage() {
         let store_save = new Object();
+        store_save.now_place = this.now_place;
         //出售类没有需要保存的数据
         // store_save.sell_save = this.sell_manage.save_sell_manage();
         store_save.buy_save = this.buy_manage.save_buy_manage();
         store_save.buyback_save = this.buyback_manage.save_buyback_manage();
+        //保存当前是否展示了商店界面
+        const Store_div = document.getElementById('Store');
+        if (Store_div.style.display == '') {
+            store_save.show_flag = true;
+        } else {
+            store_save.show_flag = false;
+        }
         return store_save;
     }
     //加载商店存档
@@ -45,6 +54,11 @@ export class Store_manage {
         if (!is_Empty_Object(store_save.buyback_save)) {
             this.buyback_manage.load_buyback_manage(store_save.buyback_save);
         }
+        //如果存档时游戏界面展示了商店界面，读档时也应该刷新商店界面内容
+        if (store_save.show_flag) {
+            this.set_new_place(store_save.now_place);
+            // this.updata_store_PL_value_div();
+        }
     }
     //地点更新，初始化商店管理类
     set_new_place(next_place) {
@@ -57,6 +71,8 @@ export class Store_manage {
         this.buy_manage.init(this.money_type, this.now_place);
         this.buyback_manage.init(this.money_type, this.now_place);
 
+        //将商店界面的一些ui调整到初始状态
+        init_store_div();
         //刷新交易结果界面
         this.updata_trade_result_div();
         //刷新商店商品列表界面信息
@@ -318,6 +334,30 @@ export class Store_manage {
         this.updata_trade_result_div();
     }
 }
+//将商店界面的一些ui调整到初始状态
+function init_store_div() {
+    //商店界面初始化
+    //激活"全部"分类按钮
+    let PL_ALL_radio_div = document.getElementById('PL_ALL_radio_div');
+    PL_ALL_radio_div.children[0].checked = true;
+    show_dropdown_table('PL_switch_div');
+    //额外关闭所有1级分类按钮
+    let radios = document.querySelectorAll('input[name="PL_1_switch"]');
+    for (const radio of radios) {
+        radio.checked = false;
+    }
+
+    //商品回购界面初始化
+    //激活"全部"分类按钮
+    let IBB_ALL_radio_div = document.getElementById('IBB_ALL_radio_div');
+    IBB_ALL_radio_div.children[0].checked = true; //初始激活该按钮
+    show_dropdown_table('IBB_switch_div');
+    //额外关闭所有1级分类按钮
+    radios = document.querySelectorAll('input[name="IBB_1_switch"]');
+    for (const radio of radios) {
+        radio.checked = false;
+    }
+}
 
 //清空中上商店界面的所有元素
 function delete_store_PL_div() {
@@ -379,6 +419,7 @@ function reset_PL_switch_button(now_PL_switch_type, all_PL_secon_type) {
         let PL_ALL_radio_div = document.getElementById('PL_ALL_radio_div');
         PL_ALL_radio_div.children[0].checked = true;
         checked_flag = true;
+        // add_click_updata_PL_value(radio); //给按钮绑定点击事件
     }
 
     //生成三个大类的“全部”分类按钮
@@ -519,10 +560,11 @@ function get_all_item_id_array_sort(sort_type, store_product_list) {
 // 向目标组件添加 点击之后过滤商店中的商品列表 的功能
 function add_click_updata_PL_value(target_div) {
     target_div.addEventListener('click', function () {
-        if (this.id == 'PL_all') {
-            //针对商品列表界面的“全部”按钮，额外新增关闭其他下拉框的功能
-            show_dropdown_table('PL_switch_div');
-        }
+        //“全部”按钮不会再刷新界面时清除和创建，所以在第一次创建的界面里就设置好了逻辑，这里只会是小类过滤按钮
+        // if (this.id == 'PL_all') {
+        //     //针对商品列表界面的“全部”按钮，额外新增关闭其他下拉框的功能
+        //     show_dropdown_table('PL_switch_div');
+        // }
         let store_manage = global.get_store_manage();
         store_manage.updata_store_PL_value_div();
     });

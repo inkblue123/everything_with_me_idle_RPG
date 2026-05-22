@@ -41,35 +41,35 @@ function make_option_page_test_div(option_page) {
 function give_player_item() {
     player.Player_get_item('Oak_logs', 10);
     player.Player_get_item('birch_logs', 10);
-    player.Player_get_item('fir_logs', 10);
-    player.Player_get_item('lightning_bark', 10);
-    player.Player_get_item('frost_marrow_resin', 10);
-    player.Player_get_item('viresilver_stem', 10);
-    player.Player_get_item('porcini', 10);
-    player.Player_get_item('chanterelle', 10);
-    player.Player_get_item('termite_mushroom', 10);
-    player.Player_get_item('river_mussel', 10);
-    player.Player_get_item('creek_fish', 10);
-    player.Player_get_item('animal_raw_meat', 10);
-    player.Player_get_item('red_berry', 10);
-    player.Player_get_item('yellow_berry', 10);
-    player.Player_get_item('grilled_fish', 10);
-    player.Player_get_item('termite_mushroom_soup', 10);
-    player.Player_get_item('fish_jerky', 10);
-    player.Player_get_item('wood_arrow', 10);
-    player.Player_get_item('copper_coin', 10);
-    player.Player_get_item('greedy_copper_coin', 10);
+    player.Player_get_item('iron_parts', 10);
+    // player.Player_get_item('lightning_bark', 10);
+    // player.Player_get_item('frost_marrow_resin', 10);
+    // player.Player_get_item('viresilver_stem', 10);
+    // player.Player_get_item('porcini', 10);
+    // player.Player_get_item('chanterelle', 10);
+    // player.Player_get_item('termite_mushroom', 10);
+    // player.Player_get_item('river_mussel', 10);
+    // player.Player_get_item('creek_fish', 10);
+    // player.Player_get_item('animal_raw_meat', 10);
+    // player.Player_get_item('red_berry', 10);
+    // player.Player_get_item('yellow_berry', 10);
+    // player.Player_get_item('grilled_fish', 10);
+    // player.Player_get_item('termite_mushroom_soup', 10);
+    // player.Player_get_item('fish_jerky', 10);
+    // player.Player_get_item('wood_arrow', 10);
+    // player.Player_get_item('copper_coin', 10);
+    // player.Player_get_item('greedy_copper_coin', 10);
 
-    player.Player_get_item('wood_sword', 6, 'damaged');
-    player.Player_get_item('wood_sword', 6, 'ordinary');
-    player.Player_get_item('wood_sword', 6, 'excellent');
-    player.Player_get_item('wood_sword', 6, 'rare');
-    player.Player_get_item('wood_sword', 6, 'epic');
-    player.Player_get_item('test_boomerang', 1, 'ordinary');
-    player.Player_get_item('test_boomerang', 3, 'excellent');
-    player.Player_get_item('test_boomerang', 5, 'rare');
-    player.Player_get_item('hatchet', 1, 'ordinary');
-    player.Player_get_item('mowing_sickle', 1, 'ordinary');
+    // player.Player_get_item('wood_sword', 6, 'damaged');
+    // player.Player_get_item('wood_sword', 6, 'ordinary');
+    // player.Player_get_item('wood_sword', 6, 'excellent');
+    // player.Player_get_item('wood_sword', 6, 'rare');
+    // player.Player_get_item('wood_sword', 6, 'epic');
+    // player.Player_get_item('test_boomerang', 1, 'ordinary');
+    // player.Player_get_item('test_boomerang', 3, 'excellent');
+    // player.Player_get_item('test_boomerang', 5, 'rare');
+    // player.Player_get_item('hatchet', 1, 'ordinary');
+    // player.Player_get_item('mowing_sickle', 1, 'ordinary');
 }
 
 //技能测试

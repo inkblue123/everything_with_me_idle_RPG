@@ -63,7 +63,16 @@ function add_formula(SYN_min, formula_id) {
     formula_value_l.innerHTML = material_ch;
     let formula_value_r = addElement(formula_value, 'div', null, 'formula_value_r');
     formula_value_r.innerHTML = product_ch;
-
+    //判断配方能否制作
+    let live_plan_manage = global.get_live_plan_manage();
+    let synthesis_manage = live_plan_manage.get_LP_live_skill_manage('synthesis_manage');
+    let now_quantity_num = synthesis_manage.get_now_quantity_num();
+    let make_flag = synthesis_manage.check_now_formula(formula_id, now_quantity_num);
+    if (make_flag) {
+        formula_value.style.backgroundColor = '#00ff0033'; //可以制造显示绿色
+    } else {
+        formula_value.style.backgroundColor = '#ff000033'; //不可制造显示红色
+    }
     //添加鼠标点击会显示详情的功能
     formula_value.addEventListener('click', () => {
         let live_plan_manage = global.get_live_plan_manage();
@@ -122,6 +131,8 @@ function init_SYN_formula_Details_div(SYN_min) {
 //获取合成制造技能中，指定子功能的配方筛选条件
 function get_SYN_formula_switch_type(SYN_min) {
     let SYN_formula_switch_type = new Object();
+
+    SYN_formula_switch_type.SYN_min = SYN_min;
     //是否选择了“当前可制造”筛选按钮
     let SYN_choice_no_make_div_id = SYN_min + '_choice_no_make';
     let SYN_choice_can_make_div_id = SYN_min + '_choice_can_make';
@@ -134,7 +145,6 @@ function get_SYN_formula_switch_type(SYN_min) {
     }
     //选择了产出哪种物品的配方
     let SYN_type_switch_id = SYN_min + '_type_switch';
-
     SYN_formula_switch_type.product_type = get_radio_switch_click_value(SYN_type_switch_id);
     return SYN_formula_switch_type;
 }
@@ -156,22 +166,33 @@ function delete_SYN_formula_Details_div(SYN_min) {
     formula_Details_div.style.display = 'none';
 }
 //获得指定配方的产物对象
-function get_formula_product(formula_id, make_num) {
+function get_formula_product(formula_id, make_num, product_obj) {
     let product_id = formulas[formula_id].product.id;
-    let product_num = formulas[formula_id].product.num * parseInt(make_num);
-    let item_obj;
-    if (items[product_id].main_type == 'equipment') {
-        //物品是装备，产物信息还应该有：稀有度
-        let product_equip_rarity = formulas[formula_id].product.equip_rarity;
-        item_obj = get_item_obj(product_id, product_num, product_equip_rarity);
-    } else if (items[product_id].main_type == 'material') {
-        //物品是材料，没有独特属性
-        item_obj = get_item_obj(product_id, product_num);
-    } else if (items[product_id].main_type == 'consumable') {
-        //物品是消耗品，产物信息还应该有：暂无
-        item_obj = get_item_obj(product_id, product_num);
+    let ret;
+    if (!is_Empty_Object(enums['all_work_bench'][product_id])) {
+        //产出是工作环境
+        ret = 'work_bench';
+        product_obj.id = product_id;
+        product_obj.next_level = formulas[formula_id].product.next_level;
+    } else if (!is_Empty_Object(items[product_id])) {
+        //产出是某种物品
+        ret = 'item';
+        let item_obj;
+        let product_num = formulas[formula_id].product.num * parseInt(make_num);
+        if (items[product_id].main_type == 'equipment') {
+            //物品是装备，产物信息还应该有：稀有度
+            let product_equip_rarity = formulas[formula_id].product.equip_rarity;
+            item_obj = get_item_obj(product_id, product_num, product_equip_rarity);
+        } else if (items[product_id].main_type == 'material') {
+            //物品是材料，没有独特属性
+            item_obj = get_item_obj(product_id, product_num);
+        } else if (items[product_id].main_type == 'consumable') {
+            //物品是消耗品，产物信息还应该有：暂无
+            item_obj = get_item_obj(product_id, product_num);
+        }
+        Object.assign(product_obj, item_obj);
     }
-    return item_obj;
+    return ret;
 }
 //获取指定筛选条件下应该显示的合成制造技能制造子功能配方
 function SYN_switch_type_handle(SYN_switch_type) {
@@ -183,6 +204,14 @@ function SYN_switch_type_handle(SYN_switch_type) {
         //配方是否属于合成制造
         if (formulas[formula_id].skill != 'synthesis') {
             console.log('玩家身上的%s配方不属于合成制造技能', formula_id);
+            continue;
+        }
+
+        //配方是否是当前子功能所属的配方
+        if (formulas[formula_id].skill_min.includes(SYN_switch_type.SYN_min)) {
+            //属于子功能，通过
+        } else {
+            //是其他子功能的配方，不通过
             continue;
         }
         //当前是否可制造筛选
@@ -218,6 +247,7 @@ function SYN_switch_type_handle(SYN_switch_type) {
             }
         }
 
+        //配方筛选界面的条件
         if (is_Empty_Object(SYN_switch_type.filter_type)) {
             //当前筛选条件里没有关于配方筛选界面的内容，所有配方都通过这一条
         } else {
@@ -363,6 +393,7 @@ function SYN_switch_type_handle(SYN_switch_type) {
                 }
             }
         }
+
         //记录通过筛选的配方
         formula_arr.push(formula_id);
     }

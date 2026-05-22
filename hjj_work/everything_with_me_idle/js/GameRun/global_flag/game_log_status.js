@@ -403,12 +403,25 @@ function make_get_formula_game_log(new_log_div, log_obj) {
     let formula_id = log_obj.log_value[0]; //配方id
     let study_status = log_obj.log_value[1]; //配方学习状态
     //例句：学会了在合成制造技能中制造某产物的配方
+    //学会了在 合成制造 的 n级工作台 配方
+    let ch;
     let product_id = formulas[formula_id].product.id; //产物id
-    let product_name = texts[product_id].item_name; //产物名
-    let skill_id = formulas[formula_id].skill; //配方所属技能id
-    let live_skill_name = texts[skill_id].live_skill_name; //配方所属技能id
 
-    let ch = '学会了在 ' + live_skill_name + ' 技能中制造 ' + product_name + ' 的配方';
+    if (!is_Empty_Object(enums['all_work_bench'][product_id])) {
+        //产出是工作环境
+        let product_name = texts[product_id].work_bench_name; //工作台名称
+        let skill_id = formulas[formula_id].skill; //配方所属技能id
+        let live_skill_name = texts[skill_id].live_skill_name; //配方所属技能id
+        let level = formulas[formula_id].product.next_level;
+        ch = '学会了在 ' + live_skill_name + ' 的 ' + level + '级' + product_name + ' 配方';
+    } else if (!is_Empty_Object(items[product_id])) {
+        //产出是某种物品
+        let product_name = texts[product_id].item_name; //产物名
+        let skill_id = formulas[formula_id].skill; //配方所属技能id
+        let live_skill_name = texts[skill_id].live_skill_name; //配方所属技能id
+
+        ch = '学会了在 ' + live_skill_name + ' 技能中制造 ' + product_name + ' 的配方';
+    }
     let part1 = addElement(new_log_div, 'div', null, 'RA_log_value_div');
     part1.innerHTML = ch;
 }

@@ -54,7 +54,19 @@ function work_bench_name(texts) {
 
     id = 'carpentry_bench';
     add_text_object(texts, id);
-    texts[id].work_bench_name = '木工台';
+    texts[id].work_bench_name = '工作台';
+    texts[id].work_bench_desc = new Array();
+    texts[id].work_bench_desc[0] = '0级工作台描述';
+    texts[id].work_bench_desc[1] = '1级工作台描述';
+    texts[id].work_bench_desc[2] = '2级工作台描述';
+    texts[id].work_bench_desc[3] = '3级工作台描述';
+    id = 'disassembly_tool';
+    add_text_object(texts, id);
+    texts[id].work_bench_name = '拆解工具';
+    texts[id].work_bench_desc = new Array();
+    texts[id].work_bench_desc[0] = '0级拆解工具描述';
+    texts[id].work_bench_desc[1] = '1级拆解工具描述';
+    texts[id].work_bench_desc[2] = '2级拆解工具描述';
 }
 //初始化文本数据库中没有明确分类的文本
 function init_Text_other(texts) {

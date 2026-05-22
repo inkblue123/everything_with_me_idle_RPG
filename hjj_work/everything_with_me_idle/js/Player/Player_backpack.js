@@ -224,6 +224,9 @@ export class Player_backpack {
             console.log('去除所有指定id物品之后还不够，理应在前面判0时判断出来，属于异常情况');
             return 0;
         }
+        //去掉物品完成，刷新背包界面
+        this.updata_BP_value();
+
         return num;
     }
 

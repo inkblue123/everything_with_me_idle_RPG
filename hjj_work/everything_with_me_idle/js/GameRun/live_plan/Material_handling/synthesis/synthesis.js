@@ -21,6 +21,7 @@ import {
 } from './SYN_function.js';
 import { get_SYN_FL_click_type, delete_SYN_FL_value, get_SYN_FL_show_value, set_a_SYN_FL_show_value } from './SYN_filter.js';
 import { updata_SYN_FM_title } from './SYN_filter_make.js';
+import { get_now_SYN_EN_work_bench, delete_SYN_EN, init_SYN_EN } from './SYN_environment.js';
 
 //合成制造技能管理类 Synthesis SYN
 export class Synthesis_manage {
@@ -33,6 +34,11 @@ export class Synthesis_manage {
 
         this.player_end_attr; //玩家最终属性拷贝，方便调用
         this.SYN_place_work_bench = new Object(); //所有地点的合成制造工作环境缓存
+        this.SYN_work_bench_unlock = new Object(); //合成制造技能的工作环境解锁情况
+
+        for (let work_bench of enums['all_SYN_work_bench']) {
+            this.SYN_work_bench_unlock[work_bench] = 0;
+        }
     }
     //获取合成制造技能管理对象的存档
     save_synthesis_manage() {
@@ -73,7 +79,7 @@ export class Synthesis_manage {
         //切换到合成制作子功能界面
         change_synthesis_div(SYN_min);
 
-        if (SYN_min == 'SYN_MK') {
+        if (SYN_min == 'SYN_MK' || SYN_min == 'SYN_FM') {
             //切换成未选择配方的界面
             delete_SYN_formula_Details_div(SYN_min);
         }
@@ -100,7 +106,6 @@ export class Synthesis_manage {
     //开始合成制造，更新合成制造技能的数值
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_live_plan_data() {
-        // this.now_time = global.get_game_now_time();
         //验证当前配方是否可以制作
         let make_flag = this.check_now_formula(this.now_formula, this.now_quantity_num);
         if (!make_flag) {
@@ -121,9 +126,15 @@ export class Synthesis_manage {
             }
         }
 
-        //给予玩家配方对应物品
-        let product_obj = get_formula_product(this.now_formula, this.now_quantity_num);
-        player.Player_get_item(product_obj);
+        //获得配方的产物
+        let product_obj = new Object();
+        let type = get_formula_product(this.now_formula, this.now_quantity_num, product_obj);
+        if (type == 'item') {
+            player.Player_get_item(product_obj);
+        } else if (type == 'work_bench') {
+            this.set_place_work_bench(this.now_place, product_obj.id, product_obj.next_level);
+            this.updata_live_plan_div('SYN_EN');
+        }
 
         //获取经验
     }
@@ -156,7 +167,7 @@ export class Synthesis_manage {
         } else if (SYN_min == 'SYN_RS') {
             // this.updata_SYN_RS_value();
         } else if (SYN_min == 'SYN_EN') {
-            // this.updata_SYN_EN_value();
+            this.updata_SYN_EN_value();
         }
     }
     //重置一轮合成制造的参数
@@ -182,6 +193,21 @@ export class Synthesis_manage {
     //判断当前是否处于合成制造的休息状态
     // 上层管理类会调用，必须定义，必须使用这个名称
     is_rest_status() {}
+    //设置指定地点的工作环境
+    // 上层管理类会调用，必须定义，必须使用这个名称
+    set_place_work_bench(place_id, work_bench_id, level) {
+        //新地点初始化
+        if (is_Empty_Object(this.SYN_place_work_bench[place_id])) {
+            this.init_SYN_place_work_bench(place_id);
+        }
+
+        if (!enums['all_SYN_work_bench'].includes(work_bench_id)) {
+            console.log('%s工作台不属于合成制造技能', work_bench_id);
+            return;
+        }
+
+        this.SYN_place_work_bench[place_id][work_bench_id] = level;
+    }
 
     //更新上中的生活技能界面中的合成制造技能界面的制造界面的内容
     updata_SYN_MK_value() {
@@ -239,15 +265,31 @@ export class Synthesis_manage {
             add_formula('SYN_FM', formula_id);
         }
     }
+    //更新上中的生活技能界面中的合成制造技能界面的工作环境详情的内容
+    updata_SYN_EN_value() {
+        //获取更新前选择的工作环境
+        let old_work_bench = get_now_SYN_EN_work_bench();
+        //清除工作环境详情的所有内容
+        delete_SYN_EN();
+        //填充工作环境详情界面的所有内容
+        init_SYN_EN(this.SYN_place_work_bench[this.now_place]);
+    }
     //初始化指定地点的合成制造工作环境情况
     init_SYN_place_work_bench(place_id) {
         this.SYN_place_work_bench[place_id] = new Object();
-        this.SYN_place_work_bench[place_id].carpentry_bench = 1;
+        for (let work_bench_id of enums['all_SYN_work_bench']) {
+            if (work_bench_id == 'carpentry_bench') {
+                this.SYN_place_work_bench[place_id][work_bench_id] = 1;
+            } else {
+                this.SYN_place_work_bench[place_id][work_bench_id] = 0;
+            }
+        }
     }
     //获取当前地点的工作环境
     get_now_place_work_bench() {
         return this.SYN_place_work_bench[this.now_place];
     }
+
     //保存要做的配方
     set_now_formula(formula_id) {
         this.now_formula = formula_id;
@@ -255,6 +297,9 @@ export class Synthesis_manage {
     //保存当前批量制造的数量
     set_now_quantity_num(quantity_num) {
         this.now_quantity_num = quantity_num;
+    }
+    get_now_quantity_num() {
+        return this.now_quantity_num;
     }
     //保存配方筛选界面选择的筛选内容
     set_SYN_filter(click_type) {
@@ -269,6 +314,7 @@ export class Synthesis_manage {
         };
         this.now_filter_value = get_radio_switch_click_value(switch_name[click_type]);
     }
+
     //更新合成制造技能的指定子功能中的配方详情
     updata_SYN_formula_Details_div() {
         let SYN_min = get_SYN_min_name();

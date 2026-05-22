@@ -35,6 +35,8 @@ function game_data_init() {
     Enum_item_init();
     //枚举数据库-属性部分的枚举更新
     Enum_attr_init();
+    //枚举数据库-生活技能的枚举更新
+    Enum_live_plan();
     //文本数据库-属性部分的更新
     Text_attr_init();
     //地图数据库-检查是否有遗漏的地点没有定义地图信息
@@ -159,6 +161,17 @@ function Enum_attr_init() {
     }
     //去重
     enums['need_second_attr'] = get_uniqueArr(enums['need_second_attr']);
+}
+//枚举数据库-生活技能的枚举更新
+function Enum_live_plan() {
+    //汇总所有原料处理类生活技能的工作环境
+    let MH_live_min = ['SYN', 'COK', 'FRG', 'EXA', 'HBB', 'EGV', 'ACM'];
+    for (let live_min of MH_live_min) {
+        let id = 'all_' + live_min + '_work_bench';
+        for (let work_bench of enums[id]) {
+            enums['all_work_bench'][work_bench] = live_min;
+        }
+    }
 }
 //文本数据库-属性部分的更新
 function Text_attr_init() {

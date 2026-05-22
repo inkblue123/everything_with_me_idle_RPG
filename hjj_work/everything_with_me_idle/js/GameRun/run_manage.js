@@ -75,7 +75,7 @@ function updata_game_data() {
     } else if (enums['live_plan_GS'].includes(now_GS)) {
         //当前处于生活技能状态，更新数值
         let live_plan_manage = global.get_live_plan_manage();
-        live_plan_manage.updata_live_plan_game_data(now_GS);
+        live_plan_manage.updata_live_plan_data(now_GS);
     } else if (now_GS == 'use_continuous') {
         //当前正在使用消耗品，更新相关数值
         let consumable_manage = global.get_consumable_manage();
@@ -126,8 +126,7 @@ function updata_timing_game_data() {
     }
     if (time_node.day) {
         //现实时间每24分钟，游戏内每天触发一次
-
-        save_game_timing_func(); //定时存档
+        // save_game_timing_func(); //定时存档
     }
     if (time_node.month) {
         //现实时间每12小时，游戏内每月触发一次

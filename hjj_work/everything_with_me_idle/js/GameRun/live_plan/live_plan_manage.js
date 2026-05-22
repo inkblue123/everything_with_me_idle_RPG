@@ -123,6 +123,10 @@ export class Live_plan_manage {
         this.engrave_manage.load_engrave_manage(Live_plan_save.engrave_save); //雕刻存档
         this.alchemy_manage.load_alchemy_manage(Live_plan_save.alchemy_save); //炼金术存档
 
+        //还没有解锁任何生活技能
+        if (Live_plan_save.EX_LP_name == undefined) {
+            return;
+        }
         // 将生活技能规划界面切换到存档中保存的技能上
         let EX_LP_button_name = Live_plan_save.EX_LP_name + '_button';
         change_Live_plan_div(Live_plan_save.LP_type); //切换到大类
@@ -144,7 +148,7 @@ export class Live_plan_manage {
         let radio_div = document.getElementById(EX_LP_button_name);
         radio_div.checked = true;
     }
-    //获取探索采集类生活技能的管理对象
+    //获取生活技能的管理对象
     get_LP_live_skill_manage(manage_name) {
         if (!this.EC_live_plan_class_name.includes(manage_name) && !this.MH_live_plan_class_name.includes(manage_name)) {
             console.log('未知管理对象，无法获取');
@@ -155,7 +159,7 @@ export class Live_plan_manage {
         return this[manage_name];
     }
     //更新当前正在进行的生活技能的数值
-    updata_live_plan_game_data(now_GS) {
+    updata_live_plan_data(now_GS) {
         if (!enums['live_plan_GS'].includes(now_GS)) {
             console.log('当前进行的游戏状态%s不属于生活技能，无法处理', now_GS);
             return;
@@ -189,6 +193,7 @@ export class Live_plan_manage {
         }
         if (!is_Empty_Object(this[manage_name])) {
             this[manage_name].init_live_plan_game_div();
+            change_Explore_collection_div(button_id);
         }
     }
     //玩家属性更新，更新到生活技能类里
@@ -241,8 +246,8 @@ export class Live_plan_manage {
             let MH_skill = get_radio_switch_click_value('MH_switch');
             MH_skill = MH_skill.substring(0, 3);
             let i = this.MH_live_plan_min_name[MH_skill];
-            if (!is_Empty_Object(this[this.MH_live_plan_min_name[i]])) {
-                this[this.MH_live_plan_min_name[i]].updata_super_game_div(next_place);
+            if (!is_Empty_Object(this[this.MH_live_plan_class_name[i]])) {
+                this[this.MH_live_plan_class_name[i]].updata_super_game_div(next_place);
             }
         }
     }
@@ -319,6 +324,17 @@ export class Live_plan_manage {
         }
         let manage_name = now_GS + '_manage';
         return this[manage_name].is_rest_status();
+    }
+    //设置指定地点的指定工作环境等级
+    set_place_work_bench(place_id, work_bench_id, level) {
+        if (is_Empty_Object(enums['all_work_bench'][work_bench_id])) {
+            console.log('%s不是工作环境');
+            return;
+        }
+        let min_name = enums['all_work_bench'][work_bench_id];
+        let i = this.MH_live_plan_min_name[min_name];
+        let manage_name = this.MH_live_plan_class_name[i];
+        this[manage_name].set_place_work_bench(place_id, work_bench_id, level);
     }
 }
 

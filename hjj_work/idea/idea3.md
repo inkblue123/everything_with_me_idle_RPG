@@ -505,7 +505,7 @@ ornament//饰品
 'raw_meat';'生肉';
 'rock';'岩石';
 'ordinary_coin';'凡间钱币';
-'wood_parts';'木制零件';
+'wood_board';'木板';
 'iron_parts';'铁质零件';
 
 ## 任务剧情分支

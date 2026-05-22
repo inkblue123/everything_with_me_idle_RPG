@@ -23,20 +23,28 @@ function init_game_status(enums) {
         GS_game_statu: 'NULL', //当前游戏状态，比如战斗中、伐木中、钓鱼中等等
         GS_challenge_flag: false, //是否处于挑战中
         GS_rest_flag: false, //是否处于休息状态
-        GS_unlock_logging: false, //伐木技能是否解锁
-        GS_unlock_fishing: false, //钓鱼技能是否解锁
-        GS_unlock_mining: false, //挖矿技能是否解锁
-        GS_unlock_collect: false, //采集技能是否解锁
-        GS_unlock_diving: false, //潜水技能是否解锁
-        GS_unlock_archaeology: false, //考古技能是否解锁
-        GS_unlock_exploration: false, //探索技能是否解锁
-        GS_unlock_synthesis: true, //合成制造技能是否解锁
-        GS_unlock_cooking: false, //烹饪技能是否解锁
-        GS_unlock_forging: false, //锻造技能是否解锁
-        GS_unlock_elixir_alchemy: false, //炼丹技能是否解锁
-        GS_unlock_herbal_bath: false, //药浴技能是否解锁
-        GS_unlock_engrave: false, //雕刻技能是否解锁
-        GS_unlock_alchemy: false, //炼金术技能是否解锁
+        GS_unlock_LGI: false, //伐木技能是否解锁
+        GS_unlock_FIS: false, //钓鱼技能是否解锁
+        GS_unlock_MIN: false, //挖矿技能是否解锁
+        GS_unlock_CLT: false, //采集技能是否解锁
+        GS_unlock_DIV: false, //潜水技能是否解锁
+        GS_unlock_ACL: false, //考古技能是否解锁
+        GS_unlock_ELT: false, //探索技能是否解锁
+        GS_unlock_SYN: false, //合成制造技能是否解锁
+        GS_unlock_SYN_MK: true, //合成制造技能的制造子功能是否解锁
+        GS_unlock_SYN_FL: false, //合成制造技能的配方筛选子功能是否解锁
+        GS_unlock_SYN_RS: false, //合成制造技能的配方研究子功能是否解锁
+        GS_unlock_SYN_EN: true, //合成制造技能的工作环境详情子功能是否解锁
+        GS_unlock_COK: false, //烹饪技能是否解锁
+        GS_unlock_COK_DS: false, //烹饪技能的烹饪菜品子功能是否解锁
+        GS_unlock_COK_MD: false, //烹饪技能的制作干制品子功能是否解锁
+        GS_unlock_COK_MS: false, //烹饪技能的制作调味品子功能是否解锁
+        GS_unlock_COK_EN: false, //烹饪技能的工作环境详情子功能是否解锁
+        GS_unlock_FRG: false, //锻造技能是否解锁
+        GS_unlock_EXA: false, //炼丹技能是否解锁
+        GS_unlock_HBB: false, //药浴技能是否解锁
+        GS_unlock_EGV: false, //雕刻技能是否解锁
+        GS_unlock_ACM: false, //炼金术技能是否解锁
     };
     //生活技能枚举
     //这里枚举的技能是会写入GS_game_statu游戏状态的，运行时遇到对应的状态就处理相应的逻辑

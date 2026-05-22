@@ -32,10 +32,10 @@ export class Place_manage {
             //进入新地点会获得一些效果，在进入时获得
             goto_new_place_get(next_place);
         }
-        //更新游戏状态
-        change_game_data(next_place);
         //移动时，如果涉及整体游戏界面布局的变化，则更新游戏界面
         change_game_div(next_place);
+        //更新游戏状态
+        change_game_data(next_place);
 
         //更新新旧地点参数
         this.updata_new_place_data();
@@ -393,77 +393,52 @@ function show_place_can_live_plan_div(next_place) {
 }
 //根据生活技能的解锁情况，隐藏不可见的生活技能界面和按钮
 function show_unlock_live_plan_div() {
-    //探索采集类生活技能
-    let live_plan_name = ['logging', 'fishing', 'mining', 'collect', 'diving', 'archaeology', 'exploration'];
-    let live_plan_div_id = ['LGI', 'FIS', 'MIN', 'CLT', 'DIV', 'ACL', 'ELT'];
+    let EC_live_plan_div_id = ['LGI', 'FIS', 'MIN', 'CLT', 'DIV', 'ACL', 'ELT'];
+    let MH_live_plan_div_id = ['SYN', 'COK', 'FRG', 'EXA', 'HBB', 'EGV', 'ACM'];
+    const main_live_plan_div_id = [...EC_live_plan_div_id, ...MH_live_plan_div_id];
+    let son_live_plan_div_id = ['SYN_MK', 'SYN_FL', 'SYN_RS', 'SYN_EN', 'COK_DS', 'COK_MD', 'COK_MS', 'COK_EN'];
     let global_flag_manage = global.get_global_flag_manage();
     let unlock_skill_num = 0; //解锁技能数
+    let unlock_EC_skill_num = 0; //解锁的探索采集技能数
+    let unlock_MH_skill_num = 0; //解锁的原料处理技能数
     let skill_unlock_statu = new Object();
-    let only_unlock_skill_order = -1; //唯一解锁的技能
+    let only_unlock_skill = -1; //唯一解锁的技能
+    const all_id = [...main_live_plan_div_id, ...son_live_plan_div_id];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < all_id.length; i++) {
         //单选按钮
-        let radio_id = live_plan_div_id[i] + '_radio_div';
+        let radio_id = all_id[i] + '_radio_div';
         let radio_div = document.getElementById(radio_id);
 
-        let status_id = 'GS_unlock_' + live_plan_name[i];
+        let status_id = 'GS_unlock_' + all_id[i];
         let status = global_flag_manage.get_flag(status_id);
 
-        skill_unlock_statu[live_plan_div_id[i]] = status;
+        skill_unlock_statu[all_id[i]] = status;
+
         if (status == true) {
-            unlock_skill_num++;
-            only_unlock_skill_order = i;
             //解锁了的技能，单选按钮可以无条件出现
             radio_div.style.display = '';
             //由于同时只能展示一个技能的内容界面，所以在后续逻辑中判断应该要展示哪个
+            if (EC_live_plan_div_id.includes(all_id[i])) {
+                unlock_skill_num++;
+                unlock_EC_skill_num++;
+                only_unlock_skill = all_id[i];
+            } else if (MH_live_plan_div_id.includes(all_id[i])) {
+                unlock_skill_num++;
+                unlock_MH_skill_num++;
+                only_unlock_skill = all_id[i];
+            }
         } else {
             radio_div.style.display = 'none';
         }
     }
     let lock_all_Live_plan_div = document.getElementById('lock_all_Live_plan_div');
+    //没有解锁生活技能，生活规划界面也是初始状态，不需要变化
     if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == 'true') {
-        //没有解锁生活技能，生活规划界面也是初始状态，不需要变化
         return;
     }
-    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == 'true') {
-        //有生活技能解锁，生活规划界面不能再展示填充页了
-        let Live_plan_switch_div = document.getElementById('Live_plan_switch_div');
-        let Live_plan_value_div = document.getElementById('Live_plan_value_div');
-        Live_plan_switch_div.style.display = '';
-        Live_plan_value_div.style.display = '';
-        lock_all_Live_plan_div.style.display = 'none';
-        lock_all_Live_plan_div.dataset.flag = 'false';
-    }
-    //根据解锁的技能，展示对应的界面
-    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == 'false') {
-        if (unlock_skill_num == 1) {
-            //如果解锁了一个技能，单选按钮和内容界面都应该切换到这个技能上
-            for (let i = 0; i < 7; i++) {
-                //单选按钮
-                let radio_id = live_plan_div_id[i] + '_radio_div';
-                let radio_div = document.getElementById(radio_id);
-                //内容界面
-                let value_div_id = live_plan_div_id[i] + '_value_div';
-                let value_div = document.getElementById(value_div_id);
-
-                if (i == only_unlock_skill_order) {
-                    // radio_div.style.display = '';
-                    radio_div.children[0].checked = true;
-                    value_div.style.display = '';
-                } else {
-                    // radio_div.style.display = 'none';
-                    value_div.style.display = 'none';
-                }
-            }
-        } else {
-            //如果解锁了多个技能，
-            //单选按钮应该全部展示，内容界面应该不变
-            //所以不需要处理
-            return;
-        }
-    }
+    //没有解锁生活技能，但是生活规划界面处于非初始状态，可能是清除存档时需要恢复
     if (unlock_skill_num == 0 && lock_all_Live_plan_div.dataset.flag == 'false') {
-        //没有解锁生活技能，但是生活规划界面处于非初始状态，可能是清除存档时需要恢复
         let Live_plan_switch_div = document.getElementById('Live_plan_switch_div');
         let Live_plan_value_div = document.getElementById('Live_plan_value_div');
         Live_plan_switch_div.style.display = 'none';
@@ -471,6 +446,60 @@ function show_unlock_live_plan_div() {
         lock_all_Live_plan_div.style.display = '';
         lock_all_Live_plan_div.dataset.flag = 'true';
         return;
+    }
+
+    //有生活技能解锁，生活规划界面不能再展示填充页了
+    if (unlock_skill_num != 0 && lock_all_Live_plan_div.dataset.flag == 'true') {
+        let Live_plan_switch_div = document.getElementById('Live_plan_switch_div');
+        let Live_plan_value_div = document.getElementById('Live_plan_value_div');
+        Live_plan_switch_div.style.display = '';
+        Live_plan_value_div.style.display = '';
+        lock_all_Live_plan_div.style.display = 'none';
+        lock_all_Live_plan_div.dataset.flag = 'false';
+    }
+    //如果两大分类的技能没有解锁，将对应的生活技能分类按钮隐藏
+    let EC_switch_radio_div = document.getElementById('EC_switch_radio_div');
+    let MH_switch_radio_div = document.getElementById('MH_switch_radio_div');
+    let EC_div = document.getElementById('EC_div');
+    let MH_div = document.getElementById('MH_div');
+    if (unlock_EC_skill_num == 0 && unlock_MH_skill_num != 0) {
+        EC_switch_radio_div.style.display = 'none';
+        MH_switch_radio_div.style.display = '';
+        MH_switch_radio_div.children[0].checked = true;
+        EC_div.style.display = 'none';
+        MH_div.style.display = '';
+    } else if (unlock_EC_skill_num != 0 && unlock_MH_skill_num == 0) {
+        EC_switch_radio_div.style.display = '';
+        EC_switch_radio_div.children[0].checked = true;
+        MH_switch_radio_div.style.display = 'none';
+        EC_div.style.display = '';
+        MH_div.style.display = 'none';
+    } else {
+        //两大技能都有解锁了，全部显示
+        EC_switch_radio_div.style.display = '';
+        MH_switch_radio_div.style.display = '';
+        // MH_switch_radio_div.children[0].checked = true;
+        // EC_div.style.display = 'none';
+        // MH_div.style.display = '';
+    }
+    //根据解锁的技能，展示对应的界面
+    if (unlock_skill_num == 1 && lock_all_Live_plan_div.dataset.flag == 'false') {
+        //如果解锁了一个技能，单选按钮和内容界面都应该切换到这个技能上
+        for (let div_id of main_live_plan_div_id) {
+            //单选按钮
+            let radio_id = div_id + '_radio_div';
+            let radio_div = document.getElementById(radio_id);
+            //内容界面
+            let value_div_id = div_id + '_value_div';
+            let value_div = document.getElementById(value_div_id);
+
+            if (div_id == only_unlock_skill) {
+                radio_div.children[0].checked = true;
+                value_div.style.display = '';
+            } else {
+                value_div.style.display = 'none';
+            }
+        }
     }
 }
 //更新背包界面物品的点击效果

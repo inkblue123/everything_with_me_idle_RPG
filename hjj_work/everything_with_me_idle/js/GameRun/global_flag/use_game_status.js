@@ -124,7 +124,7 @@ function get_UGS_pass_road_flag(place_id) {
 //临用游戏状态-获取当前展示的原料处理类生活技能的编号
 function get_UGS_now_MH_name() {
     const Live_plan_div = document.getElementById('Live_plan');
-    if ((Live_plan_div.style.display = '')) {
+    if (Live_plan_div.style.display != '') {
         //当前上中位置的窗口展示不是生活技能类
         return null;
     }

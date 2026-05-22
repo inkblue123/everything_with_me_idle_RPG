@@ -240,7 +240,18 @@ function init_book(items) {
     let id;
     let secon_type = 'book'; //消耗品大类中的书小类
 
-    id = 'woodworking_introduction'; //木工入门手册
+    id = 'woodworking_introduction_1'; //木工入门手册1
+    add_Consumable_object(items, id);
+    items[id].init_Consumable('sustain_use'); //持续使用
+    items[id].set_sustain_use_data('time', 20); //消耗现实时间20秒
+    items[id].add_use_attr('get_formula', 20, 'SYN_Oak_board_1'); //20%进度时获得配方
+    items[id].add_use_attr('get_formula', 40, 'SYN_Willow_board_1'); //30%进度时获得配方
+    items[id].add_use_attr('get_formula', 60, 'SYN_birch_board_1'); //40%进度时获得配方
+    items[id].add_use_attr('get_formula', 100, 'SYN_carpentry_bench_3'); //50%进度时获得配方
+    items[id].init_Item_other(1, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_price('ordinary_coin', 50); //物品价值
+
+    id = 'woodworking_introduction_2'; //木工入门手册2
     add_Consumable_object(items, id);
     items[id].init_Consumable('sustain_use'); //持续使用
     items[id].set_sustain_use_data('time', 20); //

@@ -22,8 +22,8 @@ function init_Text_material(texts) {
     //石头与矿石系列
     init_Text_rock(texts); //石头
     //加工零件系列
-    init_Text_wood_parts(texts); //木制零件
-    init_Text_iron_parts(texts); //铁制零件
+    init_Text_wood_board(texts); //木板
+    init_Text_metal_parts(texts); //金属零件
     //精制调味料
     init_Text_refined_seasoning(texts);
     //丹药精华
@@ -286,8 +286,8 @@ function init_Text_rock(texts) {
     texts[id].item_name = '赤铜矿';
     texts[id].item_desc = '炎热地区孕育出的特殊矿石，呈现出赤红与暗金交杂的斑驳色泽，边缘锐利如残刃，能感觉到火元素波动';
 }
-//木制零件的文本
-function init_Text_wood_parts(texts) {
+//木板的文本
+function init_Text_wood_board(texts) {
     let id;
 
     id = 'normal_board';
@@ -307,14 +307,18 @@ function init_Text_wood_parts(texts) {
     texts[id].item_name = '桦木板';
     texts[id].item_desc = '用桦木制成的完整木板，保留了桦木的纹理，是很常用的好材料';
 }
-//铁质零件的文本
-function init_Text_iron_parts(texts) {
+//金属零件的文本
+function init_Text_metal_parts(texts) {
     let id;
 
     id = 'iron_waste';
     add_text_object(texts, id);
     texts[id].item_name = '铁质废品';
     texts[id].item_desc = '一堆扭曲变形的金属残骸，应该还能找到些许有用的部件';
+    id = 'iron_parts';
+    add_text_object(texts, id);
+    texts[id].item_name = '铁质零件';
+    texts[id].item_desc = '许多铁质标准零件，可以与其他材料组合，用处很广，凡人生活所需的大部分家具环境都少不了它';
     id = 'iron_ingot';
     add_text_object(texts, id);
     texts[id].item_name = '铁锭';

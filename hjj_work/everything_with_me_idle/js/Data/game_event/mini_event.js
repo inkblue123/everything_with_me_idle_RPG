@@ -17,6 +17,10 @@ function init_mini_event(game_events) {
     game_events[id].add_process_button_click('process1', 'b2', 'next_process', 'end');
     game_events[id].add_process_button_thing('process1', 'b2', 'get_item', 'sliver_coin', 1); //给予物品
     game_events[id].add_process_button_thing('process1', 'b2', 'get_item', 'copper_coin', 325); //给予物品
+    game_events[id].add_process_button_thing('process1', 'b2', 'get_item', 'normal_board', 25); //给予物品
+    game_events[id].add_process_button_thing('process1', 'b2', 'set_global_flag', 'GS_unlock_SYN', true); //解锁合成制造
+    game_events[id].add_process_button_thing('process1', 'b2', 'get_formula', 'SYN_carpentry_bench_2'); //解锁配方
+    game_events[id].add_process_button_thing('process1', 'b2', 'get_work_bench', 'village_home', 'carpentry_bench', 2); //解锁配方
     game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
 
     id = 'new_player_teach_1'; //周一新手教学
@@ -96,7 +100,7 @@ function init_mini_event(game_events) {
     game_events[id].set_new_process('process4', 'text17');
     game_events[id].add_process_button('process4', 'b10', 'text18');
     game_events[id].add_process_button_click('process4', 'b10', 'next_process', 'process5');
-    game_events[id].add_process_button_thing('process4', 'b10', 'show_div', 'Combat_plan', 'Live_plan');
+    game_events[id].add_process_button_thing('process4', 'b10', 'show_div', 'Combat_plan', 'Live_plan', 'Store');
     game_events[id].add_process_button_thing('process4', 'b10', 'move_place', 'village_home');
     game_events[id].set_new_process('process5', 'text19');
     game_events[id].add_process_button('process5', 'b11', 'text20');
@@ -144,12 +148,12 @@ function init_mini_event(game_events) {
     game_events[id].set_new_process('process2', 'text9');
     game_events[id].add_process_button('process2', 'b5', 'text10');
     game_events[id].add_process_button_click('process2', 'b5', 'next_process', 'process3');
-    game_events[id].add_process_button_thing('process2', 'b5', 'set_global_flag', 'GS_unlock_collect', true); //解锁采集技能
+    game_events[id].add_process_button_thing('process2', 'b5', 'set_global_flag', 'GS_unlock_CLT', true); //解锁采集技能
     game_events[id].add_process_button_thing('process2', 'b5', 'move_place', 'village_old_woman'); //原地移动一次，刷新界面内的信息，将刚解锁的技能展示出来
     game_events[id].set_new_process('process3', 'text11');
     game_events[id].add_process_button('process3', 'b6', 'text12');
     game_events[id].add_process_button_click('process3', 'b6', 'next_process', 'process4');
-    game_events[id].add_process_button_thing('process3', 'b6', 'set_global_flag', 'GS_unlock_logging', true); //解锁伐木技能
+    game_events[id].add_process_button_thing('process3', 'b6', 'set_global_flag', 'GS_unlock_LGI', true); //解锁伐木技能
     game_events[id].add_process_button_thing('process3', 'b6', 'move_place', 'village_old_woman'); //原地移动一次，刷新界面内的信息，将刚解锁的技能展示出来
     game_events[id].set_new_process('process4', 'text13');
     game_events[id].add_process_button('process4', 'b7', 'text14');

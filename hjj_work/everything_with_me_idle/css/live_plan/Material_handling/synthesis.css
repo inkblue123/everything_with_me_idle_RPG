@@ -3,6 +3,7 @@
     box-sizing: border-box;
     user-select: none;
 }
+
 /* 合成制造每个子界面 */
 .SYN_son_div {
     display: flex;
@@ -12,6 +13,7 @@
     width: 100%;
     height: 100%;
 }
+
 /* 顶部配方标题 */
 .SYN_formula_title_div {
     display: flex;
@@ -21,8 +23,9 @@
     flex: 0 0 10%;
     background-color: aliceblue;
     box-sizing: border-box;
-    border-bottom: 2px solid #797691; /* 内框 */
+    border-bottom: 2px solid #797691;
 }
+
 /* 顶部配方标题-左 */
 .SYN_formula_title_1 {
     display: flex;
@@ -31,8 +34,9 @@
     width: 60%;
     height: 100%;
     box-sizing: border-box;
-    border-right: 2px solid #797691; /* 内框 */
+    border-right: 2px solid #797691;
 }
+
 /* 顶部配方标题-中 */
 .SYN_formula_title_2 {
     display: flex;
@@ -41,6 +45,7 @@
     width: 40%;
     height: 100%;
 }
+
 /* 顶部配方标题-右 */
 .SYN_formula_title_3 {
     display: flex;
@@ -59,8 +64,9 @@
     flex: 1 1 auto;
 
     box-sizing: border-box;
-    border-bottom: 1px solid #797691; /* 内框 */
+    border-bottom: 1px solid #797691;
 }
+
 /* 一个配方的摘要 */
 .formula_value {
     display: flex;
@@ -68,18 +74,19 @@
     align-items: center;
     width: 100%;
     box-sizing: border-box;
-    border-bottom: 2px solid #797691; /* 内框 */
+    border-bottom: 2px solid #797691;
 }
+
 /* 配方需求 */
 .formula_value_l {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 60%;
-    /* height: 40%; */
     box-sizing: border-box;
-    border-right: 2px solid #797691; /* 内框 */
+    border-right: 2px solid #797691;
 }
+
 /* 配方产出 */
 .formula_value_r {
     display: flex;
@@ -100,6 +107,7 @@
     box-sizing: border-box;
     border-bottom: 1px solid #797691;
 }
+
 /* 筛选标题 */
 .SYN_choice_title {
     display: flex;
@@ -110,24 +118,27 @@
     padding: 0 10px;
     box-sizing: border-box;
     border-top: 1px solid #797691;
-    border-right: 1px solid #797691; /* 内框 */
+    border-right: 1px solid #797691;
+    /* 内框 */
     border-bottom: 1px solid #797691;
 }
+
 /* 筛选当前是否可制作div */
 .SYN_choice_make_flag_div {
     flex: 0 1 auto;
     height: 100%;
     box-sizing: border-box;
 }
+
 /* 筛选当前是否可制作按钮 */
 .SYN_choice_make_flag_button {
     height: 100%;
 }
+
 /* 配方类型筛选div */
 .SYN_choice_type_div {
     display: flex;
     justify-content: center;
-    /* flex: auto; */
     flex: 1 1 auto;
     height: 100%;
 }
@@ -140,6 +151,7 @@
     width: 100%;
     flex: 0 0 20%;
 }
+
 /* 选定配方详情div */
 .SYN_formula_Details_div {
     display: flex;
@@ -148,14 +160,15 @@
     width: 100%;
     flex: 0 0 40%;
 }
+
 /* 需求详情 */
 .SYN_FD_N_div {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
-    /* background-color: rgb(255, 97, 97); */
 }
+
 /* 需求详情具体内容 */
 .SYN_FD_N_scroll_box {
     display: flex;
@@ -166,6 +179,7 @@
     height: 100%;
     box-sizing: border-box;
 }
+
 /* 工作环境详情 */
 .SYN_FD_E_div {
     display: flex;
@@ -175,6 +189,7 @@
     border-left: 2px solid #797691;
     border-right: 2px solid #797691;
 }
+
 .SYN_FD_E_value_div {
     display: flex;
     justify-content: center;
@@ -183,6 +198,7 @@
     width: 100%;
     height: 100%;
 }
+
 /* 产物详情 */
 .SYN_FD_P_div {
     display: flex;
@@ -190,11 +206,13 @@
     width: 100%;
     height: 100%;
 }
+
 .SYN_FD_P_quantity_button {
     flex: 1;
     font-size: 14px;
     cursor: pointer;
 }
+
 .SYN_FD_P_value_div {
     display: flex;
     justify-content: center;
@@ -202,6 +220,7 @@
     text-align: center;
     flex: 1;
 }
+
 .SYN_FD_P_make_button {
     flex: 1;
     font-size: 26px;
@@ -215,7 +234,7 @@
     text-align: center;
     width: 100%;
     height: auto;
-    border-bottom: 2px solid #797691; /* 内框 */
+    border-bottom: 2px solid #797691;
 }
 
 /* 需求筛选或者产物筛选父div */
@@ -225,6 +244,7 @@
     flex: 1;
     width: 100%;
 }
+
 /* 配方筛选的筛选界面的标题 */
 .SYN_FL_title_div {
     width: 100%;
@@ -248,6 +268,7 @@
 .SYN_FL_choice_type_button {
     height: 100%;
 }
+
 /* 单个界面内多个子界面切换单选按钮 */
 .SYN_FL_choice_type_button label {
     text-align: center;
@@ -255,7 +276,7 @@
     height: 100%;
     font-size: 15px;
     box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
+    border: 1px solid #797691;
 }
 
 /* 配方筛选的筛选界面的需求筛选内容父容器 */
@@ -267,6 +288,7 @@
     flex: 1;
     width: 100%;
 }
+
 /* 配方筛选的筛选界面的需求筛选之选择大类的父容器 */
 .SYN_FL_item_type_choice_div {
     display: flex;
@@ -297,6 +319,7 @@
     width: 100%;
     flex: 1 1 auto;
 }
+
 /* 容纳所有配方内容div */
 .SYN_FL_item_choice_value {
     flex-wrap: wrap;
@@ -305,15 +328,12 @@
 
 /* 展示大类或者小类的按钮 */
 .SYN_FL_item_type_button {
-    /* display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center; */
     width: 100%;
     height: auto;
     box-sizing: border-box;
-    border-bottom: 1px solid #797691; /* 内框 */
+    border-bottom: 1px solid #797691;
 }
+
 /* 单个界面内多个子界面切换单选按钮 */
 .SYN_FL_item_button label,
 .SYN_FL_item_type_button label {
@@ -322,8 +342,8 @@
     height: 100%;
     font-size: 15px;
     box-sizing: border-box;
-    /* border: 1px solid #797691;  */
 }
+
 /* 清空筛选或者确定筛选的按钮 */
 .SYN_FL_delete_or_set_button {
     display: flex;
@@ -339,8 +359,8 @@
     width: 50%;
     height: auto;
     box-sizing: border-box;
-    border-right: 1px solid #797691; /* 内框 */
-    border-bottom: 1px solid #797691; /* 内框 */
+    border-right: 1px solid #797691;
+    border-bottom: 1px solid #797691;
 }
 
 /* 配方筛选的制造界面-顶部筛选说明 */
@@ -351,8 +371,9 @@
     width: 100%;
     flex: 0 0 10%;
     box-sizing: border-box;
-    border-bottom: 2px solid #797691; /* 内框 */
+    border-bottom: 2px solid #797691;
 }
+
 /* 返回筛选界面按钮 */
 #SYN_FM_back_button {
     display: flex;
@@ -360,12 +381,195 @@
     align-items: center;
     width: auto;
     height: 100%;
-    /* border-bottom: 2px solid #797691; */
 }
+
 /* 顶部筛选说明文本 */
 #SYN_FM_title_value {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex:1;
+    flex: 1;
+}
+
+/* 顶部说明文本 */
+#SYN_EN_title_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid #797691;
+}
+
+/* 工作环境界面的详情 */
+#SYN_EN_detail_div {
+    display: flex;
+    width: 100%;
+    height: 90%;
+}
+
+/* 左侧的各种工作环境选择按钮 */
+#SYN_EN_left_div {
+    width: 30%;
+    height: 100%;
+    box-sizing: border-box;
+    border-right: 1px solid #797691;
+}
+
+/* 右侧详情 */
+#SYN_EN_right_div {
+    width: 70%;
+}
+
+/* 详情上半部分 */
+#SYN_EN_Rup_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60%;
+}
+
+/* 详情上半部分 */
+.SYN_EN_Rup_son_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid #797691;
+}
+
+/* 详情上半部分的标题 */
+.SYN_EN_Rup_title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    box-sizing: border-box;
+    border: 1px solid #797691;
+}
+
+/* 详情上半部分的名称 */
+.SYN_EN_Rup_name {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    aspect-ratio: 1/1;
+    box-sizing: border-box;
+    border: 1px solid #797691;
+}
+
+/* 详情上半部分的描述 */
+.SYN_EN_Rup_desc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30%;
+    white-space: pre-wrap;
+}
+
+/* 详情上半部分的描述 */
+#SYN_EN_Rup_arrow_div {
+    display: flex;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+}
+
+/* 详情上半部分 */
+#SYN_EN_Rin_div {
+    display: flex;
+    flex-direction: column;
+    height: 25%;
+    box-sizing: border-box;
+    border-top: 1px solid #797691;
+}
+
+#SYN_EN_Rin_value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+}
+
+/* 容纳所有配方内容div */
+#SYN_EN_Rin_div_scroll_box {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    border-bottom: 1px solid #797691;
+}
+
+/* 容纳所有配方内容div */
+#SYN_EN_Rin_value_div {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+/* 详情中部的标题 */
+#SYN_EN_Rin_title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    border-left: 1px solid #797691;
+    border-bottom: 1px solid #797691;
+
+}
+
+/* 工作环境详情界面内的一个通用元素 */
+.SYN_EN_value {
+    /* 每行两个元素 */
+    width: 50%;
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #797691;
+}
+
+
+/* 详情下部div */
+#SYN_EN_Rdown_div {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height: 15%;
+    box-sizing: border-box;
+    border-left: 1px solid #797691;
+}
+
+/* 详情独立界面，选择将要创建的工作环境*/
+#SYN_EN_add_choice_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+}
+
+/* 详情独立界面，选择将要创建的工作环境的内容 */
+#SYN_EN_add_choice_value {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    justify-content: center;
+}
+
+/* 当只有一个子元素时，让它占据两列并居中 */
+#SYN_EN_add_choice_value:has(:only-child)> :only-child {
+    grid-column: span 2;
+    text-align: center;
 }

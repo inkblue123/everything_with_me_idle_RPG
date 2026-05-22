@@ -26,7 +26,7 @@ var last_MH_switch = 'SYN_button';
 
 //创建非战斗时中上，生活规划界面
 function create_Live_plan() {
-    let Live_plan = crtElement('div', 'Live_plan', null, '');
+    let Live_plan = crtElement('div', 'Live_plan', 'flex_1', '');
     make_Live_plan_div(Live_plan);
     set_Live_plan_button(Live_plan);
     return Live_plan;
@@ -238,7 +238,15 @@ function set_Live_plan_button(Live_plan) {
     let radios = Live_plan.querySelectorAll('input[type="radio"][name="Live_plan_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
+            const EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
+            const MH_div = document.getElementById('MH_div');
+            if (EC_div.style.display == '') {
+                last_Live_plan_switch = 'EC_switch_button';
+            } else if (MH_div.style.display == '') {
+                last_Live_plan_switch = 'MH_switch_button';
+            }
             change_Live_plan_div(this.id);
+
             if (last_Live_plan_switch != this.id) {
                 let live_plan_manage = global.get_live_plan_manage();
                 //停止当前进行的生活技能

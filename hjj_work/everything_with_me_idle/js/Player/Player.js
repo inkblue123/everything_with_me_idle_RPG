@@ -168,6 +168,11 @@ export class Player_Object {
         if (ret <= 0) {
             return false;
         } else if (ret == num) {
+            //背包物品去除成功，刷新相关界面
+            //背包物品变动，刷新背包界面
+            this.player_backpack.updata_BP_value();
+            //背包物品变动，刷新生活技能配方界面
+            this.player_formulas_manage.updata_formula_value();
             return true;
         } else {
             console.log('去掉物品时结果异常');
