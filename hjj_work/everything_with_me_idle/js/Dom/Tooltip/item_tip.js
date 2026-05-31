@@ -257,12 +257,16 @@ function show_consumable(tip_type, item_obj) {
         //追加展示消耗品的使用条件
         // show_use_condition(item_obj);
     }
+    // if ( use_type == 'condition_sustain_use') {
+    //     //追加展示消耗品的持续使用需求
+    //     // show_condition_sustain_use_data(item_obj);
+    // }
+    if (use_type == 'sustain_use' || use_type == 'condition_sustain_use') {
+        //追加展示持续使用类消耗品的使用时间和使用情况
+        show_sustain_use_status(item_obj);
+    }
     //展示使用效果
     show_consumable_use_data(item_obj);
-    if (use_type == 'sustain_use' || use_type == 'condition_sustain_use') {
-        //追加展示消耗品的持续使用需求
-        // show_sustain_use_data(item_obj);
-    }
 
     return true;
 }
@@ -366,21 +370,36 @@ function show_consumable_use_data(item_obj) {
     }
 }
 //追加展示消耗品的持续使用需求
-function show_sustain_use_data(item_obj) {
+function show_sustain_use_data(item_obj) {}
+//追加展示持续使用类消耗品的使用时间和使用情况
+function show_sustain_use_status(item_obj) {
     let id = item_obj.id;
+    let use_type = items[id].use_type;
     let Tooltip = document.getElementById('tooltip');
-    let use_attr_div = addElement(Tooltip, 'div', null, 'page_columns_111');
-    for (let attr_obj of items[id].use_attr) {
-        if (attr_obj.attr_type == 'get_attr') {
-            let TLV_div = addElement(use_attr_div, 'div', null, 'table_3_value');
-            // 属性名称
-            let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
-            T_name.innerHTML = texts[attr_obj.attr_id].attr_name;
-            //属性数值
-            let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
-            T_value.innerHTML = get_table_attr_value_ch(attr_obj.attr_id, attr_obj.attr_value, item_obj);
-        }
+    let status_div = addElement(Tooltip, 'div', null, 'TLV_div');
+    //这个消耗品是否曾经使用过
+    let use_flag_div = addElement(status_div, 'div', null, 'TLV_left');
+    use_flag_div.innerHTML = '未知';
+    //使用完这个消耗品的时间
+    let use_time_div = addElement(status_div, 'div', null, 'TLV_right');
+    let consumable_manage = global.get_consumable_manage();
+    let need_time = consumable_manage.get_use_consumable_time(item_obj);
+    let seconds = need_time;
+    let minutes = Math.floor(seconds / 60);
+    seconds = Math.floor(seconds % 60);
+    let hours = Math.floor(minutes / 60);
+    minutes = Math.floor(minutes % 60);
+    let ch = '预计需要时间： ';
+    if (hours != 0) {
+        ch = ch + hours + '时';
     }
+    if (minutes != 0) {
+        ch = ch + minutes + '分';
+    }
+    if (seconds != 0) {
+        ch = ch + seconds + '秒';
+    }
+    use_time_div.innerHTML = ch;
 }
 
 //针对材料，追加展示材料类型，

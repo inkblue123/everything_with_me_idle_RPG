@@ -185,7 +185,7 @@ export class Consumable_Manage {
         //推进使用进度
         this.last_use_time = now_time;
         this.last_use_ratio += true_can_use_data_ratio;
-        this.last_use_ratio = parseFloat(this.last_use_ratio.toFixed(2));
+        this.last_use_ratio = parseFloat(this.last_use_ratio.toFixed(2)); //变成2位字符串再变成数字
 
         if (this.last_use_ratio >= 100) {
             //使用进度达到100，结算
@@ -216,6 +216,36 @@ export class Consumable_Manage {
         //玩家控制界面调回原位
         let control = document.getElementById('control');
         control.show_now_place();
+    }
+
+    //计算指定消耗品预计需要多长时间使用完毕
+    get_use_consumable_time(item_obj) {
+        let item_id = item_obj.id;
+        let need_time = new Object();
+
+        for (let use_data_obj of items[item_id].sustain_use_data) {
+            let id = use_data_obj.id;
+            let value = use_data_obj.value;
+            if (id == 'time') {
+                need_time[id] = (100 - item_obj.use_ratio) * 0.01 * value; //剩余需要的秒数
+            } else {
+                let use_speed_id = 'UCSB_' + id;
+                let P_attr = player.get_player_attributes();
+                let use_speed = P_attr.get_data_attr(use_speed_id);
+
+                let need_data = (100 - item_obj.use_ratio) * 0.01 * value; //剩余需要的值
+                need_time[id] = need_data / use_speed; //剩余需要的秒数
+            }
+            need_time[id] = parseFloat(need_time[id].toFixed(2)); //格式化
+        }
+        //返回所需时间最长的一个
+        let ret = 0;
+        for (let id in need_time) {
+            if (ret < need_time[id]) {
+                ret = need_time[id];
+            }
+        }
+        return ret;
     }
 }
 

@@ -80,6 +80,11 @@ function is_overlap(arr1, arr2) {
     const set = new Set(arr2);
     return arr1.some((item) => set.has(item));
 }
+//将两个数组合并
+// function is_overlap(arr1, arr2) {
+//     const set = new Set(arr2);
+//     return arr1.some((item) => set.has(item));
+// }
 //获取一个对象中唯一的key
 function get_object_only_key(obj) {
     let keys = Object.keys(obj); //将拥有的物品的key转换成一个数组
@@ -262,13 +267,13 @@ function get_item_obj(id, num, ...args) {
     } else if (items[id].main_type == 'consumable') {
         //物品是消耗品，args内参数的含义按以下顺序排列：使用进度，额外属性
         let use_ratio = args[0];
-        let ex_data = args[0];
+        let ex_data = args[1];
         if (check_Consumable(id, use_ratio, ex_data)) {
             item_obj.use_ratio = args[0];
             item_obj.ex_data = args[1];
         } else {
-            if (items[id].use_attr == 'once_use') {
-            } else if (items[id].use_attr == 'sustain_use') {
+            if (items[id].use_type == 'once_use') {
+            } else if (items[id].use_type == 'sustain_use') {
                 item_obj.use_ratio = 0;
             }
         }
@@ -326,32 +331,33 @@ function check_Consumable(id, use_ratio, ex_data) {
         console.log('输入的物品是未定义物品,id：%s', id);
         return false;
     }
-    if (items[id].main_type == 'consumable') {
-        if (items[id].use_attr == 'once_use') {
-            //一次性使用物品，只应该有额外属性
-            if (typeof ex_data != 'object' && !is_Empty_Object(ex_data)) {
-                console.log('一次性使用消耗品的额外属性异常');
-                return false;
-            }
-            if (!is_Empty_Object(use_ratio)) {
-                console.log('一次性使用消耗品的使用进度异常');
-                return false;
-            }
-        } else if (items[id].use_attr == 'sustain_use') {
-            //持续使用物品，只应该有使用进度
-            if (typeof use_ratio != 'number' && !is_Empty_Object(use_ratio)) {
-                console.log('持续使用消耗品的使用进度异常');
-                return false;
-            }
-            if (!is_Empty_Object(ex_data)) {
-                console.log('持续使用消耗品的额外属性异常');
-                return false;
-            }
-        }
-    } else {
+    if (items[id].main_type != 'consumable') {
         //该物品不属于消耗品
         console.log('%s不属于消耗品', id);
         return false;
+    }
+
+    if (items[id].use_type == 'once_use') {
+        //一次性使用物品，只应该有额外属性，而且允许为空
+        if (typeof ex_data != 'object' && !is_Empty_Object(ex_data)) {
+            console.log('一次性使用消耗品的额外属性异常%s', typeof ex_data);
+            return false;
+        }
+        if (!is_Empty_Object(use_ratio)) {
+            console.log('一次性使用消耗品的使用进度异常');
+            return false;
+        }
+    } else if (items[id].use_type == 'sustain_use') {
+        //持续使用物品，只应该有使用进度
+        // if (typeof use_ratio != 'number') {
+        if (typeof use_ratio != 'number' || is_Empty_Object(use_ratio)) {
+            console.log('持续使用消耗品的使用进度异常');
+            return false;
+        }
+        if (!is_Empty_Object(ex_data)) {
+            console.log('持续使用消耗品的额外属性异常');
+            return false;
+        }
     }
     return true;
 }

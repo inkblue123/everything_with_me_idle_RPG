@@ -1,6 +1,6 @@
 import { texts } from '../Text/Text.js';
 import { items } from '../Item/Item.js';
-import { is_Empty_Object, get_item_obj, get_item_id_key } from '../../Function/Function.js';
+import { is_Empty_Object, get_item_obj, get_item_id_key, get_uniqueArr } from '../../Function/Function.js';
 
 export class Place {
     constructor(place_id, area_id) {
@@ -16,9 +16,12 @@ export class Place {
         this.connect_store_place = new Array(); //可以联通的商店
         this.connect_other_place = new Array(); //可以联通的其他地点
         this.place_NPC = new Array(); //位于此处的NPC
+        this.behaviors = new Array(); //常态可执行行动
         this.condition_event = new Array(); //条件可执行事件
         this.condition_behaviors = new Array(); //条件可执行行动
         this.live_plan_flag = new Array(); //这个地点可以执行的生活技能标记
+        this.buff = new Array(); //这个地点要获得的场地buff
+        this.leave_need_delete = new Array(); //从这个地点离开时需要检查失去的东西
         this.init_Place_name_desc(place_id);
         this.set_area(area_id); //设置这个地点的所属区域
     }
@@ -128,6 +131,12 @@ export class Place {
             }
         }
     }
+    //添加在这个npc面前可以做的行动，在玩家控制界面添加一个按钮
+    add_behavior(...args) {
+        for (let id of args) {
+            this.behaviors.push(id);
+        }
+    }
     //添加在这个地点满足条件自动触发的事件
     //这个条件保存在地点库中
     add_condition_trigger_event(...value) {
@@ -152,6 +161,26 @@ export class Place {
     add_condition_behavior(...value) {
         for (let event_id of value) {
             this.condition_behaviors.push(event_id);
+        }
+    }
+    //设置在这个地点会获得的buff
+    set_buff(...value) {
+        for (let buff_id of value) {
+            this.buff.push(buff_id);
+        }
+    }
+    //设置从这个地点离开时需要检查失去的东西
+    add_leave_need_delete(...value) {
+        if (value.length % 2 != 0) {
+            console.log('参数数量错误，应该输入偶数个参数');
+            return;
+        }
+        for (let i = 0; i < value.length; i += 2) {
+            //输入参数后面每两个参数，一个是条件id，另一个是条件的值
+            let status_obj = new Object();
+            status_obj.type = value[i];
+            status_obj.id = value[i + 1];
+            this.leave_need_delete.push(status_obj);
         }
     }
 }
@@ -386,19 +415,12 @@ export class P_NPC extends Place {
     constructor(place_id, area_id) {
         super(place_id, area_id);
         this.type = 'NPC';
-        this.behaviors = new Array(); //常态可执行行动
 
         this.condition_meet_chat = new Array(); //条件见面对话
         if (is_Empty_Object(texts[place_id])) {
             console.log('未定义NPC地点%s的文本信息', place_id);
         } else {
             this.default_meet_chat = texts[place_id].default_meet_chat; //默认见面对话
-        }
-    }
-    //添加在这个npc面前可以做的行动，在玩家控制界面添加一个按钮
-    add_behavior(...args) {
-        for (let id of args) {
-            this.behaviors.push(id);
         }
     }
     //初始化见面时满足条件才说的话

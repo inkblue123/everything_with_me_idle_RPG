@@ -110,7 +110,7 @@ export class Time_manage {
         this.game_now_time = this.last_game_now_time + last_run_ms * this.game_speed;
         //更新游戏日期
         this.last_game_date = this.game_date;
-        this.game_date = judge_game_date(this.init_game_date, this.now_time);
+        this.game_date = judge_game_date(this.init_game_date, this.game_now_time);
         show_game_date(this.game_date);
     }
     //一帧结束，更新相关时间
@@ -148,7 +148,7 @@ export class Time_manage {
             this.last_game_now_time = this.game_now_time;
             this.game_now_time = this.last_game_now_time + last_run_ms * this.game_speed;
             //更新游戏日期
-            this.game_date = judge_game_date(this.init_game_date, this.now_time);
+            this.game_date = judge_game_date(this.init_game_date, this.game_now_time);
             show_game_date(this.game_date);
             this.last_start_time = this.now_time;
             this.run_flag = true;
@@ -207,8 +207,9 @@ export class Time_manage {
     //获取时间类部分的游戏存档
     save_Time_manage() {
         let Time_save = new Object();
-        Time_save.init_game_date = this.init_game_date; //当前游戏日期
-        Time_save.now_time = this.now_time; //当前游戏时间戳
+        Time_save.game_now_time = this.game_now_time; //当前游戏时间戳
+        Time_save.start_time = this.init_game_date.start_time; //当前游戏最初始启动现实时间
+        Time_save.now_time = this.now_time; //当前现实时间戳
         return Time_save;
     }
     //加载时间类的游戏存档
@@ -216,8 +217,11 @@ export class Time_manage {
         if (is_Empty_Object(Time_save)) {
             return;
         }
-        this.init_game_date = Time_save.init_game_date; //当前游戏日期
-        this.init_game_date.start_time = this.now_time - (Time_save.now_time - this.init_game_date.start_time);
+        this.now_time = Date.now();
+        let save_skip_time = this.now_time - Time_save.now_time; //存档跳过的时间
+        this.game_now_time = Time_save.game_now_time + save_skip_time; //游戏时间戳
+        this.init_game_date.start_time = Time_save.start_time + save_skip_time;
+        this.game_date = judge_game_date(this.init_game_date, this.game_now_time); //游戏日期
         show_game_date(this.game_date);
     }
     //获取当前应该触发的时间节点

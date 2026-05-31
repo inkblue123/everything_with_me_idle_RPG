@@ -243,7 +243,7 @@ function init_book(items) {
     id = 'woodworking_introduction_1'; //木工入门手册1
     add_Consumable_object(items, id);
     items[id].init_Consumable('sustain_use'); //持续使用
-    items[id].set_sustain_use_data('time', 20); //消耗现实时间20秒
+    items[id].set_sustain_use_data('time', 60); //消耗现实时间60秒
     items[id].add_use_attr('get_formula', 20, 'SYN_Oak_board_1'); //20%进度时获得配方
     items[id].add_use_attr('get_formula', 40, 'SYN_Willow_board_1'); //30%进度时获得配方
     items[id].add_use_attr('get_formula', 60, 'SYN_birch_board_1'); //40%进度时获得配方
@@ -254,7 +254,7 @@ function init_book(items) {
     id = 'woodworking_introduction_2'; //木工入门手册2
     add_Consumable_object(items, id);
     items[id].init_Consumable('sustain_use'); //持续使用
-    items[id].set_sustain_use_data('time', 20); //
+    items[id].set_sustain_use_data('time', 120); //
     items[id].add_use_attr('get_formula', 10, 'SYN_wood_helmet_1'); //10%进度时获得配方
     items[id].add_use_attr('get_formula', 20, 'SYN_wood_chest_armor_1'); //20%进度时获得配方
     items[id].add_use_attr('get_formula', 30, 'SYN_wood_leg_armor_1'); //30%进度时获得配方

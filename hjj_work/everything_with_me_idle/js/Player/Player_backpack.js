@@ -571,7 +571,8 @@ function addBP_item(item_obj) {
             player_item_num = 0;
         }
         if (items[id].main_type == 'consumable' && items[id].use_type == 'sustain_use') {
-            aitem_ch = aitem_ch + '(' + parseFloat(item_obj.use_ratio.toFixed(0)) + '%)';
+            aitem_ch = aitem_ch + '(' + item_obj.use_ratio + '%)';
+            // aitem_ch = aitem_ch + '(' + parseFloat(item_obj.use_ratio.toFixed(0)) + '%)';
         }
         aitem_div.innerHTML = aitem_ch;
         //添加鼠标移动上去时展示提示信息的功能

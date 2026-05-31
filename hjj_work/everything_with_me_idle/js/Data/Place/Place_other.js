@@ -7,9 +7,11 @@ function init_Place_other(places) {
     id = 'village_home_bed'; //村中住所-床上
     add_Place_object(places, id, area);
     places[id].add_connect_normal_place('village_home', 'village_square');
-    places[id].buff = ['sleep_1'];
+    places[id].set_buff('sleep_1');
     //设置条件触发事件，满足临用游戏状态-当前处于起床时间点
     places[id].add_condition_trigger_event('get_up', 'UGS_get_up_time_flag', true);
+    places[id].add_leave_need_delete('buff', 'sleep_1');
+    places[id].add_leave_need_delete('buff', 'get_up_buff');
 }
 
 export { init_Place_other };

@@ -25,6 +25,7 @@ export class Mini_event {
         let control = document.getElementById('control');
         //展示新地点的内容
         control.show_mini_event_process(event_id, 'first');
+        get_process_data(event_id, 'first');
     }
 
     //判断迷你事件是否满足启动条件
@@ -177,6 +178,7 @@ export class Mini_event {
             //正常进入下一流程
             let control = document.getElementById('control');
             control.show_mini_event_process(event_id, next_process_id);
+            get_process_data(event_id, next_process_id);
         }
     }
     //处理按下按钮之后触发的对话
@@ -187,6 +189,7 @@ export class Mini_event {
         //重新展示当前流程，完成对话
         let control = document.getElementById('control');
         control.show_mini_event_process(event_id, now_process_id, button_id);
+        get_process_data(event_id, now_process_id);
     }
     //判断当前是否满足迷你事件中的一个按钮的出现条件
     check_mini_event_button_condition(event_id, process_id, button_id) {
@@ -210,4 +213,21 @@ export class Mini_event {
         }
         return flag;
     }
+}
+//迷你事件的流程中存在需要处理的数据，在这里获得
+function get_process_data(event_id, process_id) {
+    let process = game_events[event_id].process[process_id];
+
+    //这个流程中会获得buff
+    if (!is_Empty_Object(process.buff)) {
+        for (let buff_id of process.buff) {
+            let P_buff = player.get_player_buff_manage();
+            P_buff.set_buff_attr(buff_id);
+        }
+    }
+    //不应该有移动地点的流程
+    // if (!is_Empty_Object(process.move)) {
+    //     let place_manage = global.get_place_manage();
+    //     place_manage.set_now_place(process.move);
+    // }
 }

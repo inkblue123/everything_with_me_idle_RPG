@@ -129,14 +129,6 @@ function set_Control_func(Control) {
                 game_event_manage.updata_mini_event(event_id, process_id, button_id);
             });
         }
-
-        //这个流程中会获得buff
-        if (!is_Empty_Object(process.buff)) {
-            for (let buff_id of process.buff) {
-                let P_buff = player.get_player_buff_manage();
-                P_buff.set_buff_attr(buff_id);
-            }
-        }
     };
     //展示使用消耗品的界面
     Control.show_use_consumable = function (id, use_ratio) {
@@ -389,6 +381,8 @@ function make_button_text(front_text, name, after_text) {
     if (after_text) button_text += after_text;
     return button_text;
 }
+//根据当前游戏状态，选择一条普通地点的描述
+function make_normal_place_desc(place_id) {}
 //根据当前游戏状态，选择NPC说的话
 function make_NPC_condition_meet_chat(NPC) {
     let text = NPC.name + '：';

@@ -88,10 +88,10 @@ export class Data_attr_manage {
         this.live_plan_attr['MIN_critical_chance'] = 5; //挖矿暴击率
         this.live_plan_attr['MIN_critical_damage'] = 150; //挖矿暴击伤害
         //角色使用消耗品的属性消耗速度
-        this.use_consumable_speed['UCSB_health_point'] = 1; //
-        this.use_consumable_speed['UCSB_magic_point'] = 1;
-        this.use_consumable_speed['UCSB_surface_energy_point'] = 1;
-        this.use_consumable_speed['UCSB_deep_energy_point'] = 1;
+        this.use_consumable_speed['UCSB_health_point'] = 1; //消耗生命的速度
+        this.use_consumable_speed['UCSB_magic_point'] = 1; //消耗魔力的速度
+        this.use_consumable_speed['UCSB_surface_energy_point'] = 1; //消耗表层精力的速度
+        this.use_consumable_speed['UCSB_deep_energy_point'] = 1; //消耗深层精力的速度
 
         //汇总
         this.prevObjects['player_attr'] = JSON.parse(JSON.stringify(this.player_attr));

@@ -296,14 +296,23 @@ function leave_old_place_delete(old_place) {
     if (old_place == undefined) {
         return;
     }
+    let P_buff = player.get_player_buff_manage();
+
+    //旧地点有固定场地buff，离开时要去掉
     if (!is_Empty_Object(places[old_place].buff)) {
-        //旧地点有buff
-        let P_buff = player.get_player_buff_manage();
         for (let id of places[old_place].buff) {
             if (is_Empty_Object(buffs[id])) {
                 console.log('%s地点有未知buff：%s', old_place, id);
             } else {
                 P_buff.delete_buff_attr(id);
+            }
+        }
+    }
+    //旧地点可能会得到一些效果，无论是否得到，都要在离开时检查一遍，无条件去掉
+    if (!is_Empty_Object(places[old_place].leave_need_delete)) {
+        for (let obj of places[old_place].leave_need_delete) {
+            if (obj.type == 'buff') {
+                P_buff.delete_buff_attr(obj.id);
             }
         }
     }
