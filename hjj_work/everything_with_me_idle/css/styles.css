@@ -9,6 +9,7 @@ html {
     justify-content: center;
     align-items: center;
     background-color: #f4f4f4;
+    box-sizing: border-box;
 }
 /* 容纳所有内容的最大的父容器 */
 .main_page {
@@ -23,6 +24,7 @@ html {
     display: grid;
     grid-template-columns: 1fr 2fr;
     flex: 0 1 95%;
+    min-height: 0;
     /* width: 100vw; */
     /* height: 95vh; */
 }
@@ -33,6 +35,7 @@ html {
     align-items: center;
     color: white;
     flex: 0 1 5%;
+    min-height: 0;
 }
 
 /* 每行1列的布局 */

@@ -131,7 +131,18 @@ function make_mind_div(MD_div) {
                 var OP_game_RASaveLogMax_lable = addElement(OP_game_RASaveLogMax_div, 'div', 'OP_game_RASaveLogMax_lable', 'OP_T2_div');
                 OP_game_RASaveLogMax_lable.innerHTML = '流水账界面日志保存数量上限';
                 var OP_game_RASaveLogMax_value = addElement(OP_game_RASaveLogMax_div, 'div', 'OP_game_RASaveLogMax_value', 'OP_V_div');
-                addElement_select(OP_game_RASaveLogMax_value, 'OP_game_RASaveLogMax', null, 'OP_select', '流水账界面日志保存数量上限', '10', '15', '20', '30', '50');
+                addElement_select(
+                    OP_game_RASaveLogMax_value,
+                    'OP_game_RASaveLogMax',
+                    null,
+                    'OP_select',
+                    '流水账界面日志保存数量上限',
+                    '10',
+                    '15',
+                    '20',
+                    '30',
+                    '50'
+                );
                 //设置-游戏设置-存档管理
                 var OP_game_SaveManage_div = addElement(OP_game_div, 'div', 'OP_game_SaveManage_div', 'OP_TLV_div');
                 var OP_game_SaveManage_lable = addElement(OP_game_SaveManage_div, 'div', 'OP_game_SaveManage_lable', 'OP_T3_div');
@@ -271,7 +282,44 @@ function make_library_div(IB_div) {
     }
     //右侧图鉴内容
     {
-        var IB_value_div = addElement(IB_div, 'div', 'IB_value_div', null);
+        //选择界面
+        var IB_select_div = addElement(IB_div, 'div', 'IB_select_div', null);
+
+        //可滚动区域
+        var IB_select_scroll_box = addElement(IB_select_div, 'div', 'IB_select_scroll_box', 'overflow_y_div');
+        var IB_select_content_div = addElement(IB_select_scroll_box, 'div', 'IB_select_content_div', 'in_overflow_div');
+        //6个章节的标题+按钮网格
+        var chapterNames = ['一', '二', '三', '四', '五', '六'];
+        for (let c = 0; c < 6; c++) {
+            //章节标题
+            var chapter_title = addElement(IB_select_content_div, 'div', null, 'IB_chapter_title');
+            chapter_title.textContent = '第' + chapterNames[c] + '章';
+
+            //按钮网格，每行3个
+            var chapter_grid = addElement(IB_select_content_div, 'div', null, 'IB_chapter_grid');
+            for (let b = 1; b <= 10; b++) {
+                var chapter_button = addElement(chapter_grid, 'button', null, 'IB_select_button');
+                chapter_button.textContent = '第' + chapterNames[c] + '章按钮' + b;
+            }
+        }
+
+        //内容界面
+        var IB_value_div = addElement(IB_div, 'div', 'IB_value_div', null, 'none');
+        //上半部分：导航栏，高度与switch_radio_div_1一致
+        var IB_nav_div = addElement(IB_value_div, 'div', 'IB_nav_div', 'page_flex');
+        var IB_back_button = addElement(IB_nav_div, 'button', 'IB_back_button', null);
+        IB_back_button.innerHTML = '<--返回';
+        var IB_prev_button = addElement(IB_nav_div, 'button', 'IB_prev_button', 'IB_value_button');
+        IB_prev_button.innerHTML = '<--上一条';
+        var IB_next_button = addElement(IB_nav_div, 'button', 'IB_next_button', 'IB_value_button');
+        IB_next_button.innerHTML = '下一条-->';
+        //下半部分：可滚动的图鉴内容区域，占据剩余空间
+        var IB_value_scroll_box = addElement(IB_value_div, 'div', 'IB_value_scroll_box', 'overflow_y_div');
+        var IB_content_div = addElement(IB_value_scroll_box, 'div', 'IB_content_div', 'in_overflow_div');
+        for (let i = 0; i < 20; i++) {
+            let test_text = addElement(IB_content_div, 'div', null, null);
+            test_text.innerHTML = '文本' + i;
+        }
     }
 }
 

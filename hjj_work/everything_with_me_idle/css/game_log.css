@@ -108,8 +108,71 @@
     /* width: 100vw; */
     /* color: white; */
     /* 测试颜色 */
-    background-color: #1100ff;
+    /* background-color: #1100ff; */
     /* height: 90%; */
+}
+
+/* 图鉴-右侧内容区域的父容器 */
+#IB_value_div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* 图鉴-右侧上部导航栏 */
+#IB_nav_div {
+    /* flex-shrink: 0; */
+}
+
+/* 图鉴-导航栏中的按钮和文本，统一高度样式，与switch_radio_div_1一致 */
+.IB_value_button {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 15px;
+}
+
+/* 图鉴-选择界面的父容器 */
+#IB_select_div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* 图鉴-选择界面的可滚动区域 */
+#IB_select_scroll_box {
+    flex: 1;
+}
+
+/* 图鉴-章节标题文本，高度与IB_value_button一致 */
+.IB_chapter_title {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 15px;
+    text-align: center;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    border: 1px solid #797691;
+}
+
+/* 图鉴-章节按钮网格，每行3个 */
+.IB_chapter_grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    width: 100%;
+    height: auto;
+}
+
+/* 图鉴-章节按钮网格中的按钮 */
+.IB_select_button {
+    padding: 10px 0;
+    font-size: 15px;
+}
+
+/* 图鉴-右侧下部可滚动内容区域 */
+#IB_value_scroll_box {
+    flex: 1;
 }
 
 /* 脑海-设置内容的div */

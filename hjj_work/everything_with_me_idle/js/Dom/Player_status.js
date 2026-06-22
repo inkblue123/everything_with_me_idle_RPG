@@ -66,7 +66,7 @@ function make_player_status_div(player_status) {
         var attribute_show = addElement(player_status_div, 'div', 'attribute_show', null, '');
         var combat_attribute_show = addElement(attribute_show, 'div', 'combat_attribute_show', null);
         var Player_attribute_show = addElement(attribute_show, 'div', 'Player_attribute_show', null);
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 9; i++) {
             let test1 = addElement(combat_attribute_show, 'div', null, 'state_show'); //条的外框
             let test2 = addElement(Player_attribute_show, 'div', null, 'state_show'); //条的外框
             if (i >= 9) {
