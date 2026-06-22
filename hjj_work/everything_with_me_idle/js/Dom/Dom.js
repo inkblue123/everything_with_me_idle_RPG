@@ -240,7 +240,13 @@ function init_game_dom() {
     IB_skill_C_droptable.style.display = 'none';
     const IB_skill_L_droptable = document.getElementById('IB_skill_L_droptable');
     IB_skill_L_droptable.style.display = 'none';
+    const IB_skill_A_droptable = document.getElementById('IB_skill_A_droptable');
+    IB_skill_A_droptable.style.display = 'none';
     const IB_enemy_droptable = document.getElementById('IB_enemy_droptable');
     IB_enemy_droptable.style.display = 'none';
+    const IB_event_droptable = document.getElementById('IB_event_droptable');
+    IB_event_droptable.style.display = 'none';
+    const IB_rule_droptable = document.getElementById('IB_rule_droptable');
+    IB_rule_droptable.style.display = 'none';
 }
 export { create_game_dom, init_game_dom };
