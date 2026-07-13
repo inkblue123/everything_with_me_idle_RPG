@@ -1,83 +1,92 @@
 /* 游戏日志界面的样式 */
 #game_log {
-    box-sizing: border-box;
+    background-color: #ffffff;
     user-select: none;
-    border-top: 1px solid #797691; /* 内框 */
-    border-left: 1px solid #797691; /* 内框 */
-    border-right: 2px solid #797691; /* 内框 */
-    border-bottom: 2px solid #797691; /* 内框 */
+    /* 内框 */
 }
+
 /* 游戏日志界面上方过滤按钮的div */
 #Game_log_switch_div {
     height: 10%;
     background-color: #ffd700;
-    box-sizing: border-box;
     /* border-bottom: 1px solid #797691;  */
 }
+
 /* 游戏日志界面下方容纳具体内容的div */
 #Game_log_value_div {
     height: 90%;
 }
+
 /* 脑海-左侧过滤按钮的div */
 #MD_scroll_box {
-    box-sizing: border-box;
-    border-right: 2px solid #797691; /* 内框 */
+    /* 内框 */
 }
 
 /* 脑海-流水账内容的div */
 #RA_value_scroll_box {
     width: 100%;
 }
+
 #RA_value_div {
     width: 100%;
     background-color: #ffffff;
 }
+
 .RA_log_div {
     display: flex;
     flex-wrap: wrap;
     padding: 5px 0;
-    box-sizing: border-box;
-    border-right: 2px solid #797691;
-    border-bottom: 2px solid #797691;
 }
+
 .RA_log_value_div {
     display: flex;
 }
+
 /* 脑海-重要事件内容的div */
 #IE_value_div {
     display: flex;
-    flex-direction: column; /* 垂直排列 */
+    flex-direction: column;
+    /* 垂直排列 */
 }
+
 /* 脑海-重要事件-主线任务的div */
 #main_quest_div {
     width: 100%;
     height: auto;
 }
+
 /* 脑海-重要事件-支线任务的div */
 #all_side_quest_div {
     width: 100%;
     height: auto;
 }
+
 /* 一个支线任务的div */
 .a_side_quest_div {
     width: 100%;
     height: auto;
 }
+
 /* 脑海-重要事件，当前事件的名称的div */
 .IE_name_div {
     font-size: 25px;
 }
+
 /* 脑海-重要事件，当前事件的所有达成条件的div */
 .IE_monitor_data_div {
     font-size: 15px;
 }
+
 /* 脑海-重要事件，一条达成条件的div */
 .monitor_value_div {
-    display: flex; /* 启用 Flexbox 布局 */
-    width: 100%; /* 父容器占满父元素的宽度 */
+    display: flex;
+    /* 启用 Flexbox 布局 */
+    width: 100%;
+    /* 父容器占满父元素的宽度 */
     border: 1px solid darkgrey;
     min-height: 40px;
 }
+
 /* 一个条件是否满足的标记 */
 .monitor_flag_div {
     display: flex;
@@ -88,6 +97,7 @@
     width: 15%;
     border: 1px solid darkgrey;
 }
+
 /* 一个条件的描述 */
 .monitor_desc_div {
     display: flex;
@@ -101,77 +111,98 @@
     font-size: 15px;
 }
 
+
 /* 图鉴内容的div */
-#IB_div {
-    /* display: grid;
-    grid-template-columns: 1fr 2fr; */
-    /* width: 100vw; */
-    /* color: white; */
-    /* 测试颜色 */
-    /* background-color: #1100ff; */
-    /* height: 90%; */
-}
+/* #IB_div {
+} */
 
-/* 图鉴-右侧内容区域的父容器 */
-#IB_value_div {
+/* 图鉴-左侧整体布局 */
+#IB_switch_sort_div {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-/* 图鉴-右侧上部导航栏 */
-#IB_nav_div {
-    /* flex-shrink: 0; */
-}
-
-/* 图鉴-导航栏中的按钮和文本，统一高度样式，与switch_radio_div_1一致 */
-.IB_value_button {
+/* 图鉴-左侧过滤按钮的div */
+#IB_switch_scroll_box {
     flex: 1;
-    padding: 10px 0;
-    font-size: 15px;
 }
 
-/* 图鉴-选择界面的父容器 */
-#IB_select_div {
+/* 图鉴-左侧固定按钮的div */
+#IB_fixed_div {
     display: flex;
-    flex-direction: column;
-    height: 100%;
+    justify-content: space-evenly;
 }
 
-/* 图鉴-选择界面的可滚动区域 */
-#IB_select_scroll_box {
-    flex: 1;
-}
-
-/* 图鉴-章节标题文本，高度与IB_value_button一致 */
-.IB_chapter_title {
+/* 图鉴-章节标题 */
+.IB_select_title_div {
     width: 100%;
     padding: 10px 0;
     font-size: 15px;
     text-align: center;
-    color: #000;
+    white-space: pre-wrap;
+    /* color: #000; */
     background-color: #fff;
-    box-sizing: border-box;
-    border: 1px solid #797691;
 }
 
-/* 图鉴-章节按钮网格，每行3个 */
-.IB_chapter_grid {
+/* 图鉴-章节按钮布局 */
+.IB_select_button_div {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    width: 100%;
-    height: auto;
+    gap: 5px;
+    padding: 5px;
+    box-sizing: border-box;
 }
 
-/* 图鉴-章节按钮网格中的按钮 */
+/* 图鉴-所有图鉴条目界面的按钮 */
 .IB_select_button {
-    padding: 10px 0;
-    font-size: 15px;
+    min-height: 30px;
+    cursor: pointer;
 }
 
-/* 图鉴-右侧下部可滚动内容区域 */
-#IB_value_scroll_box {
+/* 图鉴-展示一个具体图鉴条目的界面 */
+#IB_value_div {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 图鉴-章节标题 */
+.IB_value_title_div {
+    display: flex;
+    width: 100%;
+    /* padding: 10px 0; */
+    font-size: 15px;
+    text-align: center;
+    white-space: pre-wrap;
+    /* color: #000; */
+    background-color: #fff;
+}
+
+/* 图鉴-章节标题 */
+#IB_value_title_text {
+    display: flex;
+    flex: 1;
+    font-size: 15px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    white-space: pre-wrap;
+    background-color: #fff;
+}
+
+.IB_value_button {
+    padding: 10px 10px;
+    cursor: pointer;
+}
+
+.IB_rarity_button {
+    padding: 5px 10px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#IB_value_content_scroll_box {
     flex: 1;
 }
 
@@ -181,19 +212,21 @@
     /* 如果父布局是grid，元素本身就可以不管 */
     flex: 1;
 }
+
 /* 脑海-设置-上部内容的div */
 #OP_up_div {
     display: flex;
     /* 测试颜色 */
     height: 90%;
-    box-sizing: border-box;
-    border-bottom: 2px solid #797691; /* 内框 */
+    /* 内框 */
 }
+
 /* 脑海-设置-下部内容的div */
 #OP_down_div {
     /* 测试颜色 */
     height: 10%;
 }
+
 /* 脑海-设置-一条设置的父布局 */
 .OP_TLV_div {
     display: flex;
@@ -201,6 +234,7 @@
     width: 100%;
     height: 50px;
 }
+
 /* 脑海-设置-一条设置左侧的文本描述，80%长度版本 */
 .OP_T1_div {
     display: flex;
@@ -210,6 +244,7 @@
     height: 100%;
     box-sizing: border-box;
 }
+
 /* 脑海-设置-一条设置左侧的文本描述，50%长度版本 */
 .OP_T2_div {
     display: flex;
@@ -219,6 +254,7 @@
     height: 100%;
     box-sizing: border-box;
 }
+
 /* 脑海-设置-一条设置左侧的文本描述，20%长度版本 */
 .OP_T3_div {
     display: flex;
@@ -228,6 +264,7 @@
     height: 100%;
     box-sizing: border-box;
 }
+
 /* 脑海-设置-一条设置右侧的交互ui */
 .OP_V_div {
     flex: 1;
@@ -237,6 +274,7 @@
     width: 20%;
     height: 100%;
 }
+
 /* 脑海-设置-一个按钮的ui */
 .OP_button {
     width: 80px;

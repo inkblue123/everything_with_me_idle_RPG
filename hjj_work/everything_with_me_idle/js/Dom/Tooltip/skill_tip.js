@@ -178,9 +178,9 @@ function show_active_skill_attr_correct(slot_value_div, active_skill) {
     let slot_num = active_skill.slot_num;
     let correct_name_div = addElement(slot_value_div, 'div', null, 'lable_down');
     correct_name_div.innerHTML = '属性补正';
-    let correct_value_div = addElement(slot_value_div, 'div', null, 'page_columns_111');
+    let correct_value_div = addElement(slot_value_div, 'div', null, 'page_table_111');
     for (let correct_key in active_skill.attr_correct) {
-        let C_value_div = addElement(correct_value_div, 'div', null, 'table_3_value');
+        let C_value_div = addElement(correct_value_div, 'div', null, 'table_value');
         //属性补正名称
         let C_name = addElement(C_value_div, 'div', null, 'TLV_left');
         if (texts[correct_key].attr_name.length > 4) {
@@ -300,9 +300,9 @@ function show_passive_skill_rewards(div, rewards) {
     } else {
         //如果有多条属性，就每行两个依次往下排列
         // let rewards_div = addElement(div, 'div', null, 'lable_end');
-        let rewards_div = addElement(div, 'div', null, 'page_columns_11');
+        let rewards_div = addElement(div, 'div', null, 'page_table_11');
         for (let reward_obj of rewards) {
-            let attr_div = addElement(rewards_div, 'div', null, 'table_2_value');
+            let attr_div = addElement(rewards_div, 'div', null, 'table_value');
 
             let attr_id = reward_obj.attr;
             let attr_name_div = addElement(attr_div, 'div', null, 'TLV_left');
@@ -319,12 +319,13 @@ function show_passive_skill_rewards(div, rewards) {
 //追加展示被动技能的关键节点加成
 function show_passive_skill_milepost(div, skill_obj) {
     let skill_id = skill_obj.id;
-    //这个技能没有关键节点加成
-    if (is_Empty_Object(P_skills[skill_id].milepost)) {
+    let milepost_attr = P_skills[skill_id].milepost_attr; //技能数据库的关键节点属性信息
+    //这个技能没有关键节点属性加成
+    if (is_Empty_Object(milepost_attr)) {
         return true;
     }
 
-    for (let milepost_level in P_skills[skill_id].milepost) {
+    for (let milepost_level in milepost_attr) {
         if (skill_obj.level >= milepost_level) {
             //玩家达到了的关键节点，显示对应数值
             let a_milepost_div = addElement(div, 'div', null, 'TLV_space_evenly_div');
@@ -334,7 +335,7 @@ function show_passive_skill_milepost(div, skill_obj) {
             L_div.innerHTML = '等级' + milepost_level + '奖励：';
 
             let ch = '';
-            let milepost_array = P_skills[skill_id].milepost[milepost_level];
+            let milepost_array = milepost_attr[milepost_level];
             for (let i in milepost_array) {
                 let obj = milepost_array[i];
                 let attr_id = obj.attr;
@@ -349,7 +350,7 @@ function show_passive_skill_milepost(div, skill_obj) {
             R_div.innerHTML = ch;
         } else {
             //玩家没达到的关键节点，用问号显示，且只显示一条
-            let a_milepost_div = addElement(milepost_div, 'div', null, 'lable_down');
+            let a_milepost_div = addElement(div, 'div', null, 'lable_down');
             let ch = '等级？？奖励：？？？';
             a_milepost_div.innerHTML = ch;
             break;
@@ -389,7 +390,9 @@ function get_attr_ch(attr_id, attr_data) {
 
     if (attr_data > 0) {
         ch += '+' + attr_data;
-    } else {
+    } else if (attr_data == 0) {
+        ch += attr_data;
+    } else if (attr_data < 0) {
         ch += '-' + attr_data;
     }
 

@@ -39,7 +39,7 @@ function init_Item_Material(items) {
 
 //     id = 'test_item'; //测试物品
 //     add_Material_object(items, id);
-//     items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+//     items[id].init_Item_other(300, secon_type,0); //堆叠数量，物品小类，章节归属
 // }
 //木屑
 function init_woodchip(items) {
@@ -48,23 +48,23 @@ function init_woodchip(items) {
 
     id = 'Oak_woodchip'; //橡树木屑
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'Willow_woodchip'; //柳树木屑
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'birch_woodchip'; //桦树木屑
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'pine_woodchip'; //松树木屑
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 2); //物品价值
     id = 'fir_woodchip'; //杉树木屑
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 3); //物品价值
 }
 //凡木
@@ -74,27 +74,27 @@ function init_ordinary_wood(items) {
 
     id = 'Oak_logs'; //橡树原木
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
     id = 'Willow_logs'; //柳树原木
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 6); //物品价值
     id = 'birch_logs'; //桦树原木
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 9); //物品价值
     id = 'pine_logs'; //松树原木
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 15); //物品价值
     id = 'fir_logs'; //杉树原木
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 25); //物品价值
     id = 'decayed_wood'; //朽木
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 2); //物品价值
 }
 //灵木
@@ -104,27 +104,27 @@ function init_spirit_wood(items) {
 
     id = 'lightning_bark'; //雷杉树皮
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 173); //物品价值
 
     id = 'lightning_branch'; //雷击尖枝
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 218); //物品价值
 
     id = 'lightning_iron_logs'; //雷击铁杉木
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 112); //物品价值
 
     id = 'frost_marrow_resin'; //寒髓松树脂
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 200); //物品价值
 
     id = 'frost_marrow_ice'; //寒髓松冰晶
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 110); //物品价值
 }
 //灵草
@@ -134,17 +134,17 @@ function init_spirit_grass(items) {
 
     id = 'viresilver_stem'; //绿银草茎
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 69); //物品价值
 
     id = 'symbiotic_root'; //竹蛇共生根
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 3); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 341); //物品价值
 
     id = 'violet_bamboo_blade'; //紫斑竹刃
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 3); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 715); //物品价值
 }
 //普通蘑菇
@@ -154,22 +154,22 @@ function init_ordinary_mushroom(items) {
 
     id = 'porcini'; //牛肝菌
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 16); //物品价值
 
     id = 'craterellus'; //喇叭菌
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 19); //物品价值
 
     id = 'coral_fungus'; //珊瑚菌
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 21); //物品价值
 
     id = 'chanterelle'; //鸡油菌
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 17); //物品价值
 }
 //稀有蘑菇
@@ -179,11 +179,11 @@ function init_rare_mushroom(items) {
 
     id = 'termite_mushroom'; //鸡枞
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 120); //物品价值
     id = 'ice_matsutake'; //冰松茸
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 313); //物品价值
 }
 //水产
@@ -193,23 +193,23 @@ function init_aquatic(items) {
 
     id = 'river_mussel'; //河蚌
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 2); //物品价值
     id = 'river_crab'; //河蟹
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 4); //物品价值
     id = 'creek_fish'; //溪鱼
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 6); //物品价值
     id = 'iron_bone_fish'; //铁骨鱼
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 8); //物品价值
     id = 'bite_fish'; //咬鱼
     add_Material_object(items, id);
-    items[id].init_Item_other(300, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(300, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 13); //物品价值
 }
 //毛皮
@@ -219,15 +219,15 @@ function init_fur(items) {
 
     id = 'broken_fur'; //碎毛皮
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'ordinary_fur'; //普通毛皮
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 9); //物品价值
     id = 'high_quality_fur'; //优质毛皮
     add_Material_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 30); //物品价值
 }
 //皮革
@@ -237,15 +237,15 @@ function init_leather(items) {
 
     id = 'stitching_leather'; //缝合皮革
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
     id = 'ordinary_leather'; //普通皮革
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 15); //物品价值
     id = 'hard_and_thick_leather'; //硬厚皮革
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 40); //物品价值
 }
 //骨头
@@ -255,7 +255,7 @@ function init_bone(items) {
 
     id = 'animal_bone'; //兽骨
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 3); //物品价值
 }
 //生肉
@@ -265,11 +265,11 @@ function init_raw_meat(items) {
 
     id = 'animal_raw_meat'; //野兽生肉
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 7); //物品价值
     id = 'animal_viscus'; //野兽内脏
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 2); //物品价值
 }
 //石与矿石
@@ -279,43 +279,43 @@ function init_rock(items) {
 
     id = 'hard_rock'; //坚硬岩石
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 4); //物品价值
 
     id = 'lowFe_rock'; //含铁岩石
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 8); //物品价值
     id = 'highFe_rock'; //富铁矿石
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 16); //物品价值
 
     id = 'low_xuantie_rock'; //玄铁碎石
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 3); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 2); //物品价值
     id = 'high_xuantieFe_rock'; //玄铁矿
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 3); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 16); //物品价值
 
     id = 'low_iceiron_rock'; //寒元碎石
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 3); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 2); //物品价值
     id = 'high_iceiron_rock'; //寒元矿
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 3); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 16); //物品价值
 
     id = 'low_firecopper_rock'; //赤铜碎石
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 3); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 2); //物品价值
     id = 'high_firecopper_rock'; //赤铜矿
     add_Material_object(items, id);
-    items[id].init_Item_other(50, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(50, secon_type, 3); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 16); //物品价值
 
     //精金，灼炎石，地龙须碎，寒冰玉，枯荣石，繁花石
@@ -328,19 +328,19 @@ function init_wood_board(items) {
 
     id = 'normal_board'; //普通木板
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
     id = 'Oak_board'; //橡木板
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 12); //物品价值
     id = 'Willow_board'; //柳木板
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 14); //物品价值
     id = 'birch_board'; //桦木板
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 18); //物品价值
 }
 //金属零件
@@ -350,17 +350,17 @@ function init_metal_parts(items) {
 
     id = 'iron_waste'; //铁质废品
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
 
     id = 'iron_parts'; //铁质零件
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 10); //物品价值
 
     id = 'iron_ingot'; //铁锭
     add_Material_object(items, id);
-    items[id].init_Item_other(30, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 20); //物品价值
 }
 //精制调味料
@@ -370,15 +370,15 @@ function init_refined_seasoning(items) {
 
     id = 'fish_meat_floss'; //鱼肉松
     add_Material_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 20); //物品价值
     id = 'animal_meat_floss'; //兽肉松
     add_Material_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 35); //物品价值
     id = 'berry_jam'; //浆果果酱
     add_Material_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 25); //物品价值
 }
 //丹药精华
@@ -388,7 +388,7 @@ function init_elixir_essence(items) {
 
     // id = 'AAAA'; //
     // add_Material_object(items, id);
-    // items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(20, secon_type,0); //堆叠数量，物品小类，章节归属
 }
 
 export { init_Item_Material };

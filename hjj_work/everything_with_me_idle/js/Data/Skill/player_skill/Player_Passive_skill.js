@@ -13,6 +13,8 @@ function init_Player_Passive_skill(P_skills) {
     init_live_skill_collect(P_skills);
     //钓鱼相关的被动技能
     init_live_skill_fishing(P_skills);
+    //合成制造相关的被动技能
+    init_live_skill_synthesis(P_skills);
 }
 //初始化与战斗相关的被动技能
 function init_combat(P_skills) {
@@ -89,8 +91,8 @@ function init_live_skill_logging(P_skills) {
     P_skills[id].add_rewards('LGI_damage_battle_axe', 1, 2); //战斧伐木伤害
     P_skills[id].add_rewards('LGI_damage_logging_tool', 1, 2); //伐木工具伐木伤害
     //关键等级节点
-    P_skills[id].add_milepost(1, 'LGI_speed_battle_axe', 10); //
-    P_skills[id].add_milepost(1, 'LGI_speed_logging_tool', 10); //
+    P_skills[id].add_milepost_attr(1, 'LGI_speed_battle_axe', 10); //
+    P_skills[id].add_milepost_attr(1, 'LGI_speed_logging_tool', 10); //
 
     //精确连续劈砍
     id = 'accurate_continuous_logging';
@@ -164,6 +166,24 @@ function init_live_skill_fishing(P_skills) {
     P_skills[id].exp_source = 'bait_fish_num'; //根据钓鱼上钩阶段成功的次数获取经验
     //常态等级加成
     P_skills[id].add_rewards('FIS_takebait_attack', 1, 3); //钓鱼上钩力
+}
+//初始化与合成制造相关的被动技能
+function init_live_skill_synthesis(P_skills) {
+    let id;
+    //测试技能
+    id = 'synthesis_skill_test';
+    add_P_Passive_skill(P_skills, id);
+    P_skills[id].initial_flag = true; //这是玩家一开始就应该有的初始技能
+    P_skills[id].switch_type = 'material_acquisition'; //被动技能类型，原料获取
+    P_skills[id].levelup_type = 'exp_up'; //累计经验可升级
+    P_skills[id].set_levelup_data(2, 0, 10, 3); //设置一个等级阶段
+    P_skills[id].add_leveling_behavior('behavior', 'synthesis'); //合成制造时
+    P_skills[id].exp_source = 'make_exp'; //根据从合成制造的配方上获取经验
+    //常态等级加成
+    //关键节点加成
+    P_skills[id].add_milepost_attr(1, 'LGI_speed_battle_axe', 10); //
+    //关键节点-解锁配方筛选子功能
+    P_skills[id].add_milepost_super(1, 'set_game_status', 'GS_unlock_SYN_FL', true);
 }
 
 export { init_Player_Passive_skill };

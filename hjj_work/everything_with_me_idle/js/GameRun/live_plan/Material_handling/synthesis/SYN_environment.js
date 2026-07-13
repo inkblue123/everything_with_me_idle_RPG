@@ -8,6 +8,16 @@ import { formulas } from '../../../../Data/Formula/Formula.js';
 import { player } from '../../../../Player/Player.js';
 import { global } from '../../../global_manage.js';
 
+//更新上中的生活技能界面中的合成制造技能界面的工作环境详情的内容
+function updata_SYN_EN_value(SYN_place_work_bench) {
+    //获取更新前选择的工作环境
+    let old_work_bench = get_now_SYN_EN_work_bench();
+    //清除工作环境详情的所有内容
+    delete_SYN_EN();
+    //填充输入地点的工作环境详情界面的所有内容
+    init_SYN_EN(SYN_place_work_bench);
+}
+
 //获取工作环境界面左侧选择的工作环境
 function get_now_SYN_EN_work_bench() {
     return get_radio_switch_click_value('SYN_EN_switch');
@@ -29,15 +39,15 @@ function delete_SYN_EN() {
     SYN_EN_Rin_value_div.replaceChildren();
 }
 //初始化工作环境详情界面的所有内容
-function init_SYN_EN(SYN_place_work_bench) {
+function init_SYN_EN(place_work_bench) {
     let live_plan_manage = global.get_live_plan_manage();
     let synthesis_manage = live_plan_manage.get_LP_live_skill_manage('synthesis_manage');
     let SYN_EN_left_div = document.getElementById('SYN_EN_left_div');
     //遍历每种可能的工作台
     for (let work_bench_id of enums['all_SYN_work_bench']) {
-        if (SYN_place_work_bench[work_bench_id] == undefined) {
+        if (place_work_bench[work_bench_id] == undefined) {
             console.log('玩家没有初始化%s工作环境', work_bench_id);
-        } else if (SYN_place_work_bench[work_bench_id] == 0) {
+        } else if (place_work_bench[work_bench_id] == 0) {
             //当前地点该工作台等级为0，确认是否有配方
             let new_work_bench_formulas_id = 'SYN_' + work_bench_id + '_1';
             let P_formula = player.get_player_formulas_manage();
@@ -54,7 +64,7 @@ function init_SYN_EN(SYN_place_work_bench) {
             } else {
                 //玩家不知晓下一级升级配方，不处理
             }
-        } else if (SYN_place_work_bench[work_bench_id] != 0) {
+        } else if (place_work_bench[work_bench_id] != 0) {
             //当前地点存在某种工作环境等级不是0，需要在左侧显示
             let work_bench_name = texts[work_bench_id].work_bench_name;
             var SYN_EN_add_button = addElement(SYN_EN_left_div, 'div', null, 'radio_div switch_radio_div_1');
@@ -257,4 +267,4 @@ function updata_SYN_EN_formula_Details_div(formulas_id) {
     }
 }
 
-export { get_now_SYN_EN_work_bench, delete_SYN_EN, init_SYN_EN, change_SYN_EN_div };
+export { updata_SYN_EN_value, get_now_SYN_EN_work_bench, delete_SYN_EN, init_SYN_EN, change_SYN_EN_div };

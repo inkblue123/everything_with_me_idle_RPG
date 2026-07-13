@@ -47,20 +47,23 @@ function init_ingredient(items) {
     add_Consumable_object(items, id);
     items[id].init_Consumable('once_use'); //一次性使用
     items[id].add_use_attr('get_attr', null, 'health_point', 1);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
+    items[id].init_Item_exp('use_exp', 1); //使用时经验
     id = 'yellow_berry'; //黄浆果
     add_Consumable_object(items, id);
     items[id].init_Consumable('once_use'); //一次性使用
     items[id].add_use_attr('get_attr', null, 'surface_energy_point', 1);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
+    items[id].init_Item_exp('use_exp', 1); //使用时经验
     id = 'black_berry'; //黑浆果
     add_Consumable_object(items, id);
     items[id].init_Consumable('once_use'); //一次性使用
     items[id].add_use_attr('get_attr', null, 'magic_point', 1);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
+    items[id].init_Item_exp('use_exp', 1); //使用时经验
 }
 //食品
 function init_food(items) {
@@ -69,28 +72,28 @@ function init_food(items) {
 
     id = 'grilled_fish'; //烤鱼串
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 10); //物品价值
     id = 'big_grilled_fish'; //大烤鱼串
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 15); //物品价值
     id = 'roasted_crab'; //烤螃蟹
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 8); //物品价值
     id = 'cooked_mussel'; //熟蚌肉
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
     id = 'cooked_animal_meat'; //熟兽肉
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 10); //物品价值
 
     id = 'termite_mushroom_soup'; //鸡枞汤
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 130); //物品价值
 }
 //干制品
@@ -100,15 +103,15 @@ function init_dry_product(items) {
 
     id = 'fish_jerky'; //鱼肉干
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 30); //物品价值
     id = 'animal_jerky'; //兽肉干
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 35); //物品价值
     id = 'berry_dried_fruit'; //浆果果干
     add_Consumable_object(items, id);
-    items[id].init_Item_other(20, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 25); //物品价值
 }
 //药材
@@ -118,7 +121,7 @@ function init_crude_drug(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 //药水
 function init_potion(items) {
@@ -127,7 +130,7 @@ function init_potion(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 //丹药
 function init_elixir(items) {
@@ -136,7 +139,7 @@ function init_elixir(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 //箭矢
 function init_arrow(items) {
@@ -145,7 +148,7 @@ function init_arrow(items) {
 
     id = 'wood_arrow'; //木制箭矢
     add_Consumable_object(items, id);
-    items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    items[id].init_Item_other(100, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 3); //物品价值
 }
 //弩箭
@@ -155,7 +158,7 @@ function init_bolt(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 //喷枪弹药
 function init_spray_gun_bullet(items) {
@@ -164,7 +167,7 @@ function init_spray_gun_bullet(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 //可投掷弹药
 function init_throwable(items) {
@@ -173,7 +176,7 @@ function init_throwable(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 //法术核心弹药
 function init_magic_core_bullet(items) {
@@ -182,7 +185,7 @@ function init_magic_core_bullet(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 //鱼饵
 function init_bait(items) {
@@ -191,7 +194,7 @@ function init_bait(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 //探索消耗品
 function init_exploration_consumable(items) {
@@ -200,7 +203,7 @@ function init_exploration_consumable(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 
 //宝箱
@@ -210,7 +213,7 @@ function init_treasure_chest(items) {
 
     // id = 'AAAA'; //
     // add_Consumable_object(items, id);
-    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品大分类
+    // items[id].init_Item_other(100, secon_type); //堆叠数量，物品小类，章节归属
 }
 
 //凡间钱币
@@ -220,19 +223,23 @@ function init_ordinary_coin(items) {
 
     id = 'copper_coin'; //铜币
     add_Consumable_object(items, id);
-    items[id].init_Item_other(500, secon_type); //堆叠数量，物品小类
+    items[id].init_Consumable('keep_use'); //持有时自动消耗
+    items[id].init_Item_other(500, secon_type, 1); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'greedy_copper_coin'; //贪婪的铜币
     add_Consumable_object(items, id);
-    items[id].init_Item_other(1, secon_type); //堆叠数量，物品小类
+    items[id].init_Consumable('keep_use'); //持有时自动消耗
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 1); //物品价值
     id = 'sliver_coin'; //银币
-    add_Consumable_object(items, id);
-    items[id].init_Item_other(500, secon_type); //堆叠数量，物品小类
+    add_Consumable_object(items, id, 1);
+    items[id].init_Consumable('keep_use'); //持有时自动消耗
+    items[id].init_Item_other(500, secon_type, 1); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 100); //物品价值
     id = 'gold_coin'; //金币
     add_Consumable_object(items, id);
-    items[id].init_Item_other(500, secon_type); //堆叠数量，物品小类
+    items[id].init_Consumable('keep_use'); //持有时自动消耗
+    items[id].init_Item_other(500, secon_type, 1); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 10000); //物品价值
 }
 //书
@@ -244,12 +251,17 @@ function init_book(items) {
     add_Consumable_object(items, id);
     items[id].init_Consumable('sustain_use'); //持续使用
     items[id].set_sustain_use_data('time', 60); //消耗现实时间60秒
-    items[id].add_use_attr('get_formula', 20, 'SYN_Oak_board_1'); //20%进度时获得配方
-    items[id].add_use_attr('get_formula', 40, 'SYN_Willow_board_1'); //30%进度时获得配方
-    items[id].add_use_attr('get_formula', 60, 'SYN_birch_board_1'); //40%进度时获得配方
-    items[id].add_use_attr('get_formula', 100, 'SYN_carpentry_bench_3'); //50%进度时获得配方
-    items[id].init_Item_other(1, secon_type); //堆叠数量，物品小类
+    items[id].add_use_attr('get_formula', 10, 'SYN_Oak_board_1'); //10%进度时获得配方
+    items[id].add_use_attr('get_formula', 20, 'SYN_Oak_woodchip_1'); //20%进度时获得配方
+    items[id].add_use_attr('get_formula', 30, 'SYN_Willow_board_1'); //30%进度时获得配方
+    items[id].add_use_attr('get_formula', 40, 'SYN_Willow_woodchip_1'); //40%进度时获得配方
+    items[id].add_use_attr('get_formula', 50, 'SYN_birch_board_1'); //50%进度时获得配方
+    items[id].add_use_attr('get_formula', 60, 'SYN_birch_woodchip_1'); //60%进度时获得配方
+    items[id].add_use_attr('get_formula', 70, 'SYN_normal_board_1'); //70%进度时获得配方
+    items[id].add_use_attr('get_formula', 100, 'SYN_carpentry_bench_3'); //100%进度时获得配方
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 50); //物品价值
+    items[id].init_Item_exp('use_exp', 100); //使用时经验
 
     id = 'woodworking_introduction_2'; //木工入门手册2
     add_Consumable_object(items, id);
@@ -264,8 +276,9 @@ function init_book(items) {
     items[id].add_use_attr('get_formula', 70, 'SYN_wood_sword_1'); //70%进度时获得配方
     items[id].add_use_attr('get_formula', 80, 'SYN_wood_battle_axe_1'); //80%进度时获得配方
     items[id].add_use_attr('get_formula', 90, 'SYN_wood_dagger_1'); //90%进度时获得配方
-    items[id].init_Item_other(1, secon_type); //堆叠数量，物品小类
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 100); //物品价值
+    items[id].init_Item_exp('use_exp', 100); //使用时经验
 }
 
 export { init_Item_Consumable };

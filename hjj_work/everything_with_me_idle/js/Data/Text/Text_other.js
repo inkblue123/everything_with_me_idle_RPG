@@ -56,16 +56,16 @@ function work_bench_name(texts) {
     add_text_object(texts, id);
     texts[id].work_bench_name = '工作台';
     texts[id].work_bench_desc = new Array();
-    texts[id].work_bench_desc[0] = '0级工作台描述';
-    texts[id].work_bench_desc[1] = '1级工作台描述';
-    texts[id].work_bench_desc[2] = '2级工作台描述';
-    texts[id].work_bench_desc[3] = '3级工作台描述';
+    texts[id].work_bench_desc[0] = '0级工作台描述，实际上不应该看到这个';
+    texts[id].work_bench_desc[1] = '空手进行合成制造，仅能处理最基础的配方';
+    texts[id].work_bench_desc[2] = '一张桌子，可以在上面处理简单的配方';
+    texts[id].work_bench_desc[3] = '拥有一些便于合成制造的工具的基础工作台';
     id = 'disassembly_tool';
     add_text_object(texts, id);
     texts[id].work_bench_name = '拆解工具';
     texts[id].work_bench_desc = new Array();
-    texts[id].work_bench_desc[0] = '0级拆解工具描述';
-    texts[id].work_bench_desc[1] = '1级拆解工具描述';
+    texts[id].work_bench_desc[0] = '0级拆解工具描述，实际上不应该看到这个';
+    texts[id].work_bench_desc[1] = '空手进行配方拆解，仅能处理最基础的物品';
     texts[id].work_bench_desc[2] = '2级拆解工具描述';
 }
 //初始化文本数据库中没有明确分类的文本

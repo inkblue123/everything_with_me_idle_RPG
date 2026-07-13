@@ -292,13 +292,13 @@ export class Data_attr_manage {
                 }
             }
             //关键节点加成
-            if (!is_Empty_Object(P_skills[id].milepost)) {
-                for (let milepost_level in P_skills[id].milepost) {
+            if (!is_Empty_Object(P_skills[id].milepost_attr)) {
+                for (let milepost_level in P_skills[id].milepost_attr) {
                     if (skill_obj.level < milepost_level) {
                         //只计算到玩家达到了的关键节点的加成
                         break;
                     }
-                    let milepost_array = P_skills[id].milepost[milepost_level];
+                    let milepost_array = P_skills[id].milepost_attr[milepost_level];
                     for (let obj of milepost_array) {
                         let attr = obj.attr;
                         if (is_Empty_Object(this.passive_skill_attr[attr])) {

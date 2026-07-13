@@ -11,7 +11,10 @@ class Item {
         this.maxStack = 1; // 最大堆叠数量
         this.main_type; //物品大类型
         this.secon_type = new Array(); //物品小类型
-        this.price = new Object();
+        this.price = new Object(); //物品价值
+        this.chapter = 0; //章节归属
+        this.exp = new Object(); //物品的经验相关数据
+
         this.init_Item_name_desc(id);
     }
     //调用文本数据库中的物品名称和描述
@@ -35,7 +38,8 @@ class Item {
         }
     }
     //手动定义其他的物品属性
-    init_Item_other(maxStack, secon_type) {
+    init_Item_other(maxStack, secon_type, chapter) {
+        //最大堆叠
         if (maxStack) {
             this.maxStack = maxStack;
         }
@@ -48,9 +52,13 @@ class Item {
                 this.secon_type.push(secon_type);
             }
         }
+        if (chapter) {
+            this.chapter = chapter;
+        } else {
+            this.chapter = 0;
+        }
     }
     //设定物品的价值
-    //没有开发到这部分，还没用
     init_Item_price(...args) {
         if (args.length % 2 != 0) {
             console.log('设定物品价格时的参数数量不正常，有%d个', args.length);
@@ -59,6 +67,17 @@ class Item {
             //
             let money_type = args[i];
             this.price[money_type] = args[i + 1];
+        }
+    }
+    //设定物品的经验
+    init_Item_exp(...args) {
+        if (args.length % 2 != 0) {
+            console.log('设定物品经验时的参数数量不正常，有%d个', args.length);
+        }
+        for (let i = 0; i < args.length; i += 2) {
+            //
+            let exp_type = args[i];
+            this.exp[exp_type] = args[i + 1];
         }
     }
 }
@@ -76,20 +95,9 @@ class Equipment extends Item {
         this.equip_attr = new Object(); //装备后能提供的属性
     }
     //为这个物品填写装备特有的属性
-    //e_type：武器装备分支下的小类型
-    //maxStack：装备的堆叠数量，默认1
     //special：是否属于特制武器，默认否
     //attack_interval：攻击间隔，默认2
-    init_Equipment(e_type, maxStack = 1, special = false, attack_interval = 2) {
-        //装备小类
-        if (e_type) {
-            if (typeof e_type == 'object') {
-                this.secon_type = this.secon_type.concat(e_type);
-            }
-            if (typeof e_type == 'string') {
-                this.secon_type.push(e_type);
-            }
-        }
+    init_Equipment(special = false, attack_interval = 2) {
         //为装备预设穿戴位置
         for (let ee_type of this.secon_type) {
             if (enums.single_hand.includes(ee_type)) {
@@ -122,8 +130,6 @@ class Equipment extends Item {
         if (this.wearing_position.includes('main_hand') && this.wearing_position.includes('main_hand_two')) {
             console.log('装备不可以同时属于主手和双手，%s装备异常', this.id);
         }
-        //堆叠数量
-        this.maxStack = maxStack;
         //制式武器或者特制武器的标记
         if (special) {
             //特制武器，稀有度设置到传说

@@ -2,9 +2,11 @@ import { crtElement, addElement, addElement_radio, addElement_select } from '../
 import { save_game, save_game_show_tip, delete_save_show_tip, load_save_show_tip } from '../LoadAndSave/load.js';
 import { show_dropdown_table } from '../Function/show_func.js';
 import { global } from '../GameRun/global_manage.js';
+import { enums } from '../Data/Enum/Enum.js';
+import { texts } from '../Data/Text/Text.js';
 import { make_test_div, set_test_button } from './Game_log_test.js';
 
-//是否开启测试按钮
+//是否开启测试按钮，初始为true，运行时由游戏设置控制显隐
 var TEST_DIV_FLAG = true;
 //创建右下游戏日志界面
 function create_Game_log() {
@@ -27,7 +29,7 @@ function make_Game_log_div(Game_log) {
     addElement_radio(IB_switch_radio_div, 'IB_switch_button', 'Game_log_switch', 'IB_switch', '图鉴');
     //测试窗口 test TS
     if (typeof TEST_DIV_FLAG !== 'undefined' && TEST_DIV_FLAG) {
-        var TS_switch_radio_div = addElement(Game_log_switch_div, 'div', null, 'radio_div div_switch_button');
+        var TS_switch_radio_div = addElement(Game_log_switch_div, 'div', 'TS_switch_radio_div', 'radio_div div_switch_button');
         addElement_radio(TS_switch_radio_div, 'TS_switch_button', 'Game_log_switch', 'TS_switch', '测试');
     }
 
@@ -131,18 +133,7 @@ function make_mind_div(MD_div) {
                 var OP_game_RASaveLogMax_lable = addElement(OP_game_RASaveLogMax_div, 'div', 'OP_game_RASaveLogMax_lable', 'OP_T2_div');
                 OP_game_RASaveLogMax_lable.innerHTML = '流水账界面日志保存数量上限';
                 var OP_game_RASaveLogMax_value = addElement(OP_game_RASaveLogMax_div, 'div', 'OP_game_RASaveLogMax_value', 'OP_V_div');
-                addElement_select(
-                    OP_game_RASaveLogMax_value,
-                    'OP_game_RASaveLogMax',
-                    null,
-                    'OP_select',
-                    '流水账界面日志保存数量上限',
-                    '10',
-                    '15',
-                    '20',
-                    '30',
-                    '50'
-                );
+                addElement_select(OP_game_RASaveLogMax_value, 'OP_game_RASaveLogMax', null, 'OP_select', '流水账界面日志保存数量上限', '10', '15', '20', '30', '50');
                 //设置-游戏设置-存档管理
                 var OP_game_SaveManage_div = addElement(OP_game_div, 'div', 'OP_game_SaveManage_div', 'OP_TLV_div');
                 var OP_game_SaveManage_lable = addElement(OP_game_SaveManage_div, 'div', 'OP_game_SaveManage_lable', 'OP_T3_div');
@@ -155,6 +146,14 @@ function make_mind_div(MD_div) {
                 var OP_game_CleanSave_button = addElement(OP_game_SaveManage_value, 'button', 'OP_game_CleanSave_button', 'OP_button');
                 OP_game_CleanSave_button.innerHTML = '删除存档';
                 OP_game_CleanSave_button.style.backgroundColor = '#ff000080';
+                //设置-游戏设置-测试模式开关
+                var OP_game_TestMode_div = addElement(OP_game_div, 'div', 'OP_game_TestMode_div', 'OP_TLV_div');
+                var OP_game_TestMode_lable = addElement(OP_game_TestMode_div, 'div', 'OP_game_TestMode_lable', 'OP_T3_div');
+                OP_game_TestMode_lable.innerHTML = '是否开启调试模式';
+                var OP_game_TestMode_value = addElement(OP_game_TestMode_div, 'div', 'OP_game_TestMode_value', 'OP_V_div');
+                var OP_game_TestMode_button = addElement(OP_game_TestMode_value, 'button', 'OP_game_TestMode', 'OP_button');
+                OP_game_TestMode_button.innerHTML = '☑';
+                OP_game_TestMode_button.dataset.testmode = '1'; //内置开关标记：0关1开
             }
             //设置-画面设置
             {
@@ -171,155 +170,162 @@ function make_mind_div(MD_div) {
 function make_library_div(IB_div) {
     // 左侧的分类下拉表格界面
     {
-        var IB_scroll_box = addElement(IB_div, 'div', 'IB_scroll_box', 'overflow_y_div');
-        var IB_switch_div = addElement(IB_scroll_box, 'div', 'IB_switch_div', 'in_overflow_div');
+        var IB_switch_sort_div = addElement(IB_div, 'div', 'IB_switch_sort_div', null);
+        //上半分类按钮
+        {
+            var IB_switch_scroll_box = addElement(IB_switch_sort_div, 'div', 'IB_switch_scroll_box', 'overflow_y_div');
+            var IB_switch_div = addElement(IB_switch_scroll_box, 'div', 'IB_switch_div', 'in_overflow_div');
 
-        // 全部
-        var IB_ALL_radio_div = addElement(IB_switch_div, 'div', 'IB_ALL_radio_div', 'radio_div switch_radio_div_1');
-        addElement_radio(IB_ALL_radio_div, 'IB_all', 'IB_switch', 'IB_all', '全部');
-        //默认激活"全部"过滤条件
-        IB_ALL_radio_div.children[0].checked = true;
+            //物品 item I
+            var IB_item_radio_div = addElement(IB_switch_div, 'div', 'IB_item_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_item_radio_div, 'IB_select_button', 'IB_1_switch', 'IB_select_button', '物品');
+            var IB_item_droptable = addElement(IB_switch_div, 'div', 'IB_item_droptable', 'dropdown_table', 'none');
+            var IB_item_all_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_item_all_radio_div, 'IB_item_all', 'IB_switch', 'IB_item_all', '全部');
 
-        //物品 item I
-        var IB_item_radio_div = addElement(IB_switch_div, 'div', 'IB_item_radio_div', 'radio_div switch_radio_div_1');
-        addElement_radio(IB_item_radio_div, 'IB_item_button', 'IB_1_switch', 'IB_item_button', '物品');
-        var IB_item_droptable = addElement(IB_switch_div, 'div', 'IB_item_droptable', 'dropdown_table');
-        var IB_item_all_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_all_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_item_all_radio_div, 'IB_item_all', 'IB_switch', 'IB_item_all', '全部');
-        var IB_item_E_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_E_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_item_E_radio_div, 'IB_item_E', 'IB_switch', 'IB_item_E', '武器装备');
-        var IB_item_C_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_C_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_item_C_radio_div, 'IB_item_A', 'IB_switch', 'IB_item_C', '消耗品');
-        var IB_item_M_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_M_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_item_M_radio_div, 'IB_item_M', 'IB_switch', 'IB_item_M', '材料物品');
+            var IB_item_E_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_E_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_item_E_radio_div, 'IB_item_E', 'IB_2_switch', 'IB_item_E', '武器装备');
+            var IB_item_E_droptable = addElement(IB_item_droptable, 'div', 'IB_item_E_droptable', 'dropdown_table', 'none');
+            var IB_item_E_all_radio_div = addElement(IB_item_E_droptable, 'div', 'IB_item_E_all_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_item_E_all_radio_div, 'IB_item_E_all', 'IB_switch', 'IB_item_E_all', '全部');
+            for (let secon_type of enums.Equipment_secon_type.sort((a, b) => enums.secon_type_sort[a] - enums.secon_type_sort[b])) {
+                var IB_item_E_secon_radio_div = addElement(IB_item_E_droptable, 'div', 'IB_item_E_' + secon_type + 'radio_div', 'radio_div switch_radio_div_3');
+                addElement_radio(IB_item_E_secon_radio_div, 'IB_item_E_' + secon_type, 'IB_switch', secon_type, texts[secon_type].type_name);
+            }
 
-        //技能 skill S
-        var IB_skill_radio_div = addElement(IB_switch_div, 'div', 'IB_skill_radio_div', 'radio_div switch_radio_div_1');
-        addElement_radio(IB_skill_radio_div, 'IB_skill_button', 'IB_1_switch', 'IB_skill_button', '技能');
-        var IB_skill_droptable = addElement(IB_switch_div, 'div', 'IB_skill_droptable', 'dropdown_table');
-        var IB_skill_all_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_all_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_skill_all_radio_div, 'IB_skill_all', 'IB_switch', 'IB_skill_all', '全部');
+            var IB_item_C_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_C_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_item_C_radio_div, 'IB_item_C', 'IB_2_switch', 'IB_item_C', '消耗品');
+            var IB_item_C_droptable = addElement(IB_item_droptable, 'div', 'IB_item_C_droptable', 'dropdown_table', 'none');
+            var IB_item_C_all_radio_div = addElement(IB_item_C_droptable, 'div', 'IB_item_C_all_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_item_C_all_radio_div, 'IB_item_C_all', 'IB_switch', 'IB_item_C_all', '全部');
+            for (let secon_type of enums.Consumable_secon_type.sort((a, b) => enums.secon_type_sort[a] - enums.secon_type_sort[b])) {
+                var IB_item_C_secon_radio_div = addElement(IB_item_C_droptable, 'div', 'IB_item_C_' + secon_type + 'radio_div', 'radio_div switch_radio_div_3');
+                addElement_radio(IB_item_C_secon_radio_div, 'IB_item_C_' + secon_type, 'IB_switch', secon_type, texts[secon_type].type_name);
+            }
 
-        var IB_skill_B_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_B_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_skill_B_radio_div, 'IB_skill_B', 'IB_switch', 'IB_skill_B', '根基技能');
+            var IB_item_M_radio_div = addElement(IB_item_droptable, 'div', 'IB_item_M_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_item_M_radio_div, 'IB_item_M', 'IB_2_switch', 'IB_item_M', '材料物品');
+            var IB_item_M_droptable = addElement(IB_item_droptable, 'div', 'IB_item_M_droptable', 'dropdown_table', 'none');
+            var IB_item_M_all_radio_div = addElement(IB_item_M_droptable, 'div', 'IB_item_M_all_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_item_M_all_radio_div, 'IB_item_M_all', 'IB_switch', 'IB_item_M_all', '全部');
+            for (let secon_type of enums.Material_secon_type.sort((a, b) => enums.secon_type_sort[a] - enums.secon_type_sort[b])) {
+                var IB_item_M_secon_radio_div = addElement(IB_item_M_droptable, 'div', 'IB_item_M_' + secon_type + 'radio_div', 'radio_div switch_radio_div_3');
+                addElement_radio(IB_item_M_secon_radio_div, 'IB_item_M_' + secon_type, 'IB_switch', secon_type, texts[secon_type].type_name);
+            }
 
-        var IB_skill_C_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_C_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_skill_C_radio_div, 'IB_skill_C', 'IB_2_switch', 'IB_skill_C', '战斗技能');
-        var IB_skill_C_droptable = addElement(IB_skill_droptable, 'div', 'IB_skill_C_droptable', 'dropdown_table');
-        var IB_skill_C_all_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_all_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_C_all_radio_div, 'IB_skill_C_all', 'IB_switch', 'open_2_switch', '全部');
-        var IB_skill_C_W_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_W_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_C_W_radio_div, 'IB_skill_C_W', 'IB_switch', 'open_2_switch', '武器精通技能');
-        var IB_skill_C_Env_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_Env_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_C_Env_radio_div, 'IB_skill_C_Env', 'IB_switch', 'open_2_switch', '环境适应技能');
-        var IB_skill_C_Ene_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_Ene_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_C_Ene_radio_div, 'IB_skill_C_Ene', 'IB_switch', 'open_2_switch', '对敌精通技能');
+            //技能 skill S
+            var IB_skill_radio_div = addElement(IB_switch_div, 'div', 'IB_skill_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_skill_radio_div, 'IB_skill_button', 'IB_1_switch', 'IB_skill_button', '技能');
+            var IB_skill_droptable = addElement(IB_switch_div, 'div', 'IB_skill_droptable', 'dropdown_table', 'none');
+            var IB_skill_all_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_all_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_all_radio_div, 'IB_skill_all', 'IB_switch', 'IB_skill_all', '全部');
 
-        var IB_skill_L_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_L_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_skill_L_radio_div, 'IB_skill_L', 'IB_2_switch', 'IB_skill_L', '生活技能');
-        var IB_skill_L_droptable = addElement(IB_skill_droptable, 'div', 'IB_skill_L_droptable', 'dropdown_table');
-        var IB_skill_L_all_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_all_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_L_all_radio_div, 'IB_skill_L_all', 'IB_switch', 'open_2_switch', '全部');
-        var IB_skill_L_Raw_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_Raw_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_L_Raw_radio_div, 'IB_skill_L_Raw', 'IB_switch', 'open_2_switch', '原料获取技能');
-        var IB_skill_L_P_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_P_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_L_P_radio_div, 'IB_skill_L_P', 'IB_switch', 'open_2_switch', '原料加工技能');
-        var IB_skill_L_F_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_F_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_L_F_radio_div, 'IB_skill_L_F', 'IB_switch', 'open_2_switch', '成品使用技能');
-        var IB_skill_L_Rec_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_Rec_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_L_Rec_radio_div, 'IB_skill_L_Rec', 'IB_switch', 'open_2_switch', '回收利用技能');
+            var IB_skill_B_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_B_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_B_radio_div, 'IB_skill_B', 'IB_switch', 'IB_skill_B', '根基技能');
 
-        var IB_skill_A_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_A_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_skill_A_radio_div, 'IB_skill_A', 'IB_2_switch', 'IB_skill_A', '主动技能');
-        var IB_skill_A_droptable = addElement(IB_skill_droptable, 'div', 'IB_skill_A_droptable', 'dropdown_table');
-        var IB_skill_A_all_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_all_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_A_all_radio_div, 'IB_skill_A_all', 'IB_switch', 'open_2_switch', '全部');
-        var IB_skill_A_A_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_A_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_A_A_radio_div, 'IB_skill_A_A', 'IB_switch', 'open_2_switch', '可攻击的技能');
-        var IB_skill_A_D_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_D_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_A_D_radio_div, 'IB_skill_A_D', 'IB_switch', 'open_2_switch', '可防御的技能');
-        var IB_skill_A_R_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_R_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_A_R_radio_div, 'IB_skill_A_R', 'IB_switch', 'open_2_switch', '可恢复的技能');
-        var IB_skill_A_F_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_F_radio_div', 'radio_div switch_radio_div_3');
-        addElement_radio(IB_skill_A_F_radio_div, 'IB_skill_A_F', 'IB_switch', 'open_2_switch', '可辅助的技能');
-        //敌人 enemy E
-        var IB_enemy_radio_div = addElement(IB_switch_div, 'div', 'IB_enemy_radio_div', 'radio_div switch_radio_div_1');
-        addElement_radio(IB_enemy_radio_div, 'IB_enemy_button', 'IB_1_switch', 'IB_enemy_button', '敌人');
-        var IB_enemy_droptable = addElement(IB_switch_div, 'div', 'IB_enemy_droptable', 'dropdown_table');
-        var IB_enemy_N_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_N_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_enemy_N_radio_div, 'IB_enemy_N', 'IB_switch', 'IB_enemy_N', '战斗敌人');
-        var IB_enemy_T_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_T_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_enemy_T_radio_div, 'IB_enemy_T', 'IB_switch', 'IB_enemy_T', '伐木“敌人”');
-        var IB_enemy_F_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_F_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_enemy_F_radio_div, 'IB_enemy_F', 'IB_switch', 'IB_enemy_F', '钓鱼“敌人”');
-        var IB_enemy_O_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_O_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_enemy_O_radio_div, 'IB_enemy_O', 'IB_switch', 'IB_enemy_O', '挖矿“敌人”');
-        //事件 event E
-        var IB_event_radio_div = addElement(IB_switch_div, 'div', 'IB_event_radio_div', 'radio_div switch_radio_div_1');
-        addElement_radio(IB_event_radio_div, 'IB_event_button', 'IB_1_switch', 'IB_event_button', '事件');
-        var IB_event_droptable = addElement(IB_switch_div, 'div', 'IB_event_droptable', 'dropdown_table');
-        var IB_event_MQ_radio_div = addElement(IB_event_droptable, 'div', 'IB_event_MQ_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_event_MQ_radio_div, 'IB_event_MQ', 'IB_switch', 'IB_event_MQ', '主线任务');
-        var IB_event_SQ_radio_div = addElement(IB_event_droptable, 'div', 'IB_event_SQ_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_event_SQ_radio_div, 'IB_event_SQ', 'IB_switch', 'IB_event_SQ', '支线任务');
-        var IB_event_CL_radio_div = addElement(IB_event_droptable, 'div', 'IB_event_CL_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_event_CL_radio_div, 'IB_event_CL', 'IB_switch', 'IB_event_CL', '挑战');
-        var IB_event_AM_radio_div = addElement(IB_event_droptable, 'div', 'IB_event_AM_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_event_AM_radio_div, 'IB_event_AM', 'IB_switch', 'IB_event_AM', '成就');
+            var IB_skill_C_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_C_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_C_radio_div, 'IB_skill_C', 'IB_2_switch', 'IB_skill_C', '战斗技能');
+            var IB_skill_C_droptable = addElement(IB_skill_droptable, 'div', 'IB_skill_C_droptable', 'dropdown_table', 'none');
+            var IB_skill_C_all_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_all_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_C_all_radio_div, 'IB_skill_C_all', 'IB_switch', 'open_2_switch', '全部');
+            var IB_skill_C_W_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_W_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_C_W_radio_div, 'IB_skill_C_W', 'IB_switch', 'open_2_switch', '武器精通技能');
+            var IB_skill_C_Env_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_Env_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_C_Env_radio_div, 'IB_skill_C_Env', 'IB_switch', 'open_2_switch', '环境适应技能');
+            var IB_skill_C_Ene_radio_div = addElement(IB_skill_C_droptable, 'div', 'IB_skill_C_Ene_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_C_Ene_radio_div, 'IB_skill_C_Ene', 'IB_switch', 'open_2_switch', '对敌精通技能');
 
-        //游戏机制 rule R
-        var IB_rule_radio_div = addElement(IB_switch_div, 'div', 'IB_rule_radio_div', 'radio_div switch_radio_div_1');
-        addElement_radio(IB_rule_radio_div, 'IB_rule_button', 'IB_1_switch', 'IB_rule_button', '游戏机制');
-        var IB_rule_droptable = addElement(IB_switch_div, 'div', 'IB_rule_droptable', 'dropdown_table');
-        var IB_rule_TYPE1_radio_div = addElement(IB_rule_droptable, 'div', 'IB_rule_TYPE1_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_rule_TYPE1_radio_div, 'IB_rule_MQ', 'IB_switch', 'IB_rule_MQ', '机制分类1');
-        var IB_rule_TYPE2_radio_div = addElement(IB_rule_droptable, 'div', 'IB_rule_TYPE2_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_rule_TYPE2_radio_div, 'IB_rule_SQ', 'IB_switch', 'IB_rule_SQ', '机制分类2');
-        var IB_rule_TYPE3_radio_div = addElement(IB_rule_droptable, 'div', 'IB_rule_TYPE3_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_rule_TYPE3_radio_div, 'IB_rule_CL', 'IB_switch', 'IB_rule_CL', '机制分类3');
-        var IB_rule_TYPE4_radio_div = addElement(IB_rule_droptable, 'div', 'IB_rule_TYPE4_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(IB_rule_TYPE4_radio_div, 'IB_rule_AM', 'IB_switch', 'IB_rule_AM', '机制分类4');
+            var IB_skill_L_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_L_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_L_radio_div, 'IB_skill_L', 'IB_2_switch', 'IB_skill_L', '生活技能');
+            var IB_skill_L_droptable = addElement(IB_skill_droptable, 'div', 'IB_skill_L_droptable', 'dropdown_table', 'none');
+            var IB_skill_L_all_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_all_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_all_radio_div, 'IB_skill_L_all', 'IB_switch', 'open_2_switch', '全部');
+            var IB_skill_L_Raw_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_Raw_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_Raw_radio_div, 'IB_skill_L_Raw', 'IB_switch', 'open_2_switch', '原料获取技能');
+            var IB_skill_L_P_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_P_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_P_radio_div, 'IB_skill_L_P', 'IB_switch', 'open_2_switch', '原料加工技能');
+            var IB_skill_L_F_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_F_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_F_radio_div, 'IB_skill_L_F', 'IB_switch', 'open_2_switch', '成品使用技能');
+            var IB_skill_L_Rec_radio_div = addElement(IB_skill_L_droptable, 'div', 'IB_skill_L_Rec_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_L_Rec_radio_div, 'IB_skill_L_Rec', 'IB_switch', 'open_2_switch', '回收利用技能');
+
+            var IB_skill_A_radio_div = addElement(IB_skill_droptable, 'div', 'IB_skill_A_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_skill_A_radio_div, 'IB_skill_A', 'IB_2_switch', 'IB_skill_A', '主动技能');
+            var IB_skill_A_droptable = addElement(IB_skill_droptable, 'div', 'IB_skill_A_droptable', 'dropdown_table', 'none');
+            var IB_skill_A_all_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_all_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_A_all_radio_div, 'IB_skill_A_all', 'IB_switch', 'open_2_switch', '全部');
+            var IB_skill_A_A_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_A_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_A_A_radio_div, 'IB_skill_A_A', 'IB_switch', 'open_2_switch', '可攻击的技能');
+            var IB_skill_A_D_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_D_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_A_D_radio_div, 'IB_skill_A_D', 'IB_switch', 'open_2_switch', '可防御的技能');
+            var IB_skill_A_R_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_R_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_A_R_radio_div, 'IB_skill_A_R', 'IB_switch', 'open_2_switch', '可恢复的技能');
+            var IB_skill_A_F_radio_div = addElement(IB_skill_A_droptable, 'div', 'IB_skill_A_F_radio_div', 'radio_div switch_radio_div_3');
+            addElement_radio(IB_skill_A_F_radio_div, 'IB_skill_A_F', 'IB_switch', 'open_2_switch', '可辅助的技能');
+            //敌人 enemy E
+            var IB_enemy_radio_div = addElement(IB_switch_div, 'div', 'IB_enemy_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_enemy_radio_div, 'IB_enemy_button', 'IB_1_switch', 'IB_enemy_button', '敌人');
+            var IB_enemy_droptable = addElement(IB_switch_div, 'div', 'IB_enemy_droptable', 'dropdown_table', 'none');
+            var IB_enemy_N_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_N_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_enemy_N_radio_div, 'IB_enemy_N', 'IB_switch', 'IB_enemy_N', '战斗敌人');
+            var IB_enemy_T_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_T_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_enemy_T_radio_div, 'IB_enemy_T', 'IB_switch', 'IB_enemy_T', '伐木“敌人”');
+            var IB_enemy_F_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_F_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_enemy_F_radio_div, 'IB_enemy_F', 'IB_switch', 'IB_enemy_F', '钓鱼“敌人”');
+            var IB_enemy_O_radio_div = addElement(IB_enemy_droptable, 'div', 'IB_enemy_O_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_enemy_O_radio_div, 'IB_enemy_O', 'IB_switch', 'IB_enemy_O', '挖矿“敌人”');
+            //事件 event E
+            var IB_event_radio_div = addElement(IB_switch_div, 'div', 'IB_event_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_event_radio_div, 'IB_event_button', 'IB_1_switch', 'IB_event_button', '事件');
+            var IB_event_droptable = addElement(IB_switch_div, 'div', 'IB_event_droptable', 'dropdown_table', 'none');
+            var IB_event_MQ_radio_div = addElement(IB_event_droptable, 'div', 'IB_event_MQ_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_event_MQ_radio_div, 'IB_event_MQ', 'IB_switch', 'IB_event_MQ', '主线任务');
+            var IB_event_SQ_radio_div = addElement(IB_event_droptable, 'div', 'IB_event_SQ_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_event_SQ_radio_div, 'IB_event_SQ', 'IB_switch', 'IB_event_SQ', '支线任务');
+            var IB_event_CL_radio_div = addElement(IB_event_droptable, 'div', 'IB_event_CL_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_event_CL_radio_div, 'IB_event_CL', 'IB_switch', 'IB_event_CL', '挑战');
+            var IB_event_AM_radio_div = addElement(IB_event_droptable, 'div', 'IB_event_AM_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_event_AM_radio_div, 'IB_event_AM', 'IB_switch', 'IB_event_AM', '成就');
+
+            //游戏机制 rule R
+            var IB_rule_radio_div = addElement(IB_switch_div, 'div', 'IB_rule_radio_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_rule_radio_div, 'IB_rule_button', 'IB_1_switch', 'IB_rule_button', '游戏机制');
+            var IB_rule_droptable = addElement(IB_switch_div, 'div', 'IB_rule_droptable', 'dropdown_table', 'none');
+            var IB_rule_TYPE1_radio_div = addElement(IB_rule_droptable, 'div', 'IB_rule_TYPE1_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_rule_TYPE1_radio_div, 'IB_rule_MQ', 'IB_switch', 'IB_rule_MQ', '机制分类1');
+            var IB_rule_TYPE2_radio_div = addElement(IB_rule_droptable, 'div', 'IB_rule_TYPE2_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_rule_TYPE2_radio_div, 'IB_rule_SQ', 'IB_switch', 'IB_rule_SQ', '机制分类2');
+            var IB_rule_TYPE3_radio_div = addElement(IB_rule_droptable, 'div', 'IB_rule_TYPE3_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_rule_TYPE3_radio_div, 'IB_rule_CL', 'IB_switch', 'IB_rule_CL', '机制分类3');
+            var IB_rule_TYPE4_radio_div = addElement(IB_rule_droptable, 'div', 'IB_rule_TYPE4_radio_div', 'radio_div switch_radio_div_2');
+            addElement_radio(IB_rule_TYPE4_radio_div, 'IB_rule_AM', 'IB_switch', 'IB_rule_AM', '机制分类4');
+        }
+        //下半图鉴显示模式按钮
+        {
+            var IB_fixed_div = addElement(IB_switch_sort_div, 'div', 'IB_fixed_div', null);
+            var IB_show_have_div = addElement(IB_fixed_div, 'div', 'IB_show_have_div', 'radio_div switch_radio_div_1');
+            addElement_radio(IB_show_have_div, 'IB_show_have', 'IB_show', 'IB_show_have', '☑显示已点亮图鉴条目');
+            IB_show_have_div.children[0].checked = true;
+            var IB_show_all_div = addElement(IB_fixed_div, 'div', 'IB_show_all_div', 'radio_div switch_radio_div_1', 'none');
+            addElement_radio(IB_show_all_div, 'IB_show_all', 'IB_show', 'IB_show_all', '☐显示已点亮图鉴条目');
+        }
     }
     //右侧图鉴内容
     {
-        //选择界面
-        var IB_select_div = addElement(IB_div, 'div', 'IB_select_div', null);
-
-        //可滚动区域
-        var IB_select_scroll_box = addElement(IB_select_div, 'div', 'IB_select_scroll_box', 'overflow_y_div');
-        var IB_select_content_div = addElement(IB_select_scroll_box, 'div', 'IB_select_content_div', 'in_overflow_div');
-        //6个章节的标题+按钮网格
-        var chapterNames = ['一', '二', '三', '四', '五', '六'];
-        for (let c = 0; c < 6; c++) {
-            //章节标题
-            var chapter_title = addElement(IB_select_content_div, 'div', null, 'IB_chapter_title');
-            chapter_title.textContent = '第' + chapterNames[c] + '章';
-
-            //按钮网格，每行3个
-            var chapter_grid = addElement(IB_select_content_div, 'div', null, 'IB_chapter_grid');
-            for (let b = 1; b <= 10; b++) {
-                var chapter_button = addElement(chapter_grid, 'button', null, 'IB_select_button');
-                chapter_button.textContent = '第' + chapterNames[c] + '章按钮' + b;
-            }
-        }
-
-        //内容界面
+        //展示所有图鉴条目的界面
+        var IB_select_scroll_box = addElement(IB_div, 'div', 'IB_select_scroll_box', 'overflow_y_div');
+        var IB_select_div = addElement(IB_select_scroll_box, 'div', 'IB_select_div', 'in_overflow_div');
+        //展示一个具体图鉴条目的界面
         var IB_value_div = addElement(IB_div, 'div', 'IB_value_div', null, 'none');
-        //上半部分：导航栏，高度与switch_radio_div_1一致
-        var IB_nav_div = addElement(IB_value_div, 'div', 'IB_nav_div', 'page_flex');
-        var IB_back_button = addElement(IB_nav_div, 'button', 'IB_back_button', null);
-        IB_back_button.innerHTML = '<--返回';
-        var IB_prev_button = addElement(IB_nav_div, 'button', 'IB_prev_button', 'IB_value_button');
-        IB_prev_button.innerHTML = '<--上一条';
-        var IB_next_button = addElement(IB_nav_div, 'button', 'IB_next_button', 'IB_value_button');
-        IB_next_button.innerHTML = '下一条-->';
-        //下半部分：可滚动的图鉴内容区域，占据剩余空间
-        var IB_value_scroll_box = addElement(IB_value_div, 'div', 'IB_value_scroll_box', 'overflow_y_div');
-        var IB_content_div = addElement(IB_value_scroll_box, 'div', 'IB_content_div', 'in_overflow_div');
-        for (let i = 0; i < 20; i++) {
-            let test_text = addElement(IB_content_div, 'div', null, null);
-            test_text.innerHTML = '文本' + i;
-        }
+        //上半标题栏
+        var IB_value_title_div = addElement(IB_value_div, 'div', null, 'IB_value_title_div page_flex');
+        var IB_value_back_button = addElement(IB_value_title_div, 'button', 'IB_value_back_button', 'IB_value_button');
+        IB_value_back_button.innerHTML = '<--返回';
+        var IB_value_title_text = addElement(IB_value_title_div, 'div', 'IB_value_title_text', null);
+        IB_value_title_text.innerHTML = '显示图鉴条目名称';
+        //下半内容区
+        var IB_value_content_scroll_box = addElement(IB_value_div, 'div', 'IB_value_content_scroll_box', 'overflow_y_div');
+        var IB_value_content_div = addElement(IB_value_content_scroll_box, 'div', 'IB_value_content_div', 'in_overflow_div');
     }
 }
 
@@ -330,6 +336,11 @@ function set_Game_log_button(Game_log) {
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
             change_Game_log_div(this.id);
+            if (this.id == 'IB_switch_button') {
+                //更新图鉴界面
+                let library_manage = global.get_library_manage();
+                library_manage.updata_IB_select_div();
+            }
         });
     });
     //脑海中的组件
@@ -418,15 +429,58 @@ function set_mind_button(Game_log) {
         OP_game_CleanSave_button.onclick = function () {
             delete_save_show_tip();
         };
+        //测试模式开关
+        let OP_game_TestMode_button = Game_log.querySelector('#OP_game_TestMode');
+        OP_game_TestMode_button.onclick = function () {
+            let current = this.dataset.testmode; //读取按钮内置的开关标记
+            if (current == '0') {
+                //当前关闭，切换为开启
+                this.dataset.testmode = '1';
+                this.innerHTML = '☑';
+                global.set_flag('OP_game_TestMode', 1);
+            } else {
+                //当前开启，切换为关闭
+                this.dataset.testmode = '0';
+                this.innerHTML = '☐';
+                global.set_flag('OP_game_TestMode', 0);
+            }
+        };
     }
 }
 //设置图鉴子功能中的按钮触发事件
 function set_library_button(Game_log) {
-    //图鉴界面1级分类按钮，物品、技能、敌人
-    let radios = Game_log.querySelectorAll('input[type="radio"][name="IB_1_switch"]');
+    //图鉴显示模式按钮
+    let radios = Game_log.querySelectorAll('input[type="radio"][name="IB_show"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
-            if (this.id == 'IB_item_button') {
+            const IB_show_have_div = document.getElementById('IB_show_have_div');
+            const IB_show_all_div = document.getElementById('IB_show_all_div');
+            if (this.id == 'IB_show_have') {
+                IB_show_have_div.style.display = 'none';
+                IB_show_have_div.children[0].checked = true;
+                IB_show_all_div.style.display = '';
+            } else if (this.id == 'IB_show_all') {
+                IB_show_have_div.style.display = '';
+                IB_show_have_div.children[0].checked = true;
+                IB_show_all_div.style.display = 'none';
+            }
+            //更新图鉴界面
+            let library_manage = global.get_library_manage();
+            library_manage.update_IB_switch_div();
+            library_manage.updata_IB_select_div();
+        });
+    });
+    //图鉴展示一个具体图鉴条目的界面，返回按钮
+    let IB_value_back_button = Game_log.querySelector('#IB_value_back_button');
+    IB_value_back_button.onclick = function () {
+        change_IB_select_or_value_div('IB_select_scroll_box');
+    };
+
+    //图鉴界面1级分类按钮，物品、技能、敌人
+    radios = Game_log.querySelectorAll('input[type="radio"][name="IB_1_switch"]');
+    radios.forEach((radio) => {
+        radio.addEventListener('click', function () {
+            if (this.id == 'IB_select_button') {
                 let IB_item_all_radio_div = document.getElementById('IB_item_all_radio_div');
                 IB_item_all_radio_div.children[0].checked = true;
                 show_dropdown_table('IB_switch_div', 'IB_item_droptable');
@@ -452,13 +506,35 @@ function set_library_button(Game_log) {
             for (const radio of radios) {
                 radio.checked = false;
             }
+            //图鉴内容切换到选择界面
+            const IB_select_div = document.getElementById('IB_select_div');
+            const IB_value_div = document.getElementById('IB_value_div');
+            IB_select_div.style.display = '';
+            IB_value_div.style.display = 'none';
+            //更新图鉴界面
+            let library_manage = global.get_library_manage();
+            library_manage.updata_IB_select_div();
+            //返回到展示所有图鉴条目的界面
+            change_IB_select_or_value_div('IB_select_scroll_box');
         });
     });
     //图鉴界面2级分类按钮
     radios = Game_log.querySelectorAll('input[type="radio"][name="IB_2_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
-            if (this.id == 'IB_skill_C') {
+            if (this.id == 'IB_item_E') {
+                let IB_item_E_all_radio_div = document.getElementById('IB_item_E_all_radio_div');
+                IB_item_E_all_radio_div.children[0].checked = true;
+                show_dropdown_table('IB_item_droptable', 'IB_item_E_droptable');
+            } else if (this.id == 'IB_item_C') {
+                let IB_item_C_all_radio_div = document.getElementById('IB_item_C_all_radio_div');
+                IB_item_C_all_radio_div.children[0].checked = true;
+                show_dropdown_table('IB_item_droptable', 'IB_item_C_droptable');
+            } else if (this.id == 'IB_item_M') {
+                let IB_item_M_all_radio_div = document.getElementById('IB_item_M_all_radio_div');
+                IB_item_M_all_radio_div.children[0].checked = true;
+                show_dropdown_table('IB_item_droptable', 'IB_item_M_droptable');
+            } else if (this.id == 'IB_skill_C') {
                 let IB_skill_C_all_radio_div = document.getElementById('IB_skill_C_all_radio_div');
                 IB_skill_C_all_radio_div.children[0].checked = true;
                 show_dropdown_table('IB_skill_droptable', 'IB_skill_C_droptable');
@@ -471,8 +547,11 @@ function set_library_button(Game_log) {
                 IB_skill_A_all_radio_div.children[0].checked = true;
                 show_dropdown_table('IB_skill_droptable', 'IB_skill_A_droptable');
             }
-            // let P_All_Skills = player.get_player_All_Skills();
-            // P_All_Skills.updata_PSK_value();
+            //更新图鉴界面
+            let library_manage = global.get_library_manage();
+            library_manage.updata_IB_select_div();
+            //返回到展示所有图鉴条目的界面
+            change_IB_select_or_value_div('IB_select_scroll_box');
         });
     });
     //图鉴内每种最小分类按钮
@@ -493,14 +572,20 @@ function set_library_button(Game_log) {
                 }
             }
             //部分最小分类按钮要关闭所有2级分类按钮，并且关闭所属下拉框内的所有子下拉框
-            let open_2_skill_C_id = ['IB_skill_all', 'IB_skill_B', 'IB_skill_A', 'IB_skill_SS'];
+            let open_2_skill_C_id = ['IB_item_all', , 'IB_skill_all', 'IB_skill_B', 'IB_skill_A', 'IB_skill_SS'];
             if (open_2_skill_C_id.includes(this.id)) {
+                show_dropdown_table('IB_item_droptable');
                 show_dropdown_table('IB_skill_droptable');
                 radios = document.querySelectorAll('input[name="IB_2_switch"]');
                 for (const radio of radios) {
                     radio.checked = false;
                 }
             }
+            //更新图鉴界面
+            let library_manage = global.get_library_manage();
+            library_manage.updata_IB_select_div();
+            //返回到展示所有图鉴条目的界面
+            change_IB_select_or_value_div('IB_select_scroll_box');
         });
     });
 }
@@ -574,6 +659,18 @@ function change_game_log_OP_div(button_id) {
         } else {
             div_obj[id].style.display = 'none';
         }
+    }
+}
+//切换图鉴界面的选择列表和详情内容显示
+function change_IB_select_or_value_div(div_id) {
+    const select_box = document.getElementById('IB_select_scroll_box');
+    const IB_value_div = document.getElementById('IB_value_div');
+    if (div_id == 'IB_select_scroll_box') {
+        select_box.style.display = '';
+        IB_value_div.style.display = 'none';
+    } else if (div_id == 'IB_value_div') {
+        select_box.style.display = 'none';
+        IB_value_div.style.display = '';
     }
 }
 

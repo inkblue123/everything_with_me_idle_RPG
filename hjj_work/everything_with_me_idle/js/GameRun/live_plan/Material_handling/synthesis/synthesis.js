@@ -20,8 +20,9 @@ import {
     SYN_switch_type_handle,
 } from './SYN_function.js';
 import { get_SYN_FL_click_type, delete_SYN_FL_value, get_SYN_FL_show_value, set_a_SYN_FL_show_value } from './SYN_filter.js';
-import { updata_SYN_FM_title } from './SYN_filter_make.js';
-import { get_now_SYN_EN_work_bench, delete_SYN_EN, init_SYN_EN } from './SYN_environment.js';
+import { updata_SYN_FM_value } from './SYN_filter_make.js';
+import { updata_SYN_MK_value } from './SYN_make.js';
+import { updata_SYN_EN_value } from './SYN_environment.js';
 
 //合成制造技能管理类 Synthesis SYN
 export class Synthesis_manage {
@@ -33,7 +34,7 @@ export class Synthesis_manage {
         this.now_filter_value; //当前在配方筛选界面选定的内容
 
         this.player_end_attr; //玩家最终属性拷贝，方便调用
-        this.SYN_place_work_bench = new Object(); //所有地点的合成制造工作环境缓存
+        this.SYN_all_place_work_bench = new Object(); //所有地点的合成制造工作环境缓存
         this.SYN_work_bench_unlock = new Object(); //合成制造技能的工作环境解锁情况
 
         for (let work_bench of enums['all_SYN_work_bench']) {
@@ -43,7 +44,7 @@ export class Synthesis_manage {
     //获取合成制造技能管理对象的存档
     save_synthesis_manage() {
         let synthesis_save = new Object();
-        synthesis_save.SYN_place_work_bench = this.SYN_place_work_bench;
+        synthesis_save.SYN_all_place_work_bench = this.SYN_all_place_work_bench;
         return synthesis_save;
     }
     //加载合成制造技能存档
@@ -51,14 +52,14 @@ export class Synthesis_manage {
         if (is_Empty_Object(synthesis_save)) {
             return;
         }
-        this.SYN_place_work_bench = synthesis_save.SYN_place_work_bench;
+        this.SYN_all_place_work_bench = synthesis_save.SYN_all_place_work_bench || new Object();
     }
     //更新当前地点，初始化合成制造信息
     // 上层管理类会调用，必须定义，必须使用这个名称
     set_new_place(now_place) {
         this.now_place = now_place;
         //更新新低点的合成环境缓存
-        if (is_Empty_Object(this.SYN_place_work_bench[now_place])) {
+        if (is_Empty_Object(this.SYN_all_place_work_bench[now_place])) {
             this.init_SYN_place_work_bench(now_place);
         }
         //如果当前展示的技能就是合成制造，需要更新界面里的内容
@@ -91,8 +92,8 @@ export class Synthesis_manage {
     updata_super_game_div(now_place) {
         this.now_place = now_place;
         // this.now_time = global.get_game_now_time();
-        //更新新低点的合成环境缓存
-        if (is_Empty_Object(this.SYN_place_work_bench[now_place])) {
+        //更新新地点的合成环境缓存
+        if (is_Empty_Object(this.SYN_all_place_work_bench[now_place])) {
             this.init_SYN_place_work_bench(now_place);
         }
         //如果当前展示的技能就是合成制造，需要更新界面里的内容
@@ -135,8 +136,13 @@ export class Synthesis_manage {
             this.set_place_work_bench(this.now_place, product_obj.id, product_obj.next_level);
             this.updata_live_plan_div('SYN_EN');
         }
+        //结算合成制造的属性
 
-        //获取经验
+        //记录合成制造行为，用于结算技能经验
+        let global_flag_manage = global.get_global_flag_manage();
+        let SYN_behavior = new Object();
+        SYN_behavior.formula_id = this.now_formula;
+        global_flag_manage.record_live_plan_skill_leveling_behavior('synthesis', SYN_behavior);
     }
     //开始合成制造，更新合成制造技能的界面
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -146,7 +152,7 @@ export class Synthesis_manage {
             SYN_min = get_SYN_min_name();
         }
         if (SYN_min == 'SYN_MK') {
-            this.updata_SYN_MK_value();
+            updata_SYN_MK_value();
             //更新配方列表头右侧的占位符
             let scroll_box = SYN_min + '_formula_scroll_box';
             let value_div = SYN_min + '_formula_value_div';
@@ -163,11 +169,12 @@ export class Synthesis_manage {
         } else if (SYN_min == 'SYN_FL') {
             this.updata_SYN_FL_value('delete');
         } else if (SYN_min == 'SYN_FM') {
-            this.updata_SYN_FM_value();
+            updata_SYN_FM_value(this.now_filter_type, this.now_filter_value);
         } else if (SYN_min == 'SYN_RS') {
             // this.updata_SYN_RS_value();
         } else if (SYN_min == 'SYN_EN') {
-            this.updata_SYN_EN_value();
+            let SYN_place_work_bench = this.SYN_all_place_work_bench[this.now_place]; //一个具体地点的所有合成制造环境
+            updata_SYN_EN_value(SYN_place_work_bench);
         }
     }
     //重置一轮合成制造的参数
@@ -197,7 +204,8 @@ export class Synthesis_manage {
     // 上层管理类会调用，必须定义，必须使用这个名称
     set_place_work_bench(place_id, work_bench_id, level) {
         //新地点初始化
-        if (is_Empty_Object(this.SYN_place_work_bench[place_id])) {
+        let SYN_place_work_bench = this.SYN_all_place_work_bench[place_id]; //当前地点的所有合成制造环境
+        if (is_Empty_Object(SYN_place_work_bench)) {
             this.init_SYN_place_work_bench(place_id);
         }
 
@@ -206,24 +214,11 @@ export class Synthesis_manage {
             return;
         }
 
-        this.SYN_place_work_bench[place_id][work_bench_id] = level;
+        SYN_place_work_bench[work_bench_id] = level;
     }
 
-    //更新上中的生活技能界面中的合成制造技能界面的制造界面的内容
-    updata_SYN_MK_value() {
-        //清空这个界面里的配方
-        let SYN_MK_formula_value_div = document.getElementById('SYN_MK_formula_value_div');
-        SYN_MK_formula_value_div.replaceChildren();
-        //获取应该展示的配方过滤条件
-        let SYN_MK_type = get_SYN_formula_switch_type('SYN_MK');
-        //获取在这个过滤条件下应该展示的配方id
-        let formula_arr = SYN_switch_type_handle(SYN_MK_type);
-        //展示这些配方
-        for (let formula_id of formula_arr) {
-            add_formula('SYN_MK', formula_id);
-        }
-    }
     //更新上中的生活技能界面中的合成制造技能界面的配方筛选的筛选界面的内容
+    //这个函数不建议放进配方筛选的文件里，因为界面中有一些按钮会触发这个函数，需要作为合成制造管理类的成员函数方便调用
     updata_SYN_FL_value(updata_type, click_type, click_value) {
         //获取当前选择的筛选类型
         let SYN_FL_N_type = get_radio_switch_click_value('SYN_FL_N_type_switch');
@@ -245,49 +240,20 @@ export class Synthesis_manage {
         set_a_SYN_FL_show_value('P_secon_type', SYN_FL_C.SYN_FL_P_S, SYN_FL_show_value.product_secon_type); //产物-物品小类
         set_a_SYN_FL_show_value('P_item', SYN_FL_C.SYN_FL_P_I, SYN_FL_show_value.product_item); //产物-具体物品
     }
-    //更新上中的生活技能界面中的合成制造技能界面的配方筛选的制造界面的内容
-    updata_SYN_FM_value() {
-        //清空这个界面里的配方
-        let SYN_FM_formula_value_div = document.getElementById('SYN_FM_formula_value_div');
-        SYN_FM_formula_value_div.replaceChildren();
-
-        //获取应该展示的配方过滤条件
-        let SYN_FM_formula_switch_type = get_SYN_formula_switch_type('SYN_FM');
-        SYN_FM_formula_switch_type.filter_type = this.now_filter_type;
-        SYN_FM_formula_switch_type.filter_value = this.now_filter_value;
-        //重新生成标题
-        updata_SYN_FM_title(SYN_FM_formula_switch_type);
-
-        // 获取在这个过滤条件下应该展示的配方id
-        let formula_arr = SYN_switch_type_handle(SYN_FM_formula_switch_type);
-        // 展示这些配方
-        for (let formula_id of formula_arr) {
-            add_formula('SYN_FM', formula_id);
-        }
-    }
-    //更新上中的生活技能界面中的合成制造技能界面的工作环境详情的内容
-    updata_SYN_EN_value() {
-        //获取更新前选择的工作环境
-        let old_work_bench = get_now_SYN_EN_work_bench();
-        //清除工作环境详情的所有内容
-        delete_SYN_EN();
-        //填充工作环境详情界面的所有内容
-        init_SYN_EN(this.SYN_place_work_bench[this.now_place]);
-    }
     //初始化指定地点的合成制造工作环境情况
     init_SYN_place_work_bench(place_id) {
-        this.SYN_place_work_bench[place_id] = new Object();
+        this.SYN_all_place_work_bench[place_id] = new Object();
         for (let work_bench_id of enums['all_SYN_work_bench']) {
             if (work_bench_id == 'carpentry_bench') {
-                this.SYN_place_work_bench[place_id][work_bench_id] = 1;
+                this.SYN_all_place_work_bench[place_id][work_bench_id] = 1;
             } else {
-                this.SYN_place_work_bench[place_id][work_bench_id] = 0;
+                this.SYN_all_place_work_bench[place_id][work_bench_id] = 0;
             }
         }
     }
     //获取当前地点的工作环境
     get_now_place_work_bench() {
-        return this.SYN_place_work_bench[this.now_place];
+        return this.SYN_all_place_work_bench[this.now_place];
     }
 
     //保存要做的配方
@@ -365,7 +331,7 @@ export class Synthesis_manage {
         let FD_E_value_div_id = SYN_min + '_FD_E_value_div';
         let FD_E_value_div = document.getElementById(FD_E_value_div_id); //配方工作环境详情div
         let need_work_bench = formulas[this.now_formula].work_bench; //配方需求工作环境
-        let now_work_bench = this.SYN_place_work_bench[this.now_place]; //当前地点的工作环境
+        let SYN_place_work_bench = this.SYN_all_place_work_bench[this.now_place]; //当前地点的所有合成制造环境
         let need_WB_ch = '需求<br>';
         let now_WB_ch = '当前<br>';
         let WB_flag = true;
@@ -373,7 +339,7 @@ export class Synthesis_manage {
             let work_bench_id = need_work_bench[i].id;
             let need_level = need_work_bench[i].level;
             let work_bench_name = texts[work_bench_id].work_bench_name;
-            let now_level = now_work_bench[work_bench_id];
+            let now_level = SYN_place_work_bench[work_bench_id];
             if (now_level == undefined) {
                 now_level = 0;
             }
@@ -406,7 +372,8 @@ export class Synthesis_manage {
         let product_ch = product_name + ' X' + product_num;
         FD_P_value_div.innerHTML = product_ch;
         //添加鼠标移动上去展示产物的详情信息的功能
-        let product_obj = get_formula_product(this.now_formula, this.now_quantity_num);
+        let product_obj = new Object();
+        get_formula_product(this.now_formula, this.now_quantity_num, product_obj);
         add_show_Tooltip(FD_P_value_div, 'item', product_obj);
 
         //根据当前情况调整“制造”按钮上的遮罩
@@ -471,11 +438,11 @@ export class Synthesis_manage {
 
         //当前配方的工作环境检查
         let need_work_bench = formulas[formula_id].work_bench; //配方需求工作环境
-        let now_work_bench = this.SYN_place_work_bench[this.now_place]; //当前地点的工作环境
+        let SYN_place_work_bench = this.SYN_all_place_work_bench[this.now_place]; //当前地点的工作环境
         for (let i = 0; i < need_work_bench.length; i++) {
             let work_bench_id = need_work_bench[i].id;
             let need_level = need_work_bench[i].level;
-            let now_level = now_work_bench[work_bench_id];
+            let now_level = SYN_place_work_bench[work_bench_id];
             if (now_level == undefined) {
                 now_level = 0;
             }

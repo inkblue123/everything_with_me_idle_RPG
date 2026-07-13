@@ -24,6 +24,10 @@ function game_option_text(texts) {
     add_text_object(texts, id);
     texts[id].option_name_default = '存档管理';
     texts[id].option_name_super = '觉醒前世记忆';
+    id = 'OP_game_TestMode';
+    add_text_object(texts, id);
+    texts[id].option_name_default = '是否开启调试模式';
+    texts[id].option_name_super = '是否开启调试模式';
 }
 //初始化文本数据库中属于游戏状态相关的文本
 function init_Text_game_flag(texts) {

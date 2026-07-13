@@ -355,6 +355,8 @@ export class Player_skills {
         if (skill_obj.type == 'Passive') {
             player.updata_end_attr('passive_skill');
         }
+        //处理技能升级后的关键节点特殊效果（milepost_super）
+        active_skill_milepost_super(id, skill_obj.level, up_level);
         //更新这个技能在左上角界面的展示效果
         this.updata_PSK_value();
         //更新游戏日志
@@ -402,9 +404,12 @@ export class Player_skills {
         if (skill_obj.type == 'Passive') {
             player.updata_end_attr('passive_skill');
         }
+        //处理技能升级后的关键节点特殊效果（milepost_super）
+        active_skill_milepost_super(id, skill_obj.level, 1);
         //更新这个技能在左上角界面的展示效果
         this.updata_PSK_value();
     }
+
     //判断指定技能当前是否满级，顺便更新满级标记
     judge_skill_level_max(id) {
         let skill_obj = this.get_skill_obj(id);
@@ -578,9 +583,17 @@ function PSK_type_handle(type_switch) {
 
     //所有主动技能都可以直接展示
     let P_All_skills = Object.keys(P_All_A_Skills);
+
+    let min_show_level = 1;
+    let OP_debug_flag = global.get_flag('OP_game_TestMode');
+    if (OP_debug_flag == 1) {
+        min_show_level = 0; //开启了调试模式，允许显示0级技能方便调试
+    } else if (OP_debug_flag == 0) {
+        min_show_level = 1; //正常情况下起码要有1级才能展示
+    }
     //被动技能起码要有1级才能展示
     for (let id in P_All_P_Skills) {
-        if (P_All_P_Skills[id].level >= 1) {
+        if (P_All_P_Skills[id].level >= min_show_level) {
             P_All_skills.push(id);
         }
     }
@@ -714,5 +727,47 @@ function add_PSK_skill(skill_obj) {
         add_show_Tooltip(skill_div, 'show_passive_skill', skill_obj);
     } else if (skill_obj.type == 'Active') {
         add_show_Tooltip(skill_div, 'show_active_skill', skill_obj);
+    }
+}
+
+//将技能升级后达到的关键节点特殊效果生效
+function active_skill_milepost_super(id, now_level, up_level) {
+    let milepost_super = P_skills[id].milepost_super;
+    if (is_Empty_Object(milepost_super)) {
+        return;
+    }
+    //计算本次升级跨越的等级范围
+    let old_level = now_level - up_level; //获取这次升级的初始等级
+    if (old_level < 0) {
+        old_level = 0;
+    }
+    //遍历所有关键节点
+    for (let milepost_level in milepost_super) {
+        let level_num = Number(milepost_level);
+        //只处理本次升级跨越的节点：旧等级 < 节点等级 <= 新等级
+        if (level_num > old_level && level_num <= now_level) {
+            let milepost_array = milepost_super[milepost_level];
+            for (let obj of milepost_array) {
+                execute_milepost_super(obj);
+            }
+        }
+    }
+}
+//执行一条关键节点特殊效果
+function execute_milepost_super(obj) {
+    if (obj.action_type == 'set_game_status') {
+        //设置游戏状态
+        let GS_id = obj.target_args[0];
+        let GS_value = obj.target_args[1];
+        global.set_flag(GS_id, GS_value);
+
+        //原地移动以刷新界面（触发Place_manage的show_unlock_live_plan_div等）
+        let place_manage = global.get_place_manage();
+        let now_place = place_manage.get_now_place();
+        if (now_place) {
+            place_manage.set_now_place(now_place);
+        }
+    } else {
+        console.log('关键节点特殊效果的动作类型%s尚未支持', obj.action_type);
     }
 }

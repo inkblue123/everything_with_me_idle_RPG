@@ -14,6 +14,7 @@ export class Formula {
         this.work_bench = new Array(); //配方所需工作环境
         this.material = new Array(); //配方所需材料
         this.product = new Object(); //配方产出
+        this.exp = new Object(); //配方经验
     }
 
     //设置配方基本参数
@@ -80,6 +81,17 @@ export class Formula {
             } else if (items[product_id].main_type == 'consumable') {
                 //物品是消耗品，产物信息还应该有：暂无
             }
+        }
+    }
+    //设定物品的经验
+    set_formula_exp(...args) {
+        if (args.length % 2 != 0) {
+            console.log('设定配方经验时的参数数量不正常，有%d个', args.length);
+        }
+        for (let i = 0; i < args.length; i += 2) {
+            //
+            let exp_type = args[i];
+            this.exp[exp_type] = args[i + 1];
         }
     }
 }

@@ -7,6 +7,7 @@ const game_option_func = {
     OP_game_FPS: set_OP_game_FPS,
     OP_game_OptionTipText: set_OP_game_OptionTipText,
     OP_game_RASaveLogMax: set_OP_game_RASaveLogMax,
+    OP_game_TestMode: set_OP_game_TestMode,
 };
 export class Game_Option {
     constructor() {
@@ -58,6 +59,9 @@ export class Game_Option {
             //将设置界面的下拉框切换成选项的内容
             let option_select_div = document.getElementById(option_id);
             option_select_div.value = this[option_id];
+        } else if (option_type == 'toggle') {
+            //选项是切换按钮，this对象保存的数值就是开关状态（0关1开）
+            option_value = this[option_id];
         } else {
             //选项是鼠标拖动的进度条，this对象保存的数值就是选项的具体数值
             option_value = this[option_id];
@@ -111,6 +115,39 @@ function set_OP_game_RASaveLogMax(option_value) {
     let global_flag_manage = global.get_global_flag_manage();
     let game_log_manage = global_flag_manage.get_game_log_manage();
     game_log_manage.set_config_max_log_num(option_value);
+}
+
+//游戏设置-测试模式开关
+function set_OP_game_TestMode(option_value) {
+    //测试模式开关：0关1开
+    let TS_switch_radio_div = document.getElementById('TS_switch_radio_div');
+    let TS_div = document.getElementById('TS_div');
+    if (option_value) {
+        //开启测试模式，显示测试按钮和测试界面
+        if (TS_switch_radio_div) {
+            TS_switch_radio_div.style.display = '';
+        }
+    } else {
+        //关闭测试模式，隐藏测试按钮和测试界面
+        if (TS_switch_radio_div) {
+            TS_switch_radio_div.style.display = 'none';
+        }
+        if (TS_div) {
+            TS_div.style.display = 'none';
+        }
+        //如果当前正在测试界面，切换回脑海界面
+        let TS_switch_button = document.getElementById('TS_switch_button');
+        if (TS_switch_button && TS_switch_button.checked) {
+            let MD_switch_button = document.getElementById('MD_switch_button');
+            if (MD_switch_button) {
+                MD_switch_button.checked = true;
+            }
+            let MD_div = document.getElementById('MD_div');
+            if (MD_div) {
+                MD_div.style.display = '';
+            }
+        }
+    }
 }
 
 export {};

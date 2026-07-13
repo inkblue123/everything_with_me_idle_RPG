@@ -3,8 +3,6 @@
     position: relative;
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
 }
 
 /* 钓鱼上部div */
@@ -23,7 +21,6 @@
     justify-content: center;
     width: 40%;
     height: 90%;
-    border: 1px solid #797691;
 }
 /* 钓鱼表头文本框 */
 .FIS_table_head_text {
@@ -31,9 +28,6 @@
     justify-content: center;
     align-items: center;
     max-height: 25px;
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691;
-    /* border: 1px solid #797691; */
 }
 /* 钓鱼状态具体内容 */
 #FIS_status_value {
@@ -41,7 +35,6 @@
     justify-content: center;
     align-items: center;
     max-height: 25px;
-    border-bottom: 1px solid #797691;
 }
 /* 钓鱼提示信息 */
 #FIS_tip_div {
@@ -60,11 +53,6 @@
 .testdrop_value {
     width: 100%;
     text-align: center;
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691;
-    border: 1px solid #797691;
-    outline: 1px solid #797691;
-    outline-offset: -1px;
 }
 
 /* 钓鱼中部div*/
@@ -82,8 +70,6 @@
     justify-content: center;
     width: 60%;
     height: 90%;
-    box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
 }
 /* 钓鱼中部右侧 */
 #FIS_M_R_div {
@@ -93,8 +79,6 @@
     justify-content: center;
     width: 23%;
     height: 90%;
-    box-sizing: border-box;
-    border: 1px solid #797691;
 }
 /* 钓鱼表头文本框 */
 #FIS_point_head {
@@ -102,8 +86,6 @@
     justify-content: center;
     align-items: center;
     max-height: 25px;
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691; /* 内框 */
 }
 /* 钓点选择div */
 #FIS_point_div {
@@ -122,8 +104,6 @@
     box-sizing: border-box;
 }
 .FIS_bait_value {
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691;
 }
 
 /* 遛鱼阶段和钓鱼完成阶段时的钓鱼中部 */

@@ -1,6 +1,5 @@
 /* 合成制造总界面 */
 #SYN_value_div {
-    box-sizing: border-box;
     user-select: none;
 }
 
@@ -12,6 +11,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
+    gap: 2px;
 }
 
 /* 顶部配方标题 */
@@ -22,8 +22,7 @@
     width: 100%;
     flex: 0 0 10%;
     background-color: aliceblue;
-    box-sizing: border-box;
-    border-bottom: 2px solid #797691;
+    gap: 2px;
 }
 
 /* 顶部配方标题-左 */
@@ -33,8 +32,6 @@
     align-items: center;
     width: 60%;
     height: 100%;
-    box-sizing: border-box;
-    border-right: 2px solid #797691;
 }
 
 /* 顶部配方标题-中 */
@@ -63,8 +60,11 @@
     width: 100%;
     flex: 1 1 auto;
 
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691;
+}
+
+/* 容纳配方div需要gap让子元素的outline生效 */
+.SYN_formula_scroll_box .in_overflow_div {
+    gap: 2px;
 }
 
 /* 一个配方的摘要 */
@@ -73,8 +73,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    box-sizing: border-box;
-    border-bottom: 2px solid #797691;
+    gap: 2px;
 }
 
 /* 配方需求 */
@@ -83,8 +82,6 @@
     justify-content: center;
     align-items: center;
     width: 60%;
-    box-sizing: border-box;
-    border-right: 2px solid #797691;
 }
 
 /* 配方产出 */
@@ -94,7 +91,6 @@
     align-items: center;
     width: 40%;
     /* height: 40%; */
-    box-sizing: border-box;
 }
 
 /* 筛选div */
@@ -104,8 +100,7 @@
     width: 100%;
     /* height: 10%; */
     flex: 0 0 10%;
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691;
+    gap: 2px;
 }
 
 /* 筛选标题 */
@@ -116,23 +111,19 @@
     flex: 0 1 auto;
     height: 100%;
     padding: 0 10px;
-    box-sizing: border-box;
-    border-top: 1px solid #797691;
-    border-right: 1px solid #797691;
-    /* 内框 */
-    border-bottom: 1px solid #797691;
 }
 
 /* 筛选当前是否可制作div */
 .SYN_choice_make_flag_div {
     flex: 0 1 auto;
     height: 100%;
-    box-sizing: border-box;
 }
 
 /* 筛选当前是否可制作按钮 */
 .SYN_choice_make_flag_button {
     height: 100%;
+    border: none;
+    background: none;
 }
 
 /* 配方类型筛选div */
@@ -141,6 +132,7 @@
     justify-content: center;
     flex: 1 1 auto;
     height: 100%;
+    gap: 2px;
 }
 
 /* 未选定配方时的填充div */
@@ -165,6 +157,7 @@
 .SYN_FD_N_div {
     display: flex;
     flex-direction: column;
+    gap: 2px;
     width: 100%;
     height: 100%;
 }
@@ -177,7 +170,6 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
 }
 
 /* 工作环境详情 */
@@ -186,8 +178,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    border-left: 2px solid #797691;
-    border-right: 2px solid #797691;
+    gap: 2px;
 }
 
 .SYN_FD_E_value_div {
@@ -205,6 +196,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    gap: 2px;
 }
 
 .SYN_FD_P_quantity_button {
@@ -234,7 +226,6 @@
     text-align: center;
     width: 100%;
     height: auto;
-    border-bottom: 2px solid #797691;
 }
 
 /* 需求筛选或者产物筛选父div */
@@ -252,9 +243,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    box-sizing: border-box;
-    border-top: 1px solid #797691;
-    border-bottom: 1px solid #797691;
 }
 
 /* 配方筛选的筛选界面的需求筛选方式多选框 */
@@ -275,8 +263,6 @@
     width: 100%;
     height: 100%;
     font-size: 15px;
-    box-sizing: border-box;
-    border: 1px solid #797691;
 }
 
 /* 配方筛选的筛选界面的需求筛选内容父容器 */
@@ -298,9 +284,7 @@
     text-align: center;
     width: 25%;
     height: 100%;
-    box-sizing: border-box;
-    border-left: 1px solid #797691;
-    border-right: 1px solid #797691;
+    gap: 2px;
 }
 
 /* 配方筛选的筛选界面的需求筛选之选择具体物品的父容器 */
@@ -330,8 +314,6 @@
 .SYN_FL_item_type_button {
     width: 100%;
     height: auto;
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691;
 }
 
 /* 单个界面内多个子界面切换单选按钮 */
@@ -341,7 +323,6 @@
     width: 100%;
     height: 100%;
     font-size: 15px;
-    box-sizing: border-box;
 }
 
 /* 清空筛选或者确定筛选的按钮 */
@@ -358,9 +339,6 @@
 .SYN_FL_item_button {
     width: 50%;
     height: auto;
-    box-sizing: border-box;
-    border-right: 1px solid #797691;
-    border-bottom: 1px solid #797691;
 }
 
 /* 配方筛选的制造界面-顶部筛选说明 */
@@ -370,8 +348,6 @@
     align-items: center;
     width: 100%;
     flex: 0 0 10%;
-    box-sizing: border-box;
-    border-bottom: 2px solid #797691;
 }
 
 /* 返回筛选界面按钮 */
@@ -391,6 +367,20 @@
     flex: 1;
 }
 
+/* 配方筛选的筛选界面的标题 */
+.SYN_RS_title_div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* 配方研究-物品详情部分-容纳所有需求材料的div */
+#SYN_RS_FD_N_value_div {
+    gap: 2px;
+}
+
 /* 顶部说明文本 */
 #SYN_EN_title_div {
     display: flex;
@@ -398,8 +388,6 @@
     align-items: center;
     height: 10%;
     width: 100%;
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691;
 }
 
 /* 工作环境界面的详情 */
@@ -407,14 +395,13 @@
     display: flex;
     width: 100%;
     height: 90%;
+    gap: 2px;
 }
 
 /* 左侧的各种工作环境选择按钮 */
 #SYN_EN_left_div {
     width: 30%;
     height: 100%;
-    box-sizing: border-box;
-    border-right: 1px solid #797691;
 }
 
 /* 右侧详情 */
@@ -428,6 +415,7 @@
     justify-content: center;
     align-items: center;
     height: 60%;
+    gap: 2px;
 }
 
 /* 详情上半部分 */
@@ -438,8 +426,6 @@
     flex-direction: column;
     width: 50%;
     height: 100%;
-    box-sizing: border-box;
-    border: 1px solid #797691;
 }
 
 /* 详情上半部分的标题 */
@@ -448,8 +434,6 @@
     justify-content: center;
     align-items: center;
     width: 50%;
-    box-sizing: border-box;
-    border: 1px solid #797691;
 }
 
 /* 详情上半部分的名称 */
@@ -461,8 +445,6 @@
     align-items: center;
     width: 50%;
     aspect-ratio: 1/1;
-    box-sizing: border-box;
-    border: 1px solid #797691;
 }
 
 /* 详情上半部分的描述 */
@@ -490,8 +472,6 @@
     display: flex;
     flex-direction: column;
     height: 25%;
-    box-sizing: border-box;
-    border-top: 1px solid #797691;
 }
 
 #SYN_EN_Rin_value {
@@ -506,14 +486,13 @@
 /* 容纳所有配方内容div */
 #SYN_EN_Rin_div_scroll_box {
     flex: 1 1 auto;
-    box-sizing: border-box;
-    border-bottom: 1px solid #797691;
 }
 
 /* 容纳所有配方内容div */
 #SYN_EN_Rin_value_div {
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 2px;
 }
 
 /* 详情中部的标题 */
@@ -522,9 +501,6 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    box-sizing: border-box;
-    border-left: 1px solid #797691;
-    border-bottom: 1px solid #797691;
 
 }
 
@@ -533,8 +509,6 @@
     /* 每行两个元素 */
     width: 50%;
     text-align: center;
-    box-sizing: border-box;
-    border: 1px solid #797691;
 }
 
 
@@ -545,8 +519,6 @@
     align-items: center;
     width: 100%;
     height: 15%;
-    box-sizing: border-box;
-    border-left: 1px solid #797691;
 }
 
 /* 详情独立界面，选择将要创建的工作环境*/

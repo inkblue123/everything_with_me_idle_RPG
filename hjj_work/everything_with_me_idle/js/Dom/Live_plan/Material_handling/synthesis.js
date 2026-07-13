@@ -322,7 +322,91 @@ function make_SYN_FM_value_div(SYN_FM_value_div) {
     SYN_FM_FD_P_make_button.innerHTML = '制造';
 }
 //合成制造第四个子界面，配方研究界面
-function make_SYN_RS_value_div(SYN_RS_value_div) {}
+function make_SYN_RS_value_div(SYN_RS_value_div) {
+    //第一部分：顶部标题
+    let SYN_RS_title_div = addElement(SYN_RS_value_div, 'div', null, 'SYN_formula_title_div');
+    SYN_RS_title_div.innerHTML = '通过拆解物品，分析它的组成和制造工艺';
+
+    //第二部分：物品列表，每行3列表格
+    let SYN_RS_scroll_box = addElement(SYN_RS_value_div, 'div', null, 'overflow_y_div SYN_formula_scroll_box');
+    let SYN_RS_list_container = addElement(SYN_RS_scroll_box, 'div', null, 'in_overflow_div');
+    let SYN_RS_list_div = addElement(SYN_RS_list_container, 'div', null, 'page_table_111');
+    for (let i = 0; i < 20; i++) {
+        let table_value = addElement(SYN_RS_list_div, 'div', null, 'table_value');
+        let TL_left = addElement(table_value, 'div', null, 'TLV_left');
+        TL_left.innerHTML = '测试物品' + i;
+        let TL_right = addElement(table_value, 'div', null, 'TLV_right');
+        TL_right.innerHTML = '测试数值';
+    }
+
+    //第三部分：筛选多选框
+    let SYN_RS_choice_div = addElement(SYN_RS_value_div, 'div', null, 'SYN_choice_div');
+    let SYN_RS_choice_title = addElement(SYN_RS_choice_div, 'div', null, 'SYN_choice_title');
+    SYN_RS_choice_title.innerHTML = '筛选';
+    //可否制造筛选按钮
+    let SYN_RS_choice_make_flag_div = addElement(SYN_RS_choice_div, 'div', null, 'SYN_choice_make_flag_div');
+    let SYN_RS_choice_no_make = addElement(SYN_RS_choice_make_flag_div, 'button', 'SYN_RS_choice_no_make', 'SYN_choice_make_flag_button');
+    SYN_RS_choice_no_make.innerHTML = '☐当前可制造';
+    let SYN_RS_choice_can_make = addElement(SYN_RS_choice_make_flag_div, 'button', 'SYN_RS_choice_can_make', 'SYN_choice_make_flag_button', 'none');
+    SYN_RS_choice_can_make.innerHTML = '☑当前可制造';
+    //类型筛选多选框
+    let SYN_RS_choice_type_div = addElement(SYN_RS_choice_div, 'div', null, 'SYN_choice_type_div');
+    var SYN_RS_type_A_div = addElement(SYN_RS_choice_type_div, 'div', null, 'radio_div div_switch_button');
+    addElement_radio(SYN_RS_type_A_div, 'SYN_RS_T_A_switch_button', 'SYN_RS_type_switch', 'SYN_RS_T_A', '所有');
+    SYN_RS_type_A_div.children[0].checked = true;
+    var SYN_RS_type_E_div = addElement(SYN_RS_choice_type_div, 'div', null, 'radio_div div_switch_button');
+    addElement_radio(SYN_RS_type_E_div, 'SYN_RS_T_E_switch_button', 'SYN_RS_type_switch', 'SYN_RS_T_E', '装备');
+    var SYN_RS_type_C_div = addElement(SYN_RS_choice_type_div, 'div', null, 'radio_div div_switch_button');
+    addElement_radio(SYN_RS_type_C_div, 'SYN_RS_T_C_switch_button', 'SYN_RS_type_switch', 'SYN_RS_T_C', '消耗品');
+    var SYN_RS_type_M_div = addElement(SYN_RS_choice_type_div, 'div', null, 'radio_div div_switch_button');
+    addElement_radio(SYN_RS_type_M_div, 'SYN_RS_T_M_switch_button', 'SYN_RS_type_switch', 'SYN_RS_T_M', '材料');
+
+    //第四部分：占位（暂无具体内容）
+    // let SYN_RS_placeholder_4 = addElement(SYN_RS_value_div, 'div', null, 'SYN_no_formula_div');
+    //没有选择配方时的填充
+    let SYN_RS_no_formula_div = addElement(SYN_RS_value_div, 'div', 'SYN_RS_no_formula_div', 'SYN_no_formula_div', 'none');
+    SYN_RS_no_formula_div.innerHTML = '未选择要研究的物品';
+
+    //第五部分：选定物品详情div
+    let SYN_RS_formula_Details_div = addElement(SYN_RS_value_div, 'div', 'SYN_RS_formula_Details_div', 'SYN_formula_Details_div', '');
+    //需求详情
+    let SYN_RS_FD_N_div = addElement(SYN_RS_formula_Details_div, 'div', 'SYN_RS_FD_N_div', 'SYN_FD_N_div');
+    //标题
+    let SYN_RS_FD_N_title_div = addElement(SYN_RS_FD_N_div, 'div', 'SYN_RS_FD_N_title_div', 'Details_div');
+    SYN_RS_FD_N_title_div.innerHTML = '材料需求';
+    //所有需求材料
+    let SYN_RS_FD_N_scroll_box = addElement(SYN_RS_FD_N_div, 'div', 'SYN_RS_FD_N_scroll_box', 'overflow_y_div SYN_FD_N_scroll_box');
+    var SYN_RS_FD_N_value_div = addElement(SYN_RS_FD_N_scroll_box, 'div', 'SYN_RS_FD_N_value_div', 'in_overflow_div');
+    for (let i = 0; i < 3; i++) {
+        var Details_div = addElement(SYN_RS_FD_N_value_div, 'div', null, 'Details_div');
+        Details_div.innerHTML = '材料A（1/10）' + i;
+    }
+    //当前可用总数
+    let SYN_RS_FD_N_total_div = addElement(SYN_RS_FD_N_div, 'div', null, 'Details_div');
+    SYN_RS_FD_N_total_div.innerHTML = '当前可用总数';
+    //已研究数量
+    let SYN_RS_FD_N_researched_div = addElement(SYN_RS_FD_N_div, 'div', null, 'Details_div');
+    SYN_RS_FD_N_researched_div.innerHTML = '已研究数量';
+    //工作环境详情
+    let SYN_RS_FD_E_div = addElement(SYN_RS_formula_Details_div, 'div', 'SYN_RS_FD_E_div', 'SYN_FD_E_div');
+    //标题
+    let SYN_RS_FD_E_title_div = addElement(SYN_RS_FD_E_div, 'div', 'SYN_RS_FD_E_title_div', 'Details_div');
+    SYN_RS_FD_E_title_div.innerHTML = '工作环境需求';
+    //当前选定
+    let SYN_RS_FD_E_value_div = addElement(SYN_RS_FD_E_div, 'div', 'SYN_RS_FD_E_value_div', 'SYN_FD_E_value_div');
+    SYN_RS_FD_E_value_div.innerHTML = '1级工作台<br>当前<br>1级工作台';
+    //产物详情
+    let SYN_RS_FD_P_div = addElement(SYN_RS_formula_Details_div, 'div', 'SYN_RS_FD_P_div', 'SYN_FD_P_div');
+    let SYN_RS_FD_P_title_div = addElement(SYN_RS_FD_P_div, 'div', 'SYN_RS_FD_P_title_div', 'Details_div');
+    SYN_RS_FD_P_title_div.innerHTML = '产物';
+    let SYN_RS_FD_P_quantity_button = addElement(SYN_RS_FD_P_div, 'button', 'SYN_RS_FD_P_quantity_button', 'SYN_FD_P_quantity_button');
+    SYN_RS_FD_P_quantity_button.innerHTML = '批量制造选择-> X1';
+    SYN_RS_FD_P_quantity_button.dataset.quantity_num = '1';
+    var SYN_RS_FD_P_value_div = addElement(SYN_RS_FD_P_div, 'div', 'SYN_RS_FD_P_value_div', 'SYN_FD_P_value_div');
+    SYN_RS_FD_P_value_div.innerHTML = '产物A x1';
+    let SYN_RS_FD_P_make_button = addElement(SYN_RS_FD_P_div, 'button', 'SYN_RS_FD_P_make_button', 'SYN_FD_P_make_button');
+    SYN_RS_FD_P_make_button.innerHTML = '制造';
+}
 //合成制造第五个子界面，工作环境界面
 function make_SYN_EN_value_div(SYN_EN_value_div) {
     //顶部说明

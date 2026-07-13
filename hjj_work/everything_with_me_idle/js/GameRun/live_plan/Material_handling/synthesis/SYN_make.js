@@ -7,5 +7,25 @@ import { texts } from '../../../../Data/Text/Text.js';
 import { formulas } from '../../../../Data/Formula/Formula.js';
 import { player } from '../../../../Player/Player.js';
 import { global } from '../../../global_manage.js';
+import {
+    add_formula,
+    get_SYN_formula_switch_type,
+    SYN_switch_type_handle,
+} from './SYN_function.js';
 
-export {};
+//更新合成制造技能的制造界面的内容
+function updata_SYN_MK_value() {
+    //清空这个界面里的配方
+    let SYN_MK_formula_value_div = document.getElementById('SYN_MK_formula_value_div');
+    SYN_MK_formula_value_div.replaceChildren();
+    //获取应该展示的配方过滤条件
+    let SYN_MK_type = get_SYN_formula_switch_type('SYN_MK');
+    //获取在这个过滤条件下应该展示的配方id
+    let formula_arr = SYN_switch_type_handle(SYN_MK_type);
+    //展示这些配方
+    for (let formula_id of formula_arr) {
+        add_formula('SYN_MK', formula_id);
+    }
+}
+
+export { updata_SYN_MK_value };

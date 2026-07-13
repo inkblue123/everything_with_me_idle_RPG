@@ -45,14 +45,14 @@ function create_game_dom() {
     //整个项目先分成上下两部分，上95%是游戏主体，下5%是设置
     //游戏主体左侧三分之一是玩家相关，右侧三分之二是游戏的各种事件
     dom.game_dom = crtElement('div', null, 'game_dom', '');
-    dom.game_left = crtElement('div', null, 'page_rows_11', '');
-    dom.game_right = crtElement('div', null, 'page_rows_11', '');
+    dom.game_left = crtElement('div', 'game_left', 'page_rows_11', '');
+    dom.game_right = crtElement('div', 'game_right', 'page_rows_11', '');
     //战斗时位于游戏上半部分的容器
     dom.game_up_combat = crtElement('div', 'game_up_combat', 'page_columns_1', 'none');
     //平时位于游戏上半部分的容器
     dom.game_up_nomal = crtElement('div', 'game_up_nomal', 'page_columns_11', '');
     //平时位于游戏上半部分的容器
-    dom.game_down_nomal = crtElement('div', null, 'page_columns_11', '');
+    dom.game_down_nomal = crtElement('div', 'game_down_nomal', 'page_columns_11', '');
 
     // 向布局中插入合适的元素，实现游戏界面
     dom.main_dom = addElement(document.body, 'div', null, 'main_page');
@@ -228,25 +228,8 @@ function init_game_dom() {
     RA_value_scroll_box.style.display = '';
     IE_value_scroll_box.style.display = 'none';
     OP_div.style.display = 'none';
-    //图鉴界面内的过滤按钮切换到全部
-    const IB_ALL_radio_div = document.getElementById('IB_ALL_radio_div');
-    IB_ALL_radio_div.children[0].checked = true;
-    //其他过滤按钮都隐藏
-    const IB_item_droptable = document.getElementById('IB_item_droptable');
-    IB_item_droptable.style.display = 'none';
-    const IB_skill_droptable = document.getElementById('IB_skill_droptable');
-    IB_skill_droptable.style.display = 'none';
-    const IB_skill_C_droptable = document.getElementById('IB_skill_C_droptable');
-    IB_skill_C_droptable.style.display = 'none';
-    const IB_skill_L_droptable = document.getElementById('IB_skill_L_droptable');
-    IB_skill_L_droptable.style.display = 'none';
-    const IB_skill_A_droptable = document.getElementById('IB_skill_A_droptable');
-    IB_skill_A_droptable.style.display = 'none';
-    const IB_enemy_droptable = document.getElementById('IB_enemy_droptable');
-    IB_enemy_droptable.style.display = 'none';
-    const IB_event_droptable = document.getElementById('IB_event_droptable');
-    IB_event_droptable.style.display = 'none';
-    const IB_rule_droptable = document.getElementById('IB_rule_droptable');
-    IB_rule_droptable.style.display = 'none';
+    //图鉴界面内的过滤按钮切换到物品
+    const IB_item_radio_div = document.getElementById('IB_item_radio_div');
+    IB_item_radio_div.children[0].checked = true;
 }
 export { create_game_dom, init_game_dom };

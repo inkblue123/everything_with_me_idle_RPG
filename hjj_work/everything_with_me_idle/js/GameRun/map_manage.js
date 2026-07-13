@@ -335,9 +335,9 @@ export class Map_manage {
         for (let place_id in this.map_button) {
             //点亮当前地点相连的可移动的其他地点按钮
             if (connect_place.includes(place_id) || place_id == this.now_place) {
-                this.map_button[place_id].classList.remove('btn-disabled');
+                this.map_button[place_id].classList.remove('btn_disabled');
             } else {
-                this.map_button[place_id].classList.add('btn-disabled');
+                this.map_button[place_id].classList.add('btn_disabled');
             }
             //当前地点所在按钮添加外框
             if (place_id == this.now_place) {

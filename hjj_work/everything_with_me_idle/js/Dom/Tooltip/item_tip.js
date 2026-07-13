@@ -1,5 +1,6 @@
 import { addElement } from '../../Function/Dom_function.js';
 import { get_object_only_key, is_Empty_Object } from '../../Function/Function.js';
+import { seconds_time_to_ch } from '../../Function/math_func.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { items } from '../../Data/Item/Item.js';
 import { formulas } from '../../Data/Formula/Formula.js';
@@ -143,7 +144,7 @@ function show_equipment_attr(item_obj) {
     let id = item_obj.id;
     let rarity = item_obj.equip_rarity;
     let Tooltip = document.getElementById('tooltip');
-    let attr_div = addElement(Tooltip, 'div', null, 'page_columns_111');
+    let attr_div = addElement(Tooltip, 'div', null, 'page_table_111');
     let no_normal_attr_flag = false;
     let no_normal_attr_ch = '';
     for (let attr in items[id].equip_attr[rarity]) {
@@ -153,7 +154,7 @@ function show_equipment_attr(item_obj) {
         }
         if (enums['normal_attr'].includes(attr)) {
             //常规属性，需要用表格显示
-            let TLV_div = addElement(attr_div, 'div', null, 'table_3_value');
+            let TLV_div = addElement(attr_div, 'div', null, 'table_value');
             // 属性名称
             let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
 
@@ -315,9 +316,9 @@ function show_consumable_use_data(item_obj) {
         let use_ratio_ch = '该物品当前使用进度' + item_obj.use_ratio + '%';
         use_ratio_div.innerHTML = use_ratio_ch;
 
-        let use_attr_div = addElement(Tooltip, 'div', null, 'page_columns_11');
+        let use_attr_div = addElement(Tooltip, 'div', null, 'page_table_11');
         for (let attr_obj of items[id].use_attr) {
-            let TLV_div = addElement(use_attr_div, 'div', null, 'table_2_value');
+            let TLV_div = addElement(use_attr_div, 'div', null, 'table_value');
             if (attr_obj.attr_type == 'get_formula') {
                 let P_formula = player.get_player_formulas_manage();
                 let study_status = P_formula.get_formula_study_status(attr_obj.attr_id);
@@ -354,11 +355,11 @@ function show_consumable_use_data(item_obj) {
                 }
             }
         }
-    } else {
-        let use_attr_div = addElement(Tooltip, 'div', null, 'page_columns_111');
+    } else if (use_type == 'once_use') {
+        let use_attr_div = addElement(Tooltip, 'div', null, 'page_table_111');
         for (let attr_obj of items[id].use_attr) {
             if (attr_obj.attr_type == 'get_attr') {
-                let TLV_div = addElement(use_attr_div, 'div', null, 'table_3_value');
+                let TLV_div = addElement(use_attr_div, 'div', null, 'table_value');
                 // 属性名称
                 let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
                 T_name.innerHTML = texts[attr_obj.attr_id].attr_name;
@@ -379,27 +380,22 @@ function show_sustain_use_status(item_obj) {
     let status_div = addElement(Tooltip, 'div', null, 'TLV_div');
     //这个消耗品是否曾经使用过
     let use_flag_div = addElement(status_div, 'div', null, 'TLV_left');
-    use_flag_div.innerHTML = '未知';
+    let library_manage = global.get_library_manage();
+    let library_data = library_manage.get_library_data('item', id);
+    if (is_Empty_Object(library_data.max_use_ratio)) {
+        use_flag_div.innerHTML = '历史最大使用进度：0%';
+    } else {
+        use_flag_div.innerHTML = '历史最大使用进度：' + library_data.max_use_ratio + '%';
+        if (library_data.max_use_ratio >= 100) {
+            use_flag_div.style.color = '#00c400';
+        }
+    }
     //使用完这个消耗品的时间
     let use_time_div = addElement(status_div, 'div', null, 'TLV_right');
     let consumable_manage = global.get_consumable_manage();
     let need_time = consumable_manage.get_use_consumable_time(item_obj);
-    let seconds = need_time;
-    let minutes = Math.floor(seconds / 60);
-    seconds = Math.floor(seconds % 60);
-    let hours = Math.floor(minutes / 60);
-    minutes = Math.floor(minutes % 60);
-    let ch = '预计需要时间： ';
-    if (hours != 0) {
-        ch = ch + hours + '时';
-    }
-    if (minutes != 0) {
-        ch = ch + minutes + '分';
-    }
-    if (seconds != 0) {
-        ch = ch + seconds + '秒';
-    }
-    use_time_div.innerHTML = ch;
+    let need_time_ch = seconds_time_to_ch(need_time); //将秒时间转换成易读的字符串
+    use_time_div.innerHTML = '预计需要时间： ' + need_time_ch;
 }
 
 //针对材料，追加展示材料类型，

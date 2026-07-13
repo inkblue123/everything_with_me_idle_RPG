@@ -48,6 +48,8 @@ function make_test_div(TS_div) {
             var TS1_UnlockLivePlanSkill_value = addElement(TS1_UnlockLivePlanSkill_div, 'div', 'TS1_UnlockLivePlanSkill_value', 'OP_V_div');
             var TS1_UnlockLivePlanSkill_button = addElement(TS1_UnlockLivePlanSkill_value, 'button', 'TS1_UnlockLivePlanSkill_button', 'OP_button');
             TS1_UnlockLivePlanSkill_button.innerHTML = '逐渐解锁生活技能';
+            var TS1_UnlockLivePlanSonSkill_button = addElement(TS1_UnlockLivePlanSkill_value, 'button', 'TS1_UnlockLivePlanSonSkill_button', 'OP_button');
+            TS1_UnlockLivePlanSonSkill_button.innerHTML = '解锁生活技能子系统';
             //测试-暂停游戏
             var TS1_StopGameSpeed_div = addElement(TS_value1_div, 'div', 'TS1_StopGameSpeed_div', 'OP_TLV_div');
             var TS1_StopGameSpeed_lable = addElement(TS1_StopGameSpeed_div, 'div', 'TS1_StopGameSpeed_lable', 'OP_T2_div');
@@ -168,6 +170,11 @@ function set_test_button(Game_log) {
         let TS1_UnlockLivePlanSkill_button = Game_log.querySelector('#TS1_UnlockLivePlanSkill_button');
         TS1_UnlockLivePlanSkill_button.onclick = function () {
             unlock_live_plan_skill();
+        };
+        //解锁生活技能子系统
+        let TS1_UnlockLivePlanSonSkill_button = Game_log.querySelector('#TS1_UnlockLivePlanSonSkill_button');
+        TS1_UnlockLivePlanSonSkill_button.onclick = function () {
+            unlock_live_plan_son_skill();
         };
         //暂停游戏
         let TS1_StopGameSpeed_button = Game_log.querySelector('#TS1_StopGameSpeed_button');
@@ -353,6 +360,17 @@ function unlock_live_plan_skill() {
         global.set_flag('GS_unlock_ACL', true);
     } else if (!global.get_flag('GS_unlock_ELT')) {
         global.set_flag('GS_unlock_ELT', true);
+    }
+    //移动到当前位置，触发刷新界面的逻辑
+    let place_manage = global.get_place_manage();
+    let now_place = place_manage.get_now_place();
+    place_manage.set_now_place(now_place);
+}
+//解锁生活技能子系统
+function unlock_live_plan_son_skill() {
+    let son_skill_ids = ['SYN_MK', 'SYN_FL', 'SYN_RS', 'SYN_EN', 'COK_DS', 'COK_MD', 'COK_MS', 'COK_EN'];
+    for (let id of son_skill_ids) {
+        global.set_flag('GS_unlock_' + id, true);
     }
     //移动到当前位置，触发刷新界面的逻辑
     let place_manage = global.get_place_manage();

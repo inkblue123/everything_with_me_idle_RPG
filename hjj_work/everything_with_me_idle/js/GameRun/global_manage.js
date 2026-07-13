@@ -6,6 +6,7 @@ import { Combat_manage } from './combat_manage.js';
 import { Exp_manage } from './exp_manage.js';
 import { Map_manage } from './map_manage.js';
 import { Consumable_Manage } from './consumable_manage.js';
+import { Library_manage } from './library/library_manage.js';
 import { Game_event_manage } from './game_event/game_event_manage.js';
 import { Global_flag_manage } from './global_flag/global_flag_manage.js';
 import { Live_plan_manage } from './live_plan/live_plan_manage.js';
@@ -26,6 +27,7 @@ class Global_manage {
         this.store_manage; //交易和商店管理类
         this.map_manage; //交易和商店管理类
         this.consumable_manage; //消耗品管理类
+        this.library_manage; //图鉴管理类
     }
     init() {
         //获取配置
@@ -50,6 +52,7 @@ class Global_manage {
         // this.game_event_manage.init();
         this.store_manage = new Store_manage(); //交易和商店管理类
         this.consumable_manage = new Consumable_Manage(); //消耗品管理类
+        this.library_manage = new Library_manage(); //图鉴管理类
     }
     init_config() {
         //
@@ -92,6 +95,9 @@ class Global_manage {
     }
     get_consumable_manage() {
         return this.consumable_manage;
+    }
+    get_library_manage() {
+        return this.library_manage;
     }
     //对外提供一些常用功能的接口
     updata_time_manage() {
@@ -138,6 +144,8 @@ class Global_manage {
         global_save.store_save = this.store_manage.save_Store_manage();
         //地图管理类
         global_save.map_save = this.map_manage.save_map_manage();
+        //图鉴管理类
+        global_save.library_save = this.library_manage.save_library_manage();
 
         //目前战斗管理类只是负责记录参数进行运算的平台，并没有需要保存的信息
         // this.combat_manage; //战斗管理类
@@ -159,6 +167,7 @@ class Global_manage {
         this.random_manage.load_Random_manage(global_save.random_save);
         this.store_manage.load_Store_manage(global_save.store_save);
         this.map_manage.load_map_manage(global_save.map_save);
+        this.library_manage.load_library_manage(global_save.library_save);
         // 其他的游戏部分内容展示有很多依赖于地点的切换，所以地点存档最后更新
         this.place_manage.load_place_manage(global_save.place_save);
     }

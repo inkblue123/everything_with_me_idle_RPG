@@ -50,24 +50,7 @@ function init_game_status(enums) {
     //这里枚举的技能是会写入GS_game_statu游戏状态的，运行时遇到对应的状态就处理相应的逻辑
     id = 'live_plan_GS';
     add_Enum_Array(enums, id);
-    enums[id] = [
-        'logging',
-        'fishing',
-        'mining',
-        'collect',
-        'diving',
-        'archaeology',
-        'exploration',
-        'engrave',
-
-        'synthesis',
-        'cooking',
-        'forging',
-        'elixir_alchemy',
-        'herbal_bath',
-        'engrave',
-        'alchemy',
-    ];
+    enums[id] = ['logging', 'fishing', 'mining', 'collect', 'diving', 'archaeology', 'exploration', 'synthesis', 'cooking', 'forging', 'elixir_alchemy', 'herbal_bath', 'engrave', 'alchemy'];
 }
 //初始化枚举库中与短期游戏状态参数相关的内容
 function init_short_game_status(enums) {
@@ -142,6 +125,7 @@ function init_game_option(enums) {
         OP_game_FPS: 30, //游戏帧率
         OP_game_OptionTipText: 'default', //设置界面提示文本
         OP_game_RASaveLogMax: 10, //流水账界面日志保存数量上限
+        OP_game_TestMode: 0, //测试模式开关
     };
     //每个游戏设置在处理时的类型
     id = 'game_option_type';
@@ -151,6 +135,7 @@ function init_game_option(enums) {
         OP_game_OptionTipText: 'select', //设置界面提示文本
         OP_game_RASaveLogMax: 'select', //流水账界面日志保存数量上限
         OP_game_SaveManage: 'button', //存档管理
+        OP_game_TestMode: 'toggle', //测试模式开关
     };
 
     //游戏-游戏帧率的所有选项

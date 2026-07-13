@@ -64,9 +64,9 @@ function make_player_status_div(player_status) {
         var player_status_div = crtElement('div', 'player_status_div', null, '');
         //属性展示组件
         var attribute_show = addElement(player_status_div, 'div', 'attribute_show', null, '');
-        var combat_attribute_show = addElement(attribute_show, 'div', 'combat_attribute_show', null);
-        var Player_attribute_show = addElement(attribute_show, 'div', 'Player_attribute_show', null);
-        for (let i = 0; i < 9; i++) {
+        var combat_attribute_show = addElement(attribute_show, 'div', 'combat_attribute_show', 'page_table_111');
+        var Player_attribute_show = addElement(attribute_show, 'div', 'Player_attribute_show', 'page_table_111');
+        for (let i = 0; i < 10; i++) {
             let test1 = addElement(combat_attribute_show, 'div', null, 'state_show'); //条的外框
             let test2 = addElement(Player_attribute_show, 'div', null, 'state_show'); //条的外框
             if (i >= 9) {
@@ -90,20 +90,20 @@ function make_player_status_div(player_status) {
         // }
 
         //角色装备栏
-        var equipment_show = addElement(player_status_div, 'div', 'equipment_show', 'page_columns_1', 'none');
+        var equipment_show = addElement(player_status_div, 'div', 'equipment_show', null, 'none');
         for (let i = 0; i < 4; i++) {
             let column_id = 'EQP_column_' + (i + 1);
-            var EQP_i = addElement(equipment_show, 'div', column_id, 'page_columns_11', '');
-            var EQP_left = addElement(EQP_i, 'div', null, 'page_columns_111', ''); //装备栏左侧，角色的4个防具和主副手
+            var EQP_i = addElement(equipment_show, 'div', column_id, 'page_columns_11 EQP_column', '');
+            var EQP_left = addElement(EQP_i, 'div', null, 'EQP_left_col', ''); //装备栏左侧，角色的4个防具和主副手
             var EQP_arms_div = addElement(EQP_left, 'div', null, 'EQP_arms_div', '');
             var EQP_Armor_div = addElement(EQP_left, 'div', null, 'EQP_Armor_div', '');
             var EQP_deputy_div = addElement(EQP_left, 'div', null, 'EQP_deputy_div', '');
-            addElement(EQP_arms_div, 'div', null, 'hand_EQP_show', '');
+            addElement(EQP_arms_div, 'div', null, 'EQP_show', '');
             for (let j = 0; j < 4; j++) {
                 addElement(EQP_Armor_div, 'div', null, 'EQP_show', '');
             }
-            addElement(EQP_deputy_div, 'div', null, 'hand_EQP_show', '');
-            var EQP_right = addElement(EQP_i, 'div', null, 'page_columns_11', ''); //装备栏右侧，饰品和饰品槽
+            addElement(EQP_deputy_div, 'div', null, 'EQP_show', '');
+            var EQP_right = addElement(EQP_i, 'div', null, 'EQP_right_col', ''); //装备栏右侧，饰品和饰品槽
         }
 
         //切换属性、buff、装备栏的按钮
@@ -334,6 +334,9 @@ function change_Player_status_div(button_id) {
     if (button_id == 'PSK_switch_button') {
         PAB_div.style.display = 'none';
         PSK_div.style.display = '';
+        //切换到技能界面时刷新技能显示
+        let P_All_Skills = player.get_player_All_Skills();
+        P_All_Skills.updata_PSK_value();
     }
 }
 //更新角色名

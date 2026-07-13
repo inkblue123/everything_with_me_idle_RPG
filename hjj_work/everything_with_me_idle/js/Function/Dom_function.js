@@ -155,18 +155,18 @@ function add_show_Tooltip(target_div, tip_type, tip_value) {
     });
 }
 //  向目标组件添加鼠标点击穿戴到身上的功能
-function add_click_Equipment_worn(target_div, item_data) {
+function add_click_Equipment_worn(target_div, item_obj) {
     target_div.addEventListener('click', () => {
         //从玩家背包中去掉要穿戴的物品
-        let item_key = get_item_id_key(item_data);
-        let ret = player.Player_lose_item(item_key, item_data.num);
+        let item_key = get_item_id_key(item_obj);
+        let ret = player.Player_lose_item(item_key, item_obj.num);
         if (!ret) return;
         //切换到当前激活的装备栏
         let P_worn = player.get_player_worn();
         P_worn.show_active_EQP();
         //将要穿戴的物品放到目前激活的装备栏的指定位置
-        // let equip_rarity = item_data.equip_rarity;
-        player.worn_Equipment(item_data);
+        // let equip_rarity = item_obj.equip_rarity;
+        player.worn_Equipment(item_obj);
         //装备信息发生变动，更新相关界面和数据
         updata_player_EQP(); //玩家属性变化
         let now_GS = global.get_flag('GS_game_statu');
@@ -185,8 +185,8 @@ function add_click_Equipment_worn(target_div, item_data) {
     });
 }
 //  向目标组件添加鼠标点击使用消耗品的功能
-function add_click_use_consumable(target_div, item_data) {
-    let id = item_data.id;
+function add_click_use_consumable(target_div, item_obj) {
+    let id = item_obj.id;
     let use_type = items[id].use_type;
     //先判断这个消耗品的使用效果
     if (use_type == 'none' || use_type == 'keep_use') {
@@ -195,7 +195,7 @@ function add_click_use_consumable(target_div, item_data) {
     }
     target_div.addEventListener('click', () => {
         let consumable_manage = global.get_consumable_manage();
-        consumable_manage.use_consumable(item_data);
+        consumable_manage.use_consumable(item_obj);
         //关闭提示窗
         // let tooltip = document.getElementById('tooltip');
         // tooltip.CloseTip(); //清空小窗口

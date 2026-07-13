@@ -319,6 +319,32 @@ function skill_rewards_3(base_data, now_level) {
         return now_level * base_data;
     }
 }
+//将数字时间转换成字符串，例如输入100，输出1分40秒
+function seconds_time_to_ch(seconds) {
+    if (seconds == 0) {
+        return '0秒';
+    }
+    let minutes = Math.floor(seconds / 60);
+    seconds = Math.floor(seconds % 60);
+    let hours = Math.floor(minutes / 60);
+    minutes = Math.floor(minutes % 60);
+    let days = Math.floor(hours / 24);
+    hours = Math.floor(hours % 24);
+    let ch = '';
+    if (days != 0) {
+        ch = ch + days + '天';
+    }
+    if (hours != 0) {
+        ch = ch + hours + '时';
+    }
+    if (minutes != 0) {
+        ch = ch + minutes + '分';
+    }
+    if (seconds != 0) {
+        ch = ch + seconds + '秒';
+    }
+    return ch;
+}
 export {
     get_random, //
     get_Askill_base_attr,
@@ -330,4 +356,5 @@ export {
     format_numbers,
     calculate_num_attr,
     calculate_speed_attr,
+    seconds_time_to_ch,
 };

@@ -1,6 +1,7 @@
 import { is_Empty_Object, is_overlap } from '../Function/Function.js';
 import { P_skills } from '../Data/Skill/Skill.js';
 import { enums } from '../Data/Enum/Enum.js';
+import { formulas } from '../Data/Formula/Formula.js';
 import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
 
@@ -35,6 +36,8 @@ export class Leveling_Behavior {
         this.mining_behavior = new Object();
         //采集过程中发生的行为的参数
         this.collect_behavior = new Object();
+        //合成制造过程中发生的行为的参数
+        this.synthesis_behavior = new Object();
     }
 }
 
@@ -80,10 +83,22 @@ export class Exp_manage {
         }
         //记录练级行为以及对应的数据
         for (let id in behavior) {
-            if (is_Empty_Object(leveling_behavior[id])) {
-                leveling_behavior[id] = 0;
+            let value = behavior[id];
+            if (typeof value === 'number') {
+                //数字类型：累加
+                if (is_Empty_Object(leveling_behavior[id])) {
+                    leveling_behavior[id] = 0;
+                }
+                leveling_behavior[id] += value;
+            } else if (typeof value === 'string') {
+                //字符串类型：直接存储，覆盖时报错
+                if (!is_Empty_Object(leveling_behavior[id])) {
+                    console.log('练级行为%s的%s已经被记录为%s，现在被%s覆盖', skill_type, id, leveling_behavior[id], value);
+                }
+                leveling_behavior[id] = value;
+            } else {
+                console.log('练级行为%s的%s类型%s尚不支持', skill_type, id, typeof value);
             }
-            leveling_behavior[id] += behavior[id];
         }
     }
     //记录其他练级行为
@@ -142,8 +157,13 @@ export class Exp_manage {
         for (let type in skill_LB) {
             if (type == 'behavior') {
                 //行为判断
-                if (P_LB[type] != skill_LB[type]) {
-                    return false;
+                if (enums['live_plan_process_skill'].includes(skill_LB[type])) {
+                    //技能要求的行为是原料处理类生活技能，这些生活技能不会设置游戏状态，所以在这里单独处理
+                } else {
+                    //P_LB[type]当前状态和skill_LB[type]技能要求状态是否一致
+                    if (P_LB[type] != skill_LB[type]) {
+                        return false;
+                    }
                 }
             }
             if (type == 'weapon_type') {
@@ -162,6 +182,51 @@ export class Exp_manage {
             console.log('%s经验依据没有定义它归属于哪种升级行为', exp_source);
             return 0;
         }
+
+        //要从数据库中获得数值的经验依据
+        if (!is_Empty_Object(enums['exp_source_for_Data'][exp_source])) {
+            return this.get_exp_source_from_data(exp_source);
+        }
+
+        //可以直接从玩家行为中获得数值的经验依据
+        return this.get_exp_source_from_behavior(exp_source);
+    }
+    //从数据库中获取经验数值
+    get_exp_source_from_data(exp_source) {
+        let data_type = enums['exp_source_for_Data'][exp_source]; //数据库类型：formulas/items/enemys
+        let id_key = data_type + '_id'; //对应的id键名：formula_id/item_id/enemy_id
+
+        //从练级行为中获取数据库查询用的id
+        let id_son_behavior = enums['exp_source_for_Leveling_Behavior'][id_key];
+        if (is_Empty_Object(id_son_behavior)) {
+            console.log('%s对应的id键%s没有定义归属于哪种升级行为', exp_source, id_key);
+            return 0;
+        }
+        let data_id = this.leveling_behavior[id_son_behavior][id_key];
+        if (is_Empty_Object(data_id)) {
+            //练级行为中没有记录到对应的id，正常情况，返回0
+            return 0;
+        }
+
+        //根据数据库类型查找对应的数据库
+        if (data_type == 'formula') {
+            //配方数据库
+            if (is_Empty_Object(formulas[data_id])) {
+                console.log('配方%s数据未定义', data_id);
+                return 0;
+            }
+            if (is_Empty_Object(formulas[data_id].exp[exp_source])) {
+                return 0;
+            }
+            return formulas[data_id].exp[exp_source];
+        }
+        //TODO：items数据库，enemys数据库
+
+        console.log('%s经验依据指定的数据库类型%s尚未处理', exp_source, data_type);
+        return 0;
+    }
+    //从练级行为中直接获取经验数值
+    get_exp_source_from_behavior(exp_source) {
         let son_behavior = enums['exp_source_for_Leveling_Behavior'][exp_source];
         if (is_Empty_Object(this.leveling_behavior[son_behavior])) {
             //子行为结构体是空的，正常情况，返回0
@@ -171,7 +236,6 @@ export class Exp_manage {
             //子行为结构体中指定经验依据是空的，正常情况，返回0
             return 0;
         }
-
         return this.leveling_behavior[son_behavior][exp_source];
     }
 }

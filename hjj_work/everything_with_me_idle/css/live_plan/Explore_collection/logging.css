@@ -3,8 +3,6 @@
     position: relative;
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
 }
 
 /* 当前伐木对象头像div */
@@ -25,8 +23,6 @@
     width: 80%;
     /* height: 0; */
     aspect-ratio: 1/1;
-    box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
 }
 
 /* 树的生命进度条：最大的父元素 */
@@ -62,15 +58,11 @@
     width: 100%;
     height: 15%;
     text-align: center;
-    box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
 }
 /* 当前伐木对象中的掉落物列表滚动窗口 */
 #LGI_drop_table_scroll_box {
     width: 100%;
     height: 55%;
-    box-sizing: border-box;
-    border: 1px solid #797691; /* 内框 */
 }
 
 /* 伐木上部div */
@@ -110,7 +102,6 @@
     background-color: #f8f8f8;
     /* border: 1px solid #ccc; */
     border-radius: 2px; /* 轻微圆角 */
-    border: 1px solid #797691;
 }
 /* 玩家伐木进度条：最大的父元素 */
 .player_logging_bar {

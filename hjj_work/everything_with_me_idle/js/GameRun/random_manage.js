@@ -1,6 +1,5 @@
 import { is_Empty_Object } from '../Function/Function.js';
 import { format_numbers, get_random } from '../Function/math_func.js';
-import { places } from '../Data/Place/Place.js';
 import { enemys } from '../Data/Enemy/Enemy.js';
 
 //稀有游戏内容保底管理对象

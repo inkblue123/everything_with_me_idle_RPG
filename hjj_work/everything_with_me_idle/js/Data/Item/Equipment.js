@@ -56,7 +56,8 @@ function init_dagger(items) {
 
     id = 'wood_dagger'; //木匕首
     add_Equipment_object(items, id); //id，物品主要分类
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 20); //物品价值
@@ -71,7 +72,8 @@ function init_sword(items) {
 
     id = 'wood_sword'; //木剑
     add_Equipment_object(items, id); //id，物品主要分类
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 1); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 20); //物品价值
@@ -80,7 +82,8 @@ function init_sword(items) {
 
     id = 'test_sword'; //测试剑
     add_Equipment_object(items, id); //id，物品主要分类
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 0); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     // items[id].init_Item_price('ordinary_coin', 60); //物品价值
     //攻击，精准，暴击率，暴击伤害，攻击速度
     items[id].init_Equipment_attack_attr('ordinary', 100, 5, 5, 20, 1000); //手动设置攻击属性
@@ -93,7 +96,8 @@ function init_battle_axe(items) {
 
     id = 'wood_battle_axe'; //木制战斧
     add_Equipment_object(items, id);
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 25); //物品价值
@@ -119,7 +123,8 @@ function init_sticks(items) {
 
     id = 'wood_sticks'; //木制棍棒
     add_Equipment_object(items, id);
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 20); //物品价值
@@ -133,7 +138,8 @@ function init_hammers(items) {
 
     id = 'wood_hammers'; //木制大锤
     add_Equipment_object(items, id);
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 34); //物品价值
@@ -153,7 +159,8 @@ function init_bow(items) {
 
     id = 'wood_bow'; //木弓
     add_Equipment_object(items, id);
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 80); //物品价值
@@ -174,7 +181,8 @@ function init_hand_gun(items) {
     id = 'test_hand_gun'; //测试手弩
     add_Equipment_object(items, id);
     items[id].name = '测试用手弩';
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 0); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 60); //物品价值
@@ -195,7 +203,8 @@ function init_boomerang(items) {
     id = 'test_boomerang'; //测试回旋武器
     add_Equipment_object(items, id);
     items[id].name = '测试用回旋武器';
-    items[id].init_Equipment(secon_type, 5, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(5, secon_type, 0); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].set_attr_level('L1', 'attack', secon_type); //调用L1级的攻击属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 100); //物品价值
@@ -240,7 +249,8 @@ function init_helmet(items) {
     id = 'test_helmet';
     add_Equipment_object(items, id);
     items[id].name = '测试头盔';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 0); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     items[id].set_attr_level('L1', 'defense', secon_type); //调用L1级的防御属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     // items[id].init_Item_price('ordinary_coin', 80); //物品价值
@@ -248,7 +258,8 @@ function init_helmet(items) {
     id = 'wood_helmet';
     add_Equipment_object(items, id);
     items[id].name = '木制头盔';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 1); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     items[id].set_attr_level('L1', 'defense', secon_type); //调用L1级的防御属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 40); //物品价值
@@ -261,13 +272,15 @@ function init_chest_armor(items) {
     id = 'test_chest_armor';
     add_Equipment_object(items, id);
     items[id].name = '测试胸甲';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 0); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     // items[id].init_Item_price('ordinary_coin', 100); //物品价值
 
     id = 'wood_chest_armor';
     add_Equipment_object(items, id);
     items[id].name = '木制胸甲';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 1); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     items[id].set_attr_level('L1', 'defense', secon_type); //调用L1级的防御属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 50); //物品价值
@@ -280,13 +293,15 @@ function init_leg_armor(items) {
     id = 'test_leg_armor';
     add_Equipment_object(items, id);
     items[id].name = '测试腿甲';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 0); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     // items[id].init_Item_price('ordinary_coin', 90); //物品价值
 
     id = 'wood_leg_armor';
     add_Equipment_object(items, id);
     items[id].name = '木制腿甲';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 1); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     items[id].set_attr_level('L1', 'defense', secon_type); //调用L1级的防御属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 40); //物品价值
@@ -299,13 +314,15 @@ function init_shoes(items) {
     id = 'test_shoes';
     add_Equipment_object(items, id);
     items[id].name = '测试鞋子';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 0); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     // items[id].init_Item_price('ordinary_coin', 60); //物品价值
 
     id = 'wood_shoes';
     add_Equipment_object(items, id);
     items[id].name = '木制鞋子';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 1); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     items[id].set_attr_level('L1', 'defense', secon_type); //调用L1级的防御属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 45); //物品价值
@@ -318,13 +335,15 @@ function init_shield(items) {
     id = 'test_shield';
     add_Equipment_object(items, id);
     items[id].name = '测试盾牌';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 0); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     // items[id].init_Item_price('ordinary_coin', 60); //物品价值
 
     id = 'wood_shield';
     add_Equipment_object(items, id);
     items[id].name = '木制盾牌';
-    items[id].init_Equipment(secon_type, 1, false); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 1); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false); //是否属于特制装备
     items[id].set_attr_level('L1', 'defense', secon_type); //调用L1级的防御属性预设
     items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
     items[id].init_Item_price('ordinary_coin', 30); //物品价值
@@ -337,7 +356,8 @@ function init_logging_tool(items) {
 
     id = 'hatchet'; //柴刀
     add_Equipment_object(items, id);
-    items[id].init_Equipment([secon_type, 'collect_tool'], 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, [secon_type, 'collect_tool'], 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].init_Item_price('ordinary_coin', 50); //物品价值
     items[id].set_attr_level('L0', 'attack', secon_type); //调用L0级的攻击属性预设
     items[id].equip_attr['ordinary']['mini_tree_LGI_damage'] = 3;
@@ -353,7 +373,8 @@ function init_fishing_tool(items) {
 
     id = 'Bamboo_fishing_rod'; //竹鱼竿
     add_Equipment_object(items, id);
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].init_Item_price('ordinary_coin', 30); //物品价值
     items[id].set_attr_level('L0', 'attack', secon_type); //调用L0级的攻击属性预设
     items[id].equip_attr['ordinary']['FIS_takebait_attack'] = 5;
@@ -380,7 +401,8 @@ function init_collect_tool(items) {
 
     id = 'mowing_sickle'; //割草镰刀
     add_Equipment_object(items, id);
-    items[id].init_Equipment(secon_type, 1, false, attack_interval); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
     items[id].init_Item_price('ordinary_coin', 35); //物品价值
     items[id].set_attr_level('L0', 'attack', secon_type); //调用L0级的攻击属性预设
     items[id].equip_attr['ordinary']['CLT_chance_all_grass'] = 10;

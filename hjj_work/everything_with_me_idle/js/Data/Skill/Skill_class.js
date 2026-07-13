@@ -20,7 +20,7 @@ export class Skill {
     init_skill_name(id) {
         if (texts[id] == undefined || texts[id].skill_name == undefined) {
             //尚未定义
-            this.name = '未命名技能';
+            this.name = '未命名技能' + id;
         } else {
             this.name = texts[id].skill_name;
         }
@@ -67,7 +67,8 @@ export class P_Passive_skill extends Skill {
         this.switch_type; //这个技能用于过滤时的类型，比如加成战斗的，加成生活的，武器精通类、使用道具类等等
         this.initial_flag; //是否属于玩家初始技能
         this.rewards = new Array(); //常态等级加成
-        this.milepost = new Object(); // 关键等级节点
+        this.milepost_attr = new Object(); //关键等级节点-属性加成
+        this.milepost_super = new Object(); //关键等级节点-机制解锁等特殊效果
     }
     //设置一条常态等级加成属性
     add_rewards(attr_name, base_data, algorithm) {
@@ -78,14 +79,26 @@ export class P_Passive_skill extends Skill {
         this.rewards.push(obj);
     }
     //在指定的关键等级节点队列里添加一个属性
-    add_milepost(level, attr_name, data) {
-        if (is_Empty_Object(this.milepost[level])) {
-            this.milepost[level] = new Array();
+    add_milepost_attr(level, attr_name, data) {
+        if (is_Empty_Object(this.milepost_attr[level])) {
+            this.milepost_attr[level] = new Array();
         }
         let obj = new Object();
         obj.attr = attr_name; //属性名
         obj.data = data; //属性数值
-        this.milepost[level].push(obj);
+        this.milepost_attr[level].push(obj);
+    }
+    //在指定的关键等级节点队列里添加一个特殊效果
+    //action_type：动作类型，如'set_game_status'
+    //target_args：目标参数数组，如['GS_unlock_SYN_FL']
+    add_milepost_super(level, action_type, ...target_args) {
+        if (is_Empty_Object(this.milepost_super[level])) {
+            this.milepost_super[level] = new Array();
+        }
+        let obj = new Object();
+        obj.action_type = action_type; //动作类型
+        obj.target_args = target_args; //目标参数数组
+        this.milepost_super[level].push(obj);
     }
 }
 //玩家主动技能

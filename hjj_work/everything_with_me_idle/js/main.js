@@ -6,10 +6,10 @@ import { global } from './GameRun/global_manage.js';
 import { player } from './Player/Player.js';
 
 window.addEventListener('load', () => {
-    //加载游戏布局
-    create_game_dom();
     //部分游戏数据初始化
     game_data_init();
+    //加载游戏布局
+    create_game_dom();
     //全局配置和全局对象初始化
     // global.init();
     // //玩家类初始化

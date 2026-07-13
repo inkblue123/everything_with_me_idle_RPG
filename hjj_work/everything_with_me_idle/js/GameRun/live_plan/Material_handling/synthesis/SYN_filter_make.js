@@ -8,6 +8,29 @@ import { texts } from '../../../../Data/Text/Text.js';
 import { formulas } from '../../../../Data/Formula/Formula.js';
 import { player } from '../../../../Player/Player.js';
 import { global } from '../../../global_manage.js';
+import { add_formula, get_SYN_formula_switch_type, SYN_switch_type_handle } from './SYN_function.js';
+
+//更新配方筛选的制造界面
+function updata_SYN_FM_value(now_filter_type, now_filter_value) {
+    //清空这个界面里的配方
+    let SYN_FM_formula_value_div = document.getElementById('SYN_FM_formula_value_div');
+    SYN_FM_formula_value_div.replaceChildren();
+
+    //获取应该展示的配方过滤条件
+    let SYN_FM_formula_switch_type = get_SYN_formula_switch_type('SYN_FM');
+    SYN_FM_formula_switch_type.filter_type = now_filter_type;
+    SYN_FM_formula_switch_type.filter_value = now_filter_value;
+    //重新生成标题
+    updata_SYN_FM_title(SYN_FM_formula_switch_type);
+
+    // 获取在这个过滤条件下应该展示的配方id
+    let formula_arr = SYN_switch_type_handle(SYN_FM_formula_switch_type);
+    // 展示这些配方
+    for (let formula_id of formula_arr) {
+        add_formula('SYN_FM', formula_id);
+    }
+}
+
 //生成指定筛选条件下的制造界面标题
 function updata_SYN_FM_title(SYN_FM_formula_switch_type) {
     //'筛选了 ** 物品A 的所有配方';
@@ -40,4 +63,4 @@ function updata_SYN_FM_title(SYN_FM_formula_switch_type) {
     let SYN_FM_title_value = document.getElementById('SYN_FM_title_value');
     SYN_FM_title_value.innerHTML = SYN_FM_title_ch;
 }
-export { updata_SYN_FM_title };
+export { updata_SYN_FM_value, updata_SYN_FM_title };

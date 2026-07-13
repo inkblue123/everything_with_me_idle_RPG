@@ -20,8 +20,8 @@ export class Consumable_Manage {
         this.player_end_attr = player_end_attr;
     }
     //使用一份指定消耗品
-    use_consumable(item_data) {
-        let id = item_data.id;
+    use_consumable(item_obj) {
+        let id = item_obj.id;
 
         let use_type = items[id].use_type;
         if (use_type == 'none' || use_type == 'keep_use') {
@@ -30,26 +30,26 @@ export class Consumable_Manage {
         }
 
         //判断指定消耗品当前能否使用
-        if (!this.check_consumable_con_use(item_data)) {
+        if (!this.check_consumable_can_use(item_obj)) {
             return;
         }
 
         let ret;
         //根据消耗品使用类型，使用一份
         if (use_type == 'once_use') {
-            ret = this.use_once_use_consumable(item_data);
+            ret = this.use_once_use_consumable(item_obj);
             if (ret) {
                 let P_backpack = player.get_player_backpack();
                 P_backpack.updata_BP_value();
             }
         } else if (use_type == 'sustain_use') {
-            this.init_sustain_use_consumable(item_data);
+            this.init_sustain_use_consumable(item_obj);
         }
     }
     //判断指定消耗品当前能否使用
-    check_consumable_con_use(item_data) {
+    check_consumable_can_use(item_obj) {
         let flag = true;
-        let id = item_data.id;
+        let id = item_obj.id;
         let use_type = items[id].use_type;
         if (use_type == 'once_use') {
             //一次性使用，要判断使用的效果能否生效
@@ -78,16 +78,16 @@ export class Consumable_Manage {
                 flag = false;
             }
             //消耗品已经使用完毕，不能使用
-            if (item_data.use_ratio >= 100) {
+            if (item_obj.use_ratio >= 100) {
                 flag = false;
             }
         }
         return flag;
     }
     //使用一份一次性使用消耗品
-    use_once_use_consumable(item_data) {
-        let item_key = get_item_id_key(item_data);
-        let id = item_data.id;
+    use_once_use_consumable(item_obj) {
+        let item_key = get_item_id_key(item_obj);
+        let id = item_obj.id;
         //物品减少一个
         let ret = player.Player_lose_item(item_key, 1);
         if (!ret) {
@@ -98,22 +98,30 @@ export class Consumable_Manage {
         for (let attr_obj of items[id].use_attr) {
             get_consumable_use_data(attr_obj);
         }
+        //更新图鉴
+        let library_manage = global.get_library_manage();
+        library_manage.use_item_updata_library(item_obj);
+        //记录使用了一个消耗品行为，用于结算消耗品相关技能的经验
+        let global_flag_manage = global.get_global_flag_manage();
+        let consumable_behavior = new Object();
+        consumable_behavior.once_use = 1;
+        global_flag_manage.record_live_plan_skill_leveling_behavior('consumable', consumable_behavior);
         return true;
     }
     //开始使用一个持续使用消耗品
-    init_sustain_use_consumable(item_data) {
+    init_sustain_use_consumable(item_obj) {
         //保存这个消耗品的初始状态
-        this.now_use_id = item_data.id;
-        this.now_use_item_key = get_item_id_key(item_data);
+        this.now_use_id = item_obj.id;
+        this.now_use_item_key = get_item_id_key(item_obj);
         this.start_use_time = global.get_game_now_time();
         this.last_use_time = global.get_game_now_time();
-        this.start_use_ratio = item_data.use_ratio;
-        this.last_use_ratio = item_data.use_ratio;
+        this.start_use_ratio = item_obj.use_ratio;
+        this.last_use_ratio = item_obj.use_ratio;
         //启动使用消耗品状态
         global.set_flag('GS_game_statu', 'use_continuous');
         //玩家控制界面切换到消耗品
         let control = document.getElementById('control');
-        control.show_use_consumable(item_data.id, item_data.use_ratio);
+        control.show_use_consumable(item_obj.id, item_obj.use_ratio);
     }
     //更新一帧当前正在使用的消耗品
     updata_sustain_use_consumable() {
@@ -213,6 +221,9 @@ export class Consumable_Manage {
         //获得使用后的新物品
         let item_obj = get_item_obj(this.now_use_id, 1, this.last_use_ratio);
         player.Player_get_item_nolog(item_obj);
+        //更新图鉴
+        let library_manage = global.get_library_manage();
+        library_manage.use_item_updata_library(item_obj);
         //玩家控制界面调回原位
         let control = document.getElementById('control');
         control.show_now_place();
