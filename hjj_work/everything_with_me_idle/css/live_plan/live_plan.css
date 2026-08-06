@@ -2,17 +2,35 @@
 @import url('./Explore_collection/fishing.css');
 @import url('./Explore_collection/collect.css');
 @import url('./Explore_collection/mining.css');
+@import url('./Explore_collection/diving.css');
+@import url('./Explore_collection/archaeology.css');
+@import url('./Explore_collection/exploration.css');
 @import url('./Material_handling/synthesis.css');
+@import url('./Material_handling/cooking.css');
+@import url('./Material_handling/forging.css');
+@import url('./Material_handling/elixir_alchemy.css');
+@import url('./Material_handling/herbal_bath.css');
+@import url('./Material_handling/engrave.css');
+@import url('./Material_handling/alchemy.css');
 
 /* 生活规划总界面 */
 #Live_plan {
-    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    outline: 2px solid #797691;
     user-select: none;
+    position: relative; /*作为锁定遮罩的定位父元素*/
+}
+
+#Live_plan_value_div {
+    outline: 2px solid #797691;
 }
 
 /* 生活规划n个子界面的切换按钮的div */
 #Live_plan_switch_div {
     height: 10%;
+    gap: 2px;
 }
 
 /* 容纳具体的探索采集原料处理内容的div */
@@ -21,33 +39,36 @@
 }
 
 #EC_scroll_box {
-    /* display: flex; */
-    /* flex-direction: column; */
+    outline: 2px solid #797691;
+}
+
+#EC_classifica_div {
+    gap: 2px;
 }
 
 #MH_scroll_box {
-    /* display: flex; */
-    /* flex-direction: column; */
+    outline: 2px solid #797691;
+}
+
+#MH_switch_div {
+    gap: 2px;
 }
 
 /* 探索采集-容纳全部内容的div */
-/* #EC_div {
-    background-color: rgb(255, 0, 0);
-} */
+#EC_div {
+    gap: 2px;
+}
 
 /* 原料处理界面-容纳全部内容的div */
-/* #MH_div {
-    background-color: rgb(72, 255, 0);
-} */
+#MH_div {
+    gap: 2px;
+}
 
-/* .LP_div {
-    box-sizing: border-box;
-    border: 1px solid #797691; 
-} */
 /* 掉落品的div */
 .drop_value {
     width: 100%;
     text-align: center;
+    outline: 2px solid #797691;
 }
 
 /* 未解锁任何生活技能时的填充页 */

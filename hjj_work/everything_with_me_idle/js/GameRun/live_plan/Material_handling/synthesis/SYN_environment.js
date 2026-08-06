@@ -1,4 +1,4 @@
-import { addElement, addElement_radio, add_show_Tooltip, get_radio_switch_click_value } from '../../../../Function/Dom_function.js';
+import { addElement, addElement_botton, addElement_radio, add_show_Tooltip, get_radio_switch_click_value } from '../../../../Function/Dom_function.js';
 import { is_Empty_Object, get_item_obj, get_uniqueArr } from '../../../../Function/Function.js';
 
 import { enums } from '../../../../Data/Enum/Enum.js';
@@ -9,7 +9,7 @@ import { player } from '../../../../Player/Player.js';
 import { global } from '../../../global_manage.js';
 
 //更新上中的生活技能界面中的合成制造技能界面的工作环境详情的内容
-function updata_SYN_EN_value(SYN_place_work_bench) {
+function updata_SYN_EN_div(SYN_place_work_bench) {
     //获取更新前选择的工作环境
     let old_work_bench = get_now_SYN_EN_work_bench();
     //清除工作环境详情的所有内容
@@ -43,6 +43,7 @@ function init_SYN_EN(place_work_bench) {
     let live_plan_manage = global.get_live_plan_manage();
     let synthesis_manage = live_plan_manage.get_LP_live_skill_manage('synthesis_manage');
     let SYN_EN_left_div = document.getElementById('SYN_EN_left_div');
+    let has_new_work_bench = false; //当前地点是否有可新增的工作环境
     //遍历每种可能的工作台
     for (let work_bench_id of enums['all_SYN_work_bench']) {
         if (place_work_bench[work_bench_id] == undefined) {
@@ -54,9 +55,10 @@ function init_SYN_EN(place_work_bench) {
             let study_status = P_formula.get_formula_study_status(new_work_bench_formulas_id);
             if (study_status == 'know') {
                 //玩家知晓创建新工作台的配方，添加到选择界面
+                has_new_work_bench = true; //存在可新增的工作环境
                 let work_bench_name = texts[work_bench_id].work_bench_name;
                 let SYN_EN_add_choice_value = document.getElementById('SYN_EN_add_choice_value');
-                var SYN_EN_add_choice_button = addElement(SYN_EN_add_choice_value, 'button', '', 'LP_button');
+                var SYN_EN_add_choice_button = addElement_botton(SYN_EN_add_choice_value, '', 'LP_button');
                 SYN_EN_add_choice_button.innerHTML = work_bench_name;
                 SYN_EN_add_choice_button.addEventListener('click', function () {
                     change_SYN_EN_div('creat_work_bench', work_bench_id);
@@ -70,6 +72,13 @@ function init_SYN_EN(place_work_bench) {
             var SYN_EN_add_button = addElement(SYN_EN_left_div, 'div', null, 'radio_div switch_radio_div_1');
             addElement_radio(SYN_EN_add_button, 'SYN_EN_' + work_bench_id, 'SYN_EN_switch', work_bench_id, work_bench_name);
         }
+    }
+    //设置选择新工作环境界面的标题，根据是否存在可新增的工作环境调整
+    let SYN_EN_add_choice_title = document.getElementById('SYN_EN_add_choice_title');
+    if (has_new_work_bench) {
+        SYN_EN_add_choice_title.innerHTML = '选择要建造的工作环境';
+    } else {
+        SYN_EN_add_choice_title.innerHTML = '当前地点没有可用的新工作环境';
     }
     //设置按下某种工作台的按钮后调整界面的逻辑
     let radios = document.querySelectorAll('input[type="radio"][name="SYN_EN_switch"]');
@@ -267,4 +276,4 @@ function updata_SYN_EN_formula_Details_div(formulas_id) {
     }
 }
 
-export { updata_SYN_EN_value, get_now_SYN_EN_work_bench, delete_SYN_EN, init_SYN_EN, change_SYN_EN_div };
+export { updata_SYN_EN_div, get_now_SYN_EN_work_bench, delete_SYN_EN, init_SYN_EN, change_SYN_EN_div };

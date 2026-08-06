@@ -448,6 +448,10 @@ export class Enemy_manage {
     }
     //更新战斗界面中的所有敌人
     updata_enemy_show() {
+        // if (is_Empty_Object(places[this.now_place]) || places[this.now_place].type != 'combat') {
+        //     //当前地点不是战斗地点，无需记录
+        //     return true;
+        // }
         let combat_place_enemys = this.get_combat_place_enemys();
         for (let place_x in combat_place_enemys) {
             for (let place_y = 0; place_y < 9; place_y++) {
@@ -487,6 +491,7 @@ export class Enemy_manage {
     save_enemy_manage() {
         let enemy_save = new Object();
         this.now_time = global.get_game_now_time();
+        enemy_save.now_place = this.now_place; //当前游戏时间戳
         enemy_save.now_time = this.now_time; //当前游戏时间戳
         enemy_save.combat_place_enemys = this.combat_place_enemys; //当前地点内的敌人
         enemy_save.last_combat_place_data = this.last_combat_place_data; //曾经到过的战斗地点的参数
@@ -500,6 +505,7 @@ export class Enemy_manage {
         let now_time = global.get_now_time();
         //加载曾经到过的战斗地点的参数
         this.last_combat_place_data = enemy_save.last_combat_place_data;
+        this.now_place = enemy_save.now_place;
         //同步时间
         for (let place_id in enemy_save.last_combat_place_data) {
             let save_last_out_time = enemy_save.last_combat_place_data[place_id].last_out_time;
@@ -567,6 +573,10 @@ export class Enemy_manage {
     }
     //记录离开时的怪物数据
     set_leave_enemy_data() {
+        // if (is_Empty_Object(places[this.now_place]) || places[this.now_place].type != 'combat') {
+        //     //当前地点不是战斗地点，无需记录
+        //     return true;
+        // }
         if (places[this.now_place].combat_type != 'limited_enemy_road' && places[this.now_place].combat_type != 'limited_enemy_trap') {
             //只有通道和陷阱类型的战斗区域需要记录数据
             return true;

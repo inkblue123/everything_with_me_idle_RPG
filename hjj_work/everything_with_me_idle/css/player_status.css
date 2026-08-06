@@ -6,7 +6,6 @@
     justify-content: space-between;
 
     /* 单列布局 */
-    background-color: #797691;
     gap: 2px;
     user-select: none;
 }
@@ -16,14 +15,12 @@
     height: 10%;
     display: flex;
     flex-wrap: nowrap;
-    background-color: #797691;
     gap: 2px;
-    /* 防止换行 */
 }
 
 #player_status_value_div {
     height: 90%;
-    background-color: #ffffff;
+    outline: 2px solid #797691;
 }
 
 /* 角色状态界面的样式 */
@@ -33,7 +30,6 @@
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    background-color: #797691;
     gap: 2px;
 }
 
@@ -46,7 +42,7 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     padding-bottom: 5px;
-    background-color: #ffffff;
+    outline: 2px solid #797691;
 }
 
 /* 角色名：父元素 */
@@ -178,7 +174,7 @@
     height: 55%;
     width: 100%;
     align-items: center;
-    background-color: #ffffff;
+    outline: 2px solid #797691;
 }
 
 /* 背包物品界面的样式 */
@@ -214,7 +210,6 @@
 .EQP_column {
     flex: 1;
     height: 100%;
-    background-color: #797691;
     gap: 2px;
 }
 
@@ -222,14 +217,14 @@
 .EQP_left_col {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    background-color: #ffffff;
+    outline: 2px solid #797691;
 }
 
 /* 装备栏列-右侧（饰品） */
 .EQP_right_col {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    background-color: #ffffff;
+    outline: 2px solid #797691;
 }
 
 /* 一个装备栏父元素 */
@@ -340,7 +335,6 @@
     align-items: center;
     width: 100%;
     height: 20%;
-    background-color: #797691;
     gap: 2px;
 }
 
@@ -352,7 +346,7 @@
     align-items: center;
     flex: 1;
     height: 100%;
-    background-color: #ffffff;
+    outline: 2px solid #797691;
 }
 
 /* 选择装备栏的大div */
@@ -365,7 +359,7 @@
     align-items: center;
     gap: 2px;
     height: 100%;
-    background-color: #ffffff;
+    outline: 2px solid #797691;
 }
 
 /* 装备栏选择单选框 */
@@ -405,9 +399,18 @@
     background-color: #3597db;
 }
 
+#PSK_div {
+    gap: 2px;
+}
+
 #PSK_switch_sort_div {
     display: flex;
     flex-direction: column;
+    outline: 2px solid #797691;
+}
+
+#PSK_switch_div {
+    gap: 2px;
 }
 
 #PSK_switch_scroll_box {
@@ -418,19 +421,18 @@
     height: auto;
 }
 
+#PSK_value_scroll_box {
+    outline: 2px solid #797691;
+}
+
 /* 容纳具体技能内容的div */
 #PSK_value_div {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    /* 自动换行 */
-    align-content: flex-start;
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 /* 玩家技能界面-右侧布局中具体的一个技能 */
 .PSK_value {
-    /* 每行两个元素 */
-    width: 50%;
-    background-color: #ffffff;
     text-align: center;
 }

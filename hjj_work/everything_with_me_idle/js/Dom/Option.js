@@ -1,4 +1,4 @@
-import { crtElement, addElement } from '../Function/Dom_function.js';
+import { crtElement, addElement, addElement_botton } from '../Function/Dom_function.js';
 import { player } from '../Player/Player.js';
 import { global } from '../GameRun/global_manage.js';
 
@@ -12,12 +12,12 @@ function create_Option() {
 function make_option_page_test_div(option_page) {
     let button_div;
 
-    button_div = addElement(option_page, 'button');
+    button_div = addElement_botton(option_page);
     button_div.innerHTML = '物品测试';
     button_div.onclick = function () {
         give_player_item();
     };
-    button_div = addElement(option_page, 'button');
+    button_div = addElement_botton(option_page);
     button_div.innerHTML = 'css特效测试';
     button_div.onclick = function () {
         // startMagicAnimation();
@@ -28,7 +28,7 @@ function make_option_page_test_div(option_page) {
             block: 'center',
         });
     };
-    button_div = addElement(option_page, 'button');
+    button_div = addElement_botton(option_page);
     button_div.innerHTML = '随机数测试';
     button_div.onclick = function () {
         let data = Math.random();

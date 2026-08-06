@@ -1,10 +1,12 @@
-import { crtElement, addElement, addElement_radio, addElement_select } from '../Function/Dom_function.js';
+import { crtElement, addElement, addElement_botton, addElement_radio, addElement_select } from '../Function/Dom_function.js';
 import { updata_formula_UI_placeholder } from '../Function/Updata_func.js';
 import { is_Empty_Object } from '../Function/Function.js';
 import { save_game, save_game_show_object_tip } from '../LoadAndSave/load.js';
 import { P_skills } from '../Data/Skill/Skill.js';
 import { items } from '../Data/Item/Item.js';
 import { global } from '../GameRun/global_manage.js';
+import { places } from '../Data/Place/Place.js';
+import { formulas } from '../Data/Formula/Formula.js';
 import { player } from '../Player/Player.js';
 import { get_item_id_key } from '../Function/Function.js';
 
@@ -32,87 +34,69 @@ function make_test_div(TS_div) {
             var TS1_FinishNewPlayerTeach123_lable = addElement(TS1_FinishNewPlayerTeach123_div, 'div', 'TS1_FinishNewPlayerTeach123_lable', 'OP_T2_div');
             TS1_FinishNewPlayerTeach123_lable.innerHTML = '完成3天的新手教学';
             var TS1_FinishNewPlayerTeach123_value = addElement(TS1_FinishNewPlayerTeach123_div, 'div', 'TS1_FinishNewPlayerTeach123_value', 'OP_V_div');
-            var TS1_FinishNewPlayerTeach123_button = addElement(TS1_FinishNewPlayerTeach123_value, 'button', 'TS1_FinishNewPlayerTeach123_button', 'OP_button');
-            TS1_FinishNewPlayerTeach123_button.innerHTML = '完成3天的新手教学';
+            var TS1_FinishNewPlayerTeach123_button = addElement_botton(TS1_FinishNewPlayerTeach123_value, 'TS1_FinishNewPlayerTeach123_button', 'OP_button', undefined, '完成3天的新手教学');
             //测试-完成当前挑战
             var TS1_FinishNowChallenge_div = addElement(TS_value1_div, 'div', 'TS1_FinishNowChallenge_div', 'OP_TLV_div');
             var TS1_FinishNowChallenge_lable = addElement(TS1_FinishNowChallenge_div, 'div', 'TS1_FinishNowChallenge_lable', 'OP_T2_div');
             TS1_FinishNowChallenge_lable.innerHTML = '完成当前挑战';
             var TS1_FinishNowChallenge_value = addElement(TS1_FinishNowChallenge_div, 'div', 'TS1_FinishNowChallenge_value', 'OP_V_div');
-            var TS1_FinishNowChallenge_button = addElement(TS1_FinishNowChallenge_value, 'button', 'TS1_FinishNowChallenge_button', 'OP_button');
-            TS1_FinishNowChallenge_button.innerHTML = '完成当前挑战';
+            var TS1_FinishNowChallenge_button = addElement_botton(TS1_FinishNowChallenge_value, 'TS1_FinishNowChallenge_button', 'OP_button', undefined, '完成当前挑战');
             //测试-逐渐解锁生活技能
             var TS1_UnlockLivePlanSkill_div = addElement(TS_value1_div, 'div', 'TS1_UnlockLivePlanSkill_div', 'OP_TLV_div');
             var TS1_UnlockLivePlanSkill_lable = addElement(TS1_UnlockLivePlanSkill_div, 'div', 'TS1_UnlockLivePlanSkill_lable', 'OP_T2_div');
             TS1_UnlockLivePlanSkill_lable.innerHTML = '逐渐解锁生活技能';
             var TS1_UnlockLivePlanSkill_value = addElement(TS1_UnlockLivePlanSkill_div, 'div', 'TS1_UnlockLivePlanSkill_value', 'OP_V_div');
-            var TS1_UnlockLivePlanSkill_button = addElement(TS1_UnlockLivePlanSkill_value, 'button', 'TS1_UnlockLivePlanSkill_button', 'OP_button');
-            TS1_UnlockLivePlanSkill_button.innerHTML = '逐渐解锁生活技能';
-            var TS1_UnlockLivePlanSonSkill_button = addElement(TS1_UnlockLivePlanSkill_value, 'button', 'TS1_UnlockLivePlanSonSkill_button', 'OP_button');
-            TS1_UnlockLivePlanSonSkill_button.innerHTML = '解锁生活技能子系统';
+            var TS1_UnlockLivePlanSkill_button = addElement_botton(TS1_UnlockLivePlanSkill_value, 'TS1_UnlockLivePlanSkill_button', 'OP_button', undefined, '逐渐解锁生活技能');
+            var TS1_UnlockLivePlanSonSkill_button = addElement_botton(TS1_UnlockLivePlanSkill_value, 'TS1_UnlockLivePlanSonSkill_button', 'OP_button', undefined, '解锁生活技能子系统');
             //测试-暂停游戏
             var TS1_StopGameSpeed_div = addElement(TS_value1_div, 'div', 'TS1_StopGameSpeed_div', 'OP_TLV_div');
             var TS1_StopGameSpeed_lable = addElement(TS1_StopGameSpeed_div, 'div', 'TS1_StopGameSpeed_lable', 'OP_T2_div');
             TS1_StopGameSpeed_lable.innerHTML = '暂停游戏';
             var TS1_StopGameSpeed_value = addElement(TS1_StopGameSpeed_div, 'div', 'TS1_StopGameSpeed_value', 'OP_V_div');
-            var TS1_StopGameSpeed_button = addElement(TS1_StopGameSpeed_value, 'button', 'TS1_StopGameSpeed_button', 'OP_button');
-            TS1_StopGameSpeed_button.innerHTML = '暂停游戏';
-            var TS1_StartGameSpeed_button = addElement(TS1_StopGameSpeed_value, 'button', 'TS1_StartGameSpeed_button', 'OP_button');
-            TS1_StartGameSpeed_button.innerHTML = '恢复游戏';
+            var TS1_StopGameSpeed_button = addElement_botton(TS1_StopGameSpeed_value, 'TS1_StopGameSpeed_button', 'OP_button', undefined, '暂停游戏');
+            var TS1_StartGameSpeed_button = addElement_botton(TS1_StopGameSpeed_value, 'TS1_StartGameSpeed_button', 'OP_button', undefined, '恢复游戏');
             //测试-游戏速度
             var TS1_ChangeGameSpeed_div = addElement(TS_value1_div, 'div', 'TS1_ChangeGameSpeed_div', 'OP_TLV_div');
             var TS1_ChangeGameSpeed_lable = addElement(TS1_ChangeGameSpeed_div, 'div', 'TS1_ChangeGameSpeed_lable', 'OP_T3_div');
             TS1_ChangeGameSpeed_lable.innerHTML = '游戏速度';
             var TS1_ChangeGameSpeed_value = addElement(TS1_ChangeGameSpeed_div, 'div', 'TS1_ChangeGameSpeed_value', 'OP_V_div');
-            var TS1_GameSpeedX1_button = addElement(TS1_ChangeGameSpeed_value, 'button', 'TS1_GameSpeedX1_button', 'OP_button');
-            TS1_GameSpeedX1_button.innerHTML = '1倍速';
-            var TS1_GameSpeedX2_button = addElement(TS1_ChangeGameSpeed_value, 'button', 'TS1_GameSpeedX2_button', 'OP_button');
-            TS1_GameSpeedX2_button.innerHTML = '2倍速';
-            var TS1_GameSpeedX5_button = addElement(TS1_ChangeGameSpeed_value, 'button', 'TS1_GameSpeedX5_button', 'OP_button');
-            TS1_GameSpeedX5_button.innerHTML = '5倍速';
+            var TS1_GameSpeedX1_button = addElement_botton(TS1_ChangeGameSpeed_value, 'TS1_GameSpeedX1_button', 'OP_button', undefined, '1倍速');
+            var TS1_GameSpeedX2_button = addElement_botton(TS1_ChangeGameSpeed_value, 'TS1_GameSpeedX2_button', 'OP_button', undefined, '2倍速');
+            var TS1_GameSpeedX5_button = addElement_botton(TS1_ChangeGameSpeed_value, 'TS1_GameSpeedX5_button', 'OP_button', undefined, '5倍速');
             //测试-红绿蓝设0
             var TS1_HPMPENPSet0_div = addElement(TS_value1_div, 'div', 'TS1_HPMPENPSet0_div', 'OP_TLV_div');
             var TS1_HPMPENPSet0_lable = addElement(TS1_HPMPENPSet0_div, 'div', 'TS1_HPMPENPSet0_lable', 'OP_T3_div');
             TS1_HPMPENPSet0_lable.innerHTML = '红绿蓝设0';
             var TS1_HPMPENPSet0_value = addElement(TS1_HPMPENPSet0_div, 'div', 'TS1_HPMPENPSet0_value', 'OP_V_div');
-            var TS1_HPSet0_button = addElement(TS1_HPMPENPSet0_value, 'button', 'TS1_HPSet0_button', 'OP_button');
-            TS1_HPSet0_button.innerHTML = '血量设0';
-            var TS1_MPSet0_button = addElement(TS1_HPMPENPSet0_value, 'button', 'TS1_MPSet0_button', 'OP_button');
-            TS1_MPSet0_button.innerHTML = '魔力设0';
-            var TS1_ENPSet0_button = addElement(TS1_HPMPENPSet0_value, 'button', 'TS1_ENPSet0_button', 'OP_button');
-            TS1_ENPSet0_button.innerHTML = '精力设0';
+            var TS1_HPSet0_button = addElement_botton(TS1_HPMPENPSet0_value, 'TS1_HPSet0_button', 'OP_button', undefined, '血量设0');
+            var TS1_MPSet0_button = addElement_botton(TS1_HPMPENPSet0_value, 'TS1_MPSet0_button', 'OP_button', undefined, '魔力设0');
+            var TS1_ENPSet0_button = addElement_botton(TS1_HPMPENPSet0_value, 'TS1_ENPSet0_button', 'OP_button', undefined, '精力设0');
             //测试-批量物品测试
             var TS1_GivePlayerItems_div = addElement(TS_value1_div, 'div', 'TS1_GivePlayerItems_div', 'OP_TLV_div');
             var TS1_GivePlayerItems_lable = addElement(TS1_GivePlayerItems_div, 'div', 'TS1_GivePlayerItems_lable', 'OP_T2_div');
             TS1_GivePlayerItems_lable.innerHTML = '物品测试';
             var TS1_GivePlayerItems_value = addElement(TS1_GivePlayerItems_div, 'div', 'TS1_GivePlayerItems_value', 'OP_V_div');
-            var TS1_GivePlayerItems_button = addElement(TS1_GivePlayerItems_value, 'button', 'TS1_GivePlayerItems_button', 'OP_button');
-            TS1_GivePlayerItems_button.innerHTML = '部分物品测试';
-            var TS1_GivePlayerAllItems_button = addElement(TS1_GivePlayerItems_value, 'button', 'TS1_GivePlayerAllItems_button', 'OP_button');
-            TS1_GivePlayerAllItems_button.innerHTML = '全部物品测试';
+            var TS1_GivePlayerItems_button = addElement_botton(TS1_GivePlayerItems_value, 'TS1_GivePlayerItems_button', 'OP_button', undefined, '部分物品测试');
+            var TS1_GivePlayerAllItems_button = addElement_botton(TS1_GivePlayerItems_value, 'TS1_GivePlayerAllItems_button', 'OP_button', undefined, '全部物品测试');
             //测试-解锁全部技能
             var TS1_GivePlayerAllSkill_div = addElement(TS_value1_div, 'div', 'TS1_GivePlayerAllSkill_div', 'OP_TLV_div');
             var TS1_GivePlayerAllSkill_lable = addElement(TS1_GivePlayerAllSkill_div, 'div', 'TS1_GivePlayerAllSkill_lable', 'OP_T2_div');
             TS1_GivePlayerAllSkill_lable.innerHTML = '解锁全部技能';
             var TS1_GivePlayerAllSkill_value = addElement(TS1_GivePlayerAllSkill_div, 'div', 'TS1_GivePlayerAllSkill_value', 'OP_V_div');
-            var TS1_GivePlayerAllSkill_button = addElement(TS1_GivePlayerAllSkill_value, 'button', 'TS1_GivePlayerAllSkill_button', 'OP_button');
-            TS1_GivePlayerAllSkill_button.innerHTML = '解锁全部技能';
+            var TS1_GivePlayerAllSkill_button = addElement_botton(TS1_GivePlayerAllSkill_value, 'TS1_GivePlayerAllSkill_button', 'OP_button', undefined, '解锁全部技能');
             //测试-给予buff测试
             var TS1_GivePlayerbuff_div = addElement(TS_value1_div, 'div', 'TS1_GivePlayerbuff_div', 'OP_TLV_div');
             var TS1_GivePlayerbuff_lable = addElement(TS1_GivePlayerbuff_div, 'div', 'TS1_GivePlayerbuff_lable', 'OP_T2_div');
             TS1_GivePlayerbuff_lable.innerHTML = 'buff测试';
             var TS1_Playerbuff_value = addElement(TS1_GivePlayerbuff_div, 'div', 'TS1_Playerbuff_value', 'OP_V_div');
-            var TS1_GivePlayerbuff_button = addElement(TS1_Playerbuff_value, 'button', 'TS1_GivePlayerbuff_button', 'OP_button');
-            TS1_GivePlayerbuff_button.innerHTML = '给予buff测试';
-            var TS1_DeletePlayerbuff_button = addElement(TS1_Playerbuff_value, 'button', 'TS1_DeletePlayerbuff_button', 'OP_button');
-            TS1_DeletePlayerbuff_button.innerHTML = '清空buff';
+            var TS1_GivePlayerbuff_button = addElement_botton(TS1_Playerbuff_value, 'TS1_GivePlayerbuff_button', 'OP_button', undefined, '给予buff测试');
+            var TS1_DeletePlayerbuff_button = addElement_botton(TS1_Playerbuff_value, 'TS1_DeletePlayerbuff_button', 'OP_button', undefined, '清空buff');
             //测试-导出存档对象
             var TS1_GetObjectSave_div = addElement(TS_value1_div, 'div', 'TS1_GetObjectSave_div', 'OP_TLV_div');
             var TS1_GetObjectSave_lable = addElement(TS1_GetObjectSave_div, 'div', 'TS1_GetObjectSave_lable', 'OP_T2_div');
             TS1_GetObjectSave_lable.innerHTML = '导出存档对象';
             var TS1_GetObjectSave_value = addElement(TS1_GetObjectSave_div, 'div', 'TS1_GetObjectSave_value', 'OP_V_div');
-            var TS1_GetObjectSave_button = addElement(TS1_GetObjectSave_value, 'button', 'TS1_GetObjectSave_button', 'OP_button');
-            TS1_GetObjectSave_button.innerHTML = '导出存档对象';
+            var TS1_GetObjectSave_button = addElement_botton(TS1_GetObjectSave_value, 'TS1_GetObjectSave_button', 'OP_button', undefined, '导出存档对象');
         }
         //测试2
         {
@@ -123,24 +107,39 @@ function make_test_div(TS_div) {
             var TS2_Map_lable = addElement(TS2_Map_div, 'div', 'TS2_Map_lable', 'OP_T2_div');
             TS2_Map_lable.innerHTML = '地图功能测试';
             var TS2_Map_value = addElement(TS2_Map_div, 'div', 'TS2_Map_value', 'OP_V_div');
-            var TS2_MapSize_button = addElement(TS2_Map_value, 'button', 'TS2_MapSize_button', 'OP_button');
-            TS2_MapSize_button.innerHTML = '地图大小测试';
+            var TS2_MapSize_button = addElement_botton(TS2_Map_value, 'TS2_MapSize_button', 'OP_button', undefined, '地图大小测试');
             //测试2-制造配方测试
             var TS2_Makeformula_div = addElement(TS_value2_div, 'div', 'TS2_Makeformula_div', 'OP_TLV_div');
             var TS2_Makeformula_lable = addElement(TS2_Makeformula_div, 'div', 'TS2_Makeformula_lable', 'OP_T2_div');
             TS2_Makeformula_lable.innerHTML = '制造配方测试';
             var TS2_Addformula_value = addElement(TS2_Makeformula_div, 'div', 'TS2_Addformula_value', 'OP_V_div');
-            var TS2_Addformula_button = addElement(TS2_Addformula_value, 'button', 'TS2_Addformula_button', 'OP_button');
-            TS2_Addformula_button.innerHTML = '添加';
-            var TS2_Deleteformula_button = addElement(TS2_Addformula_value, 'button', 'TS2_Deleteformula_button', 'OP_button');
-            TS2_Deleteformula_button.innerHTML = '删除';
+            var TS2_Addformula_button = addElement_botton(TS2_Addformula_value, 'TS2_Addformula_button', 'OP_button', undefined, '添加');
+            var TS2_Deleteformula_button = addElement_botton(TS2_Addformula_value, 'TS2_Deleteformula_button', 'OP_button', undefined, '删除');
             //测试2-校验玩家背包物品
             var TS2_check_player_backpack_div = addElement(TS_value2_div, 'div', 'TS2_check_player_backpack_div', 'OP_TLV_div');
             var TS2_check_player_backpack_lable = addElement(TS2_check_player_backpack_div, 'div', 'TS2_check_player_backpack_lable', 'OP_T2_div');
             TS2_check_player_backpack_lable.innerHTML = '校验玩家背包物品';
             var TS2_check_player_backpack_value = addElement(TS2_check_player_backpack_div, 'div', 'TS2_check_player_backpack_value', 'OP_V_div');
-            var TS2_check_player_backpack_button = addElement(TS2_check_player_backpack_value, 'button', 'TS2_check_player_backpack_button', 'OP_button');
-            TS2_check_player_backpack_button.innerHTML = '校验';
+            var TS2_check_player_backpack_button = addElement_botton(TS2_check_player_backpack_value, 'TS2_check_player_backpack_button', 'OP_button', undefined, '校验');
+            //测试2-通过当前通道战斗地点
+            var TS2_PassCombatRoad_div = addElement(TS_value2_div, 'div', 'TS2_PassCombatRoad_div', 'OP_TLV_div');
+            var TS2_PassCombatRoad_lable = addElement(TS2_PassCombatRoad_div, 'div', 'TS2_PassCombatRoad_lable', 'OP_T2_div');
+            TS2_PassCombatRoad_lable.innerHTML = '通过当前"通道"战斗地点';
+            var TS2_PassCombatRoad_value = addElement(TS2_PassCombatRoad_div, 'div', 'TS2_PassCombatRoad_value', 'OP_V_div');
+            var TS2_PassCombatRoad_clear_button = addElement_botton(TS2_PassCombatRoad_value, 'TS2_PassCombatRoad_clear_button', 'OP_button', undefined, '满足通道条件');
+            var TS2_PassCombatRoad_force_button = addElement_botton(TS2_PassCombatRoad_value, 'TS2_PassCombatRoad_force_button', 'OP_button', undefined, '无条件通过通道');
+            //测试2-学会所有配方
+            var TS2_LearnAllFormula_div = addElement(TS_value2_div, 'div', 'TS2_LearnAllFormula_div', 'OP_TLV_div');
+            var TS2_LearnAllFormula_lable = addElement(TS2_LearnAllFormula_div, 'div', 'TS2_LearnAllFormula_lable', 'OP_T2_div');
+            TS2_LearnAllFormula_lable.innerHTML = '学会所有配方';
+            var TS2_LearnAllFormula_value = addElement(TS2_LearnAllFormula_div, 'div', 'TS2_LearnAllFormula_value', 'OP_V_div');
+            var TS2_LearnAllFormula_button = addElement_botton(TS2_LearnAllFormula_value, 'TS2_LearnAllFormula_button', 'OP_button', undefined, '学会所有配方');
+            //测试2-移动到村中住所
+            var TS2_GotoVillageHome_div = addElement(TS_value2_div, 'div', 'TS2_GotoVillageHome_div', 'OP_TLV_div');
+            var TS2_GotoVillageHome_lable = addElement(TS2_GotoVillageHome_div, 'div', 'TS2_GotoVillageHome_lable', 'OP_T2_div');
+            TS2_GotoVillageHome_lable.innerHTML = '移动到村中住所';
+            var TS2_GotoVillageHome_value = addElement(TS2_GotoVillageHome_div, 'div', 'TS2_GotoVillageHome_value', 'OP_V_div');
+            var TS2_GotoVillageHome_button = addElement_botton(TS2_GotoVillageHome_value, 'TS2_GotoVillageHome_button', 'OP_button', undefined, '移动到村中住所');
         }
     }
 }
@@ -285,7 +284,7 @@ function set_test_button(Game_log) {
             var formula_value_r = addElement(formula_value, 'div', null, 'formula_value_r');
             formula_value_r.innerHTML = '产物A x1';
             //配方数量变化，根据滚动条更新占位图标
-            updata_formula_UI_placeholder('SYN_MK_formula_scroll_box', 'SYN_MK_formula_value_div', 'SYN_MK_formula_title_3');
+            updata_formula_UI_placeholder('SYN_MK');
         };
         //制造配方测试--删除
         let TS2_Deleteformula_button = Game_log.querySelector('#TS2_Deleteformula_button');
@@ -295,12 +294,32 @@ function set_test_button(Game_log) {
                 SYN_MK_formula_value_div.removeChild(SYN_MK_formula_value_div.firstChild);
             }
             //配方数量变化，根据滚动条更新占位图标
-            updata_formula_UI_placeholder('SYN_MK_formula_scroll_box', 'SYN_MK_formula_value_div', 'SYN_MK_formula_title_3');
+            updata_formula_UI_placeholder('SYN_MK');
         };
         //校验玩家背包物品
         let TS2_check_player_backpack_button = Game_log.querySelector('#TS2_check_player_backpack_button');
         TS2_check_player_backpack_button.onclick = function () {
             check_player_backpack();
+        };
+        //通过当前通道战斗地点-满足通道条件
+        let TS2_PassCombatRoad_clear_button = Game_log.querySelector('#TS2_PassCombatRoad_clear_button');
+        TS2_PassCombatRoad_clear_button.onclick = function () {
+            pass_road_by_clear();
+        };
+        //通过当前通道战斗地点-无条件通过通道
+        let TS2_PassCombatRoad_force_button = Game_log.querySelector('#TS2_PassCombatRoad_force_button');
+        TS2_PassCombatRoad_force_button.onclick = function () {
+            pass_road_by_force();
+        };
+        //学会所有配方
+        let TS2_LearnAllFormula_button = Game_log.querySelector('#TS2_LearnAllFormula_button');
+        TS2_LearnAllFormula_button.onclick = function () {
+            learn_all_formula();
+        };
+        //移动到村中住所
+        let TS2_GotoVillageHome_button = Game_log.querySelector('#TS2_GotoVillageHome_button');
+        TS2_GotoVillageHome_button.onclick = function () {
+            goto_village_home();
         };
     }
 }
@@ -479,4 +498,75 @@ function check_player_backpack() {
     P_backpack.updata_BP_value();
     console.log('背包物品修复完成');
 }
+//通过当前通道战斗地点-满足通道条件（清空敌人数，模拟打完所有敌人）
+function pass_road_by_clear() {
+    let place_manage = global.get_place_manage();
+    let now_place = place_manage.get_now_place();
+    let now_place_type = place_manage.get_now_place_type();
+
+    if (now_place_type != 'combat') {
+        console.log('当前地点不是战斗地点，无法执行"满足通道条件"');
+        return;
+    }
+    if (places[now_place].combat_type != 'limited_enemy_road') {
+        console.log('当前战斗地点不是"通道"类型（combat_type: %s），无法执行"满足通道条件"', places[now_place].combat_type);
+        return;
+    }
+
+    let enemy_manage = global.get_enemy_manage();
+    // 将杀敌数设置为当前积累的敌人数，触发 add_kill_enemy_num 中的自动通过逻辑
+    let need_kill = enemy_manage.now_place_enemy_cumulative - enemy_manage.kill_enemy_num;
+    if (need_kill <= 0) {
+        console.log('当前通道敌人已清空，无需额外操作');
+        return;
+    }
+    enemy_manage.add_kill_enemy_num(need_kill);
+    console.log('已模拟击杀 %d 个敌人，通过当前通道，移动到 %s', need_kill, places[now_place].next_accessible_area);
+}
+
+//通过当前通道战斗地点-无条件通过（强行移动到对面地点）
+function pass_road_by_force() {
+    let place_manage = global.get_place_manage();
+    let now_place = place_manage.get_now_place();
+    let now_place_type = place_manage.get_now_place_type();
+
+    if (now_place_type != 'combat') {
+        console.log('当前地点不是战斗地点，无法执行"无条件通过通道"');
+        return;
+    }
+    if (places[now_place].combat_type != 'limited_enemy_road') {
+        console.log('当前战斗地点不是"通道"类型（combat_type: %s），无法执行"无条件通过通道"', places[now_place].combat_type);
+        return;
+    }
+
+    let next_place = places[now_place].next_accessible_area;
+    if (!next_place) {
+        console.log('当前通道 %s 未定义 next_accessible_area，无法通过', now_place);
+        return;
+    }
+    place_manage.set_now_place(next_place);
+    console.log('已无条件通过通道 %s，移动到 %s', now_place, next_place);
+}
+
+//学会所有配方
+function learn_all_formula() {
+    let P_formulas_manage = player.get_player_formulas_manage();
+    let count = 0;
+    for (let id in formulas) {
+        let status = P_formulas_manage.get_formula_study_status(id);
+        if (status == 'unknow') {
+            P_formulas_manage.Player_get_formula(id, 'know');
+            count++;
+        }
+    }
+    console.log('已学会 %d 个新配方', count);
+}
+
+//移动到village_home
+function goto_village_home() {
+    let place_manage = global.get_place_manage();
+    place_manage.set_now_place('village_home');
+    console.log('已移动到 village_home');
+}
+
 export { make_test_div, set_test_button };

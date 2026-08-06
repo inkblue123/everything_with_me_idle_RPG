@@ -1,4 +1,4 @@
-import { crtElement, empty_dom, addElement } from '../Function/Dom_function.js';
+import { crtElement, empty_dom, addElement, addElement_botton } from '../Function/Dom_function.js';
 import { is_Empty_Object } from '../Function/Function.js';
 import { places } from '../Data/Place/Place.js';
 import { items } from '../Data/Item/Item.js';
@@ -40,8 +40,7 @@ function make_Control_div(Control) {
     //左边的待出售物品div
     let sell_name_div = addElement(sell_div, 'div', null, 'sell_buy_name_div');
     sell_name_div.innerHTML = '准备出售的物品';
-    let sell_quantity_button = addElement(sell_div, 'button', 'sell_quantity_button', 'player_Control_button');
-    sell_quantity_button.innerHTML = '出售批量选择-> X1';
+    let sell_quantity_button = addElement_botton(sell_div, 'sell_quantity_button', 'player_Control_button', null, '出售批量选择-> X1');
     sell_quantity_button.dataset.quantity_num = '1';
     var sell_value_scroll_box = addElement(sell_div, 'div', 'null', 'overflow_y_div sell_buy_scroll_box');
     var sell_value_div = addElement(sell_value_scroll_box, 'div', 'sell_value_div', 'in_overflow_div');
@@ -49,18 +48,15 @@ function make_Control_div(Control) {
     //中间的的交易结果div
     let trade_result_name_div = addElement(trade_result_div, 'div', 'trade_result_name_div', null);
     trade_result_name_div.innerHTML = '交易结果<br>收入：0<br>支出：0';
-    let supplement_money_button = addElement(trade_result_div, 'button', 'supplement_money_button', null);
-    supplement_money_button.innerHTML = '补齐货币';
-    let trade_button = addElement(trade_result_div, 'button', 'trade_button', null);
-    trade_button.innerHTML = '确认交易';
+    let supplement_money_button = addElement_botton(trade_result_div, 'supplement_money_button', null, null, '补齐货币');
+    let trade_button = addElement_botton(trade_result_div, 'trade_button', null, null, '确认交易');
     addElement(trade_button, 'div', 'trade_button_overlay', 'overlay', 'none');
     trade_button.style.pointerEvents = 'auto';
 
     //右边的待购买物品div
     let buy_name_div = addElement(buy_div, 'div', null, 'sell_buy_name_div');
     buy_name_div.innerHTML = '准备购买的物品';
-    let buy_quantity_button = addElement(buy_div, 'button', 'buy_quantity_button', 'player_Control_button');
-    buy_quantity_button.innerHTML = '购买批量选择-> X1';
+    let buy_quantity_button = addElement_botton(buy_div, 'buy_quantity_button', 'player_Control_button', null, '购买批量选择-> X1');
     buy_quantity_button.dataset.quantity_num = '1';
     var buy_value_scroll_box = addElement(buy_div, 'div', null, 'overflow_y_div sell_buy_scroll_box');
     var buy_value_div = addElement(buy_value_scroll_box, 'div', 'buy_value_div', 'in_overflow_div');
@@ -123,7 +119,7 @@ function set_Control_func(Control) {
                 continue;
             }
             //满足出现条件，在控制界面中添加按钮
-            let control_button = addElement(player_Control_div, 'button', null, 'player_Control_button');
+            let control_button = addElement_botton(player_Control_div, null, 'player_Control_button');
             control_button.innerHTML = texts[event_id][process.button[button_id].text];
             control_button.addEventListener('click', function () {
                 game_event_manage.updata_mini_event(event_id, process_id, button_id);
@@ -141,8 +137,7 @@ function set_Control_func(Control) {
         Place_desc_div.innerHTML = text_ch;
 
         //添加按钮
-        let control_button = addElement(player_Control_div, 'button', null, 'player_Control_button');
-        control_button.innerHTML = '停止使用';
+        let control_button = addElement_botton(player_Control_div, null, 'player_Control_button', null, '停止使用');
         control_button.addEventListener('click', function () {
             //结算当前消耗品的使用情况
             let global_flag_manage = global.get_global_flag_manage();
@@ -339,7 +334,7 @@ function add_control_button_move(new_place_id, front_text, after_text) {
     let button_text = make_button_text(front_text, places[new_place_id].name, after_text);
     //生成按钮
     let player_Control_div = document.getElementById('player_Control_div');
-    let move_place_button = addElement(player_Control_div, 'button', null, 'player_Control_button');
+    let move_place_button = addElement_botton(player_Control_div, null, 'player_Control_button');
     move_place_button.innerHTML = button_text;
     move_place_button.addEventListener('click', function () {
         let place_manage = global.get_place_manage();
@@ -352,7 +347,7 @@ function add_control_button_start_event(event_id) {
     let button_text = game_events[event_id].button_name;
     //生成按钮
     let player_Control_div = document.getElementById('player_Control_div');
-    let move_place_button = addElement(player_Control_div, 'button', null, 'player_Control_button');
+    let move_place_button = addElement_botton(player_Control_div, null, 'player_Control_button');
     move_place_button.innerHTML = button_text;
     move_place_button.addEventListener('click', function () {
         let game_event_manage = global.get_game_event_manage();
@@ -367,7 +362,7 @@ function add_control_button_end_event(front_text, after_text) {
     let button_text = make_button_text(front_text, name, after_text);
     //生成按钮
     let player_Control_div = document.getElementById('player_Control_div');
-    let move_place_button = addElement(player_Control_div, 'button', null, 'player_Control_button');
+    let move_place_button = addElement_botton(player_Control_div, null, 'player_Control_button');
     move_place_button.innerHTML = button_text;
     move_place_button.addEventListener('click', function () {
         game_event_manage.end_challenge('exit');

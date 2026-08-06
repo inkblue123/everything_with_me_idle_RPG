@@ -1,45 +1,81 @@
 /* 游戏日志界面的样式 */
 #game_log {
-    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    outline: 2px solid #797691;
     user-select: none;
-    /* 内框 */
 }
 
 /* 游戏日志界面上方过滤按钮的div */
 #Game_log_switch_div {
+    display: flex;
     height: 10%;
-    background-color: #ffd700;
-    /* border-bottom: 1px solid #797691;  */
+    gap: 2px;
+    outline: 2px solid #797691;
 }
 
 /* 游戏日志界面下方容纳具体内容的div */
 #Game_log_value_div {
     height: 90%;
+    outline: 2px solid #797691;
+}
+
+#MD_div {
+    gap: 2px;
 }
 
 /* 脑海-左侧过滤按钮的div */
 #MD_scroll_box {
-    /* 内框 */
+    outline: 2px solid #797691;
+}
+
+#MD_switch_div {
+    gap: 2px;
+}
+
+#TS_div {
+    gap: 2px;
+}
+
+#TS_switch_div {
+    gap: 2px;
+}
+
+#TS_scroll_box {
+    outline: 2px solid #797691;
+}
+
+#TS_value1_scroll_box {
+    outline: 2px solid #797691;
+}
+
+#TS_value2_scroll_box {
+    outline: 2px solid #797691;
 }
 
 /* 脑海-流水账内容的div */
 #RA_value_scroll_box {
-    width: 100%;
+    outline: 2px solid #797691;
 }
 
 #RA_value_div {
-    width: 100%;
-    background-color: #ffffff;
+    gap: 2px;
 }
 
 .RA_log_div {
     display: flex;
     flex-wrap: wrap;
     padding: 5px 0;
+    outline: 2px solid #797691;
 }
 
 .RA_log_value_div {
     display: flex;
+}
+
+#IE_value_scroll_box {
+    outline: 2px solid #797691;
 }
 
 /* 脑海-重要事件内容的div */
@@ -83,7 +119,7 @@
     /* 启用 Flexbox 布局 */
     width: 100%;
     /* 父容器占满父元素的宽度 */
-    border: 1px solid darkgrey;
+    gap: 2px;
     min-height: 40px;
 }
 
@@ -95,7 +131,7 @@
     /* text-align: center; */
     font-size: 25px;
     width: 15%;
-    border: 1px solid darkgrey;
+    outline: 2px solid #797691;
 }
 
 /* 一个条件的描述 */
@@ -103,7 +139,8 @@
     display: flex;
     /* justify-content: center; */
     align-items: center;
-    width: 80%;
+    width: 85%;
+    outline: 2px solid #797691;
 }
 
 /* 脑海-重要事件，当前事件的所有奖励的div */
@@ -113,25 +150,44 @@
 
 
 /* 图鉴内容的div */
-/* #IB_div {
-} */
+#IB_div {
+    gap: 2px;
+}
 
 /* 图鉴-左侧整体布局 */
 #IB_switch_sort_div {
     display: flex;
     flex-direction: column;
     height: 100%;
+    gap: 2px;
+    outline: 2px solid #797691;
 }
 
 /* 图鉴-左侧过滤按钮的div */
 #IB_switch_scroll_box {
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    outline: 2px solid #797691;
+}
+
+#IB_switch_div {
+    gap: 2px;
+}
+
+#IB_select_scroll_box {
+    outline: 2px solid #797691;
 }
 
 /* 图鉴-左侧固定按钮的div */
 #IB_fixed_div {
     display: flex;
     justify-content: space-evenly;
+    outline: 2px solid #797691;
+}
+
+#IB_select_div {
+    gap: 2px;
 }
 
 /* 图鉴-章节标题 */
@@ -142,7 +198,7 @@
     text-align: center;
     white-space: pre-wrap;
     /* color: #000; */
-    background-color: #fff;
+    outline: 2px solid #797691;
 }
 
 /* 图鉴-章节按钮布局 */
@@ -153,18 +209,22 @@
     gap: 5px;
     padding: 5px;
     box-sizing: border-box;
+    outline: 2px solid #797691;
 }
 
 /* 图鉴-所有图鉴条目界面的按钮 */
 .IB_select_button {
     min-height: 30px;
-    cursor: pointer;
+    border: none;
+    outline: 1px solid #797691;
+    background-color: #efefef;
 }
 
 /* 图鉴-展示一个具体图鉴条目的界面 */
 #IB_value_div {
     display: flex;
     flex-direction: column;
+    outline: 2px solid #797691;
 }
 
 /* 图鉴-章节标题 */
@@ -193,17 +253,19 @@
 
 .IB_value_button {
     padding: 10px 10px;
-    cursor: pointer;
 }
 
 .IB_rarity_button {
     padding: 5px 10px;
     background-color: #fff;
-    cursor: pointer;
 }
 
 #IB_value_content_scroll_box {
     flex: 1;
+}
+
+#OP_div {
+    outline: 2px solid #797691;
 }
 
 /* 脑海-设置内容的div */
@@ -279,5 +341,4 @@
 .OP_button {
     width: 80px;
     height: 45px;
-    /* font-size: 15px; */
 }

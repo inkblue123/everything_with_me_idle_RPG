@@ -157,7 +157,7 @@ export class Player_backpack {
         //分辨配方需求
         if (enums['all_secon_type'].includes(material_id)) {
             material_type = 'all_secon_type';
-            BP_num = P_backpack.get_BP_all_secon_type_num(material_id);
+            BP_num = this.get_BP_all_secon_type_num(material_id);
         } else if (enums['Item_secon_type'].includes(material_id)) {
             material_type = 'Item_secon_type';
             BP_num = this.get_BP_Item_secon_type_num(material_id);
@@ -196,26 +196,15 @@ export class Player_backpack {
                 continue;
             }
 
-            // 处理该物品的所有实例
-            for (let item_key in this.backpack_items_data[item_id].BP_key) {
-                let item_num = this.backpack_items_data[item_id].BP_key[item_key];
-                let remove_num = Math.min(need_lose_num, item_num);
-
-                // 更新数量
-                // this.updateItemCounts(item_id, item_key, remove_num);
-                this.backpack_items[item_key].num -= remove_num;
-                this.backpack_items_data[item_id].all_num -= remove_num;
-                this.backpack_items_data[item_id].BP_key[item_key] -= remove_num;
-                need_lose_num -= remove_num;
-                // 清理空数据
-                if (this.backpack_items_data[item_id].BP_key[item_key] <= 0) {
-                    delete this.backpack_items_data[item_id].BP_key[item_key];
-                }
-                // this.cleanupItemData(item_id, item_key);
-                if (need_lose_num <= 0) {
-                    break;
-                }
+            //扣除该物品，装备按稀有度从低到高，材料或消耗品直接扣除
+            let item_all_num = this.backpack_items_data[item_id].all_num;
+            let remove_num = Math.min(need_lose_num, item_all_num);
+            let lose_ret = this.Player_lose_item_by_id(item_id, remove_num);
+            if (lose_ret != remove_num) {
+                console.log('扣除%s物品时失败，属于异常情况', item_id);
+                return 0;
             }
+            need_lose_num -= remove_num;
             if (need_lose_num <= 0) {
                 break;
             }
@@ -227,6 +216,92 @@ export class Player_backpack {
         //去掉物品完成，刷新背包界面
         this.updata_BP_value();
 
+        return num;
+    }
+    //从玩家背包中去掉指定id的物品，装备按稀有度从低到高扣除，其他物品直接扣除
+    Player_lose_item_by_id(item_id, num) {
+        if (items[item_id].main_type == 'equipment') {
+            //装备带有稀有度，按稀有度从低到高扣除
+            return this.Player_lose_equipment_item(item_id, num);
+        } else {
+            //材料或消耗品等，直接扣除
+            return this.Player_lose_material_item(item_id, num);
+        }
+    }
+    //从玩家背包中去掉指定材料或消耗品物品
+    Player_lose_material_item(item_id, num) {
+        let need_lose_num = num; //需要去掉的数量
+        let BP_data = this.backpack_items_data[item_id];
+        if (is_Empty_Object(BP_data)) {
+            return 0;
+        }
+        if (BP_data.all_num < need_lose_num) {
+            return 0;
+        }
+        for (let item_key in BP_data.BP_key) {
+            let item_num = BP_data.BP_key[item_key];
+            let remove_num = Math.min(need_lose_num, item_num);
+
+            this.backpack_items[item_key].num -= remove_num;
+            BP_data.all_num -= remove_num;
+            BP_data.BP_key[item_key] -= remove_num;
+            need_lose_num -= remove_num;
+            //清理空数据
+            if (BP_data.BP_key[item_key] <= 0) {
+                delete BP_data.BP_key[item_key];
+            }
+            if (need_lose_num <= 0) {
+                break;
+            }
+        }
+        if (need_lose_num > 0) {
+            console.log('扣除材料物品%s时不够，属于异常情况', item_id);
+            return 0;
+        }
+        return num;
+    }
+    //从玩家背包中去掉指定装备物品，按稀有度从低到高扣除
+    Player_lose_equipment_item(item_id, num) {
+        let need_lose_num = num; //需要去掉的数量
+        //该装备物品的背包数据
+        let BP_data = this.backpack_items_data[item_id];
+        if (is_Empty_Object(BP_data)) {
+            return 0;
+        }
+        //玩家背包该装备的总数量少于需要去掉的数量
+        if (BP_data.all_num < need_lose_num) {
+            return 0;
+        }
+        //稀有度顺序，从低到高
+        let rarity_order = enums['special_rarity'];
+        //收集该装备背包里各个稀有度的key，并按稀有度低到高排序
+        let rarity_key_arr = new Array();
+        for (let item_key in BP_data.BP_key) {
+            let rarity = item_key.split(':')[1]; //从背包key解析稀有度
+            rarity_key_arr.push({ key: item_key, rarity: rarity });
+        }
+        rarity_key_arr.sort((a, b) => rarity_order.indexOf(a.rarity) - rarity_order.indexOf(b.rarity));
+        //按稀有度低到高逐个扣除
+        for (let rarity_key of rarity_key_arr) {
+            let item_num = BP_data.BP_key[rarity_key.key];
+            let remove_num = Math.min(need_lose_num, item_num);
+
+            this.backpack_items[rarity_key.key].num -= remove_num;
+            BP_data.all_num -= remove_num;
+            BP_data.BP_key[rarity_key.key] -= remove_num;
+            need_lose_num -= remove_num;
+            //清理空数据
+            if (BP_data.BP_key[rarity_key.key] <= 0) {
+                delete BP_data.BP_key[rarity_key.key];
+            }
+            if (need_lose_num <= 0) {
+                break;
+            }
+        }
+        if (need_lose_num > 0) {
+            console.log('按稀有度扣除装备时还不够，理应在前面判0时判断出来，属于异常情况');
+            return 0;
+        }
         return num;
     }
 
@@ -553,7 +628,7 @@ function addBP_item(item_obj) {
 
     while (player_item_num) {
         let BP_value_div = document.getElementById('BP_value_div');
-        let aitem_div = addElement(BP_value_div, 'div', null, 'BP_value');
+        let aitem_div = addElement(BP_value_div, 'div', null, 'table_value');
         let aitem_obj_data = JSON.parse(JSON.stringify(item_obj));
         //设置显示的文本
         let aitem_ch = '';
@@ -614,7 +689,7 @@ function addBP_goods(item_obj) {
     aitem_data.num = can_show_num;
 
     let BP_value_div = document.getElementById('BP_value_div');
-    let aitem_div = addElement(BP_value_div, 'div', null, 'BP_value');
+    let aitem_div = addElement(BP_value_div, 'div', null, 'table_value');
     aitem_div.innerHTML = name + ' x' + can_show_num;
     if (items[id].main_type == 'equipment') {
         //根据装备稀有度调整文字颜色

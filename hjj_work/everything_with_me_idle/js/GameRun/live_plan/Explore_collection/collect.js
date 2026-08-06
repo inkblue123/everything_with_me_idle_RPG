@@ -165,6 +165,7 @@ export class Collect_manage {
             //新地点不能采集，应该把界面更新成无采集目标
             let CLT_no_show_value_div = document.getElementById('CLT_no_show_value_div');
             CLT_no_show_value_div.innerHTML = '无';
+            CLT_no_show_value_div.style.display = '';
             let CLT_have_show_value_div = document.getElementById('CLT_have_show_value_div');
             CLT_have_show_value_div.replaceChildren();
             let CLT_show_chance_div = document.getElementById('CLT_show_chance_div');
@@ -975,6 +976,7 @@ export class Collect_manage {
         //清空现有展示的内容
         let CLT_no_show_value_div = document.getElementById('CLT_no_show_value_div');
         CLT_no_show_value_div.innerHTML = '';
+        CLT_no_show_value_div.style.display = 'none';
         let CLT_have_show_value_div = document.getElementById('CLT_have_show_value_div');
         CLT_have_show_value_div.replaceChildren();
         //获取可展示物品个数
@@ -988,12 +990,14 @@ export class Collect_manage {
         if (can_show_num == 0 && all_num == 0) {
             //当前地点没有可展示的采集物品，应该属于不可采集的地点，显示相应的信息
             CLT_no_show_value_div.innerHTML = '无';
+            CLT_no_show_value_div.style.display = '';
         } else if (can_show_num != 0 && all_num == 0) {
             //不应出现的错误情况
             console.log('异常：地点%s，没有可采集物品，但却有可展示的采集物', this.now_place);
         } else if (can_show_num == 0 && all_num != 0) {
             //地点里有可采集物，但没有需要展示的物品，仅显示提示信息
             CLT_no_show_value_div.innerHTML = '未知物品';
+            CLT_no_show_value_div.style.display = '';
         } else if (can_show_num != 0 && all_num != 0) {
             //地点里有可采集物，也有需要展示的物品
             for (let item_key in this.CLT_place_items_show[this.now_place].show_flag) {

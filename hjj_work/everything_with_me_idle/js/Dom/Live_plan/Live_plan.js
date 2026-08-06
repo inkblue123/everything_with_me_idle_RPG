@@ -19,11 +19,6 @@ import { make_herbal_bath_div, set_herbal_bath_button } from './Material_handlin
 import { make_engrave_div, set_engrave_button } from './Material_handling/engrave.js';
 import { make_alchemy_div, set_alchemy_button } from './Material_handling/alchemy.js';
 
-//上一次点击的生活技能界面按钮
-var last_Live_plan_switch = 'EC_switch_button';
-var last_EC_switch = 'LGI_button';
-var last_MH_switch = 'SYN_button';
-
 //创建非战斗时中上，生活规划界面
 function create_Live_plan() {
     let Live_plan = crtElement('div', 'Live_plan', 'flex_1', '');
@@ -37,11 +32,11 @@ function make_Live_plan_div(Live_plan) {
     //界面上部，区分当前展示的内容的按钮
     var Live_plan_switch_div = crtElement('div', 'Live_plan_switch_div', 'page_flex', 'none');
     //搜索采集窗口 Explore_collection EC
-    var EC_switch_radio_div = addElement(Live_plan_switch_div, 'div', 'EC_switch_radio_div', 'radio_div div_switch_button');
+    var EC_switch_radio_div = addElement(Live_plan_switch_div, 'div', 'EC_switch_radio_div', 'radio_div div_switch_radio');
     addElement_radio(EC_switch_radio_div, 'EC_switch_button', 'Live_plan_switch', 'EC_switch', '搜索采集');
     EC_switch_radio_div.children[0].checked = true; //初始激活该按钮
     //原料处理窗口 Material_handling MH
-    var MH_switch_radio_div = addElement(Live_plan_switch_div, 'div', 'MH_switch_radio_div', 'radio_div div_switch_button');
+    var MH_switch_radio_div = addElement(Live_plan_switch_div, 'div', 'MH_switch_radio_div', 'radio_div div_switch_radio');
     addElement_radio(MH_switch_radio_div, 'MH_switch_button', 'Live_plan_switch', 'MH_switch', '原料处理');
     //界面下部，具体展示内容的窗口
     var Live_plan_value_div = crtElement('div', 'Live_plan_value_div', 'page_columns_1', 'none');
@@ -58,6 +53,10 @@ function make_Live_plan_div(Live_plan) {
     Live_plan.appendChild(Live_plan_switch_div);
     Live_plan.appendChild(Live_plan_value_div);
     Live_plan.appendChild(lock_all_Live_plan_div);
+
+    //研究等操作进行中，锁住整个生活技能界面的透明遮罩
+    var live_plan_lock_div = addElement(Live_plan, 'div', 'live_plan_lock_div', 'overlay', 'none');
+    live_plan_lock_div.style.backgroundColor = 'transparent';
 }
 //创建探索采集窗口 Explore_collection EC
 function make_Explore_collection_div(EC_div) {
@@ -234,31 +233,35 @@ function make_Material_handling_div(MH_div) {
 
 // 为组件添加触发事件
 function set_Live_plan_button(Live_plan) {
-    //界面最上方，切换搜索采集、原料处理的按钮
+    //界面最上方，切换探索采集、原料处理的按钮
     let radios = Live_plan.querySelectorAll('input[type="radio"][name="Live_plan_switch"]');
     radios.forEach((radio) => {
         radio.addEventListener('click', function () {
             const EC_div = document.getElementById('EC_div'); //搜索采集窗口 Explore_collection EC
             const MH_div = document.getElementById('MH_div');
+            //记录点击前的生活技能展示大类是什么
             if (EC_div.style.display == '') {
-                last_Live_plan_switch = 'EC_switch_button';
+                global.set_flag('GS_last_Live_plan_switch', 'EC_switch_button');
             } else if (MH_div.style.display == '') {
-                last_Live_plan_switch = 'MH_switch_button';
+                global.set_flag('GS_last_Live_plan_switch', 'MH_switch_button');
             }
+            //切换到点击后的生活技能大类界面
             change_Live_plan_div(this.id);
 
-            if (last_Live_plan_switch != this.id) {
+            if (global.get_flag('GS_last_Live_plan_switch') != this.id) {
                 let live_plan_manage = global.get_live_plan_manage();
                 //停止当前进行的生活技能
                 live_plan_manage.stop_now_live_skill();
                 //初始化新技能的界面
                 if (this.id == 'EC_switch_button') {
+                    let last_EC_switch = global.get_flag('GS_last_EC_switch');
                     live_plan_manage.init_live_plan_game_div(last_EC_switch);
                 } else if (this.id == 'MH_switch_button') {
+                    let last_MH_switch = global.get_flag('GS_last_MH_switch');
                     live_plan_manage.init_live_plan_game_div(last_MH_switch);
                 }
             }
-            last_Live_plan_switch = this.id; //更新上一次点击的生活技能界面按钮
+            global.set_flag('GS_last_Live_plan_switch', this.id); //更新上一次点击的生活技能界面按钮
         });
     });
     //搜索采集界面，左侧选择某个技能之后，右侧切换成对应的界面
@@ -268,17 +271,13 @@ function set_Live_plan_button(Live_plan) {
             let live_plan_manage = global.get_live_plan_manage();
             //停止当前进行的生活技能
             live_plan_manage.stop_now_live_skill();
-            if (last_EC_switch != this.id) {
+            if (global.get_flag('GS_last_EC_switch') != this.id) {
                 //点击了当前没有展示的另一个生活技能，初始化新技能的界面
                 live_plan_manage.init_live_plan_game_div(this.id);
             }
-            last_EC_switch = this.id; //更新上一次点击的生活技能界面按钮
+            global.set_flag('GS_last_EC_switch', this.id); //更新上一次点击的生活技能界面按钮
 
-            //切换游戏状态
-            // if (this.id == 'MIN_button') {
-            //     global.set_flag('GS_game_statu', 'mining');
-            // } else {
-            //     //停止游戏状态
+            //停止游戏状态
             global.set_flag('GS_game_statu', 'NULL');
             // }
             //切换界面
@@ -292,11 +291,11 @@ function set_Live_plan_button(Live_plan) {
             let live_plan_manage = global.get_live_plan_manage();
             //停止当前进行的生活技能
             live_plan_manage.stop_now_live_skill();
-            if (last_MH_switch != this.id) {
+            if (global.get_flag('GS_last_MH_switch') != this.id) {
                 //点击了当前没有展示的另一个生活技能，初始化新技能的界面
                 live_plan_manage.init_live_plan_game_div(this.id);
             }
-            last_MH_switch = this.id; //更新上一次点击的生活技能界面按钮
+            global.set_flag('GS_last_MH_switch', this.id); //更新上一次点击的生活技能界面按钮
 
             //停止游戏状态
             global.set_flag('GS_game_statu', 'NULL');

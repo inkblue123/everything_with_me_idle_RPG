@@ -3,6 +3,7 @@ import { init_game_dom } from '../Dom/Dom.js';
 import { start_game_loop } from '../GameRun/run_manage.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
+import { save_game_to_file } from './save_to_file.js';
 
 //新游戏读档加载
 function init_game() {
@@ -49,9 +50,8 @@ function save_game() {
     //存储到浏览器内存中
     window.localStorage.setItem('v0.1', save_str);
 
-    //游戏日志里提示保存成功
-    // let global_flag_manage = global.get_global_flag_manage();
-    // global_flag_manage.set_game_log('save_game', event_id);
+    //保存存档到 save_file 目录，由于
+    // save_game_to_file();
 }
 //导出存档功能-弹窗并将玩家的加密存档输出到弹窗中
 function save_game_show_tip() {
@@ -215,4 +215,5 @@ export {
     delete_save_show_tip,
     load_save,
     load_save_show_tip,
+    b64_to_utf8,
 };

@@ -1,4 +1,4 @@
-import { crtElement, addElement, addElement_radio } from '../../../Function/Dom_function.js';
+import { crtElement, addElement, addElement_botton, addElement_radio } from '../../../Function/Dom_function.js';
 import { global } from '../../../GameRun/global_manage.js';
 
 //构建采集技能的界面内容
@@ -37,20 +37,14 @@ function make_collect_div(CLT_value_div) {
     let CLT_down_div = addElement(CLT_value_div, 'div', 'CLT_down_div', null, '');
     //左边，启动幸运采集和涉险采集的按钮
     let CLT_option1_div = addElement(CLT_down_div, 'div', null, 'CLT_option_div', '');
-    var CLT_luck_open_button = addElement(CLT_option1_div, 'button', 'CLT_luck_open_button', 'LP_button', '');
-    CLT_luck_open_button.innerHTML = '☑幸运采集';
-    var CLT_luck_close_button = addElement(CLT_option1_div, 'button', 'CLT_luck_close_button', 'LP_button', 'none');
-    CLT_luck_close_button.innerHTML = '☐幸运采集';
-    var CLT_danger_open_button = addElement(CLT_option1_div, 'button', 'CLT_danger_open_button', 'LP_button', '');
-    CLT_danger_open_button.innerHTML = '☑涉险采集';
-    var CLT_danger_close_button = addElement(CLT_option1_div, 'button', 'CLT_danger_close_button', 'LP_button', 'none');
-    CLT_danger_close_button.innerHTML = '☐涉险采集';
+    var CLT_luck_open_button = addElement_botton(CLT_option1_div, 'CLT_luck_open_button', 'LP_button', '', '☑幸运采集');
+    var CLT_luck_close_button = addElement_botton(CLT_option1_div, 'CLT_luck_close_button', 'LP_button', 'none', '☐幸运采集');
+    var CLT_danger_open_button = addElement_botton(CLT_option1_div, 'CLT_danger_open_button', 'LP_button', '', '☑涉险采集');
+    var CLT_danger_close_button = addElement_botton(CLT_option1_div, 'CLT_danger_close_button', 'LP_button', 'none', '☐涉险采集');
     //中间，开始或停止采集的按钮
     let CLT_start_button_div = addElement(CLT_down_div, 'div', 'CLT_start_button_div', 'CLT_option_div', '');
-    var CLT_S_button = addElement(CLT_start_button_div, 'button', 'CLT_S_button', 'LP_button', '');
-    CLT_S_button.innerHTML = '开始采集';
-    var CLT_E_button = addElement(CLT_start_button_div, 'button', 'CLT_E_button', 'LP_button', 'none');
-    CLT_E_button.innerHTML = '停止采集';
+    var CLT_S_button = addElement_botton(CLT_start_button_div, 'CLT_S_button', 'LP_button', '', '开始采集');
+    var CLT_E_button = addElement_botton(CLT_start_button_div, 'CLT_E_button', 'LP_button', 'none', '停止采集');
     //右边，待定
     let CLT_option2_div = addElement(CLT_down_div, 'div', null, 'CLT_option_div', '');
 }

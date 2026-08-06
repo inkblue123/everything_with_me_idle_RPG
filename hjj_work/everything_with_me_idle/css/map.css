@@ -1,19 +1,9 @@
 /* 地图最大父界面的样式 */
 #map {
-    /* display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center; */
     position: relative;
     overflow: hidden;
-
-    /* 单列布局 */
-    /* height: 50%; */
-    /* 内框 */
+    outline: 2px solid #797691;
     user-select: none;
-    background-color: white;
-    /* background-color: white; */
 }
 
 /* 地图界面负责移动的div */
@@ -52,10 +42,7 @@
     width: 100px;
     height: 60px;
     font-size: 12px;
-    background-color: #efefef !important;
     /* 灰色背景 */
-    cursor: pointer;
-    /* 鼠标悬停标识，手*/
 }
 
 /* 不可用按钮的样式 */
@@ -63,12 +50,10 @@
     /* opacity: 0.5;  */
     /* 显示禁止光标 */
     cursor: not-allowed;
-    /* 禁用所有鼠标事件 */
-    pointer-events: none;
     /* 灰色背景 */
-    background-color: #6d6d6d !important;
+    background-color: #6d6d6d;
     /* 灰色边框 */
-    border-color: #999999 !important;
+    border-color: #999999
 }
 
 /* 当前地点按钮的外框样式 */

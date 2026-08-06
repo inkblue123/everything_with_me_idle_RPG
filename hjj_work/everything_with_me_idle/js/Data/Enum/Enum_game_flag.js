@@ -45,6 +45,9 @@ function init_game_status(enums) {
         GS_unlock_HBB: false, //药浴技能是否解锁
         GS_unlock_EGV: false, //雕刻技能是否解锁
         GS_unlock_ACM: false, //炼金术技能是否解锁
+        GS_last_Live_plan_switch: 'EC_switch_button', //上次展示的生活技能大分类
+        GS_last_EC_switch: 'LGI_button', //上次展示的探索采集技能
+        GS_last_MH_switch: 'SYN_button', //上次展示的原料处理技能
     };
     //生活技能枚举
     //这里枚举的技能是会写入GS_game_statu游戏状态的，运行时遇到对应的状态就处理相应的逻辑
@@ -104,6 +107,7 @@ function init_game_log_status(enums) {
         'archaeology', //考古技能运行时的日志
         'exploration', //探索技能运行时的日志
         'get_formula', //学会配方
+        'formula_library_unlock', //通过图鉴解锁学会配方
     ];
     id = 'other_log_type'; //属于其他部分的游戏日志
     add_Enum_Array(enums, id);

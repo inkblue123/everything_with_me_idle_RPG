@@ -15,6 +15,8 @@ export class Formula {
         this.material = new Array(); //配方所需材料
         this.product = new Object(); //配方产出
         this.exp = new Object(); //配方经验
+        this.research = new Object(); //配方研究需求
+        this.research.can_research = false; //默认不可研究
     }
 
     //设置配方基本参数
@@ -82,6 +84,12 @@ export class Formula {
                 //物品是消耗品，产物信息还应该有：暂无
             }
         }
+    }
+    //设置这个配方的研究需求
+    set_formula_research(need_num, work_bench_level) {
+        this.research.can_research = true;
+        this.research.need_num = need_num; //研究需求数量
+        this.research.need_work_bench_level = work_bench_level; //研究需求工作环境等级
     }
     //设定物品的经验
     set_formula_exp(...args) {

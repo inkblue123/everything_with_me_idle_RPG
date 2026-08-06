@@ -21,7 +21,6 @@ html {
     padding: 2px;
     gap: 2px;
     box-sizing: border-box;
-    background-color: #797691;
 }
 
 /* 游戏主界面 */
@@ -41,7 +40,7 @@ html {
     color: white;
     flex: 0 1 5%;
     min-height: 0;
-    background-color: #ffffff;
+    outline: 2px solid #797691;
 }
 
 /* 游戏主体左侧布局 */
@@ -63,6 +62,7 @@ html {
 #game_down_nomal {
     gap: 2px;
 }
+
 
 /* 每行1列，共2行的布局 */
 .page_rows_11 {
@@ -109,7 +109,7 @@ html {
     grid-template-columns: repeat(3, 1fr);
 }
 
-/* 每行3列的表格布局*/
+/* 每行2列的表格布局*/
 .page_table_11 {
     display: grid;
     gap: 1px;
@@ -148,6 +148,7 @@ html {
     position: relative;
     height: auto;
     width: 100%;
+
 }
 
 /* 单选框，表示是否选中的圆点 */
@@ -169,6 +170,7 @@ html {
     /* 垂直居中 */
     color: #000;
     background-color: #fff;
+    outline: 2px solid #797691;
 }
 
 /* 单选框，选中之后，圆点的样式 */
@@ -197,26 +199,21 @@ html {
 
 /* 内容过高会启动竖直滚动条的div */
 .overflow_y_div {
-    /* flex: 1; */
     position: relative;
     overflow-y: auto;
-    /* 启用竖直滚动 */
-    /* height: 100%; */
-    /* max-height: 320px; */
 }
 
 /* 在overflow_y_div内部，当内容超过100时就会激活滚动条 */
 .in_overflow_div {
     position: absolute;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: 1fr;
     width: 100%;
-    /* height: 100%; */
 }
 
+
 /* 单个界面内多个子界面切换单选按钮 */
-.div_switch_button label {
+.div_switch_radio label {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -243,6 +240,7 @@ html {
     color: #000;
     background-color: #fff;
     /* 内框 */
+    outline: 2px solid #797691;
 }
 
 /* 80%宽度 */
@@ -257,6 +255,7 @@ html {
     color: #000;
     background-color: #fff;
     /* 内框 */
+    outline: 2px solid #797691;
 }
 
 /* 60%宽度 */
@@ -271,6 +270,7 @@ html {
     color: #000;
     background-color: #fff;
     /* 内框 */
+    outline: 2px solid #797691;
 }
 
 /* 启动隐藏下拉表格的按钮，第一级 */
@@ -307,7 +307,8 @@ html {
     transition: height 0.3s ease-out;
     /* height: 0px; */
     overflow: hidden;
-    padding: 2px;
+    /* padding: 2px; */
+
 }
 
 /* 进度条组件：最大的父元素 */
@@ -369,4 +370,15 @@ html {
     /* 字体大小 */
     font-size: 20px;
     font-weight: 600;
+}
+
+/* 通用按钮样式：去掉默认样式，设置枚举库按钮颜色 */
+.game_button {
+    /* outline: 2px solid #797691; */
+    /* 使用box-shadow代替outline，实现圆角效果 */
+    border: none;
+    background-color: #efefef;
+    box-shadow: 0 0 0 1px #797691;
+    border-radius: 2px;
+    cursor: pointer;
 }

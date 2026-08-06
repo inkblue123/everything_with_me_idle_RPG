@@ -145,8 +145,15 @@ export class Live_plan_manage {
             let manage_name = this.MH_live_plan_class_name[i];
             this[manage_name].updata_super_game_div(Live_plan_save.now_place);
         }
-        let radio_div = document.getElementById(EX_LP_button_name);
-        radio_div.checked = true;
+        // let radio_div = document.getElementById(EX_LP_button_name);
+        // radio_div.checked = true;
+        //左侧分类按钮也要切换到存档中保存的技能，这部分保存在游戏状态里
+        let last_EC_switch = global.get_flag('GS_last_EC_switch');
+        let last_EC_button = document.getElementById(last_EC_switch);
+        last_EC_button.checked = true;
+        let last_MH_switch = global.get_flag('GS_last_MH_switch');
+        let last_MH_button = document.getElementById(last_MH_switch);
+        last_MH_button.checked = true;
     }
     //获取生活技能的管理对象
     get_LP_live_skill_manage(manage_name) {

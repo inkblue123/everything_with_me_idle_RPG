@@ -127,8 +127,7 @@ export class Place_manage {
         let next_place = place_save.now_place;
 
         //更新游戏状态
-        // change_game_data(next_place);
-
+        change_game_data(next_place);
         //移动时，如果涉及整体游戏界面布局的变化，则更新游戏界面
         change_game_div(next_place);
 
@@ -195,6 +194,11 @@ function change_game_div(next_place) {
     let place_manage = global.get_place_manage();
     let now_place_type = place_manage.get_now_place_type();
     if (next_place_type == 'normal' || next_place_type == 'NPC') {
+        //根据玩家生活技能解锁情况，展示或隐藏生活技能界面与按钮
+        show_unlock_live_plan_div();
+        //根据普通地点的生活技能可用情况，显示或遮罩生活技能规划界面
+        show_place_can_live_plan_div(next_place);
+
         if (now_place_type == 'normal' || now_place_type == 'NPC') {
             //从普通地点到另一个普通地点，不需要执行额外操作
         } else if (now_place_type == 'combat') {
@@ -204,10 +208,6 @@ function change_game_div(next_place) {
             //从商店移动到普通地点，执行转场
             show_live_plan_div();
         }
-        //根据玩家生活技能解锁情况，展示或隐藏生活技能界面与按钮
-        show_unlock_live_plan_div();
-        //根据普通地点的生活技能可用情况，显示或遮罩生活技能规划界面
-        show_place_can_live_plan_div(next_place);
     } else if (next_place_type == 'combat') {
         let enemy_manage = global.get_enemy_manage();
         if (now_place_type == 'normal' || now_place_type == 'NPC') {

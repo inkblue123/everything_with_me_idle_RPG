@@ -1,4 +1,4 @@
-import { crtElement, addElement, addElement_radio } from '../../../Function/Dom_function.js';
+import { crtElement, addElement, addElement_botton, addElement_radio } from '../../../Function/Dom_function.js';
 import { global } from '../../../GameRun/global_manage.js';
 
 //构建钓鱼技能的界面内容
@@ -64,10 +64,8 @@ function make_fishing_div(FIS_value_div) {
 
     //钓鱼下部，开始按钮
     let FIS_down_div = addElement(FIS_value_div, 'div', 'FIS_down_div', null, '');
-    var FIS_S_button = addElement(FIS_down_div, 'button', 'FIS_S_button', 'LP_button', '');
-    FIS_S_button.innerHTML = '开始钓鱼';
-    var FIS_E_button = addElement(FIS_down_div, 'button', 'FIS_E_button', 'LP_button', 'none');
-    FIS_E_button.innerHTML = '停止钓鱼';
+    var FIS_S_button = addElement_botton(FIS_down_div, 'FIS_S_button', 'LP_button', '', '开始钓鱼');
+    var FIS_E_button = addElement_botton(FIS_down_div, 'FIS_E_button', 'LP_button', 'none', '停止钓鱼');
 }
 
 //为钓鱼界面中的按钮添加交互逻辑

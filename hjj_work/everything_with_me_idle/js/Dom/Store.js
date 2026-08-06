@@ -16,11 +16,11 @@ function make_Store_div(Store) {
     //界面上部，区分当前展示的内容的按钮
     var Store_switch_div = crtElement('div', 'Store_switch_div', null, '');
     //商品列表 product_list PL
-    var PL_switch_radio_div = addElement(Store_switch_div, 'div', 'PL_switch_radio_div', 'radio_div div_switch_button');
+    var PL_switch_radio_div = addElement(Store_switch_div, 'div', 'PL_switch_radio_div', 'radio_div div_switch_radio');
     addElement_radio(PL_switch_radio_div, 'PL_switch_button', 'Store_switch', 'PL_switch', '商品列表');
     PL_switch_radio_div.children[0].checked = true; //初始激活该按钮
     //物品回购 Item_buy_back IBB
-    var IBB_switch_radio_div = addElement(Store_switch_div, 'div', null, 'radio_div div_switch_button');
+    var IBB_switch_radio_div = addElement(Store_switch_div, 'div', null, 'radio_div div_switch_radio');
     addElement_radio(IBB_switch_radio_div, 'IBB_switch_button', 'Store_switch', 'IBB_switch', '物品回购');
 
     //界面下部，具体展示内容的窗口

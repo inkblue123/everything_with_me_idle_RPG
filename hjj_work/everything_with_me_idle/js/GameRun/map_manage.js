@@ -1,5 +1,5 @@
 import { is_Empty_Object, get_uniqueArr } from '../Function/Function.js';
-import { crtElement, addElement, addElement_radio } from '../Function/Dom_function.js';
+import { crtElement, addElement, addElement_radio, addElement_botton, getRectEvenHidden } from '../Function/Dom_function.js';
 
 import { places } from '../Data/Place/Place.js';
 import { maps } from '../Data/Map/map.js';
@@ -200,7 +200,8 @@ export class Map_manage {
         this.map_canvas.width = area_size_x;
         this.map_canvas.height = area_size_y;
 
-        const viewportRect = this.map_div.getBoundingClientRect(); //地图界面最大父布局
+        const viewportRect = getRectEvenHidden(this.map_div); //地图界面最大父布局
+        // const viewportRect = this.map_div.getBoundingClientRect(); //地图界面最大父布局
         const contentRect = this.map_move_div.getBoundingClientRect(); //地图界面中负责移动的子布局
 
         //保存界面初始大小
@@ -295,11 +296,15 @@ export class Map_manage {
                 continue; //该地点在地图内没有按钮
             }
             //生成可以显示的地点按钮
-            let map_button = addElement(this.map_move_div, 'button', null, 'map_button');
-            map_button.innerHTML = get_map_button_text(place_id, this.now_area);
+            let map_button_text = get_map_button_text(place_id, this.now_area);
+            let map_button = addElement_botton(this.map_move_div, null, 'map_button', '', map_button_text);
             map_button.style.left = maps[this.now_area].place_data[place_id].button_x + 'px'; // 设置位置
             map_button.style.top = maps[this.now_area].place_data[place_id].button_y + 'px';
             map_button.addEventListener('click', function () {
+                if (this.classList.contains('btn_disabled')) {
+                    //如果按钮有不可达标记，不允许点击事件发生
+                    return;
+                }
                 let place_manage = global.get_place_manage();
                 place_manage.set_now_place(place_id);
             });

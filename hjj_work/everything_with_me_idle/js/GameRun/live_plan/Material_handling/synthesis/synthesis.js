@@ -9,26 +9,19 @@ import { formulas } from '../../../../Data/Formula/Formula.js';
 import { player } from '../../../../Player/Player.js';
 import { global } from '../../../global_manage.js';
 
-import {
-    add_formula,
-    get_SYN_min_name,
-    change_synthesis_div,
-    get_SYN_formula_switch_type,
-    init_SYN_formula_Details_div,
-    delete_SYN_formula_Details_div,
-    get_formula_product,
-    SYN_switch_type_handle,
-} from './SYN_function.js';
+import { get_SYN_min_name, change_synthesis_div, init_SYN_formula_Details_div, delete_SYN_formula_Details_div, get_formula_product, check_now_formula } from './SYN_function.js';
 import { get_SYN_FL_click_type, delete_SYN_FL_value, get_SYN_FL_show_value, set_a_SYN_FL_show_value } from './SYN_filter.js';
-import { updata_SYN_FM_value } from './SYN_filter_make.js';
-import { updata_SYN_MK_value } from './SYN_make.js';
-import { updata_SYN_EN_value } from './SYN_environment.js';
+import { updata_SYN_FM_div } from './SYN_filter_make.js';
+import { updata_SYN_MK_div } from './SYN_make.js';
+import { updata_SYN_EN_div } from './SYN_environment.js';
+import { updata_SYN_RS_div, updata_live_plan_research } from './SYN_research.js';
 
 //合成制造技能管理类 Synthesis SYN
 export class Synthesis_manage {
     constructor() {
         this.now_place = 'village_home'; //当前地点
         this.now_formula; //当前选定的配方
+        this.now_research_formula; //当前选定的研究配方
         this.now_quantity_num = '1'; //当前批量制造的数量
         this.now_filter_type; //当前在配方筛选界面选定的类型
         this.now_filter_value; //当前在配方筛选界面选定的内容
@@ -80,11 +73,9 @@ export class Synthesis_manage {
         //切换到合成制作子功能界面
         change_synthesis_div(SYN_min);
 
-        if (SYN_min == 'SYN_MK' || SYN_min == 'SYN_FM') {
-            //切换成未选择配方的界面
-            delete_SYN_formula_Details_div(SYN_min);
-        }
-        //更新当前配方内容
+        //切换成未选择配方的界面
+        delete_SYN_formula_Details_div(SYN_min);
+        //更新当前合成制造子功能界面
         this.updata_live_plan_div(SYN_min);
     }
     //地点变化时，对合成制造界面特殊更新
@@ -107,6 +98,13 @@ export class Synthesis_manage {
     //开始合成制造，更新合成制造技能的数值
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_live_plan_data() {
+        //当前展示的合成制造子功能是配方研究，走研究逻辑
+        let SYN_min = get_SYN_min_name();
+        if (SYN_min == 'SYN_RS') {
+            updata_live_plan_research();
+            return;
+        }
+
         //验证当前配方是否可以制作
         let make_flag = this.check_now_formula(this.now_formula, this.now_quantity_num);
         if (!make_flag) {
@@ -152,29 +150,30 @@ export class Synthesis_manage {
             SYN_min = get_SYN_min_name();
         }
         if (SYN_min == 'SYN_MK') {
-            updata_SYN_MK_value();
+            updata_SYN_MK_div();
             //更新配方列表头右侧的占位符
-            let scroll_box = SYN_min + '_formula_scroll_box';
-            let value_div = SYN_min + '_formula_value_div';
-            let rt3 = SYN_min + '_formula_title_3';
-            updata_formula_UI_placeholder(scroll_box, value_div, rt3);
+            updata_formula_UI_placeholder(SYN_min);
             //更新配方详情
-            let no_formula_div_id = SYN_min + '_no_formula_div';
-            const no_formula_div = document.getElementById(no_formula_div_id);
             if (this.now_formula === undefined) {
+                let no_formula_div_id = SYN_min + '_no_formula_div';
+                const no_formula_div = document.getElementById(no_formula_div_id);
                 no_formula_div.style.display = '';
-            } else if (no_formula_div.style.display == 'none') {
+            }
+            // if (no_formula_div.style.display == 'none')
+            else {
                 this.updata_SYN_formula_Details_div();
             }
         } else if (SYN_min == 'SYN_FL') {
-            this.updata_SYN_FL_value('delete');
+            this.updata_SYN_FL_div('delete');
         } else if (SYN_min == 'SYN_FM') {
-            updata_SYN_FM_value(this.now_filter_type, this.now_filter_value);
+            updata_SYN_FM_div(this.now_filter_type, this.now_filter_value);
+            //更新配方列表头右侧的占位符（与 SYN_MK 同理，使用 getRectEvenHidden 兼容隐藏状态）
+            updata_formula_UI_placeholder(SYN_min);
         } else if (SYN_min == 'SYN_RS') {
-            // this.updata_SYN_RS_value();
+            updata_SYN_RS_div();
         } else if (SYN_min == 'SYN_EN') {
             let SYN_place_work_bench = this.SYN_all_place_work_bench[this.now_place]; //一个具体地点的所有合成制造环境
-            updata_SYN_EN_value(SYN_place_work_bench);
+            updata_SYN_EN_div(SYN_place_work_bench);
         }
     }
     //重置一轮合成制造的参数
@@ -219,7 +218,7 @@ export class Synthesis_manage {
 
     //更新上中的生活技能界面中的合成制造技能界面的配方筛选的筛选界面的内容
     //这个函数不建议放进配方筛选的文件里，因为界面中有一些按钮会触发这个函数，需要作为合成制造管理类的成员函数方便调用
-    updata_SYN_FL_value(updata_type, click_type, click_value) {
+    updata_SYN_FL_div(updata_type, click_type, click_value) {
         //获取当前选择的筛选类型
         let SYN_FL_N_type = get_radio_switch_click_value('SYN_FL_N_type_switch');
         let SYN_FL_P_type = get_radio_switch_click_value('SYN_FL_P_type_switch');
@@ -260,6 +259,10 @@ export class Synthesis_manage {
     set_now_formula(formula_id) {
         this.now_formula = formula_id;
     }
+    //保存要研究的配方
+    set_now_research_formula(formula_id) {
+        this.now_research_formula = formula_id;
+    }
     //保存当前批量制造的数量
     set_now_quantity_num(quantity_num) {
         this.now_quantity_num = quantity_num;
@@ -287,6 +290,10 @@ export class Synthesis_manage {
         if (SYN_min == 'SYN_FL') {
             SYN_min = 'SYN_FM';
         }
+        //配方研究界面没有数量选择和产物值div，不应走到这里，保险判断
+        if (SYN_min == 'SYN_RS') {
+            return;
+        }
 
         //清空当前配方详情
         init_SYN_formula_Details_div(SYN_min);
@@ -295,35 +302,65 @@ export class Synthesis_manage {
         let FD_N_value_div_id = SYN_min + '_FD_N_value_div';
         let FD_N_value_div = document.getElementById(FD_N_value_div_id); //配方材料需求详情div
         let P_backpack = player.get_player_backpack(); //玩家可用物品
+        //获取配方学习状态，研究状态的配方始终视作不可制作
+        let P_formulas_manage = player.get_player_formulas_manage();
+        let P_formulas = P_formulas_manage.get_player_skill_formulas('SYN');
+        let is_study = false; //配方是否处于研究状态
+        if (!is_Empty_Object(P_formulas[this.now_formula]) && P_formulas[this.now_formula].status == 'study') {
+            is_study = true;
+        }
+        let library_manage = null;
+        if (is_study) {
+            //研究状态需要访问图鉴系统判断材料是否解锁
+            library_manage = global.get_library_manage();
+        }
         let make_flag = true;
+        if (is_study) {
+            //研究状态的配方始终不可制作
+            make_flag = false;
+        }
         for (let formula_material of formulas[this.now_formula].material) {
             let m_id = formula_material.id; //需求材料id
             let m_name = ''; //需求材料名
             let need_item_num = formula_material.num * parseInt(this.now_quantity_num); //需要的数量
             let BP_num = 0; //玩家拥有的数量
-            if (enums['all_secon_type'].includes(m_id)) {
-                //配方的这个材料是“任意**”子类合集
-                m_name = texts[m_id].type_name;
-                BP_num = P_backpack.get_BP_all_secon_type_num(m_id);
-            } else if (enums['Item_secon_type'].includes(m_id)) {
-                //配方的这个材料是某个子类
-                m_name = '任意' + texts[m_id].type_name;
-                BP_num = P_backpack.get_BP_Item_secon_type_num(m_id);
-            } else if (!is_Empty_Object(items[m_id])) {
-                //配方的这个材料是某个具体物品
-                m_name = texts[m_id].item_name;
-                BP_num = P_backpack.get_BP_Item_id_num(m_id);
-            } else {
-                console.log('%s配方的材料需求%s不属于已知类型，无法判断', this.now_formula, m_id);
+            let m_unlock = true; //材料是否解锁过图鉴
+            if (is_study) {
+                //研究状态，检查该材料是否解锁过图鉴
+                m_unlock = library_manage.is_formula_material_unlocked(m_id);
             }
-            let FD_N_ch = m_name + '( ' + BP_num + ' / ' + need_item_num + ' )';
-            let Details_div = addElement(FD_N_value_div, 'div', null, 'Details_div');
-            Details_div.innerHTML = FD_N_ch;
-            if (need_item_num > BP_num) {
-                Details_div.style.backgroundColor = '#ff000033'; //材料不足显示红色
-                make_flag = false;
+            if (m_unlock) {
+                //解锁过图鉴（或完全学习），按材料类型取名
+                if (enums['all_secon_type'].includes(m_id)) {
+                    //配方的这个材料是“任意**”子类合集
+                    m_name = texts[m_id].type_name;
+                    BP_num = P_backpack.get_BP_all_secon_type_num(m_id);
+                } else if (enums['Item_secon_type'].includes(m_id)) {
+                    //配方的这个材料是某个子类
+                    m_name = '任意' + texts[m_id].type_name;
+                    BP_num = P_backpack.get_BP_Item_secon_type_num(m_id);
+                } else if (!is_Empty_Object(items[m_id])) {
+                    //配方的这个材料是某个具体物品
+                    m_name = texts[m_id].item_name;
+                    BP_num = P_backpack.get_BP_Item_id_num(m_id);
+                } else {
+                    console.log('%s配方的材料需求%s不属于已知类型，无法判断', this.now_formula, m_id);
+                }
+                //正常显示材料需求
+                let FD_N_ch = m_name + '( ' + BP_num + ' / ' + need_item_num + ' )';
+                let Details_div = addElement(FD_N_value_div, 'div', null, 'Details_div');
+                Details_div.innerHTML = FD_N_ch;
+                if (need_item_num > BP_num) {
+                    Details_div.style.backgroundColor = enums['show_nocan_color']; //材料不足显示红色
+                    make_flag = false;
+                } else {
+                    Details_div.style.backgroundColor = enums['show_can_color']; //材料足够显示绿色
+                }
             } else {
-                Details_div.style.backgroundColor = '#00ff0033'; //材料足够显示绿色
+                //未解锁图鉴，显示灰色和？？？
+                let Details_div = addElement(FD_N_value_div, 'div', null, 'Details_div');
+                Details_div.innerHTML = '？？？';
+                Details_div.style.backgroundColor = enums['show_study_color']; //显示灰色
             }
         }
 
@@ -358,9 +395,9 @@ export class Synthesis_manage {
         }
         FD_E_value_div.innerHTML = need_WB_ch + now_WB_ch;
         if (WB_flag) {
-            FD_E_value_div.style.backgroundColor = '#00ff0033'; //工作环境达标显示绿色
+            FD_E_value_div.style.backgroundColor = enums['show_can_color']; //工作环境达标显示绿色
         } else {
-            FD_E_value_div.style.backgroundColor = '#ff000033'; //工作环境不足显示红色
+            FD_E_value_div.style.backgroundColor = enums['show_nocan_color']; //工作环境不足显示红色
         }
 
         //展示点击配方的产出
@@ -389,69 +426,8 @@ export class Synthesis_manage {
     }
     //检查输入的配方是否可以制造
     check_now_formula(id, num) {
-        let formula_id = '';
-        let quantity_num = 1;
-        if (is_Empty_Object(id)) {
-            console.log('没有输入配方id，无法判断');
-            return false;
-        } else if (is_Empty_Object(formulas[id])) {
-            console.log('%s不属于配方id，不应该调用当前函数', id);
-            return false;
-        } else if (formulas[id].skill != 'synthesis') {
-            console.log('%s配方不属于合成制造技能，不应该调用当前函数', id);
-            return false;
-        } else {
-            formula_id = id;
-            if (typeof num == 'number') {
-                quantity_num = num;
-            } else if (typeof num == 'string') {
-                quantity_num = parseInt(num);
-            }
-        }
-
-        let make_flag = true;
-
-        //当前配方的需求材料检查
-        let P_backpack = player.get_player_backpack(); //玩家可用物品
-        for (let formula_material of formulas[formula_id].material) {
-            let m_id = formula_material.id; //需求材料id
-            let m_num = formula_material.num * quantity_num; //需要的数量
-            let BP_num = 0; //玩家拥有的数量
-            if (enums['all_secon_type'].includes(m_id)) {
-                //配方的这个材料是“任意**”子类合集
-                BP_num = P_backpack.get_BP_all_secon_type_num(m_id);
-            } else if (enums['Item_secon_type'].includes(m_id)) {
-                //配方的这个材料是某个子类
-                BP_num = P_backpack.get_BP_Item_secon_type_num(m_id);
-            } else if (!is_Empty_Object(items[m_id])) {
-                //配方的这个材料是某个具体物品
-                BP_num = P_backpack.get_BP_Item_id_num(m_id);
-            } else {
-                console.log('%s配方的材料需求%s不属于已知类型，无法判断', formula_id, m_id);
-                return;
-            }
-            if (BP_num < m_num) {
-                make_flag = false;
-                break;
-            }
-        }
-
-        //当前配方的工作环境检查
-        let need_work_bench = formulas[formula_id].work_bench; //配方需求工作环境
-        let SYN_place_work_bench = this.SYN_all_place_work_bench[this.now_place]; //当前地点的工作环境
-        for (let i = 0; i < need_work_bench.length; i++) {
-            let work_bench_id = need_work_bench[i].id;
-            let need_level = need_work_bench[i].level;
-            let now_level = SYN_place_work_bench[work_bench_id];
-            if (now_level == undefined) {
-                now_level = 0;
-            }
-            if (need_level > now_level) {
-                make_flag = false;
-                break;
-            }
-        }
-        return make_flag;
+        //调用SYN_function.js的通用函数
+        return check_now_formula(id, num);
     }
 }
 

@@ -557,7 +557,7 @@ function ASP_type_handle(type_switch) {
 // 向战斗规划界面的主动技能规划界面添加一个主动技能
 function add_ASP_skill(skill_obj) {
     let active_value_div = document.getElementById('active_value_div');
-    let askill = addElement(active_value_div, 'div', null, 'active_value');
+    let askill = addElement(active_value_div, 'div', null, 'table_value');
     askill.innerHTML = skill_obj.name;
     //鼠标点击之后可以设置到玩家身上
     add_click_Active_skill_worn(askill, skill_obj.id);
@@ -718,7 +718,7 @@ function PSK_type_handle(type_switch) {
 // 向左上角的玩家属性界面中的玩家技能界面添加一个技能
 function add_PSK_skill(skill_obj) {
     let active_value_div = document.getElementById('PSK_value_div');
-    let skill_div = addElement(active_value_div, 'div', null, 'PSK_value');
+    let skill_div = addElement(active_value_div, 'div', null, 'table_value');
     skill_div.innerHTML = skill_obj.name;
     //鼠标点击之后可以设置到玩家身上
     // add_click_Active_skill_worn(skill_div, skill_id);

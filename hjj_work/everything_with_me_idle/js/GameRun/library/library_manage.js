@@ -1,8 +1,9 @@
 import { is_Empty_Object } from '../../Function/Function.js';
-import { addElement, get_radio_switch_click_value } from '../../Function/Dom_function.js';
+import { addElement, addElement_botton, get_radio_switch_click_value } from '../../Function/Dom_function.js';
 import { global } from '../global_manage.js';
 import { items } from '../../Data/Item/Item.js';
 import { enums } from '../../Data/Enum/Enum.js';
+import { formulas } from '../../Data/Formula/Formula.js';
 import { updata_IB_item_value_div } from './item_library.js';
 
 //图鉴管理类
@@ -49,7 +50,8 @@ export class Library_manage {
         let item_id = item_obj.id;
 
         //检查图鉴数据中是否已有该物品id的记录
-        if (is_Empty_Object(this.item_library_data[item_id])) {
+        let is_new = is_Empty_Object(this.item_library_data[item_id]); //是否首次点亮图鉴
+        if (is_new) {
             //没有获得过，在图鉴数据中创建该物品id
             this.item_library_data[item_id] = new Object();
             this.item_library_data[item_id].get_count = 0;
@@ -81,7 +83,17 @@ export class Library_manage {
         if (is_Empty_Object(this.item_type_library_data[item_main_type])) {
             this.item_type_library_data[item_main_type] = new Object();
         }
-        this.item_type_library_data[item_main_type][item_secon_type] = true;
+        //遍历物品的所有小类，逐个记录（子类是数组，不能直接当key使用）
+        for (let secon_type of item_secon_type) {
+            this.item_type_library_data[item_main_type][secon_type] = true;
+        }
+
+        //返回图鉴更新类型：首次点亮返回new，已有数据增加计数返回add
+        if (is_new) {
+            return 'new';
+        } else {
+            return 'add';
+        }
     }
     //使用消耗品时更新图鉴
     use_item_updata_library(item_obj) {
@@ -154,8 +166,69 @@ export class Library_manage {
             return library_data[id];
         }
         //图鉴数据中没有记录，返回空
-        console.log('没有查询到%s的%s图鉴数据，理论上不应该出现', type, id);
+        // console.log('没有查询到%s的%s图鉴数据，理论上不应该出现', type, id);
         return new Object();
+    }
+    //判断指定物品是否解锁过图鉴
+    is_item_unlocked(item_id) {
+        return !is_Empty_Object(this.item_library_data[item_id]);
+    }
+    //判断指定子类下是否有解锁过图鉴的物品
+    is_secon_type_has_unlocked(secon_type) {
+        //根据小类枚举判断该子类属于哪个大类
+        let main_type;
+        if (enums['Equipment_secon_type'].includes(secon_type)) {
+            main_type = 'equipment';
+        } else if (enums['Consumable_secon_type'].includes(secon_type)) {
+            main_type = 'consumable';
+        } else if (enums['Material_secon_type'].includes(secon_type)) {
+            main_type = 'material';
+        } else {
+            console.log('子类%s不属于已知大类，无法判断是否解锁', secon_type);
+            return false;
+        }
+        //查询该大类下该小类是否解锁过
+        if (is_Empty_Object(this.item_type_library_data[main_type])) {
+            return false;
+        }
+        if (is_Empty_Object(this.item_type_library_data[main_type][secon_type])) {
+            return false;
+        }
+        return true;
+    }
+    //判断配方的一种材料是否解锁过图鉴
+    is_formula_material_unlocked(material_id) {
+        if (enums['all_secon_type'].includes(material_id)) {
+            //材料是“任意**”子类合集，合集下有任意一个解锁的子类才算解锁
+            for (let secon_type of enums[material_id]) {
+                if (this.is_secon_type_has_unlocked(secon_type)) {
+                    return true;
+                }
+            }
+            return false;
+        } else if (enums['Item_secon_type'].includes(material_id)) {
+            //材料是某个子类，该子类下有任意一个解锁的物品才算解锁
+            return this.is_secon_type_has_unlocked(material_id);
+        } else if (!is_Empty_Object(items[material_id])) {
+            //材料是某个具体物品，该物品解锁过才算解锁
+            return this.is_item_unlocked(material_id);
+        } else {
+            console.log('配方的材料需求%s不属于已知类型，无法判断是否解锁', material_id);
+            return false;
+        }
+    }
+    //判断配方的每种材料需求是否都解锁过图鉴
+    is_formula_all_materials_unlocked(formula_id) {
+        if (is_Empty_Object(formulas[formula_id])) {
+            console.log('配方%s不存在，无法判断材料解锁情况', formula_id);
+            return false;
+        }
+        for (let formula_material of formulas[formula_id].material) {
+            if (!this.is_formula_material_unlocked(formula_material.id)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     //更新图鉴左侧的分类按钮界面
@@ -360,7 +433,7 @@ function updata_IB_item_select_div(normal_chapter, item_library_data) {
                 let is_lit = item_data.is_lit;
                 if (is_lit) {
                     //图鉴点亮，正常显示
-                    let button = addElement(IB_select_button_div, 'button', null, 'IB_select_button');
+                    let button = addElement_botton(IB_select_button_div, null, 'IB_select_button');
                     button.innerHTML = items[item_id].name;
                     //点击切换到详情界面
                     button.onclick = function () {
@@ -370,7 +443,7 @@ function updata_IB_item_select_div(normal_chapter, item_library_data) {
                     };
                 } else {
                     //图鉴未点亮，使用禁用样式
-                    let button = addElement(IB_select_button_div, 'button', null, 'IB_select_button btn_disabled');
+                    let button = addElement_botton(IB_select_button_div, null, 'IB_select_button btn_disabled');
                     button.innerHTML = '？？？';
                 }
             }

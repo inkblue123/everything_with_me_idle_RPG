@@ -1,7 +1,7 @@
 import { player } from '../Player/Player.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
-import { add_show_Tooltip, add_click_Active_skill_worn_remove, addElement } from './Dom_function.js';
+import { add_show_Tooltip, add_click_Active_skill_worn_remove, addElement, getRectEvenHidden } from './Dom_function.js';
 import { is_Empty_Object } from './Function.js';
 
 //更新玩家属性展示表格中的数值
@@ -214,12 +214,19 @@ function updata_player_active() {
 }
 
 //原料处理界面中的配方发生变动，更新相关界面
-function updata_formula_UI_placeholder(scroll_box_id, value_div_id, placeholder_id) {
+function updata_formula_UI_placeholder(SYN_min) {
+    let scroll_box_id = SYN_min + '_formula_scroll_box';
+    let value_div_id = SYN_min + '_formula_value_div';
+    let placeholder_id = SYN_min + '_formula_title_3';
     const scroll_box = document.getElementById(scroll_box_id); //可以启动滚动条的父div
     const value_div = document.getElementById(value_div_id); //填充内容撑出父div滚动条的子div
     const placeholder = document.getElementById(placeholder_id); //需要显示和隐藏的占位div
-    const scroll_box_Rect = scroll_box.getBoundingClientRect();
-    const value_div_Rect = value_div.getBoundingClientRect();
+    // 当配方内容超过可视区域出现滚动条时，需要在标题行右侧显示一个 14px 的占位元素（SYN_formula_title_3），
+    // 以对齐下方因滚动条而缩窄的内容列。判断滚动条是否出现的方法是比较内容区（value_div）与视口区（scroll_box）的高度。
+    // 为了避免在界面隐藏时（display:none 导致 getBoundingClientRect 返回全 0）误判，
+    // 此处使用 getRectEvenHidden 替代原生 getBoundingClientRect，即使在隐藏状态下也能获取正确的尺寸。
+    const scroll_box_Rect = getRectEvenHidden(scroll_box);
+    const value_div_Rect = getRectEvenHidden(value_div);
     // console.log('value_div_Rect.height = %d,scroll_box_Rect.height = %d', value_div_Rect.height, scroll_box_Rect.height);
     if (value_div_Rect.height > scroll_box_Rect.height) {
         placeholder.style.display = '';

@@ -6,6 +6,7 @@ import { init_Enum_type } from './Enum_type.js';
 import { init_Enum_game_flag } from './Enum_game_flag.js';
 import { init_Enum_skill_exp } from './Enum_skill_exp.js';
 import { init_Enum_buff } from './Enum_buff.js';
+import { init_Enum_div } from './Enum_div.js';
 
 //创建新的内容之前建议先用add_Enum_Array,重名情况会用console.log输出
 //如果已经有过内容则应该考虑换个名字
@@ -27,6 +28,8 @@ function init_enums() {
     init_Enum_buff(enums);
     //初始化枚举库中与生活技能相关的内容
     init_Enum_live_plan(enums);
+    //初始化枚举库中与游戏界面布局相关的内容
+    init_Enum_div(enums);
 }
 
 export { enums, init_enums };

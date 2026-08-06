@@ -1,0 +1,197 @@
+{
+    "global_save": {
+        "Time_save": { "game_now_time": 1785734321486, "start_time": 1785734263273, "now_time": 1785734321486 },
+        "place_save": { "now_place": "village_home", "last_place": "village_home", "last_normal_place": "village_home" },
+        "global_flag_save": {
+            "GS_status": {
+                "GS_game_statu": "NULL",
+                "GS_challenge_flag": false,
+                "GS_rest_flag": false,
+                "GS_unlock_LGI": true,
+                "GS_unlock_FIS": false,
+                "GS_unlock_MIN": false,
+                "GS_unlock_CLT": true,
+                "GS_unlock_DIV": false,
+                "GS_unlock_ACL": false,
+                "GS_unlock_ELT": false,
+                "GS_unlock_SYN": true,
+                "GS_unlock_SYN_MK": true,
+                "GS_unlock_SYN_FL": false,
+                "GS_unlock_SYN_RS": false,
+                "GS_unlock_SYN_EN": true,
+                "GS_unlock_COK": false,
+                "GS_unlock_COK_DS": false,
+                "GS_unlock_COK_MD": false,
+                "GS_unlock_COK_MS": false,
+                "GS_unlock_COK_EN": false,
+                "GS_unlock_FRG": false,
+                "GS_unlock_EXA": false,
+                "GS_unlock_HBB": false,
+                "GS_unlock_EGV": false,
+                "GS_unlock_ACM": false,
+                "GS_last_Live_plan_switch": "EC_switch_button",
+                "GS_last_EC_switch": "LGI_button",
+                "GS_last_MH_switch": "SYN_button"
+            },
+            "important_nodes": {
+                "main_quest": { "main_quest_1": true },
+                "challenge": { "new_player_combat_test": true },
+                "achievement": {},
+                "mini_event": { "unlock_collect_logging": true, "find_village_home_money": true },
+                "side_quest": {}
+            },
+            "game_option": { "OP_game_FPS": 0, "OP_game_OptionTipText": 0, "OP_game_RASaveLogMax": 0, "OP_game_TestMode": 1 }
+        },
+        "enemy_save": {
+            "now_place": "new_player_combat_test",
+            "now_time": 1785734321486,
+            "combat_place_enemys": {
+                "little_distance": [{}, {}, {}, {}, {}, {}, {}, {}, {}],
+                "middle_distance": [{}, {}, {}, {}, {}, {}, {}, {}, {}],
+                "remote_distance": [{}, {}, {}, {}, {}, {}, {}, {}, {}]
+            },
+            "last_combat_place_data": {}
+        },
+        "game_event_save": {
+            "main_quest_save": { "main_quest_id": null, "monitor_data": {} },
+            "side_quest_save": {
+                "study_fishing": { "event_id": "study_fishing", "monitor_data": { "EE_VM_woodshop_study_fishing": false } },
+                "study_mining": { "event_id": "study_mining", "monitor_data": { "PKL_EnemyId_Training_Dummy": 0 } }
+            },
+            "challenge_save": { "challenge_id": null }
+        },
+        "live_plan_save": {
+            "now_place": "village_home",
+            "logging_save": { "now_time": 1785734310856, "LGI_place_rare_trees": {}, "now_LGI_way": "LGI_F_way", "now_place": "village_home" },
+            "fishing_save": { "now_time": 1785734310856, "now_FIS_status": 1, "FIS_place_rare_fishs": {}, "FIS_place_items_show": {}, "now_place": "village_home" },
+            "mining_save": { "now_time": 1785734310856, "MIN_place_ores": {}, "now_place": "village_home" },
+            "collect_save": {
+                "now_time": 1785734310856,
+                "CLT_place_rare_items": {},
+                "CLT_place_items_show": {},
+                "now_CLT_status": 1,
+                "luck_CLT_flag": true,
+                "danger_CLT_flag": true,
+                "now_place": "village_home"
+            },
+            "diving_save": {},
+            "archaeology_save": {},
+            "exploration_save": {},
+            "synthesis_save": {
+                "SYN_all_place_work_bench": {
+                    "game_statr": { "carpentry_bench": 1, "disassembly_tool": 0 },
+                    "village_hospital": { "carpentry_bench": 1, "disassembly_tool": 0 },
+                    "village_home": { "carpentry_bench": 2, "disassembly_tool": 0 },
+                    "village_square": { "carpentry_bench": 1, "disassembly_tool": 0 },
+                    "village_barracks": { "carpentry_bench": 1, "disassembly_tool": 0 },
+                    "village_Combat_coach": { "carpentry_bench": 1, "disassembly_tool": 0 },
+                    "VBH_rest_location": { "carpentry_bench": 1, "disassembly_tool": 0 },
+                    "village_old_woman": { "carpentry_bench": 1, "disassembly_tool": 0 }
+                }
+            },
+            "cooking_save": {},
+            "forging_save": {},
+            "elixir_alchemy_save": {},
+            "herbal_bath_save": {},
+            "engrave_save": {},
+            "alchemy_save": {},
+            "LP_type": "EC_switch_button",
+            "EX_LP_name": "LGI"
+        },
+        "random_save": { "rare_manage_save": {}, "number_manage_save": {} },
+        "store_save": { "buy_save": { "store_buy_goods_cumulative": {} }, "buyback_save": { "store_Item_buy_back_goods": {}, "store_last_clearance_time": {} }, "show_flag": false },
+        "map_save": {
+            "area_can_show_places": {
+                "test": { "test_combat1": { "show_flag": true }, "game_statr": { "show_flag": true }, "test_normal1": { "show_flag": false } },
+                "village": {
+                    "VB_melee_train": { "show_flag": false },
+                    "VB_range_train": { "show_flag": false },
+                    "new_player_combat_test": { "show_flag": true },
+                    "village_home": { "show_flag": true },
+                    "village_square": { "show_flag": true },
+                    "village_market": { "show_flag": true },
+                    "village_barracks": { "show_flag": true },
+                    "village_hospital": { "show_flag": true },
+                    "VM_woodshop": { "show_flag": false },
+                    "VM_smithy": { "show_flag": false },
+                    "village_Combat_coach": { "show_flag": true },
+                    "village_woodshop_owner": { "show_flag": false },
+                    "village_home_bed": { "show_flag": false },
+                    "VH_pharmacy": { "show_flag": false },
+                    "VM_smithy_showcase": { "show_flag": false },
+                    "VM_woodshop_showcase": { "show_flag": false },
+                    "VM_trade_hub": { "show_flag": false },
+                    "VBH_rest_location": { "show_flag": true }
+                },
+                "village_backhill": {
+                    "forest_edge_road": { "show_flag": true },
+                    "forest_core_road": { "show_flag": false },
+                    "VBH_rest_location": { "show_flag": true },
+                    "logged_forest": { "show_flag": true },
+                    "LF_grass": { "show_flag": false },
+                    "LF_woodland": { "show_flag": false },
+                    "LF_creek": { "show_flag": false },
+                    "cemetery": { "show_flag": true },
+                    "forest_edge": { "show_flag": false },
+                    "FE_woodland": { "show_flag": false },
+                    "FE_pond": { "show_flag": false },
+                    "forest_core": { "show_flag": false },
+                    "FC_scree": { "show_flag": false },
+                    "FC_Peakarea": { "show_flag": false },
+                    "village_old_woman": { "show_flag": true },
+                    "village_square": { "show_flag": true },
+                    "cave_inlet": { "show_flag": false },
+                    "alp_cave_inlet": { "show_flag": false }
+                }
+            }
+        },
+        "library_save": {
+            "item_library_data": { "sliver_coin": { "get_count": 1 }, "copper_coin": { "get_count": 1 }, "normal_board": { "get_count": 1 } },
+            "skill_library_data": {},
+            "enemy_library_data": {},
+            "event_library_data": {},
+            "rule_library_data": {},
+            "item_type_library_data": { "consumable": { "ordinary_coin": true }, "material": { "wood_board": true } }
+        }
+    },
+    "player_save": {
+        "Player_attr_save": {
+            "data_attr_save": { "name": "玩家", "health_point": 96, "magic_point": 100, "energy_point": 100 },
+            "player_energy_save": { "surface_energy_point": 100, "deep_energy_point": 100 }
+        },
+        "Player_buff_manage_save": {},
+        "Player_backpack_save": {
+            "backpack_items": {
+                "sliver_coin:0000000000000000": { "id": "sliver_coin", "num": 1 },
+                "copper_coin:0000000000000000": { "id": "copper_coin", "num": 325 },
+                "normal_board:0000000000000000": { "id": "normal_board", "num": 25 }
+            }
+        },
+        "Player_worn_save": { "worn_EQP": { "EQP_column_1": {}, "EQP_column_2": {}, "EQP_column_3": {}, "EQP_column_4": {} }, "now_active_EQP": 0 },
+        "Player_skills_save": {
+            "passive_skills": {
+                "normal_sword": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "normal_sticks": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "bare_handed_logging": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "fast_axe_skill": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "accurate_continuous_logging": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "be_careful_with_collect": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "have_the_discerning_eye": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "precision_cast": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "synthesis_skill_test": { "exp": 0, "level": 0, "level_stage": 0, "levelmax_flag": false },
+                "lucky_finder": { "exp": 0, "level": 1, "level_stage": "0", "levelmax_flag": true }
+            },
+            "active_skills": {}
+        },
+        "Player_ASkills_manage_save": { "active_slot_num": 3, "active_slots": [{}, {}, {}] },
+        "Player_formulas_manage_save": {
+            "synthesis_formulas": { "SYN_carpentry_bench_2": { "id": "SYN_carpentry_bench_2", "status": "know" } },
+            "cooking_formulas": {},
+            "forging_formulas": {},
+            "elixir_alchemy_formulas": {},
+            "herbal_bath_formulas": {},
+            "engrave_formulas": {},
+            "alchemy_formulas": {}
+        }
+    }
+}

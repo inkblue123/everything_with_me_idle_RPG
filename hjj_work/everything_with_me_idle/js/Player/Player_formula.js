@@ -63,15 +63,55 @@ export class Player_formulas_manage {
             console.log('不存在%s配方', id);
             return false;
         }
+        //研究状态的配方，如果所有材料都在图鉴中解锁，直接视作完全了解
+        let final_status = study_status;
+        let library_unlock_flag = false; //是否通过图鉴解锁直接完全学会
+        if (study_status == 'study') {
+            let library_manage = global.get_library_manage();
+            if (library_manage.is_formula_all_materials_unlocked(id)) {
+                final_status = 'know'; //图鉴已点亮所有材料，直接完全了解
+                library_unlock_flag = true;
+            }
+        }
         //获取这个配方属于哪个技能
         let skill_name = formulas[id].skill + '_formulas';
         //在对应技能的配方下获取
         this[skill_name][id] = new Player_formula(id);
-        this[skill_name][id].status = study_status;
+        this[skill_name][id].status = final_status;
         this.updata_formula_value();
-        //添加学会了配方的日志
+        //添加学会配方的日志
         let global_flag_manage = global.get_global_flag_manage();
         global_flag_manage.set_game_log('get_formula', id, study_status);
+        if (library_unlock_flag) {
+            //同时通过图鉴解锁直接完全学会，补充"已在图鉴中点亮..."日志
+            global_flag_manage.set_game_log('formula_library_unlock', id);
+        }
+    }
+    //检查玩家的所有配方，如果学习中的配方所有材料都在图鉴中解锁，就把配方调整为完全了解
+    check_updata_study_formula_by_library() {
+        let all_skill_names = ['synthesis', 'cooking', 'forging', 'elixir_alchemy', 'herbal_bath', 'engrave', 'alchemy'];
+        let library_manage = global.get_library_manage();
+        let updata_flag = false; //是否有配方被升级
+        for (let skill_name of all_skill_names) {
+            let P_formulas = this.get_player_skill_formulas(skill_name);
+            for (let formula_id in P_formulas) {
+                //只处理处于学习状态的配方
+                if (P_formulas[formula_id].status != 'study') {
+                    continue;
+                }
+                //配方所有材料都在图鉴中解锁，调整为完全了解
+                if (library_manage.is_formula_all_materials_unlocked(formula_id)) {
+                    P_formulas[formula_id].status = 'know';
+                    let global_flag_manage = global.get_global_flag_manage();
+                    global_flag_manage.set_game_log('formula_library_unlock', formula_id);
+                    updata_flag = true;
+                }
+            }
+        }
+        //有配方升级，刷新生活技能配方界面
+        if (updata_flag) {
+            this.updata_formula_value();
+        }
     }
     //获得当前玩家配方情况
     get_player_skill_formulas(skill_name) {
@@ -123,44 +163,3 @@ export class Player_formulas_manage {
         live_plan_manage.updata_live_plan_game_div(MH_name);
     }
 }
-
-//获取当前展示的原料处理类生活技能的子功能编号
-// function get_now_MH_min_name() {
-//     const MH_switch_button = document.getElementById('MH_switch_button');
-//     if (MH_switch_button.checked != true) {
-//         //当前展示的生活技能不是原料处理类
-//         return null;
-//     }
-//     // 寻找当前展示的生活技能
-//     let MH_name;
-//     const radios = document.querySelectorAll('input[name="MH_switch"]');
-//     for (const radio of radios) {
-//         if (radio.checked) {
-//             MH_name = radio.value.slice(0, 3);
-//             break;
-//         }
-//     }
-//     //寻找当前展示的是生活技能中的哪个子功能
-//     let MH_min_name = null;
-//     radios = document.querySelectorAll('input[name="' + MH_skill_name + '_switch"]');
-//     for (const radio of radios) {
-//         if (radio.checked) {
-//             MH_min_name = radio.value.slice(0, 6);
-//             break;
-//         }
-//     }
-//     return MH_min_name;
-// }
-//获取当前屏幕上展示的生活技能配方窗口
-// function get_LP_formula_div() {
-//     let MH_min_name = get_now_MH_min_name();
-//     if (MH_min_name == null) {
-//         return null;
-//     }
-//     //获取屏幕上展示的子功能的配方界面
-//     let MH_min_formula_div = MH_min_skill + '_formula_value_div';
-//     let LP_formula_div = document.getElementById(MH_min_formula_div);
-//     return LP_formula_div;
-// }
-//获取指定生活技能子功能中激活的过滤条件
-// function get_MH_type_switch(MH_min_name) {}

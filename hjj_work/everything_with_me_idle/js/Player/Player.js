@@ -106,7 +106,11 @@ export class Player_Object {
             this.player_formulas_manage.updata_formula_value();
             //更新图鉴
             let library_manage = global.get_library_manage();
-            library_manage.get_item_updata_library(item_obj);
+            let library_updata_type = library_manage.get_item_updata_library(item_obj);
+            if (library_updata_type == 'new') {
+                //首次点亮新物品的图鉴，检查是否有学习中的配方因此完全学会
+                this.player_formulas_manage.check_updata_study_formula_by_library();
+            }
         }
     }
     //给玩家背包添加物品，不触发日志的接口

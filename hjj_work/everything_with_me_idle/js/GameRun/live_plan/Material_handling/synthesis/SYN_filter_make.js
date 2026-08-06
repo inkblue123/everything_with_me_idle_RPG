@@ -1,6 +1,5 @@
 import { addElement, addElement_radio, add_show_Tooltip, get_radio_switch_click_value } from '../../../../Function/Dom_function.js';
 import { is_Empty_Object, get_item_obj, get_uniqueArr } from '../../../../Function/Function.js';
-import { updata_formula_UI_placeholder } from '../../../../Function/Updata_func.js';
 
 import { enums } from '../../../../Data/Enum/Enum.js';
 import { items } from '../../../../Data/Item/Item.js';
@@ -11,7 +10,7 @@ import { global } from '../../../global_manage.js';
 import { add_formula, get_SYN_formula_switch_type, SYN_switch_type_handle } from './SYN_function.js';
 
 //更新配方筛选的制造界面
-function updata_SYN_FM_value(now_filter_type, now_filter_value) {
+function updata_SYN_FM_div(now_filter_type, now_filter_value) {
     //清空这个界面里的配方
     let SYN_FM_formula_value_div = document.getElementById('SYN_FM_formula_value_div');
     SYN_FM_formula_value_div.replaceChildren();
@@ -63,4 +62,4 @@ function updata_SYN_FM_title(SYN_FM_formula_switch_type) {
     let SYN_FM_title_value = document.getElementById('SYN_FM_title_value');
     SYN_FM_title_value.innerHTML = SYN_FM_title_ch;
 }
-export { updata_SYN_FM_value, updata_SYN_FM_title };
+export { updata_SYN_FM_div, updata_SYN_FM_title };

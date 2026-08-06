@@ -16,11 +16,11 @@ function make_player_status_div(player_status) {
     //界面上部，区分当前展示的内容的按钮
     var player_status_switch = crtElement('div', 'player_status_switch_div', null, '');
     //属性 player_attribute PAB
-    var PAB_switch_radio_div = addElement(player_status_switch, 'div', 'PAB_switch_radio_div', 'radio_div div_switch_button');
+    var PAB_switch_radio_div = addElement(player_status_switch, 'div', 'PAB_switch_radio_div', 'radio_div div_switch_radio');
     addElement_radio(PAB_switch_radio_div, 'PAB_switch_button', 'player_status_switch', 'PAB_switch', '属性');
     PAB_switch_radio_div.children[0].checked = true; //初始激活该按钮
     //技能 player_skill PSK
-    var PSK_switch_radio_div = addElement(player_status_switch, 'div', 'PSK_switch_radio_div', 'radio_div div_switch_button');
+    var PSK_switch_radio_div = addElement(player_status_switch, 'div', 'PSK_switch_radio_div', 'radio_div div_switch_radio');
     addElement_radio(PSK_switch_radio_div, 'PSK_switch_button', 'player_status_switch', 'PSK_switch', '技能');
     //界面下部，具体展示内容的窗口
     var player_status_value_div = crtElement('div', 'player_status_value_div', 'page_columns_1', '');
@@ -209,8 +209,9 @@ function make_player_status_div(player_status) {
             addElement_radio(PSK_level_radio_div, 'PSK_level_sort', 'PSK_sort', 'level_sort', '等级排序');
             PSK_level_radio_div.children[0].checked = true; //默认激活"个数排序"过滤条件
         }
-        //
-        var PSK_value_div = addElement(PSK_div, 'div', 'PSK_value_div', null);
+        //右侧容纳具体技能的界面
+        var PSK_value_scroll_box = addElement(PSK_div, 'div', 'PSK_value_scroll_box', 'overflow_y_div');
+        var PSK_value_div = addElement(PSK_value_scroll_box, 'div', 'PSK_value_div', 'in_overflow_div');
     }
 
     player_status.appendChild(player_status_switch);

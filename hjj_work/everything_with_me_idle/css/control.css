@@ -2,7 +2,8 @@
 #control {
     display: flex;
     flex-direction: column;
-    background-color: #ffffff;
+    gap: 2px;
+    outline: 2px solid #797691;
     user-select: none;
 }
 
@@ -11,8 +12,8 @@
     display: flex;
     height: 10%;
     padding: 0 5px;
-    /* 占据一整行，类型在左，内容在右 */
     justify-content: space-between;
+    outline: 2px solid #797691;
 }
 
 #control_name_left_div {
@@ -45,23 +46,19 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    /* box-sizing: border-box; */
-    /* text-align: center;  */
     justify-content: center;
     align-items: center;
     min-height: 20%;
-    /* 避免文本仅靠左右边界 */
     margin: 0px 5px;
     white-space: pre-wrap;
-    /* 保留空格和换行 */
-    /* background-color: rgb(19, 250, 54); */
 }
 
 /* 用来容纳角色当前位置可以进行的操作的容器 */
 #player_Control_div {
     display: flex;
-    /* flex: 1;  */
     flex-direction: column;
+    gap: 2px;
+    outline: 2px solid #797691;
 }
 
 /* 可执行操作按钮 */
@@ -70,13 +67,9 @@
     min-height: 30px;
     width: 100%;
     text-align: center;
-    cursor: pointer;
-    /* 鼠标悬停标识，手*/
     font-size: 15px;
     justify-content: center;
     align-items: center;
-    /* background-color: rgb(250, 19, 19); */
-    /* border-bottom: 2px solid #797691;  */
 }
 
 /* 展示有限刷怪区域敌人剩余数量的div */
@@ -90,7 +83,7 @@
 #goods_trade_div {
     display: flex;
     flex: 1;
-    /* 填充剩余空间 */
+    outline: 2px solid #797691;
 }
 
 /* 左侧玩家出售物品的div */
@@ -141,37 +134,28 @@
 #supplement_money_button {
     display: flex;
     text-align: center;
-    cursor: pointer;
     font-size: 15px;
-    /* width: 50%; */
     height: 20%;
     justify-content: center;
     align-items: center;
-    /* border: 2px solid #797691; */
 }
 
 /* 交易情况-确认交易的按钮 */
 #trade_button {
     position: relative;
-    /* display: relative; */
     text-align: center;
-    cursor: pointer;
     font-size: 15px;
-    /* width: 50%; */
     height: 30%;
     justify-content: center;
     align-items: center;
-    /* border: 2px solid #797691; */
 }
 
 .sell_buy_scroll_box {
-    /* height: auto; */
     height: 100%;
 }
 
 /* 背包界面-右侧布局中具体的一个物品 */
 .sell_buy_value {
     width: 100%;
-    /* background-color: #ffffff; */
     text-align: center;
 }

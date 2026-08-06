@@ -1,4 +1,4 @@
-import { crtElement, addElement, addElement_radio, addElement_select, addElement_lazy_select } from '../../../Function/Dom_function.js';
+import { crtElement, addElement, addElement_botton, addElement_radio, addElement_select, addElement_lazy_select } from '../../../Function/Dom_function.js';
 import { P_skills, B_skills } from '../../../Data/Skill/Skill.js';
 import { items } from '../../../Data/Item/Item.js';
 import { global } from '../../../GameRun/global_manage.js';
@@ -66,8 +66,7 @@ function make_mining_div(MIN_value_div) {
     MIN_MR_bar.children[0].children[0].style.width = '0%';
     // MIN_MR_bar.style.visibility = 'hidden';
     //更换挖矿目标的按钮
-    var MIN_replace_button = addElement(MIN_M_R_div, 'button', 'MIN_replace_button', null);
-    MIN_replace_button.innerHTML = '更换目标';
+    var MIN_replace_button = addElement_botton(MIN_M_R_div, 'MIN_replace_button', null, undefined, '更换目标');
 
     //挖矿下部，开始按钮
     let MIN_down_div = addElement(MIN_value_div, 'div', 'MIN_down_div', null, '');
@@ -81,10 +80,8 @@ function make_mining_div(MIN_value_div) {
     var MIN_D_current = addElement(MIN_D_frame, 'div', 'MIN_D_current', 'progress_bar_current player_mining_current');
     MIN_D_bar.children[0].children[0].style.width = '0%';
     //开始和停止挖矿按钮
-    var MIN_S_button = addElement(MIN_D_M_div, 'button', 'MIN_S_button', 'LP_button', '');
-    MIN_S_button.innerHTML = '开始挖矿';
-    var MIN_E_button = addElement(MIN_D_M_div, 'button', 'MIN_E_button', 'LP_button', 'none');
-    MIN_E_button.innerHTML = '停止挖矿';
+    var MIN_S_button = addElement_botton(MIN_D_M_div, 'MIN_S_button', 'LP_button', '', '开始挖矿');
+    var MIN_E_button = addElement_botton(MIN_D_M_div, 'MIN_E_button', 'LP_button', 'none', '停止挖矿');
     // 下部右侧
     let MIN_D_R_div = addElement(MIN_down_div, 'div', null, 'MIN_D_div', '');
 }

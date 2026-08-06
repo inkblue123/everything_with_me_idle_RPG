@@ -1,5 +1,6 @@
-import { crtElement, addElement, addElement_radio, addElement_select } from '../Function/Dom_function.js';
+import { crtElement, addElement, addElement_botton, addElement_radio, addElement_select } from '../Function/Dom_function.js';
 import { save_game, save_game_show_tip, delete_save_show_tip, load_save_show_tip } from '../LoadAndSave/load.js';
+import { init_save_file_directory, is_file_system_api_supported } from '../LoadAndSave/save_to_file.js';
 import { show_dropdown_table } from '../Function/show_func.js';
 import { global } from '../GameRun/global_manage.js';
 import { enums } from '../Data/Enum/Enum.js';
@@ -21,15 +22,15 @@ function make_Game_log_div(Game_log) {
     //界面上部，区分当前展示的内容的按钮
     var Game_log_switch_div = crtElement('div', 'Game_log_switch_div', 'page_flex', '');
     //脑海 mind MD
-    var MD_switch_radio_div = addElement(Game_log_switch_div, 'div', 'MD_switch_radio_div', 'radio_div div_switch_button');
+    var MD_switch_radio_div = addElement(Game_log_switch_div, 'div', 'MD_switch_radio_div', 'radio_div div_switch_radio');
     addElement_radio(MD_switch_radio_div, 'MD_switch_button', 'Game_log_switch', 'MD_switch', '脑海');
     MD_switch_radio_div.children[0].checked = true; //初始激活该按钮
     //图鉴窗口 library IB
-    var IB_switch_radio_div = addElement(Game_log_switch_div, 'div', null, 'radio_div div_switch_button');
+    var IB_switch_radio_div = addElement(Game_log_switch_div, 'div', null, 'radio_div div_switch_radio');
     addElement_radio(IB_switch_radio_div, 'IB_switch_button', 'Game_log_switch', 'IB_switch', '图鉴');
     //测试窗口 test TS
     if (typeof TEST_DIV_FLAG !== 'undefined' && TEST_DIV_FLAG) {
-        var TS_switch_radio_div = addElement(Game_log_switch_div, 'div', 'TS_switch_radio_div', 'radio_div div_switch_button');
+        var TS_switch_radio_div = addElement(Game_log_switch_div, 'div', 'TS_switch_radio_div', 'radio_div div_switch_radio');
         addElement_radio(TS_switch_radio_div, 'TS_switch_button', 'Game_log_switch', 'TS_switch', '测试');
     }
 
@@ -139,20 +140,17 @@ function make_mind_div(MD_div) {
                 var OP_game_SaveManage_lable = addElement(OP_game_SaveManage_div, 'div', 'OP_game_SaveManage_lable', 'OP_T3_div');
                 OP_game_SaveManage_lable.innerHTML = '存档管理';
                 var OP_game_SaveManage_value = addElement(OP_game_SaveManage_div, 'div', 'OP_game_SaveManage_value', 'OP_V_div');
-                var OP_game_Save_button = addElement(OP_game_SaveManage_value, 'button', 'OP_game_Save_button', 'OP_button');
-                OP_game_Save_button.innerHTML = '导出存档';
-                var OP_game_Load_button = addElement(OP_game_SaveManage_value, 'button', 'OP_game_Load_button', 'OP_button');
-                OP_game_Load_button.innerHTML = '导入存档';
-                var OP_game_CleanSave_button = addElement(OP_game_SaveManage_value, 'button', 'OP_game_CleanSave_button', 'OP_button');
-                OP_game_CleanSave_button.innerHTML = '删除存档';
+                var OP_game_Save_button = addElement_botton(OP_game_SaveManage_value, 'OP_game_Save_button', 'OP_button', null, '导出存档');
+                var OP_game_Load_button = addElement_botton(OP_game_SaveManage_value, 'OP_game_Load_button', 'OP_button', null, '导入存档');
+                var OP_game_CleanSave_button = addElement_botton(OP_game_SaveManage_value, 'OP_game_CleanSave_button', 'OP_button', null, '删除存档');
                 OP_game_CleanSave_button.style.backgroundColor = '#ff000080';
+                // var OP_game_SetSaveDir_button = addElement_botton(OP_game_SaveManage_value, 'OP_game_SetSaveDir_button', 'OP_button', null, '设置存档目录');
                 //设置-游戏设置-测试模式开关
                 var OP_game_TestMode_div = addElement(OP_game_div, 'div', 'OP_game_TestMode_div', 'OP_TLV_div');
                 var OP_game_TestMode_lable = addElement(OP_game_TestMode_div, 'div', 'OP_game_TestMode_lable', 'OP_T3_div');
                 OP_game_TestMode_lable.innerHTML = '是否开启调试模式';
                 var OP_game_TestMode_value = addElement(OP_game_TestMode_div, 'div', 'OP_game_TestMode_value', 'OP_V_div');
-                var OP_game_TestMode_button = addElement(OP_game_TestMode_value, 'button', 'OP_game_TestMode', 'OP_button');
-                OP_game_TestMode_button.innerHTML = '☑';
+                var OP_game_TestMode_button = addElement_botton(OP_game_TestMode_value, 'OP_game_TestMode', 'OP_button', null, '☑');
                 OP_game_TestMode_button.dataset.testmode = '1'; //内置开关标记：0关1开
             }
             //设置-画面设置
@@ -319,8 +317,7 @@ function make_library_div(IB_div) {
         var IB_value_div = addElement(IB_div, 'div', 'IB_value_div', null, 'none');
         //上半标题栏
         var IB_value_title_div = addElement(IB_value_div, 'div', null, 'IB_value_title_div page_flex');
-        var IB_value_back_button = addElement(IB_value_title_div, 'button', 'IB_value_back_button', 'IB_value_button');
-        IB_value_back_button.innerHTML = '<--返回';
+        var IB_value_back_button = addElement_botton(IB_value_title_div, 'IB_value_back_button', 'IB_value_button', null, '<--返回');
         var IB_value_title_text = addElement(IB_value_title_div, 'div', 'IB_value_title_text', null);
         IB_value_title_text.innerHTML = '显示图鉴条目名称';
         //下半内容区
@@ -429,6 +426,11 @@ function set_mind_button(Game_log) {
         OP_game_CleanSave_button.onclick = function () {
             delete_save_show_tip();
         };
+        //设置存档目录
+        // let OP_game_SetSaveDir_button = Game_log.querySelector('#OP_game_SetSaveDir_button');
+        // OP_game_SetSaveDir_button.onclick = function () {
+        //     init_save_file_directory();
+        // };
         //测试模式开关
         let OP_game_TestMode_button = Game_log.querySelector('#OP_game_TestMode');
         OP_game_TestMode_button.onclick = function () {

@@ -11,7 +11,10 @@ function init_Enum_live_plan(enums) {
 
 //探索采集类生活技能
 function init_live_plan_explore(enums) {
-    let id = 'live_plan_explore_skill';
+    let id;
+
+    //所有探索采集类生活技能
+    id = 'live_plan_explore_skill';
     add_Enum_Array(enums, id);
     enums[id] = [
         'logging', //伐木
@@ -22,10 +25,24 @@ function init_live_plan_explore(enums) {
         'archaeology', //考古
         'exploration', //探索
     ];
+    //所有探索采集类生活技能的简称
+    id = 'live_plan_explore_skill_min';
+    add_Enum_Object(enums, id);
+    enums[id] = {
+        LGI: 'logging', //伐木
+        FIS: 'fishing', //钓鱼
+        MIN: 'mining', //挖矿
+        CLT: 'collect', //采集
+        DIV: 'diving', //潜水
+        ACL: 'archaeology', //考古
+        ELT: 'exploration', //探索
+    };
 }
 //原料处理类生活技能
 function init_live_plan_process(enums) {
-    let id = 'live_plan_process_skill';
+    let id;
+    //所有原料处理类生活技能
+    id = 'live_plan_process_skill';
     add_Enum_Array(enums, id);
     enums[id] = [
         'synthesis', //合成制造
@@ -36,6 +53,18 @@ function init_live_plan_process(enums) {
         'engrave', //雕刻
         'alchemy', //炼金术
     ];
+    //所有原料处理类生活技能的简称
+    id = 'live_plan_process_skill_min';
+    add_Enum_Object(enums, id);
+    enums[id] = {
+        SYN: 'synthesis', //合成制造
+        COK: 'cooking', //烹饪
+        FRG: 'forging', //锻造
+        EXA: 'elixir_alchemy', //炼丹
+        HBB: 'herbal_bath', //药浴
+        EGV: 'engrave', //雕刻
+        ACM: 'alchemy', //炼金术
+    };
 }
 
 function init_live_plan_work_bench(enums) {

@@ -24,6 +24,20 @@ function addElement(parent_element, elem, id, cls, sty_display) {
     parent_element.appendChild(newelem);
     return newelem;
 }
+//向parent_element中添加一个button
+function addElement_botton(parent_element, id, cls, sty_display, innerHTML) {
+    let newbotton = document.createElement('button');
+    if (id) newbotton.id = id;
+    if (cls) {
+        newbotton.className = cls + ' game_button';
+    } else {
+        newbotton.className = 'game_button';
+    }
+    if (sty_display) newbotton.style.display = sty_display;
+    if (innerHTML) newbotton.innerHTML = innerHTML;
+    parent_element.appendChild(newbotton);
+    return newbotton;
+}
 //向parent_element中添加一个radio
 function addElement_radio(parent_element, id, name, value, textContent) {
     let newradio = document.createElement('input');
@@ -327,6 +341,71 @@ function start_magic_animation(div_id, text) {
     requestAnimationFrame(animate);
 }
 
+/**
+ * 获取元素的边界矩形，即使该元素或其祖先元素因 display: none 而隐藏
+ *
+ * 当元素或其祖先有 display: none 时，浏览器不会为该元素生成渲染盒，
+ * 原生的 getBoundingClientRect() 会返回全 0 值（top/right/bottom/left/width/height 均为 0），
+ * 导致调用方无法获取元素的真实尺寸。
+ *
+ * 此函数会检测祖先链上是否存在 display: none 的节点：
+ *  - 如果不存在（快路径），直接返回原生 getBoundingClientRect() 的结果；
+ *  - 如果存在（慢路径），临时清除所有隐藏祖先的 inline display:none 样式，
+ *    同时设置 visibility: hidden 避免视觉闪现，测量完毕后恢复原状。
+ *    由于测量是同步的，浏览器不会在中间状态进行绘制，不会产生视觉闪烁。
+ *
+ * @param {Element} elem - 目标 DOM 元素
+ * @returns {DOMRect} - 元素的边界矩形，获取失败时返回全 0 的 DOMRect
+ */
+function getRectEvenHidden(elem) {
+	if (!elem || !elem.nodeType) {
+		console.log('getRectEvenHidden: 输入元素无效');
+		return new DOMRect(0, 0, 0, 0);
+	}
+
+	// 快路径：元素有 offsetParent 说明自身及所有祖先都不是 display:none，
+	// 元素已经正常渲染，直接返回原生测量结果
+	if (elem.offsetParent !== null) {
+		return elem.getBoundingClientRect();
+	}
+
+	// 慢路径：祖先链上存在 display:none 节点，需要临时让它们参与布局
+	// 沿 DOM 树向上收集所有 display:none 的祖先（包括自身）
+	const hiddenNodes = [];
+	let node = elem;
+	while (node && node.nodeType === 1) {
+		if (window.getComputedStyle(node).display === 'none') {
+			hiddenNodes.push(node);
+		}
+		node = node.parentElement;
+	}
+
+	// 保存原始 inline style，然后清除 display:none 并设为不可见
+	const savedStyles = hiddenNodes.map(n => ({
+		node: n,
+		display: n.style.display,
+		visibility: n.style.visibility,
+	}));
+
+	for (const n of hiddenNodes) {
+		// 清除 inline 的 display:none，使 CSS 类定义的 display 值生效
+		n.style.display = '';
+		// visibility:hidden 确保元素不产生视觉闪现，但仍参与布局计算
+		n.style.visibility = 'hidden';
+	}
+
+	// 同步测量——此时浏览器会立即重算布局，但不会绘制中间状态
+	const rect = elem.getBoundingClientRect();
+
+	// 恢复所有被修改的 inline style
+	for (const s of savedStyles) {
+		s.node.style.display = s.display;
+		s.node.style.visibility = s.visibility;
+	}
+
+	return rect;
+}
+
 //获取指定多选框中已选择按钮的内容
 function get_radio_switch_click_value(radio_switch_id) {
     let select_id = 'input[name="' + radio_switch_id + '"]';
@@ -347,6 +426,7 @@ function get_radio_switch_click_value(radio_switch_id) {
 export {
     crtElement,
     addElement,
+    addElement_botton,
     addElement_radio,
     addElement_select,
     addElement_lazy_select,
@@ -361,4 +441,5 @@ export {
     Gradient_div,
     start_magic_animation,
     get_radio_switch_click_value,
+    getRectEvenHidden,
 };

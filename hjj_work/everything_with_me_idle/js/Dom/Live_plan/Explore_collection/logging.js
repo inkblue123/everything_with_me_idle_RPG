@@ -1,4 +1,4 @@
-import { crtElement, addElement, addElement_radio } from '../../../Function/Dom_function.js';
+import { crtElement, addElement, addElement_botton, addElement_radio } from '../../../Function/Dom_function.js';
 import { global } from '../../../GameRun/global_manage.js';
 
 //构建伐木技能的界面内容
@@ -50,17 +50,12 @@ function make_logging_div(LGI_value_div) {
     addElement_radio(LGI_M_way_radio_div, 'LGI_M_way', 'LGI_switch', 'LGI_M_way', '精细伐木');
 
     //中部右侧
-    var LGI_R_button = addElement(LGI_middle_div, 'button', 'LGI_R_button', 'LP_button');
-    LGI_R_button.innerHTML = '更换目标';
+    var LGI_R_button = addElement_botton(LGI_middle_div, 'LGI_R_button', 'LP_button', undefined, '更换目标');
 
     //伐木下部，开始按钮
     let LGI_down_div = addElement(LGI_value_div, 'div', 'LGI_down_div', null, '');
-    var LGI_S_button = addElement(LGI_down_div, 'button', 'LGI_S_button', 'LP_button', '');
-    // var LGI_S_button = addElement(LGI_down_div, 'button', 'LGI_S_button', null, '');
-    LGI_S_button.innerHTML = '开始伐木';
-    var LGI_E_button = addElement(LGI_down_div, 'button', 'LGI_E_button', 'LP_button', 'none');
-    // var LGI_E_button = addElement(LGI_down_div, 'button', 'LGI_E_button', null, 'none');
-    LGI_E_button.innerHTML = '停止伐木';
+    var LGI_S_button = addElement_botton(LGI_down_div, 'LGI_S_button', 'LP_button', '', '开始伐木');
+    var LGI_E_button = addElement_botton(LGI_down_div, 'LGI_E_button', 'LP_button', 'none', '停止伐木');
 }
 
 //为伐木界面中的按钮添加交互逻辑

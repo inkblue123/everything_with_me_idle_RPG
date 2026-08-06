@@ -1,4 +1,4 @@
-import { addElement } from '../../Function/Dom_function.js';
+import { addElement, addElement_botton } from '../../Function/Dom_function.js';
 import { load_save, delete_save, init_game } from '../../LoadAndSave/load.js';
 
 import { texts } from '../../Data/Text/Text.js';
@@ -61,16 +61,14 @@ function init_load_save_tip(value) {
 
     let button_div = addElement(load_game_div, 'div', 'SandL_button_div', null);
     //导入按钮
-    let load_button = addElement(button_div, 'button', null, 'SandL_button');
-    load_button.innerHTML = texts['load_tip_load_button'].button_text;
+    let load_button = addElement_botton(button_div, null, 'SandL_button', null, texts['load_tip_load_button'].button_text);
     load_button.addEventListener('click', () => {
         Tooltip.CloseTip(); //清空小窗口
         let save_str = load_textarea.value;
         load_save(save_str);
     });
     //退出按钮
-    let exit_button = addElement(button_div, 'button', null, 'SandL_button');
-    exit_button.innerHTML = texts['load_tip_exit_button'].button_text;
+    let exit_button = addElement_botton(button_div, null, 'SandL_button', null, texts['load_tip_exit_button'].button_text);
     exit_button.addEventListener('click', () => {
         Tooltip.CloseTip(); //清空小窗口
     });
@@ -106,8 +104,7 @@ function init_save_game_tip(value) {
 
     let button_div = addElement(save_game_div, 'div', 'SandL_button_div', null);
     //退出按钮
-    let exit_button = addElement(button_div, 'button', null, 'SandL_button');
-    exit_button.innerHTML = texts['save_tip_exit_button'].button_text;
+    let exit_button = addElement_botton(button_div, null, 'SandL_button', null, texts['save_tip_exit_button'].button_text);
     exit_button.addEventListener('click', () => {
         Tooltip.CloseTip(); //清空小窗口
     });
@@ -138,8 +135,7 @@ function init_delete_save_tip(value) {
 
     let button_div = addElement(delete_save_div, 'div', 'SandL_button_div', null);
     //确认按钮
-    let delete_button = addElement(button_div, 'button', 'SandL_delete_button', null);
-    delete_button.innerHTML = texts['delete_tip_ok_button'].button_text;
+    let delete_button = addElement_botton(button_div, 'SandL_delete_button', null, null, texts['delete_tip_ok_button'].button_text);
     // 小延迟确保样式已加载，添加普通样式，触发渐变动画
     setTimeout(() => {
         delete_button.classList.add('normal');
@@ -159,8 +155,7 @@ function init_delete_save_tip(value) {
         // }, 50);
     }, 5000);
     //取消按钮
-    let exit_button = addElement(button_div, 'button', null, 'SandL_button');
-    exit_button.innerHTML = texts['delete_tip_exit_button'].button_text;
+    let exit_button = addElement_botton(button_div, null, 'SandL_button', null, texts['delete_tip_exit_button'].button_text);
     exit_button.addEventListener('click', () => {
         Tooltip.CloseTip(); //清空小窗口
     });
@@ -175,8 +170,7 @@ function init_delete_save_OK_tip(delete_save_div) {
     delete_text1.innerHTML = texts['delete_tip_text'].lable_text4;
 
     let button_div = addElement(delete_save_div, 'div', 'SandL_button_div', null);
-    let exit_button = addElement(button_div, 'button', null, 'SandL_button');
-    exit_button.innerHTML = texts['save_tip_exit_button'].button_text;
+    let exit_button = addElement_botton(button_div, null, 'SandL_button', null, texts['save_tip_exit_button'].button_text);
     exit_button.addEventListener('click', () => {
         let Tooltip = document.getElementById('tooltip');
         Tooltip.CloseTip(); //清空小窗口

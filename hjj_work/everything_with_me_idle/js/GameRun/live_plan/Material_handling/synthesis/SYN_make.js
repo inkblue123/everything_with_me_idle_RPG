@@ -7,14 +7,10 @@ import { texts } from '../../../../Data/Text/Text.js';
 import { formulas } from '../../../../Data/Formula/Formula.js';
 import { player } from '../../../../Player/Player.js';
 import { global } from '../../../global_manage.js';
-import {
-    add_formula,
-    get_SYN_formula_switch_type,
-    SYN_switch_type_handle,
-} from './SYN_function.js';
+import { add_formula, get_SYN_formula_switch_type, SYN_switch_type_handle } from './SYN_function.js';
 
 //更新合成制造技能的制造界面的内容
-function updata_SYN_MK_value() {
+function updata_SYN_MK_div() {
     //清空这个界面里的配方
     let SYN_MK_formula_value_div = document.getElementById('SYN_MK_formula_value_div');
     SYN_MK_formula_value_div.replaceChildren();
@@ -28,4 +24,4 @@ function updata_SYN_MK_value() {
     }
 }
 
-export { updata_SYN_MK_value };
+export { updata_SYN_MK_div };

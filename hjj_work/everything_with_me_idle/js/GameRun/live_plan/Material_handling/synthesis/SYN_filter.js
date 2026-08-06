@@ -390,7 +390,7 @@ function set_a_SYN_FL_show_value(choice_id, click_value, value_attr) {
         radio.addEventListener('click', function () {
             let live_plan_manage = global.get_live_plan_manage();
             let synthesis_manage = live_plan_manage.get_LP_live_skill_manage('synthesis_manage');
-            synthesis_manage.updata_SYN_FL_value('change', choice_id, this.value);
+            synthesis_manage.updata_SYN_FL_div('change', choice_id, this.value);
         });
     }
 

@@ -4,7 +4,7 @@ import { items } from '../../Data/Item/Item.js';
 import { texts } from '../../Data/Text/Text.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { formulas } from '../../Data/Formula/Formula.js';
-import { addElement } from '../../Function/Dom_function.js';
+import { addElement, addElement_botton } from '../../Function/Dom_function.js';
 
 //显示一个物品的图鉴详情
 function updata_IB_item_value_div(item_library_data, item_id) {
@@ -105,7 +105,7 @@ function show_IB_item_equipment_data(item_id) {
         if (texts[rarity] && texts[rarity].rarity_name) {
             rarity_name = texts[rarity].rarity_name;
         }
-        let btn = addElement(rarity_btn_div, 'button', null, 'IB_rarity_button');
+        let btn = addElement_botton(rarity_btn_div, null, 'IB_rarity_button');
         btn.innerHTML = rarity_name;
         //按稀有度颜色设置按钮文字颜色
         if (enums[rarity] && enums[rarity].rarity_color) {

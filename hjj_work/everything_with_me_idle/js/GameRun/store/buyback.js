@@ -161,7 +161,7 @@ export class BuyBack_Manage {
             }
         }
         let IBB_value_div = document.getElementById('IBB_value_div');
-        let aitem_div = addElement(IBB_value_div, 'div', null, 'goods_value');
+        let aitem_div = addElement(IBB_value_div, 'div', null, 'table_value');
         if (items[good_item.id].main_type == 'equipment') {
             //根据装备稀有度调整文字颜色
             aitem_div.style.color = enums[good_item.equip_rarity].rarity_color;
