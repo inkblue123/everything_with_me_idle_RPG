@@ -193,36 +193,44 @@ export class Exp_manage {
     }
     //从数据库中获取经验数值
     get_exp_source_from_data(exp_source) {
-        let data_type = enums['exp_source_for_Data'][exp_source]; //数据库类型：formulas/items/enemys
-        let id_key = data_type + '_id'; //对应的id键名：formula_id/item_id/enemy_id
-
-        //从练级行为中获取数据库查询用的id
-        let id_son_behavior = enums['exp_source_for_Leveling_Behavior'][id_key];
-        if (is_Empty_Object(id_son_behavior)) {
-            console.log('%s对应的id键%s没有定义归属于哪种升级行为', exp_source, id_key);
+        //从练级行为上读取数据库查询用id的字段名，如合成制造的SYN_formula_id
+        let data_key_obj = enums['exp_source_for_Data_key'][exp_source];
+        if (is_Empty_Object(data_key_obj)) {
+            console.log('%s对应的练级行为字段名没有定义，无法从练级行为中获取查询数据库用的id', exp_source);
             return 0;
         }
+        //从练级行为中获取数据库查询用id所在的子行为结构体
+        let id_son_behavior = data_key_obj.son_behavior;
+        let id_key = data_key_obj.id_key;
         let data_id = this.leveling_behavior[id_son_behavior][id_key];
         if (is_Empty_Object(data_id)) {
             //练级行为中没有记录到对应的id，正常情况，返回0
             return 0;
         }
 
+        //获取经验依据和数据库之间的联系
+        let data_obj = enums['exp_source_for_Data'][exp_source];
+        let data_name = data_obj.data_name; //该升级行为要去哪个数据库寻找数据，例如配方数据库formulas物品数据库items等
+        let exp_name = data_obj.exp_name; //该升级行为要读取哪个经验字段
+
         //根据数据库类型查找对应的数据库
-        if (data_type == 'formula') {
+        if (data_name == 'formula') {
             //配方数据库
             if (is_Empty_Object(formulas[data_id])) {
                 console.log('配方%s数据未定义', data_id);
                 return 0;
             }
-            if (is_Empty_Object(formulas[data_id].exp[exp_source])) {
+            if (is_Empty_Object(formulas[data_id].exp)) {
                 return 0;
             }
-            return formulas[data_id].exp[exp_source];
+            if (is_Empty_Object(formulas[data_id].exp[exp_name])) {
+                return 0;
+            }
+            return formulas[data_id].exp.make_exp;
         }
         //TODO：items数据库，enemys数据库
 
-        console.log('%s经验依据指定的数据库类型%s尚未处理', exp_source, data_type);
+        console.log('%s经验依据指定的数据库类型%s尚未处理', exp_source, data_name);
         return 0;
     }
     //从练级行为中直接获取经验数值

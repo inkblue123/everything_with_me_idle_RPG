@@ -15,17 +15,32 @@ export class Game_Event {
         this.init_event_name_desc(id);
     }
     //设置该事件的出现条件
-    set_conditions_appear(...args) {
-        if (args.length % 2 != 0) {
-            console.log('输入的条件个数不是偶数，需要确认输入的条件是否正确');
+    //type：条件类型，event_flag(读取游戏状态) / skill_level(读取技能等级) / function_value(查询某个函数)
+    //key：条件判断的目标，根据type不同含义不同（如事件id、技能id、查询函数名等）
+    //value：条件要求的值，与当前值做比较，判断是否满足
+    //direction：比较方向，=、>、>=、<、<=，缺省为等值比较
+    set_conditions_appear(type, key, value, direction) {
+        //验空验错
+        if (type == undefined || type == '') {
+            console.log('设置事件出现条件时缺少type，需要确认输入是否正确');
             return;
         }
-        for (let i = 0; i < args.length; i += 2) {
-            let appear_obj = new Object();
-            appear_obj.status_id = args[i];
-            appear_obj.value = args[i + 1];
-            this.conditions_appear.push(appear_obj);
+        if (key == undefined || key == '') {
+            console.log('设置事件出现条件时缺少key，需要确认输入是否正确');
+            return;
         }
+        if (value === undefined) {
+            console.log('设置事件出现条件时缺少value，需要确认输入是否正确');
+            return;
+        }
+        let appear_obj = new Object();
+        appear_obj.type = type; //条件类型
+        appear_obj.key = key; //条件判断的目标
+        appear_obj.value = value; //条件要求的值
+        if (direction != undefined) {
+            appear_obj.direction = direction; //比较方向，缺省为等值
+        }
+        this.conditions_appear.push(appear_obj);
     }
     //设置事件完成条件
     set_finish_condition(...args) {

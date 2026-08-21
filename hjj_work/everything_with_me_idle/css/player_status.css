@@ -362,41 +362,20 @@
     outline: 2px solid #797691;
 }
 
-/* 装备栏选择单选框 */
-.PA_switch_radio_div {
+/* 装备栏选择单选框
+   尺寸规则。隐藏原生圆点、选中高亮等样式复用基类.radio_div，不再重复定义 */
+.radio_div.PA_switch_radio_div {
     margin: auto;
     width: auto;
 }
 
-/* 装备栏选择单选框，表示是否选中的圆点 */
-.PA_switch_radio_div input[type='radio'] {
-    /*清楚默认样式*/
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    position: absolute;
-    opacity: 0;
-}
-
-/* 装备栏选择单选框，和圆点绑定的文本 */
+/* 装备栏选择单选框，和圆点绑定的文本的尺寸 */
 .PA_switch_radio_div label {
-    display: flex;
     width: 50px;
     height: 50px;
     font-size: 15px;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
     /* 让文本按照换行符换行，同时保留空格 */
     white-space: pre-wrap;
-    color: #000;
-    outline: 2px solid #797691;
-}
-
-/* 装备栏选择多选框，选中之后，圆点绑定的文本的样式 */
-.PA_switch_radio_div input[type='radio']:checked+label {
-    color: #fff;
-    background-color: #3597db;
 }
 
 #PSK_div {

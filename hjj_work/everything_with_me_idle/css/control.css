@@ -61,6 +61,18 @@
     outline: 2px solid #797691;
 }
 
+/* 可执行操作提示 */
+.player_Control_tip {
+    display: flex;
+    /* min-height: 30px; */
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    justify-content: center;
+    align-items: center;
+    outline: 2px solid #797691;
+}
+
 /* 可执行操作按钮 */
 .player_Control_button {
     display: flex;

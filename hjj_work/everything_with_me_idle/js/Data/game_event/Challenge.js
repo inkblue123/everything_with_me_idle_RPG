@@ -4,7 +4,7 @@ function init_Challenge(game_events) {
     let id = 'new_player_combat_test';
     add_Challenge_obj(game_events, id);
     //事件出现条件
-    game_events[id].set_conditions_appear('new_player_combat_test', false);
+    game_events[id].set_conditions_appear('event_flag', 'new_player_combat_test', false);
 
     // game_events[id].add_behavior('new_player_combat_test');
     game_events[id].place = 'new_player_combat_test'; //挑战开始地点

@@ -55,6 +55,26 @@ class game_time_BUFF extends BUFF {
             this.last_buff_time = this.buff_start_time; //上次触发buff的时间
         }
         this.buff_have_time = buff_save.buff_have_time; //buff剩余有效时间
+        //读取存档中buff效果的生效状态，防止读档后一次性效果重复生效、还原数值丢失
+        if (!is_Empty_Object(buff_save.buff_value)) {
+            for (let saved_value of buff_save.buff_value) {
+                if (saved_value.start_flag === undefined && saved_value.start_data === undefined) {
+                    continue;
+                }
+                //找到当前数据库里对应的buff效果，恢复它的生效状态
+                for (let buff_value of this.buff_value) {
+                    if (buff_value.buff_type == saved_value.buff_type && buff_value.data_type == saved_value.data_type) {
+                        if (saved_value.start_flag !== undefined) {
+                            buff_value.start_flag = saved_value.start_flag;
+                        }
+                        if (saved_value.start_data !== undefined) {
+                            buff_value.start_data = saved_value.start_data;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
     }
     //检查这个buff应该运行、等待、清除的状态
     get_buff_status(game_now_time) {
@@ -81,7 +101,7 @@ class game_time_BUFF extends BUFF {
     }
     //获取这个buff的剩余有效时间
     get_buff_have_time() {
-        if ((this.buff_have_time = 'infinite')) {
+        if (this.buff_have_time == 'infinite') {
             return this.buff_have_time;
         } else {
             return Math.floor(this.buff_have_time / 1000);
@@ -248,11 +268,17 @@ export class Player_Buff_Manage {
     set_buff_attr(id) {
         if (is_Empty_Object(buffs[id])) {
             console.log('获得id为%s的buff失败，buff数据库不存在这个buff', id);
+            return;
         }
         //构建buff对象
         let buff_obj = new Object();
         if (buffs[id].time_type == 'game_time_buff') {
             buff_obj = new game_time_BUFF(id);
+        }
+        if (is_Empty_Object(buff_obj)) {
+            //尚未实现这个时间类型的buff，暂时不能获得
+            console.log('获得id为%s的buff失败，时间类型%s尚未实现', id, buffs[id].time_type);
+            return;
         }
 
         buff_obj.init();
@@ -271,9 +297,13 @@ export class Player_Buff_Manage {
     }
     //根据id清除玩家的一个buff
     delete_buff_attr(id) {
+        if (is_Empty_Object(buffs[id])) {
+            console.log('删除id为%s的buff失败，buff数据库不存在这个buff', id);
+            return;
+        }
         let time_type_ch = buffs[id].time_type;
         let buff_value_obj = new Object(); //
-        if (!is_Empty_Object(this[time_type_ch][id])) {
+        if (!is_Empty_Object(this[time_type_ch]) && !is_Empty_Object(this[time_type_ch][id])) {
             buff_value_obj = this[time_type_ch][id].delete_buff();
             delete this[time_type_ch][id];
         }
@@ -294,6 +324,15 @@ export class Player_Buff_Manage {
             for (let id in this.game_time_buff) {
                 buff_value_obj = this.game_time_buff[id].delete_buff();
                 delete this.game_time_buff[id];
+
+                //将buff生效或清除的属性变化更新到最终buff属性里
+                this.updata_end_buff_attr(buff_value_obj);
+            }
+        }
+        if (!is_Empty_Object(this.combat_round_buff)) {
+            for (let id in this.combat_round_buff) {
+                buff_value_obj = this.combat_round_buff[id].delete_buff();
+                delete this.combat_round_buff[id];
 
                 //将buff生效或清除的属性变化更新到最终buff属性里
                 this.updata_end_buff_attr(buff_value_obj);
@@ -507,7 +546,7 @@ function buff_id_sort(buff_objs) {
     // infinite 按键的字典序排序（升序）
     infiniteKeys.sort((a, b) => a.localeCompare(b));
     // 数值键按值从大到小排序
-    numericKeys.sort((a, b) => obj[b] - obj[a]);
+    numericKeys.sort((a, b) => sortData[b] - sortData[a]);
     // 合并结果：infinite在前（字典序），数值在后（从大到小）
     return [...infiniteKeys, ...numericKeys];
 }

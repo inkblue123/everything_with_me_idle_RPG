@@ -236,14 +236,14 @@ export class Player_active_skills_Manage {
             } else {
                 //有影响因素，根据主动技能内容修改攻击间隔
                 let atk_speed_correct = this.active_slots[i].attr_correct['attack_speed'];
-                if ((atk_speed_correct.type = 'fixed')) {
+                if (atk_speed_correct.type == 'fixed') {
                     //固定攻击间隔
                     this.any_slot_time[i] = atk_speed_correct.value * 1000;
-                } else if ((atk_speed_correct.type = 'ratio')) {
+                } else if (atk_speed_correct.type == 'ratio') {
                     //攻速加成
                     let base_attack_interval = this.player_end_attr['attack_interval'];
                     let attack_speed = this.player_end_attr['attack_speed'] + atk_speed_correct.value;
-                    let attack_interval_ratio = this.end_data_attr['attack_interval_ratio']; //攻速影响倍率
+                    let attack_interval_ratio = this.player_end_attr['attack_interval_ratio']; //攻速影响倍率
 
                     this.any_slot_time[i] = calculate_speed_attr(base_attack_interval, 0, attack_speed, 0, attack_interval_ratio);
                 }

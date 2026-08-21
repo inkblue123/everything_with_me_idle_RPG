@@ -150,8 +150,8 @@ function make_mind_div(MD_div) {
                 var OP_game_TestMode_lable = addElement(OP_game_TestMode_div, 'div', 'OP_game_TestMode_lable', 'OP_T3_div');
                 OP_game_TestMode_lable.innerHTML = '是否开启调试模式';
                 var OP_game_TestMode_value = addElement(OP_game_TestMode_div, 'div', 'OP_game_TestMode_value', 'OP_V_div');
-                var OP_game_TestMode_button = addElement_botton(OP_game_TestMode_value, 'OP_game_TestMode', 'OP_button', null, '☑');
-                OP_game_TestMode_button.dataset.testmode = '1'; //内置开关标记：0关1开
+                var OP_game_TestMode_button = addElement_botton(OP_game_TestMode_value, 'OP_game_TestMode', 'OP_button', null, '☐');
+                OP_game_TestMode_button.dataset.testmode = '0'; //内置开关标记：0关1开
             }
             //设置-画面设置
             {

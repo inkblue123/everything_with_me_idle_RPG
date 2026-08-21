@@ -55,6 +55,33 @@ function is_last_child_of_parent(element) {
     // 用 lastElementChild 做恒等比较：只匹配元素，忽略文本/注释节点
     return element.parentNode.lastElementChild === element;
 }
+// 检查一个元素之后是否还有"实际会显示内容"的兄弟元素。
+// display:none 的兄弟元素不参与布局（跳过）；高度为0的兄弟元素（例如内部子按钮全部隐藏的空下拉框）
+// 会隔开位置，不会紧贴在本元素下边框处绘制内容。
+// 如果之后没有能紧贴绘制下边框的兄弟元素，那么该元素就是父元素中"最后一个实际显示的子元素"：
+// 它内部最后一个子元素的下边框(outline)没有其他元素来补，需要设置overflow:visible才不会被裁剪。
+// 覆盖了is_last_child_of_parent无法处理的场景：父元素后续兄弟被隐藏
+// （例如MH_switch_div中，前期未解锁的原料处理技能按钮被隐藏，导致位于中部的SYN_droptable
+// 变成最后一个实际显示的元素，其内部最后一个按钮的下边框会消失）。
+function is_last_visible_child_of_parent(element) {
+    // 先确保 element 存在且已挂载在 DOM 中（parentNode 不为 null）
+    if (!element || !element.parentNode) {
+        return false;
+    }
+    let sibling = element.nextElementSibling;
+    while (sibling) {
+        // 隐藏的兄弟元素不参与布局，跳过继续向后找
+        if (sibling.style.display !== 'none') {
+            // 遇到第一个显示中的兄弟元素：
+            // 如果它没有实际高度，则它不会紧贴在本元素下边框处绘制内容，
+            // 后面的兄弟元素也会被它隔开，同样无法补下边框，视为"最后一个实际显示的子元素"
+            return sibling.offsetHeight <= 0;
+        }
+        sibling = sibling.nextElementSibling;
+    }
+    // 后面没有兄弟元素，本身就是父元素的最后一个子元素
+    return true;
+}
 //点击了隐藏下拉框的按钮之后，展示当前按钮相关的下拉框，隐藏其他下拉框
 function show_dropdown_table(in_overflow_div, table_id) {
     const dropdownTable = document.getElementById(table_id);
@@ -89,9 +116,11 @@ function show_dropdown_table(in_overflow_div, table_id) {
             dropdownTable.style.height = contentHeight + 'px';
             setTimeout(() => {
                 dropdownTable.style.height = ''; // 最大高度需要根据内容调整
-                // 如果这个dropdown_table是父元素的最后一个子元素，展开后设置overflow:visible，
-                // 避免其内部最后一个子元素的下边框(outline)被overflow:hidden裁剪
-                if (is_last_child_of_parent(dropdownTable)) {
+                // 展开动画结束后，如果这个dropdown_table之后没有其他实际显示的子元素
+                // （是父元素最后一个子元素，或后面的兄弟元素被隐藏/没有高度，例如MH_switch_div中
+                // 前期未解锁的原料处理技能按钮被隐藏，导致位于中部的SYN_droptable变成最后一个实际显示元素），
+                // 设置overflow:visible，避免其内部最后一个子元素的下边框(outline)被overflow:hidden裁剪
+                if (is_last_visible_child_of_parent(dropdownTable)) {
                     dropdownTable.style.overflow = 'visible';
                 }
             }, 300); // 让显示状态先更新，再触发动画

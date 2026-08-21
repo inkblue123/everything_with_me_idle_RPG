@@ -171,6 +171,7 @@ html {
     color: #000;
     background-color: #fff;
     outline: 2px solid #797691;
+    cursor: pointer;
 }
 
 /* 单选框，选中之后，圆点的样式 */
@@ -309,6 +310,14 @@ html {
     overflow: hidden;
     /* padding: 2px; */
 
+}
+
+/* 嵌套在另一个下拉表格内的下拉表格（第三级）：
+   顶部留出2px内边距，使第一个子元素的上边框(outline)落在表格内部，
+   既不会被上面的overflow:hidden裁剪，又能与上一级按钮的下边框处于同一条2px带，
+   从而显示为一条对齐的边框线（否则边框会缺一段，或显示到上一个布局上形成台阶） */
+.dropdown_table .dropdown_table {
+    padding-top: 2px;
 }
 
 /* 进度条组件：最大的父元素 */

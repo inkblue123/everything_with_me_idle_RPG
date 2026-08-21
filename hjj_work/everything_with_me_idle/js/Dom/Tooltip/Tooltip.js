@@ -6,6 +6,7 @@ import { init_skill_tip } from './skill_tip.js';
 import { init_game_save_tip } from './game_save_tip.js';
 import { init_Hp_Mp_Enp_tip } from './HpMpEnp_bar_tip.js';
 import { init_buff_tip } from './buff_tip.js';
+import { init_map_tip } from './map_tip.js';
 
 export const TOOLTIP_WIDTH = 360;
 
@@ -28,8 +29,8 @@ function set_Tooltip_func(Tooltip) {
         this.CloseTip();
         this.type = type;
         let Tooltip_type = enums['Tooltip_type'][type];
-
         this.style.display = 'block';
+
         if (Tooltip_type == 'item') {
             //初始化物品介绍内容
             init_item_tip(type, value);
@@ -45,6 +46,9 @@ function set_Tooltip_func(Tooltip) {
         } else if (Tooltip_type == 'buff') {
             //buff详情
             init_buff_tip(type, value);
+        } else if (Tooltip_type == 'map') {
+            //地图提示
+            init_map_tip(type, value);
         }
         //初始化后移动一次小窗口，避免直接初始化在浏览器窗口外
         this.MoveTip(event);

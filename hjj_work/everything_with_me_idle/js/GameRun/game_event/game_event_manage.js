@@ -231,7 +231,7 @@ export class Game_event_manage {
     check_mini_event_button_condition(event_id, process_id, button_id) {
         return this.mini_event_manage.check_mini_event_button_condition(event_id, process_id, button_id);
     }
-    //完成指定迷你事件
+    //完成指定迷你事件(目前是测试按钮)
     end_mini_event(event_id, flag) {
         this.mini_event_manage.end_mini_event(event_id, flag);
     }

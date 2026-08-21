@@ -94,6 +94,9 @@ function init_Tooltip_type(enums) {
         ENP_bar: 'HME_bar',
         //buff详情
         buff: 'buff',
+        //地图提示
+        map: 'map',
+        event_show: 'map',
     };
 }
 //配方的学习状态

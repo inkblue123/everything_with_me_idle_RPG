@@ -4,6 +4,7 @@ import { game_events } from '../../Data/Game_event/Game_Event.js';
 import { global } from '../global_manage.js';
 import { player } from '../../Player/Player.js';
 import { save_game } from '../../LoadAndSave/load.js';
+import { control_show_mini_event_process } from '../../Function/control_function.js';
 //迷你事件对象
 export class Mini_event {
     constructor() {
@@ -21,10 +22,8 @@ export class Mini_event {
             return;
         }
 
-        // 获取玩家控制界面
-        let control = document.getElementById('control');
         //展示新地点的内容
-        control.show_mini_event_process(event_id, 'first');
+        control_show_mini_event_process(event_id, 'first');
         get_process_data(event_id, 'first');
     }
 
@@ -176,8 +175,7 @@ export class Mini_event {
             this.end_mini_event(event_id, 'finish');
         } else {
             //正常进入下一流程
-            let control = document.getElementById('control');
-            control.show_mini_event_process(event_id, next_process_id);
+            control_show_mini_event_process(event_id, next_process_id);
             get_process_data(event_id, next_process_id);
         }
     }
@@ -187,8 +185,7 @@ export class Mini_event {
         //记录这个按钮按过了
         this.mini_event_button_flag[button_id] = true;
         //重新展示当前流程，完成对话
-        let control = document.getElementById('control');
-        control.show_mini_event_process(event_id, now_process_id, button_id);
+        control_show_mini_event_process(event_id, now_process_id, button_id);
         get_process_data(event_id, now_process_id);
     }
     //判断当前是否满足迷你事件中的一个按钮的出现条件

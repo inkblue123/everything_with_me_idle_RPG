@@ -56,28 +56,31 @@ export class Game_Option {
                 return;
             }
             option_value = enums[option_id][this[option_id]];
-            //将设置界面的下拉框切换成选项的内容
-            let option_select_div = document.getElementById(option_id);
-            option_select_div.value = this[option_id];
         } else if (option_type == 'toggle') {
             //选项是切换按钮，this对象保存的数值就是开关状态（0关1开）
             option_value = this[option_id];
+            //将按钮调整到设置对应的开关状态
         } else {
             //选项是鼠标拖动的进度条，this对象保存的数值就是选项的具体数值
             option_value = this[option_id];
         }
         //调用对应的生效函数
         let func = game_option_func[option_id];
-        func(option_value);
+        func(option_value, this[option_id]);
     }
 }
 //游戏设置-帧率
-function set_OP_game_FPS(option_value) {
+function set_OP_game_FPS(option_value, option_status) {
+    //生效数值
     let time_manage = global.get_time_manage();
     time_manage.set_game_FPS(option_value);
+
+    //修改设置-游戏设置-游戏运行帧率的下拉框的文本
+    let OP_game_FPS_select = document.getElementById('OP_game_FPS');
+    OP_game_FPS_select.value = option_status;
 }
 //游戏设置-设置提示文本
-function set_OP_game_OptionTipText(option_value) {
+function set_OP_game_OptionTipText(option_value, option_status) {
     let text_option_id = 'option_name_' + option_value;
     //修改每个设置选项的提示文本
     for (let option_id in enums['game_option_type']) {
@@ -109,16 +112,22 @@ function set_OP_game_OptionTipText(option_value) {
     //修改脑海-设置的文本
     let OP_radio_div = document.getElementById('OP_radio_div');
     OP_radio_div.children[1].textContent = texts['OP_radio_div'][text_option_id];
+    //修改设置-游戏设置-设置界面提示文本的下拉框的文本
+    let OP_game_OptionTipText_select = document.getElementById('OP_game_OptionTipText');
+    OP_game_OptionTipText_select.value = option_status;
 }
 //游戏设置-流水账界面日志保存数量上限
-function set_OP_game_RASaveLogMax(option_value) {
+function set_OP_game_RASaveLogMax(option_value, option_status) {
     let global_flag_manage = global.get_global_flag_manage();
     let game_log_manage = global_flag_manage.get_game_log_manage();
     game_log_manage.set_config_max_log_num(option_value);
+    //修改设置-游戏设置-流水账界面日志保存数量上限的下拉框的文本
+    let OP_game_RASaveLogMax_select = document.getElementById('OP_game_RASaveLogMax');
+    OP_game_RASaveLogMax_select.value = option_status;
 }
 
 //游戏设置-测试模式开关
-function set_OP_game_TestMode(option_value) {
+function set_OP_game_TestMode(option_value, option_status) {
     //测试模式开关：0关1开
     let TS_switch_radio_div = document.getElementById('TS_switch_radio_div');
     let TS_div = document.getElementById('TS_div');
@@ -147,6 +156,16 @@ function set_OP_game_TestMode(option_value) {
                 MD_div.style.display = '';
             }
         }
+    }
+
+    //修改设置-游戏设置-测试模式开关的按钮显示
+    let OP_game_RASaveLogMax_select = document.getElementById('OP_game_TestMode');
+    if (option_status == 1) {
+        OP_game_RASaveLogMax_select.innerHTML = '☑';
+        OP_game_RASaveLogMax_select.dataset.testmode = '1';
+    } else if (option_status == 0) {
+        OP_game_RASaveLogMax_select.innerHTML = '☐';
+        OP_game_RASaveLogMax_select.dataset.testmode = '0';
     }
 }
 

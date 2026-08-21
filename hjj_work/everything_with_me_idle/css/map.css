@@ -37,12 +37,26 @@
     /* z-index: 0; */
 }
 
+/* 地图按钮 */
 .map_button {
     position: absolute;
     width: 100px;
     height: 60px;
     font-size: 12px;
     /* 灰色背景 */
+}
+
+/* 地图按钮右上角的事件提示星标 */
+.map_event_tip_star {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    /* pointer-events: none; */
+    /* 纯展示，不拦截按钮点击和地图拖动 */
+    z-index: 1;
 }
 
 /* 不可用按钮的样式 */

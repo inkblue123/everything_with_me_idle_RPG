@@ -109,17 +109,17 @@ function make_player_status_div(player_status) {
         //切换属性、buff、装备栏的按钮
         var Player_attr_switch_div = crtElement('div', 'Player_attr_switch_div', null, '');
         var PA_switch_div = addElement(Player_attr_switch_div, 'div', 'PA_switch_div', null);
-        var player_attr_switch_radio_div = addElement(PA_switch_div, 'div', 'player_attr_switch_radio_div', 'PA_switch_radio_div');
+        var player_attr_switch_radio_div = addElement(PA_switch_div, 'div', 'player_attr_switch_radio_div', 'radio_div PA_switch_radio_div');
         addElement_radio(player_attr_switch_radio_div, 'player_attr', 'PA_switch', 'player_attr', '属性\n展示');
         player_attr_switch_radio_div.children[0].checked = true;
-        var buff_switch_radio_div = addElement(PA_switch_div, 'div', 'buff_switch_radio_div', 'PA_switch_radio_div');
+        var buff_switch_radio_div = addElement(PA_switch_div, 'div', 'buff_switch_radio_div', 'radio_div PA_switch_radio_div');
         addElement_radio(buff_switch_radio_div, 'player_buff', 'PA_switch', 'player_buff', 'buff\n展示');
-        var EQP_switch_radio_div = addElement(PA_switch_div, 'div', 'EQP_switch_radio_div', 'PA_switch_radio_div');
+        var EQP_switch_radio_div = addElement(PA_switch_div, 'div', 'EQP_switch_radio_div', 'radio_div PA_switch_radio_div');
         addElement_radio(EQP_switch_radio_div, 'player_EQP', 'PA_switch', 'player_EQP', '装备\n展示');
         //多个装备栏选择按钮
         var EQP_switch_div = addElement(Player_attr_switch_div, 'div', 'EQP_switch_div', null);
         for (let i = 0; i < 4; i++) {
-            let EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'PA_switch_radio_div');
+            let EQP_switch_radio_div = addElement(EQP_switch_div, 'div', null, 'radio_div PA_switch_radio_div');
             let id = 'EQP_' + (i + 1);
             let value = 'EQP_column_' + (i + 1);
             let text = '装备栏\n' + (i + 1);

@@ -22,7 +22,7 @@ export class Map {
         this.area_other_place = other_places;
     }
     //添加区域内一个地点的地图信息
-    add_place_data(place_id, button_flag=false, x, y) {
+    add_place_data(place_id, button_flag = false, x, y) {
         if (is_Empty_Object(this.place_data[place_id])) {
             this.place_data[place_id] = new Object();
         }
@@ -38,6 +38,12 @@ export class Map {
     //添加区域内一个地点和其他地点相连的地图信息
     add_place_button_line(place_id, ...line_places) {
         this.place_data[place_id].line_places = line_places;
+    }
+    //添加区域内一个地点如果有事件，提示需要展示到哪里
+    //例如某地点中存在一个npc，npc有事件可以触发，在地图界面由于没有npc这个按钮显示，所以这个npc的事件提示由某地点来展示
+    //所以npc的event_tip_show就应该等于某地点的id
+    add_place_event_tip_show(place_id, event_tip_show) {
+        this.place_data[place_id].event_tip_show = event_tip_show;
     }
 }
 function add_Map_object(map, newid) {

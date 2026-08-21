@@ -6,7 +6,7 @@ function init_mini_event(game_events) {
     id = 'find_village_home_money'; //翻找住所寻找可用资源
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
-    game_events[id].set_conditions_appear('find_village_home_money', false); //事件没做过
+    game_events[id].set_conditions_appear('event_flag', 'find_village_home_money', false); //事件没做过
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1
@@ -26,8 +26,8 @@ function init_mini_event(game_events) {
     id = 'new_player_teach_1'; //周一新手教学
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
-    game_events[id].set_conditions_appear('UGS_village_barracks_week', 1);
-    game_events[id].set_conditions_appear('new_player_teach_1', false);
+    game_events[id].set_conditions_appear('function_value', 'UGS_village_barracks_week', 1);
+    game_events[id].set_conditions_appear('event_flag', 'new_player_teach_1', false);
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_button('first', 'b1', 'text2');
@@ -37,8 +37,8 @@ function init_mini_event(game_events) {
     id = 'new_player_teach_2'; //周二新手教学
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
-    game_events[id].set_conditions_appear('UGS_village_barracks_week', 2);
-    game_events[id].set_conditions_appear('new_player_teach_2', false);
+    game_events[id].set_conditions_appear('function_value', 'UGS_village_barracks_week', 2);
+    game_events[id].set_conditions_appear('event_flag', 'new_player_teach_2', false);
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_button('first', 'b1', 'text2');
@@ -52,8 +52,8 @@ function init_mini_event(game_events) {
     id = 'new_player_teach_3'; //周三新手教学
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
-    game_events[id].set_conditions_appear('UGS_village_barracks_week', 3);
-    game_events[id].set_conditions_appear('new_player_teach_3', false);
+    game_events[id].set_conditions_appear('function_value', 'UGS_village_barracks_week', 3);
+    game_events[id].set_conditions_appear('event_flag', 'new_player_teach_3', false);
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_button('first', 'b1', 'text2');
@@ -130,7 +130,7 @@ function init_mini_event(game_events) {
     id = 'unlock_collect_logging'; //解锁采集和伐木技能
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
-    game_events[id].set_conditions_appear('unlock_collect_logging', false);
+    game_events[id].set_conditions_appear('event_flag', 'unlock_collect_logging', false);
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1
@@ -175,8 +175,8 @@ function init_mini_event(game_events) {
     id = 'VM_woodshop_study_fishing'; //向木工坊老板询问如何钓鱼
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
-    game_events[id].set_conditions_appear('VM_woodshop_study_fishing', false); //事件没做过
-    game_events[id].set_conditions_appear('unlock_collect_logging', true); //完成了前置任务
+    game_events[id].set_conditions_appear('event_flag', 'VM_woodshop_study_fishing', false); //事件没做过
+    game_events[id].set_conditions_appear('event_flag', 'unlock_collect_logging', true); //完成了前置任务
     //该迷你事件的所有流程
     game_events[id].set_new_process('first', 'text1');
     game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1
@@ -196,6 +196,24 @@ function init_mini_event(game_events) {
     game_events[id].set_new_process('process5', 'text11');
     game_events[id].add_process_button('process5', 'b6', 'text12');
     game_events[id].add_process_button_click('process5', 'b6', 'next_process', 'end');
+    game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
+
+    id = 'VM_woodshop_get_disassembly_tool'; //木工老板似乎有点事，获得1级拆解工具配方
+    add_Mini_event_obj(game_events, id);
+    //该迷你事件出现的条件
+    game_events[id].set_conditions_appear('event_flag', 'VM_woodshop_get_disassembly_tool', false); //事件没做过
+    game_events[id].set_conditions_appear('skill_level', 'synthesis_mastery', 2, '>='); //合成制造技能达到2级
+    //该迷你事件的所有流程
+    game_events[id].set_new_process('first', 'text1');
+    game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1
+    game_events[id].add_process_button_click('first', 'b1', 'next_process', 'process1'); //b1按钮点击之后进入下一流程
+    game_events[id].set_new_process('process1', 'text3');
+    game_events[id].add_process_button('process1', 'b2', 'text4');
+    game_events[id].add_process_button_click('process1', 'b2', 'next_process', 'process2');
+    game_events[id].set_new_process('process2', 'text5');
+    game_events[id].add_process_button('process2', 'b3', 'text6');
+    game_events[id].add_process_button_click('process2', 'b3', 'next_process', 'end');
+    game_events[id].add_process_button_thing('process2', 'b3', 'get_formula', 'SYN_disassembly_tool_1'); //获得1级拆解工具配方
     game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
 }
 

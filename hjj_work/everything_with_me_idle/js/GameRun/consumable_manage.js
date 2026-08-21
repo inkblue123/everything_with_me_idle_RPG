@@ -3,6 +3,7 @@ import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
+import { control_show_now_place, control_show_use_consumable } from '../Function/control_function.js';
 
 //消耗品管理类
 export class Consumable_Manage {
@@ -120,8 +121,7 @@ export class Consumable_Manage {
         //启动使用消耗品状态
         global.set_flag('GS_game_statu', 'use_continuous');
         //玩家控制界面切换到消耗品
-        let control = document.getElementById('control');
-        control.show_use_consumable(item_obj.id, item_obj.use_ratio);
+        control_show_use_consumable(item_obj.id, item_obj.use_ratio);
     }
     //更新一帧当前正在使用的消耗品
     updata_sustain_use_consumable() {
@@ -225,8 +225,7 @@ export class Consumable_Manage {
         let library_manage = global.get_library_manage();
         library_manage.use_item_updata_library(item_obj);
         //玩家控制界面调回原位
-        let control = document.getElementById('control');
-        control.show_now_place();
+        control_show_now_place();
     }
 
     //计算指定消耗品预计需要多长时间使用完毕

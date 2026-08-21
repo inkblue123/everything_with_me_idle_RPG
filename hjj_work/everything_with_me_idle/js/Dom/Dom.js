@@ -109,6 +109,11 @@ function init_game_dom() {
     SYN_radio_div.children[0].checked = true;
     const SYN_droptable = document.getElementById('SYN_droptable');
     SYN_droptable.style.display = 'flex';
+    // 这里直接展开SYN_droptable，不会经过show_dropdown_table。
+    // 前期其他原料处理技能未解锁时，SYN_droptable是MH_switch_div中最后一个实际显示的元素，
+    // 其内部最后一个子按钮的下边框(outline)没有其他元素来补，
+    // 需要手动放开overflow，否则会被.dropdown_table的overflow:hidden裁剪掉
+    SYN_droptable.style.overflow = 'visible';
     const SYN_MK_radio_div = document.getElementById('SYN_MK_radio_div');
     SYN_MK_radio_div.children[0].checked = true;
     const COK_droptable = document.getElementById('COK_droptable');

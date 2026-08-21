@@ -139,7 +139,7 @@ export class Synthesis_manage {
         //记录合成制造行为，用于结算技能经验
         let global_flag_manage = global.get_global_flag_manage();
         let SYN_behavior = new Object();
-        SYN_behavior.formula_id = this.now_formula;
+        SYN_behavior.SYN_formula_id = this.now_formula;
         global_flag_manage.record_live_plan_skill_leveling_behavior('synthesis', SYN_behavior);
     }
     //开始合成制造，更新合成制造技能的界面

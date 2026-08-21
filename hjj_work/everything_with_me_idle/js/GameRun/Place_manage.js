@@ -5,6 +5,7 @@ import { enums } from '../Data/Enum/Enum.js';
 import { places } from '../Data/Place/Place.js';
 import { global } from './global_manage.js';
 import { player } from '../Player/Player.js';
+import { control_show_now_place } from '../Function/control_function.js';
 //记录地点相关内容的对象
 export class Place_manage {
     constructor() {
@@ -43,17 +44,16 @@ export class Place_manage {
         updata_backpack_value(this.last_place, this.now_place);
         //根据新地点参数，更新相关界面信息
         updata_control_place_name(next_place);
+        //地图更新
+        let map_manage = global.get_map_manage();
+        map_manage.set_now_place(next_place);
 
         if (goto_flag == 'mini_event') {
             //迷你事件中移动玩家位置，由于控制界面主要用来呈现迷你事件的按钮，所以仅更新参数，不更新控制界面
             return;
         }
         //展示新地点的内容
-        let control = document.getElementById('control');
-        control.show_now_place();
-        //地图更新
-        let map_manage = global.get_map_manage();
-        map_manage.set_now_place(next_place);
+        control_show_now_place();
     }
     //更新新旧地点参数
     updata_new_place_data() {
@@ -145,8 +145,7 @@ export class Place_manage {
         //更新背包界面物品的点击效果
         updata_backpack_value(this.last_place, this.now_place);
         //展示新地点的内容
-        let control = document.getElementById('control');
-        control.show_now_place();
+        control_show_now_place();
         //地图更新
         let map_manage = global.get_map_manage();
         map_manage.set_now_place(next_place);

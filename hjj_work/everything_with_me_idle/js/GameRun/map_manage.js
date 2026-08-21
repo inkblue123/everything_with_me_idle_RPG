@@ -1,5 +1,6 @@
 import { is_Empty_Object, get_uniqueArr } from '../Function/Function.js';
-import { crtElement, addElement, addElement_radio, addElement_botton, getRectEvenHidden } from '../Function/Dom_function.js';
+import { crtElement, addElement, addElement_botton, getRectEvenHidden, add_show_Tooltip } from '../Function/Dom_function.js';
+import { check_condition_appear_behaviors } from '../Function/control_function.js';
 
 import { places } from '../Data/Place/Place.js';
 import { maps } from '../Data/Map/map.js';
@@ -17,6 +18,7 @@ export class Map_manage {
         this.ctx; //地图界面内的线条
         this.map_button = new Object(); //地图内按钮
         this.area_can_show_places = new Object(); //区域内可展示地点记录
+        this.map_event_tip_star = new Array(); //当前地图内已添加的事件提示星标元素
 
         this.isDragging = false; //是否在地图界面内“按下鼠标”
         //在地图界面内按下鼠标的坐标
@@ -150,6 +152,7 @@ export class Map_manage {
     set_now_place(next_place) {
         //地点相同，不需要移动
         if (next_place == this.now_place) {
+            this.updata_map_event_tip(); //更新可触发事件的提示
             return;
         }
         this.now_place = next_place;
@@ -165,12 +168,12 @@ export class Map_manage {
         } else {
             //区域不同，重新生成新区域地图
             this.now_area = next_area;
-            //清空旧地点图片
+            //清空旧地点所有内容
             this.map_move_div.replaceChildren();
             //重置旧布局位置和大小
             this.scale = 1;
             this.updatePosition(0, 0);
-            //清空旧地点按钮
+            //清空旧地点按钮数据
             this.map_button = new Object();
             //清除按钮连线
             this.ctx.clearRect(0, 0, this.map_canvas.width, this.map_canvas.height);
@@ -183,7 +186,8 @@ export class Map_manage {
             this.init_map_button(); //初始化新区域内的地点按钮
         }
         this.updata_map_button(); //更新现在应该展示的按钮
-        this.updata_map_button_line();
+        this.updata_map_button_line(); //更新地点按钮之间的连线
+        this.updata_map_event_tip(); //更新可触发事件的提示
     }
 
     //初始化地图内移动子布局的参数
@@ -396,7 +400,65 @@ export class Map_manage {
             }
         }
     }
+    //更新可触发事件的提示
+    updata_map_event_tip() {
+        //遍历当前区域地图库内的每个地点，寻找需要展示可触发事件提示的地点
+        let event_tip_show_arr = new Array();
+        for (let place_id in maps[this.now_area].place_data) {
+            //跳过没有配置event_tip_show的地点
+            if (is_Empty_Object(maps[this.now_area].place_data[place_id].event_tip_show)) {
+                continue;
+            }
+            //判断该地点是否有可以触发的事件
+            let place = places[place_id];
+            let can_trigger_event = false;
+            //可以进行的常态事件，常态事件如果能提示那会始终提示，不太好
+            // if (!is_Empty_Object(place.behaviors)) {
+            //     can_trigger_event = true;
+            // }
+            //有条件出现的事件，只要有一条满足条件即可触发
+            if (!is_Empty_Object(place.condition_behaviors)) {
+                for (let event_id of place.condition_behaviors) {
+                    if (check_condition_appear_behaviors(event_id)) {
+                        can_trigger_event = true;
+                        break;
+                    }
+                }
+            }
+            //该地点有可以触发的事件，记录其event_tip_show
+            if (can_trigger_event) {
+                event_tip_show_arr.push(maps[this.now_area].place_data[place_id].event_tip_show);
+            }
+        }
+        event_tip_show_arr = get_uniqueArr(event_tip_show_arr); //去重
 
+        //根据可触发事件的地点，在地图界面对应的按钮右上角添加事件提示星标
+        //先清理上一次添加的星标
+        delete_map_event_tip(this.map_event_tip_star);
+
+        //每个可触发事件的地点添加星标
+        for (let place_id of event_tip_show_arr) {
+            //获取该地点在地图界面内的按钮
+            let button = this.map_button[place_id];
+            if (button.style.display == 'none') {
+                continue; //该地点的按钮没有显示，跳过
+            }
+            //创建星标元素，挂在map_move_div下，会跟随地图的移动和缩放一起移动、变大变小
+            let star = addElement(this.map_move_div, 'div', null, 'map_event_tip_star');
+            star.innerHTML = '⭐';
+            //定位到按钮的右上角：left对齐按钮右边缘，top对齐按钮上边缘
+            let btn_left = parseFloat(button.style.left) || 0;
+            let btn_top = parseFloat(button.style.top) || 0;
+            let btn_style = getComputedStyle(button);
+            let btn_width = parseFloat(btn_style.width) || 0;
+            star.style.left = btn_left + btn_width - star.offsetWidth * 0.5 + 'px';
+            star.style.top = btn_top - star.offsetHeight * 0.5 + 'px';
+            this.map_event_tip_star.push(star);
+
+            //给对应地图按钮添加鼠标移动上去时展示提示信息的功能
+            add_show_Tooltip(star, 'event_show');
+        }
+    }
     //测试，修改地图内布局的大小
     change_map_size() {
         let next_size = 0;
@@ -446,7 +508,6 @@ function get_map_button_text(place_id, now_area) {
     }
     return text;
 }
-
 //获取当前可以和指定地点相连的其他地点
 function get_connect_place_id(place_id) {
     let connect_place = new Array();
@@ -503,4 +564,13 @@ function get_connect_place_id(place_id) {
     }
     connect_place = get_uniqueArr(connect_place); //去重
     return connect_place;
+}
+//清除地图中的可触发事件提示
+function delete_map_event_tip(map_event_tip_star) {
+    if (map_event_tip_star.length > 0) {
+        for (let star of map_event_tip_star) {
+            star.remove();
+        }
+    }
+    map_event_tip_star.length = 0;
 }
