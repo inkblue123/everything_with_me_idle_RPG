@@ -155,6 +155,11 @@ function init_item_all_type(enums) {
         'ordinary_mushroom', //普通蘑菇
         'rare_mushroom', //稀有蘑菇
     ];
+    id = 'all_seasoning'; //任意调味料
+    add_Enum_Array(enums, id);
+    enums[id] = [
+        'refined_seasoning', //精致调味料
+    ];
 }
 
 export { init_Enum_item };

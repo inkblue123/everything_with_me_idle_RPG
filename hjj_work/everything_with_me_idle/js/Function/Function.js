@@ -184,65 +184,31 @@ function make_condition_name(monitor_id) {
         return event_name;
     }
 }
-//比较div中dataset里存储的key值和valueToCompare是否一致
-function compare_dataset_value(element, key, valueToCompare) {
-    const storedValue = element.dataset[key];
-
-    // 处理未存储值的情况
-    if (storedValue === undefined) {
-        return valueToCompare === undefined;
+//从element界面的dataset里获取一个key的value
+//set_dataset_value 存入时用 JSON 编码保类型，这里用 JSON.parse 还原，保证数字/字符串/布尔/null/对象/数组能原样往返
+function get_dataset_value(element, key) {
+    const raw = element.dataset[key];
+    if (raw === undefined || raw === null || raw === '') {
+        //未设置过（或被 set_dataset_value 删除）的值，返回 undefined
+        return undefined;
     }
-
-    // 处理布尔值比较
-    if (typeof valueToCompare === 'boolean') {
-        return storedValue === (valueToCompare ? 'true' : 'false');
+    try {
+        return JSON.parse(raw);
+    } catch (e) {
+        //非合法 JSON（例如被其他代码直读写入的普通字符串），原样返回字符串
+        return raw;
     }
-
-    // 处理数字比较
-    if (typeof valueToCompare === 'number') {
-        const parsed = parseFloat(storedValue);
-        return !isNaN(parsed) && parsed === valueToCompare;
-    }
-
-    // 处理对象/数组比较
-    if (typeof valueToCompare === 'object' && valueToCompare !== null) {
-        try {
-            const parsed = JSON.parse(storedValue);
-            return JSON.stringify(parsed) === JSON.stringify(valueToCompare);
-        } catch (e) {
-            return false;
-        }
-    }
-
-    // 默认字符串比较
-    return storedValue === String(valueToCompare);
 }
 //在element界面的dataset里保存一个key value
+//由于 dataset 会把所有值转成字符串，这里统一用 JSON.stringify 编码以保留类型：
+//数字 5 -> "5"，字符串 "5" -> "\"5\""，这样 JSON.parse 时能区分开。
 function set_dataset_value(element, key, value) {
+    //undefined 和 null 无法往返，视为清空该 key
     if (value === undefined || value === null) {
         delete element.dataset[key];
         return;
     }
-
-    // 特殊处理布尔值
-    if (typeof value === 'boolean') {
-        element.dataset[key] = value ? 'true' : 'false';
-        return;
-    }
-
-    // 处理对象和数组
-    if (typeof value === 'object') {
-        try {
-            element.dataset[key] = JSON.stringify(value);
-            return;
-        } catch (e) {
-            console.error('Failed to stringify object:', e);
-            return;
-        }
-    }
-
-    // 其他类型直接转为字符串
-    element.dataset[key] = String(value);
+    element.dataset[key] = JSON.stringify(value);
 }
 //将输入的参数转换成一个物品对象
 function get_item_obj(id, num, ...args) {
@@ -361,6 +327,65 @@ function check_Consumable(id, use_ratio, ex_data) {
     }
     return true;
 }
+//把可能为空的值转成数字0(效果行的数值折算用)
+function to_num(value) {
+    if (value === undefined || value === null || value === '') {
+        return 0;
+    }
+    return value;
+}
+//归并一份"使用效果/额外效果"的效果行集合：基础效果(模板use_attr或season_effect) 与 实例额外效果(ex_data.bonus)
+//归并规则：
+//  get_attr  ：按 attr_id 相加 attr_value(数值)
+//  其他类型(如get_buff/get_item/get_formula)：原样保留，不去重、不合并(语义未定前不做合并，避免改错)
+//返回一个新的数组，不改动传入的数据
+function get_merge_use_attr(base_attr, ex_data) {
+    let ret = new Array();
+    let attr_map = new Object(); //get_attr类型的归并结果：attr_id -> 效果行
+    //先归并基础效果行
+    for (let attr_obj of base_attr || new Array()) {
+        if (attr_obj.attr_type == 'get_attr') {
+            if (attr_map[attr_obj.attr_id] === undefined) {
+                let row = new Object();
+                row.attr_type = attr_obj.attr_type;
+                row.use_ratio = attr_obj.use_ratio;
+                row.attr_id = attr_obj.attr_id;
+                row.attr_value = to_num(attr_obj.attr_value);
+                attr_map[attr_obj.attr_id] = row;
+            } else {
+                attr_map[attr_obj.attr_id].attr_value += to_num(attr_obj.attr_value);
+            }
+        } else {
+            ret.push(attr_obj);
+        }
+    }
+    //再归并实例额外效果行(ex_data.bonus)
+    let bonus_arr = new Array();
+    if (ex_data != undefined && !is_Empty_Object(ex_data.bonus)) {
+        bonus_arr = ex_data.bonus;
+    }
+    for (let bonus_obj of bonus_arr) {
+        if (bonus_obj.attr_type == 'get_attr') {
+            if (attr_map[bonus_obj.attr_id] === undefined) {
+                let row = new Object();
+                row.attr_type = bonus_obj.attr_type;
+                row.use_ratio = bonus_obj.use_ratio;
+                row.attr_id = bonus_obj.attr_id;
+                row.attr_value = to_num(bonus_obj.attr_value);
+                attr_map[bonus_obj.attr_id] = row;
+            } else {
+                attr_map[bonus_obj.attr_id].attr_value += to_num(bonus_obj.attr_value);
+            }
+        } else {
+            ret.push(bonus_obj);
+        }
+    }
+    //把归并后的get_attr效果行追加到结果中
+    for (let attr_id in attr_map) {
+        ret.push(attr_map[attr_id]);
+    }
+    return ret;
+}
 
 export {
     check_Equipment,
@@ -371,9 +396,11 @@ export {
     is_overlap,
     get_object_only_key,
     get_monitor_ch,
-    compare_dataset_value,
+    get_dataset_value,
     set_dataset_value,
     get_item_id_key,
     get_item_obj,
     get_random_text,
+    to_num,
+    get_merge_use_attr,
 };

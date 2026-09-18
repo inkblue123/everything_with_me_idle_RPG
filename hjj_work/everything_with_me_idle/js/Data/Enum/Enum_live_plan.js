@@ -65,6 +65,25 @@ function init_live_plan_process(enums) {
         EGV: 'engrave', //雕刻
         ACM: 'alchemy', //炼金术
     };
+    //所有原料处理类生活技能的子功能的id
+    id = 'live_plan_process_son_skill_min';
+    add_Enum_Object(enums, id);
+    enums[id] = {
+        SYN_MK: 'synthesis', //合成制造-制造
+        SYN_FL: 'synthesis', //合成制造-配方筛选
+        SYN_RS: 'synthesis', //合成制造-配方研究
+        SYN_EN: 'synthesis', //合成制造-工作环境详情
+        COK_CD: 'cooking', //烹饪-烹饪菜品
+        COK_MD: 'cooking', //烹饪-制作干制品
+        COK_MS: 'cooking', //烹饪-制作调味品
+        COK_DS: 'cooking', //烹饪-菜品调味
+        COK_EN: 'cooking', //烹饪-工作环境详情
+        // FRG: 'forging', //锻造
+        // EXA: 'elixir_alchemy', //炼丹
+        // HBB: 'herbal_bath', //药浴
+        // EGV: 'engrave', //雕刻
+        // ACM: 'alchemy', //炼金术
+    };
 }
 
 function init_live_plan_work_bench(enums) {
@@ -83,6 +102,7 @@ function init_live_plan_work_bench(enums) {
     //烹饪技能的所有工作环境
     id = 'all_COK_work_bench';
     add_Enum_Array(enums, id);
+    enums[id] = ['bonfire', 'drying_device', 'seasoning_tool'];
 
     //锻造技能的所有工作环境
     id = 'all_FRG_work_bench';

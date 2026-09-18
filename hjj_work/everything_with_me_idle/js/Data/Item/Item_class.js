@@ -278,6 +278,7 @@ class Consumable extends Item {
         this.use_type = 'none'; //这个消耗品的使用方式
         this.sustain_use_data = new Array(); //持续使用型消耗品的参数
         this.use_attr = new Array(); //这个消耗品的使用效果
+        this.season_effect = new Array(); //这个消耗品作为"调味料"加入菜品时贡献的效果行(仅调味时读取)
     }
     //为这个物品填写消耗品特有的属性
     init_Consumable(use_type) {
@@ -295,7 +296,8 @@ class Consumable extends Item {
         this.sustain_use_data.push(obj);
     }
     //为这个物品添加一种使用效果
-    add_use_attr(attr_type, use_ratio, attr_id, attr_value1, attr_value2, attr_value3) {
+    //参数含义按效果类型而定，详见 build_use_effect_obj
+    add_use_attr(attr_type, use_ratio, attr_id, value1, value2, value3) {
         if (this.use_type == 'none') {
             console.log('%s物品没有定义可用，却定义了使用效果，异常', this.id);
             return;
@@ -304,10 +306,47 @@ class Consumable extends Item {
         obj.attr_type = attr_type;
         obj.use_ratio = use_ratio;
         obj.attr_id = attr_id;
-        obj.attr_value1 = attr_value1;
-        obj.attr_value2 = attr_value2;
-        obj.attr_value3 = attr_value3;
+        if (attr_type == 'get_attr') {
+            //使用后获得属性
+            obj.attr_value = value1; //属性值
+        } else if (attr_type == 'get_buff') {
+            //使用后获得buff
+            obj.buff_time = value1; //buff时间
+            obj.buff_value = value2; //buff每秒数值
+        } else if (attr_type == 'get_item') {
+            //使用后获得物品
+            obj.item_num = value1; //物品数量
+        } else if (attr_type == 'get_formula') {
+            //获得配方效果没有值参数
+        } else {
+            console.log('%s物品定义使用效果时，效果类型%s尚未支持，该效果行不写入', item_id, attr_type);
+            return null;
+        }
         this.use_attr.push(obj);
+    }
+    //为这个调味料添加一种"作为调料时"贡献给菜品的效果行(与使用效果同构，调味时才被读取折算)
+    add_season_effect(attr_type, use_ratio, attr_id, value1, value2, value3) {
+        let obj = new Object();
+        obj.attr_type = attr_type;
+        obj.use_ratio = use_ratio;
+        obj.attr_id = attr_id;
+        if (attr_type == 'get_attr') {
+            //使用后获得属性
+            obj.attr_value = value1; //属性值
+        } else if (attr_type == 'get_buff') {
+            //使用后获得buff
+            obj.buff_time = value1; //buff时间
+            obj.buff_value = value2; //buff每秒数值
+        } else if (attr_type == 'get_item') {
+            //使用后获得物品
+            obj.item_num = value1; //物品数量
+        } else if (attr_type == 'get_formula') {
+            //获得配方效果没有值参数
+        } else {
+            console.log('%s物品定义使用效果时，效果类型%s尚未支持，该效果行不写入', item_id, attr_type);
+            return null;
+        }
+        this.season_effect.push(obj);
     }
 }
 class Material extends Item {

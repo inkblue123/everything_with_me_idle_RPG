@@ -77,6 +77,7 @@ function init_Tooltip_type(enums) {
     enums[id] = {
         //需要展示物品的详情
         item: 'item',
+        formula_product: 'item', //配方产物
         sell_good: 'item',
         buy_good: 'item',
         buyback_good: 'item',

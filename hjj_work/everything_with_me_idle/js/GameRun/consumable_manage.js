@@ -1,4 +1,4 @@
-import { is_Empty_Object, get_item_obj, get_item_id_key } from '../Function/Function.js';
+import { is_Empty_Object, get_item_obj, get_item_id_key, get_merge_use_attr } from '../Function/Function.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_manage.js';
@@ -95,8 +95,9 @@ export class Consumable_Manage {
             console.log('去掉%s消耗品时异常', item_key);
             return false;
         }
-        //获得一次效果
-        for (let attr_obj of items[id].use_attr) {
+        //归并食用效果：白板模板 use_attr ∪ 实例调味 ex_data.bonus(同attr相加)，一次结算
+        let use_attr_merge = get_merge_use_attr(items[id].use_attr, item_obj.ex_data);
+        for (let attr_obj of use_attr_merge) {
             get_consumable_use_data(attr_obj);
         }
         //更新图鉴
@@ -263,12 +264,13 @@ export class Consumable_Manage {
 function get_consumable_use_data(attr_obj) {
     if (attr_obj.attr_type == 'get_attr') {
         let P_attr = player.get_player_attributes();
-        P_attr.change_data_attr(attr_obj.attr_id, attr_obj.attr_value1);
+        P_attr.change_data_attr(attr_obj.attr_id, attr_obj.attr_value);
     } else if (attr_obj.attr_type == 'get_item') {
         //给予物品的效果，如果当前背包空间满了，就不能使用
         console.log('没有开发给予物品的消耗品的逻辑');
     } else if (attr_obj.attr_type == 'get_buff') {
-        console.log('没有开发给予buff的消耗品的逻辑');
+        //给予buff的效果尚未接通(buff系统升级规划于roadmap #1)。本期仅识别、不崩、打清晰日志，不实际生效
+        console.log('消耗品效果类型get_buff尚未接通，跳过：attr_id=%s', attr_obj.attr_id);
     } else if (attr_obj.attr_type == 'get_formula') {
         let P_formula = player.get_player_formulas_manage();
         P_formula.Player_get_formula(attr_obj.attr_id, 'know');

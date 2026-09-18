@@ -1,7 +1,6 @@
 import { is_Empty_Object, get_uniqueArr } from '../Function/Function.js';
 import { add_show_Tooltip, addElement } from '../Function/Dom_function.js';
 import { buffs } from '../Data/Buff/Buff.js';
-import { enums } from '../Data/Enum/Enum.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from './Player.js';
 //一个玩家buff对象基类
@@ -13,12 +12,12 @@ class BUFF {
         for (let key in copiedData) {
             this[key] = copiedData[key];
         }
-        for (let buff_value of this.buff_value) {
-            if (buff_value.buff_type == 'only_start_restore' || buff_value.buff_type == 'only_start_no_restore') {
-                buff_value.start_flag = false; //仅需生效一次的效果才会有，记录是否生效
+        for (let effect of this.effects) {
+            if (effect.when == 'on_apply') {
+                effect.start_flag = false; //仅需生效一次的效果才会有，记录是否生效
             }
-            if (buff_value.buff_type == 'only_start_restore' || buff_value.buff_type == 'continuous_start_restore') {
-                buff_value.start_data = 0; //需要还原的效果才会有，记录还原时要扣除的数值
+            if (effect.revert) {
+                effect.start_data = 0; //需要还原的效果才会有，记录还原时要扣除的数值
             }
         }
     }
@@ -55,23 +54,18 @@ class game_time_BUFF extends BUFF {
             this.last_buff_time = this.buff_start_time; //上次触发buff的时间
         }
         this.buff_have_time = buff_save.buff_have_time; //buff剩余有效时间
-        //读取存档中buff效果的生效状态，防止读档后一次性效果重复生效、还原数值丢失
-        if (!is_Empty_Object(buff_save.buff_value)) {
-            for (let saved_value of buff_save.buff_value) {
-                if (saved_value.start_flag === undefined && saved_value.start_data === undefined) {
-                    continue;
+        //读取存档中效果行的生效状态，防止读档后一次性效果重复生效、还原数值丢失
+        if (!is_Empty_Object(buff_save.effects)) {
+            for (let i = 0; i < buff_save.effects.length; i++) {
+                if (i >= this.effects.length) {
+                    break;
                 }
-                //找到当前数据库里对应的buff效果，恢复它的生效状态
-                for (let buff_value of this.buff_value) {
-                    if (buff_value.buff_type == saved_value.buff_type && buff_value.data_type == saved_value.data_type) {
-                        if (saved_value.start_flag !== undefined) {
-                            buff_value.start_flag = saved_value.start_flag;
-                        }
-                        if (saved_value.start_data !== undefined) {
-                            buff_value.start_data = saved_value.start_data;
-                        }
-                        break;
-                    }
+                let saved_effect = buff_save.effects[i];
+                if (saved_effect.start_flag !== undefined) {
+                    this.effects[i].start_flag = saved_effect.start_flag;
+                }
+                if (saved_effect.start_data !== undefined) {
+                    this.effects[i].start_data = saved_effect.start_data;
                 }
             }
         }
@@ -113,44 +107,65 @@ class game_time_BUFF extends BUFF {
         let time_in = game_now_time - this.last_buff_time;
         let buff_value_obj = new Object();
 
-        for (let buff_value of this.buff_value) {
-            let buff_type = buff_value.buff_type;
-            let data_type = buff_value.data_type;
-            let data_value = buff_value.data_value;
-            //仅需要运行一次的buff，如果已经生效过了，就不需要重复生效
-            if (buff_type == 'only_start_no_restore' || buff_type == 'only_start_restore') {
-                if (buff_value.start_flag == true) {
-                    continue;
-                }
+        for (let effect of this.effects) {
+            let is_once;
+            //这一条效果是不是「只在获得时产出一次」
+            if (effect.when == 'on_apply') {
+                is_once = true;
+            }
+            //仅需要生效一次的效果（when == 'on_apply'），检查它有没有生效过：
+            //  start_flag == true  —— 已经生效过了，跳过，本次不再产出
+            //  start_flag == false —— 还没生效过，继续往下走，本次产出后会把标记置成 true
+            //（when == 'tick' 的效果没有这个标记，每一帧都要产出）
+            if (is_once && effect.start_flag == true) {
+                continue;
             }
 
+            //时机 when 与产出类型 out 的取值（并排列出，未开发的先占好位置）：
+            //  when = 'tick'     —— 每帧产出一次（数值按经过时间等比摊算，即 100ms 摊算）
+            //  when = 'on_apply' —— 获得时只产出一次
+            //  out  = 'value'    —— 产出一个「加成值」，汇进总对象 end_buff_attr，由 restart_end_buff 统一分派生效（本期使用）
+            //  out  = 'act'      —— 产出一个「动作」，交给动作通道执行（本期未开发，只留接口位置）
+            let data = 0; //这一次为这条效果行产出的数值
+            if (effect.out == 'act') {
+                //──────── 动作通道（本期未开发，位置预留）────────
+                //将来在这里产出「动作描述」，例如：做什么动作、对谁、多少
+                //动作不进总对象累加，而是交给动作通道排队执行
+                data = 0;
+            } else if (effect.out == 'value') {
+                //buff的效果是某种加成值，按时机 when 分两种产法
+                if (effect.when == 'on_apply') {
+                    //只在获得时产出一次（走到这里说明上面的 start_flag 必定是 false，也就是还没生效过）
+                    data = get_true_data(effect.value);
+                    if (effect.revert) {
+                        //需要还原的效果：记下这次加进去的数值，移除buff时取负返还
+                        effect.start_data = data;
+                    }
+                    effect.start_flag = true; //这条一次性效果已生效，下次不再产出
+                } else if (effect.when == 'tick') {
+                    //每帧都产出，数值按经过的时间等比摊算
+                    data = get_continuous_start_data(effect.value, this.time_type, time_in);
+                    if (effect.revert) {
+                        //需要还原的效果：把每帧产出的数值累加起来，移除buff时整体取负返还
+                        effect.start_data += data;
+                    }
+                } else {
+                    console.log('%s buff的效果行时机类型未定义，跳过：%s', this.id, effect.when);
+                }
+            } else {
+                console.log('%s buff的效果行产出类型未定义，跳过：%s', this.id, effect.out);
+                continue;
+            }
+
+            let data_type = effect.target;
             if (is_Empty_Object(buff_value_obj[data_type])) {
                 buff_value_obj[data_type] = new Array();
             }
             let obj = new Object();
             obj.buff_id = this.id;
-            obj.buff_type = buff_type;
-            if (buff_type == 'continuous_start_no_restore') {
-                //每帧都生效，清除buff时不需要复原的效果
-                let data = get_continuous_start_data(data_value, this.time_type, time_in);
-                obj.data = data;
-            } else if (buff_type == 'continuous_start_restore') {
-                //每帧都生效，清除buff时需要复原的效果
-                let data = get_continuous_start_data(data_value, this.time_type, time_in);
-                obj.data = data;
-
-                buff_value.start_data += data;
-            } else if (buff_type == 'only_start_no_restore') {
-                //仅生效一次，清除buff时不需要还原的效果
-                obj.data = data_value;
-                buff_value.start_flag = true;
-            } else if (buff_type == 'only_start_restore') {
-                //仅生效一次，清除buff时需要还原的效果
-                let true_data = get_true_data(data_value);
-                obj.data = true_data;
-                buff_value.start_data = true_data;
-                buff_value.start_flag = true;
-            }
+            obj.row_key = get_row_key(effect, this.id);
+            obj.out = effect.out; //产出类型：与数据库里声明的保持一致（'value' 或 'act'），供 updata_end_buff_attr 判断
+            obj.data = data;
             buff_value_obj[data_type].push(obj);
         }
         //更新参数
@@ -164,31 +179,28 @@ class game_time_BUFF extends BUFF {
     //清除这个buff的效果
     delete_buff(game_now_time) {
         let buff_value_obj = new Object();
-        for (let buff_value of this.buff_value) {
-            let buff_type = buff_value.buff_type;
-            let data_type = buff_value.data_type;
-            let data_value = buff_value.data_value;
-            if (buff_type != 'continuous_start_restore' && buff_type != 'only_start_restore') {
+        for (let effect of this.effects) {
+            //只有需要还原的效果才需要取负返还
+            if (!effect.revert) {
                 continue;
             }
+            let data_type = effect.target;
             if (is_Empty_Object(buff_value_obj[data_type])) {
                 buff_value_obj[data_type] = new Array();
             }
             let obj = new Object();
             obj.buff_id = this.id;
-            obj.buff_type = buff_type;
-
-            if (buff_type == 'continuous_start_restore') {
-                //每帧都生效，清除buff时需要复原的效果
-                obj.data = buff_value.start_data * -1;
-            } else if (buff_type == 'only_start_restore') {
-                //仅生效一次，清除buff时需要还原的效果
-                obj.data = buff_value.start_data * -1;
-            }
+            obj.row_key = get_row_key(effect, this.id);
+            obj.out = 'value'; //还原也属于「加成值」这一路：移除时把之前加进去的取负返还
+            obj.data = effect.start_data * -1;
             buff_value_obj[data_type].push(obj);
         }
         return buff_value_obj;
     }
+}
+//取得一条效果行在总对象里的记账key
+function get_row_key(effect, buff_id) {
+    return effect.when + '_' + (effect.revert ? 'restore' : 'no_restore') + '_' + buff_id;
 }
 //计算持续获得属性的效果，这一次激活应该获得的数值
 function get_continuous_start_data(data_value, time_type, time_value) {
@@ -223,6 +235,7 @@ export class Player_Buff_Manage {
 
         this.end_buff_attr = new Object(); //所有buff的效果合计
         this.end_data_attr = new Object(); //所有buff效果中，需要汇入玩家属性类里汇总的属性
+        this.target_dispatch = new Object(); //效果目标 -> 分发给谁（从buff数据库汇总而来）
 
         this.end_buff_change_flag = false; //每一帧计算所有buff之后，最终buff有没有发生更改
         this.end_buff_change_data_type = new Array(); //改变了的效果id
@@ -231,7 +244,23 @@ export class Player_Buff_Manage {
         this.game_time_buff_sort_id; //游戏时间buff的id排序情况
         this.combat_round_buff_sort_id; //战斗回合时间buff的id排序情况
     }
-    init() {}
+    init() {
+        this.init_target_dispatch();
+    }
+    //从buff数据库汇总「效果目标 -> 分发给谁」
+    //同一个目标被两条效果行声明成不同的分发方式时，打印告警
+    init_target_dispatch() {
+        this.target_dispatch = new Object();
+        for (let id in buffs) {
+            for (let effect of buffs[id].effects) {
+                if (this.target_dispatch[effect.target] == undefined) {
+                    this.target_dispatch[effect.target] = effect.dispatch;
+                } else if (this.target_dispatch[effect.target] != effect.dispatch) {
+                    console.log('buff效果%s同时声明了两种分发方式：%s / %s', effect.target, this.target_dispatch[effect.target], effect.dispatch);
+                }
+            }
+        }
+    }
     //获取玩家buff部分的游戏存档
     save_Player_Buff_attr() {
         let buff_attr_save = new Object();
@@ -283,15 +312,6 @@ export class Player_Buff_Manage {
 
         buff_obj.init();
         let time_type_ch = buff_obj.time_type;
-        //初始想法是将新旧buff的好的部分合并
-        // let old_buff = this[time_type_ch][id];
-        // if (is_Empty_Object(old_buff)) {
-        //     // 没有同名buff，直接新增
-        //     this[time_type_ch][id] = buff_obj;
-        // } else {
-        //     // 有同名buff，将两个buff的好的部分合并
-        //     this.update_same_name_buff(old_buff, buff_obj);
-        // }
         //没有想好同名的新旧buff如何更新，直接用新buff替换旧buff
         this[time_type_ch][id] = buff_obj;
     }
@@ -402,12 +422,25 @@ export class Player_Buff_Manage {
         this.end_buff_change_flag = true;
         for (let data_type in buff_value_obj) {
             for (let obj of buff_value_obj[data_type]) {
-                // let obj = buff_value_obj[data_type];
+                //按产出类型 out 分派（取值与 start_buff 里一致，并排列出）：
+                //  out = 'value' —— 加成值：累加进总对象 end_buff_attr，稍后由 restart_end_buff 统一分派生效（本期使用）
+                //  out = 'act'   —— 动作：交给动作通道执行（本期未开发，只留接口位置）
+                //  其他          —— 未定义的产出类型，打日志并跳过
+                if (obj.out == 'act') {
+                    //──────── 动作通道（本期未开发，位置预留）────────
+                    //将来在这里把动作交给动作通道排队执行，而不是累加进总对象
+                    console.log('buff动作通道尚未实现，%s buff的%s动作被跳过', obj.buff_id, data_type);
+                    continue;
+                } else if (obj.out != 'value') {
+                    console.log('buff效果的产出类型未定义，%s buff的%s效果被跳过：%s', obj.buff_id, data_type, obj.out);
+                    continue;
+                }
+                //──────── 加成值通道（本期使用）────────
                 if (typeof obj.data != 'number') {
                     console.log('buff效果应该全部转换成数字，%s buff的%s效果异常', obj.buff_id, data_type);
                     continue;
                 }
-                //data_type效果发生变化，记录id
+                //接下来data_type效果会发生变化，记录id
                 this.end_buff_change_data_type.push(data_type);
 
                 if (is_Empty_Object(this.end_buff_attr[data_type])) {
@@ -421,7 +454,7 @@ export class Player_Buff_Manage {
                 //data_type效果的最终值
                 this.end_buff_attr[data_type].now_data += obj.data;
                 //data_type效果的组成部分
-                let data_key = obj.buff_type + '_' + obj.buff_id;
+                let data_key = obj.row_key;
                 if (is_Empty_Object(end_buff_obj[data_key])) {
                     end_buff_obj[data_key] = 0;
                 }
@@ -442,9 +475,11 @@ export class Player_Buff_Manage {
 
         for (let data_type of this.end_buff_change_data_type) {
             let end_buff_obj = this.end_buff_attr[data_type];
+            let dispatch = this.target_dispatch[data_type]; //这个效果该分发给谁
             //获取data_type效果的生效数值
             let end_data;
-            if (enums['bool_data_type'].includes(data_type)) {
+            if (dispatch == 'flag') {
+                //游戏标记是布尔量，用累加和的正负判断真假
                 if (end_buff_obj.now_data > 0) {
                     end_data = true;
                 } else if (end_buff_obj.now_data == 0) {
@@ -457,20 +492,20 @@ export class Player_Buff_Manage {
                 end_data = end_buff_obj.now_data - end_buff_obj.last_data;
             }
             end_buff_obj.last_data = end_buff_obj.now_data;
-            //根据效果的id，调用对应的接口，让它们生效
-            if (enums['change_data_attr_data_type'].includes(data_type)) {
+            //根据效果的分发方式，调用对应的接口，让它们生效
+            if (dispatch == 'resource') {
                 change_data_attr(data_type, end_data);
-            } else if (enums['updata_end_attr_data_type'].includes(data_type)) {
+            } else if (dispatch == 'attr') {
                 if (is_Empty_Object(this.end_data_attr[data_type])) {
                     this.end_data_attr[data_type] = 0;
                 }
                 this.end_data_attr[data_type] += end_data;
                 updata_end_attr_flag = true;
-            } else if (enums['global_set_flag_data_type'].includes(data_type)) {
+            } else if (dispatch == 'flag') {
                 global_set_flag(data_type, end_data);
-            } else if (enums['set_game_speed_num_data_type'].includes(data_type)) {
+            } else if (dispatch == 'game_speed_num') {
                 set_game_speed_num(end_data);
-            } else if (enums['set_game_speed_ratio_data_type'].includes(data_type)) {
+            } else if (dispatch == 'game_speed_ratio') {
                 set_game_speed_ratio(end_data);
             } else {
                 console.log('%s效果没有定义生效方式', data_type);
@@ -616,8 +651,6 @@ function change_data_attr(data_type, end_data) {
 }
 //更新玩家最终属性中buff部分接口
 function updata_end_attr_buff() {
-    // let P_attr = player.get_player_attributes();
-    // P_attr.updata_end_attr('buff');
     player.updata_end_attr('buff');
 }
 //修改游戏状态

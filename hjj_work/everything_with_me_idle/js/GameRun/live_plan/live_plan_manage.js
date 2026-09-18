@@ -1,4 +1,4 @@
-import { change_Live_plan_div, change_Explore_collection_div, change_Material_handling_div } from '../../Function/show_func.js';
+import { show_dropdown_table_fast, change_Live_plan_div, change_Explore_collection_div, change_Material_handling_div } from '../../Function/show_func.js';
 import { is_Empty_Object } from '../../Function/Function.js';
 import { get_radio_switch_click_value } from '../../Function/Dom_function.js';
 import { places } from '../../Data/Place/Place.js';
@@ -14,7 +14,7 @@ import { Archaeology_manage } from './Explore_collection/archaeology.js';
 import { Exploration_manage } from './Explore_collection/exploration.js';
 
 import { Synthesis_manage } from './Material_handling/synthesis/synthesis.js';
-import { Cooking_manage } from './Material_handling/cooking.js';
+import { Cooking_manage } from './Material_handling/cooking/cooking.js';
 import { Forging_manage } from './Material_handling/forging.js';
 import { Elixir_alchemy_manage } from './Material_handling/elixir_alchemy.js';
 import { Herbal_bath_manage } from './Material_handling/herbal_bath.js';
@@ -151,9 +151,16 @@ export class Live_plan_manage {
         let last_EC_switch = global.get_flag('GS_last_EC_switch');
         let last_EC_button = document.getElementById(last_EC_switch);
         last_EC_button.checked = true;
+        let EC_skill_name = last_EC_switch.slice(0, 3);
+        let drop_name = EC_skill_name + '_droptable';
+        show_dropdown_table_fast('MH_switch_div', drop_name);
+
         let last_MH_switch = global.get_flag('GS_last_MH_switch');
         let last_MH_button = document.getElementById(last_MH_switch);
         last_MH_button.checked = true;
+        let MH_skill_name = last_MH_switch.slice(0, 3);
+        drop_name = MH_skill_name + '_droptable';
+        show_dropdown_table_fast('MH_switch_div', drop_name);
     }
     //获取生活技能的管理对象
     get_LP_live_skill_manage(manage_name) {
@@ -200,7 +207,6 @@ export class Live_plan_manage {
         }
         if (!is_Empty_Object(this[manage_name])) {
             this[manage_name].init_live_plan_game_div();
-            change_Explore_collection_div(button_id);
         }
     }
     //玩家属性更新，更新到生活技能类里

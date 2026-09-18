@@ -27,6 +27,15 @@ function set_Tooltip_func(Tooltip) {
     // 初始化小窗口内容并显示小窗口
     Tooltip.InitTip = function (type, value, event) {
         this.CloseTip();
+
+        //tip_value支持传入函数(值提供者)：在鼠标移入的这一刻才求值，使提示内容能跟随实时状态变化
+        if (typeof value == 'function') {
+            value = value();
+        }
+        //值提供者求值为空，视为当前没有可展示的内容，保持隐藏，不弹出提示窗
+        if (value == undefined) {
+            return;
+        }
         this.type = type;
         let Tooltip_type = enums['Tooltip_type'][type];
         this.style.display = 'block';

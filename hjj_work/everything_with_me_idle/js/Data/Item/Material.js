@@ -27,10 +27,6 @@ function init_Item_Material(items) {
     //加工零件系列
     init_wood_board(items); //木板
     init_metal_parts(items); //金属零件
-    //精制调味料
-    init_refined_seasoning(items);
-    //丹药精华
-    init_elixir_essence(items);
 }
 //测试物品
 // function init_test_item(items) {
@@ -362,33 +358,6 @@ function init_metal_parts(items) {
     add_Material_object(items, id);
     items[id].init_Item_other(30, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 20); //物品价值
-}
-//精制调味料
-function init_refined_seasoning(items) {
-    let id;
-    let secon_type = 'refined_seasoning'; //材料大类中的精制调味料小类
-
-    id = 'fish_meat_floss'; //鱼肉松
-    add_Material_object(items, id);
-    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
-    items[id].init_Item_price('ordinary_coin', 20); //物品价值
-    id = 'animal_meat_floss'; //兽肉松
-    add_Material_object(items, id);
-    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
-    items[id].init_Item_price('ordinary_coin', 35); //物品价值
-    id = 'berry_jam'; //浆果果酱
-    add_Material_object(items, id);
-    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
-    items[id].init_Item_price('ordinary_coin', 25); //物品价值
-}
-//丹药精华
-function init_elixir_essence(items) {
-    let id;
-    let secon_type = 'elixir_essence'; //材料大类中的丹药精华小类
-
-    // id = 'AAAA'; //
-    // add_Material_object(items, id);
-    // items[id].init_Item_other(20, secon_type,0); //堆叠数量，物品小类，章节归属
 }
 
 export { init_Item_Material };

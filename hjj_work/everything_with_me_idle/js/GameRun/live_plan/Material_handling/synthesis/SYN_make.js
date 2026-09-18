@@ -7,7 +7,7 @@ import { texts } from '../../../../Data/Text/Text.js';
 import { formulas } from '../../../../Data/Formula/Formula.js';
 import { player } from '../../../../Player/Player.js';
 import { global } from '../../../global_manage.js';
-import { add_formula, get_SYN_formula_switch_type, SYN_switch_type_handle } from './SYN_function.js';
+import { add_SYN_formula, get_SYN_formula_switch_type, SYN_switch_type_handle } from './SYN_function.js';
 
 //更新合成制造技能的制造界面的内容
 function updata_SYN_MK_div() {
@@ -20,7 +20,7 @@ function updata_SYN_MK_div() {
     let formula_arr = SYN_switch_type_handle(SYN_MK_type);
     //展示这些配方
     for (let formula_id of formula_arr) {
-        add_formula('SYN_MK', formula_id);
+        add_SYN_formula('SYN_MK', formula_id);
     }
 }
 

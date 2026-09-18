@@ -179,24 +179,6 @@ export class BuyBack_Manage {
         this.add_click_buyback_item(aitem_div, aitem_data);
     }
 
-    //获取玩家某种待购买物品的数量
-    get_buyback_goods_num(args) {
-        let item_key;
-        if (typeof args == 'object') {
-            //输入的是物品对象，转换成key
-            item_key = get_item_id_key(args);
-        } else if (typeof args == 'string') {
-            //输入的是key，直接使用
-            item_key = args;
-        }
-        if (this.player_buyback_goods[item_key] === undefined) {
-            //待购买物品库没有该物品，等于购买0个
-            return 0;
-        }
-
-        //待购买物品库有这个物品，直接查询数量
-        return this.player_buyback_goods[item_key].num;
-    }
     // 向目标组件添加 点击之后放入待回购物品界面中的功能
     add_click_buyback_item(target_div, item_data) {
         target_div.addEventListener('click', () => {

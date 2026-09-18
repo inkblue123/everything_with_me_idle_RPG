@@ -60,7 +60,8 @@ export class Player_attributes {
         } else if (id == 'deep_energy_point') {
             return this.player_energy.judge_deep_energy_max();
         } else if (id == 'health_point') {
-            if (this.data_attr.health_point >= this.data_attr.combat_survival_attr['health_max']) {
+            //用派生上限 true_health_max（含 max_health_ratio 这类百分比加成），与 change_data_attr 的钳制共用同一套上限
+            if (this.data_attr.health_point >= this.data_attr.end_data_attr['true_health_max']) {
                 return true;
             } else {
                 return false;
@@ -106,7 +107,7 @@ export class Player_attributes {
     //更新血条上的数值
     updata_HP_bar_div() {
         let health_point = this.get_data_attr('health_point');
-        let health_max = this.get_data_attr('health_max');
+        let health_max = this.get_data_attr('true_health_max'); //用派生上限，与血量钳制保持同一套数值
         let bar_ratio = (health_point / health_max) * 100;
         bar_ratio = bar_ratio.toFixed(2);
         bar_ratio = bar_ratio + '%';

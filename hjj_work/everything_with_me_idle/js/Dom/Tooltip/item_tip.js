@@ -1,5 +1,5 @@
 import { addElement } from '../../Function/Dom_function.js';
-import { get_object_only_key, is_Empty_Object } from '../../Function/Function.js';
+import { get_object_only_key, is_Empty_Object, get_merge_use_attr } from '../../Function/Function.js';
 import { seconds_time_to_ch } from '../../Function/math_func.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { items } from '../../Data/Item/Item.js';
@@ -356,8 +356,10 @@ function show_consumable_use_data(item_obj) {
             }
         }
     } else if (use_type == 'once_use') {
+        //一次性使用消耗品：展示其食用效果(白板模板 use_attr 合并调味 ex_data.bonus，同attr相加)
+        let use_attr_merge = get_merge_use_attr(items[id].use_attr, item_obj.ex_data);
         let use_attr_div = addElement(Tooltip, 'div', null, 'page_table_111');
-        for (let attr_obj of items[id].use_attr) {
+        for (let attr_obj of use_attr_merge) {
             if (attr_obj.attr_type == 'get_attr') {
                 let TLV_div = addElement(use_attr_div, 'div', null, 'table_value');
                 // 属性名称
@@ -365,7 +367,7 @@ function show_consumable_use_data(item_obj) {
                 T_name.innerHTML = texts[attr_obj.attr_id].attr_name;
                 //属性数值
                 let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
-                T_value.innerHTML = get_table_attr_value_ch(attr_obj.attr_id, attr_obj.attr_value1, item_obj);
+                T_value.innerHTML = get_table_attr_value_ch(attr_obj.attr_id, attr_obj.attr_value, item_obj);
             }
         }
     }
@@ -445,12 +447,12 @@ function show_material_source_use(item_obj) {}
 //追加展示物品的价值或者出售购买时的标价
 function show_item_price(tip_type, item_obj) {
     let Tooltip = document.getElementById('tooltip');
-    if (tip_type == 'item') {
+    if (tip_type == 'item' || tip_type == 'formula_product') {
         //平常展示物品的时候，不会常态展示物品价值，因为有些物品含有多种价值，全部展示会很乱
         //需要有技能之后才允许常态展示
         // let label = addElement(Tooltip, 'div', null, 'lable_down');
         // label.innerHTML = '物品价值：xx铜币';
-    } else {
+    } else if (tip_type == 'sell_good' || tip_type == 'buy_good' || tip_type == 'buyback_good') {
         // 玩家位于商店，打算出售该物品，需要展示此时这个物品在商人眼里的价值
         let label = addElement(Tooltip, 'div', null, 'lable_down');
         let id, num, equip_rarity, money_type, item_trade_price;
@@ -518,6 +520,9 @@ function show_item_price(tip_type, item_obj) {
                 label.innerHTML = '免费';
             }
         }
+    } else {
+        console.log('未处理的展示物品类型%s，不知道是否要展示价值', tip_type);
+        return;
     }
 }
 

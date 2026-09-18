@@ -66,6 +66,19 @@ function init_div_color(enums) {
     add_Enum_Object(enums, id);
     enums[id] = '#efefef'; //淡灰色
 }
+//每种下拉框中内容的文本和序号
+// function init_select_data(enums) {
+//     let id;
+//     //生活技能界面-烹饪技能-菜品烹饪子功能-排序属性下拉框
+//     id = 'COK_CD_attr_select';
+//     add_Enum_Array(enums, id);
+//     enums[id] = [
+//         { text: '默认', data: 'null' },
+//         { text: '生命', data: 'health_point' },
+//         { text: '魔力', data: 'magic_point' },
+//         { text: '精力', data: 'surface_energy_point' },
+//     ]; //
+// }
 
 function init_Enum_div(enums) {
     //每种装备稀有度对应的颜色
@@ -74,6 +87,8 @@ function init_Enum_div(enums) {
     init_active_skill_show_color(enums);
     //游戏布局中涉及到的颜色
     init_div_color(enums);
+    //每种下拉框中内容的文本和序号
+    // init_select_data(enums);
 }
 
 export { init_Enum_div };

@@ -7,6 +7,7 @@ import { items } from '../Data/Item/Item.js';
 import { global } from '../GameRun/global_manage.js';
 import { places } from '../Data/Place/Place.js';
 import { formulas } from '../Data/Formula/Formula.js';
+import { enums } from '../Data/Enum/Enum.js';
 import { player } from '../Player/Player.js';
 import { get_item_id_key } from '../Function/Function.js';
 
@@ -363,7 +364,7 @@ function finish_now_challenge() {
     game_event_manage.test_finish_now_challenge();
     game_event_manage.init_IE_div();
 }
-//逐渐解锁生活技能
+//逐渐解锁生活技能（逐个解锁，共14个主技能，每次点击解锁下一个）
 function unlock_live_plan_skill() {
     if (!global.get_flag('GS_unlock_CLT')) {
         global.set_flag('GS_unlock_CLT', true);
@@ -379,6 +380,20 @@ function unlock_live_plan_skill() {
         global.set_flag('GS_unlock_ACL', true);
     } else if (!global.get_flag('GS_unlock_ELT')) {
         global.set_flag('GS_unlock_ELT', true);
+    } else if (!global.get_flag('GS_unlock_SYN')) {
+        global.set_flag('GS_unlock_SYN', true);
+    } else if (!global.get_flag('GS_unlock_COK')) {
+        global.set_flag('GS_unlock_COK', true);
+    } else if (!global.get_flag('GS_unlock_FRG')) {
+        global.set_flag('GS_unlock_FRG', true);
+    } else if (!global.get_flag('GS_unlock_EXA')) {
+        global.set_flag('GS_unlock_EXA', true);
+    } else if (!global.get_flag('GS_unlock_HBB')) {
+        global.set_flag('GS_unlock_HBB', true);
+    } else if (!global.get_flag('GS_unlock_EGV')) {
+        global.set_flag('GS_unlock_EGV', true);
+    } else if (!global.get_flag('GS_unlock_ACM')) {
+        global.set_flag('GS_unlock_ACM', true);
     }
     //移动到当前位置，触发刷新界面的逻辑
     let place_manage = global.get_place_manage();
@@ -387,7 +402,7 @@ function unlock_live_plan_skill() {
 }
 //解锁生活技能子系统
 function unlock_live_plan_son_skill() {
-    let son_skill_ids = ['SYN_MK', 'SYN_FL', 'SYN_RS', 'SYN_EN', 'COK_DS', 'COK_MD', 'COK_MS', 'COK_EN'];
+    let son_skill_ids = Object.keys(enums['live_plan_process_son_skill_min']);
     for (let id of son_skill_ids) {
         global.set_flag('GS_unlock_' + id, true);
     }
@@ -396,41 +411,41 @@ function unlock_live_plan_son_skill() {
     let now_place = place_manage.get_now_place();
     place_manage.set_now_place(now_place);
 }
-// 批量给予物品
+// 批量给予部分物品
 function give_player_item() {
-    player.Player_get_item('Oak_logs', 10);
-    player.Player_get_item('birch_logs', 10);
-    player.Player_get_item('fir_logs', 10);
-    player.Player_get_item('lightning_bark', 10);
-    player.Player_get_item('frost_marrow_resin', 10);
-    player.Player_get_item('viresilver_stem', 10);
-    player.Player_get_item('porcini', 10);
-    player.Player_get_item('chanterelle', 10);
-    player.Player_get_item('termite_mushroom', 10);
-    player.Player_get_item('river_mussel', 10);
-    player.Player_get_item('creek_fish', 10);
-    player.Player_get_item('animal_raw_meat', 10);
-    player.Player_get_item('red_berry', 10);
-    player.Player_get_item('yellow_berry', 10);
-    player.Player_get_item('grilled_fish', 10);
-    player.Player_get_item('termite_mushroom_soup', 10);
-    player.Player_get_item('fish_jerky', 10);
-    player.Player_get_item('wood_arrow', 10);
-    player.Player_get_item('copper_coin', 10);
-    player.Player_get_item('greedy_copper_coin', 10);
+    player.Player_get_item('fish_meat_floss', 10);
+    player.Player_get_item('animal_meat_floss', 10);
+    player.Player_get_item('berry_jam', 10);
+    // player.Player_get_item('lightning_bark', 10);
+    // player.Player_get_item('frost_marrow_resin', 10);
+    // player.Player_get_item('viresilver_stem', 10);
+    // player.Player_get_item('porcini', 10);
+    // player.Player_get_item('chanterelle', 10);
+    // player.Player_get_item('termite_mushroom', 10);
+    // player.Player_get_item('river_mussel', 10);
+    // player.Player_get_item('creek_fish', 10);
+    // player.Player_get_item('animal_raw_meat', 10);
+    // player.Player_get_item('red_berry', 10);
+    // player.Player_get_item('yellow_berry', 10);
+    // player.Player_get_item('grilled_fish', 10);
+    // player.Player_get_item('termite_mushroom_soup', 10);
+    // player.Player_get_item('fish_jerky', 10);
+    // player.Player_get_item('wood_arrow', 10);
+    // player.Player_get_item('copper_coin', 10);
+    // player.Player_get_item('greedy_copper_coin', 10);
 
-    player.Player_get_item('wood_sword', 6, 'damaged');
-    player.Player_get_item('wood_sword', 6, 'ordinary');
-    player.Player_get_item('wood_sword', 6, 'excellent');
-    player.Player_get_item('wood_sword', 6, 'rare');
-    player.Player_get_item('wood_sword', 6, 'epic');
-    player.Player_get_item('test_boomerang', 1, 'ordinary');
-    player.Player_get_item('test_boomerang', 3, 'excellent');
-    player.Player_get_item('test_boomerang', 5, 'rare');
-    player.Player_get_item('hatchet', 1, 'ordinary');
-    player.Player_get_item('mowing_sickle', 1, 'ordinary');
+    // player.Player_get_item('wood_sword', 6, 'damaged');
+    // player.Player_get_item('wood_sword', 6, 'ordinary');
+    // player.Player_get_item('wood_sword', 6, 'excellent');
+    // player.Player_get_item('wood_sword', 6, 'rare');
+    // player.Player_get_item('wood_sword', 6, 'epic');
+    // player.Player_get_item('test_boomerang', 1, 'ordinary');
+    // player.Player_get_item('test_boomerang', 3, 'excellent');
+    // player.Player_get_item('test_boomerang', 5, 'rare');
+    // player.Player_get_item('hatchet', 1, 'ordinary');
+    // player.Player_get_item('mowing_sickle', 1, 'ordinary');
 }
-// 批量给予物品
+// 批量给予全部物品
 function give_player_all_item() {
     for (let id in items) {
         if (items[id].main_type == 'equipment') {

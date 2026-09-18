@@ -1,4 +1,5 @@
 import { crtElement, addElement, addElement_botton, addElement_radio } from '../../../Function/Dom_function.js';
+import { get_dataset_value, set_dataset_value } from '../../../Function/Function.js';
 import { change_SYN_EN_div } from '../../../GameRun/live_plan/Material_handling/synthesis/SYN_environment.js';
 import { global } from '../../../GameRun/global_manage.js';
 
@@ -95,8 +96,7 @@ function make_SYN_MK_value_div(SYN_MK_value_div) {
     let SYN_MK_FD_P_title_div = addElement(SYN_MK_FD_P_div, 'div', 'SYN_MK_FD_P_title_div', 'Details_div', '');
     SYN_MK_FD_P_title_div.innerHTML = '产物';
     let SYN_MK_FD_P_quantity_button = addElement_botton(SYN_MK_FD_P_div, 'SYN_MK_FD_P_quantity_button', 'SYN_FD_P_quantity_button', undefined, '批量制造选择-> X1');
-
-    SYN_MK_FD_P_quantity_button.dataset.quantity_num = '1';
+    set_dataset_value(SYN_MK_FD_P_quantity_button, 'quantity_num', 1);
     var SYN_MK_FD_P_value_div = addElement(SYN_MK_FD_P_div, 'div', 'SYN_MK_FD_P_value_div', 'SYN_FD_P_value_div');
     SYN_MK_FD_P_value_div.innerHTML = '产物A x1';
     let SYN_MK_FD_P_make_button = addElement_botton(SYN_MK_FD_P_div, 'SYN_MK_FD_P_make_button', 'SYN_FD_P_make_button', undefined, '制造');
@@ -302,7 +302,7 @@ function make_SYN_FM_value_div(SYN_FM_value_div) {
     let SYN_FM_FD_P_title_div = addElement(SYN_FM_FD_P_div, 'div', 'SYN_FM_FD_P_title_div', 'Details_div', '');
     SYN_FM_FD_P_title_div.innerHTML = '产物';
     let SYN_FM_FD_P_quantity_button = addElement_botton(SYN_FM_FD_P_div, 'SYN_FM_FD_P_quantity_button', 'SYN_FD_P_quantity_button', undefined, '批量制造选择-> X1');
-    SYN_FM_FD_P_quantity_button.dataset.quantity_num = '1';
+    set_dataset_value(SYN_FM_FD_P_quantity_button, 'quantity_num', 1);
     var SYN_FM_FD_P_value_div = addElement(SYN_FM_FD_P_div, 'div', 'SYN_FM_FD_P_value_div', 'SYN_FD_P_value_div');
     SYN_FM_FD_P_value_div.innerHTML = '产物A x1';
     let SYN_FM_FD_P_make_button = addElement_botton(SYN_FM_FD_P_div, 'SYN_FM_FD_P_make_button', 'SYN_FD_P_make_button', undefined, '制造');
@@ -505,15 +505,13 @@ function set_SYN_make_button(SYN_value_div) {
     //批量选择按钮，点击之后要更换数字
     let SYN_MK_quantity_button = SYN_value_div.querySelector('#SYN_MK_FD_P_quantity_button');
     SYN_MK_quantity_button.addEventListener('click', function () {
-        let now_quantity_num = this.dataset.quantity_num;
+        let now_quantity_num = get_dataset_value(this, 'quantity_num');
         let next_quantity_num = get_SYN_next_quantity_num(now_quantity_num);
         this.innerHTML = '批量制造选择-> X' + next_quantity_num;
-        this.dataset.quantity_num = next_quantity_num;
+        set_dataset_value(this, 'quantity_num', next_quantity_num);
         let live_plan_manage = global.get_live_plan_manage();
         let synthesis_manage = live_plan_manage.get_LP_live_skill_manage('synthesis_manage');
-        synthesis_manage.set_now_quantity_num(next_quantity_num); //设置批量数字
-        // live_plan_manage.updata_live_plan_game_div('synthesis');
-        synthesis_manage.updata_SYN_formula_Details_div(); //更新配方详情
+        synthesis_manage.updata_live_plan_div(); //更新界面
     });
     //制造按钮
     let SYN_MK_FD_P_make_button = SYN_value_div.querySelector('#SYN_MK_FD_P_make_button');
@@ -596,14 +594,13 @@ function set_SYN_filter_make_button(SYN_value_div) {
     //批量选择按钮，点击之后要更换数字
     let SYN_FM_quantity_button = SYN_value_div.querySelector('#SYN_FM_FD_P_quantity_button');
     SYN_FM_quantity_button.addEventListener('click', function () {
-        let now_quantity_num = this.dataset.quantity_num;
+        let now_quantity_num = get_dataset_value(this, 'quantity_num');
         let next_quantity_num = get_SYN_next_quantity_num(now_quantity_num);
         this.innerHTML = '批量制造选择-> X' + next_quantity_num;
-        this.dataset.quantity_num = next_quantity_num;
+        set_dataset_value(this, 'quantity_num', next_quantity_num);
         let live_plan_manage = global.get_live_plan_manage();
         let synthesis_manage = live_plan_manage.get_LP_live_skill_manage('synthesis_manage');
-        synthesis_manage.set_now_quantity_num(next_quantity_num); //设置批量数字
-        synthesis_manage.updata_SYN_formula_Details_div(); //更新配方详情
+        synthesis_manage.updata_live_plan_div(); //更新界面
     });
     //制造按钮
     let SYN_FM_FD_P_make_button = SYN_value_div.querySelector('#SYN_FM_FD_P_make_button');
@@ -666,7 +663,7 @@ function get_SYN_next_quantity_num(now_quantity_num) {
     while (1) {
         if (zero_num >= 10) {
             console.log('数字计算错误，now_quantity_num的值不正常');
-            return '1';
+            return 1;
         }
 
         if (parseInt(x / 10) > 0) {
@@ -682,7 +679,7 @@ function get_SYN_next_quantity_num(now_quantity_num) {
     let next_x = arrr[x];
     if (next_x == 0 || next_x == undefined) {
         console.log('数字计算错误，next_x的值不正常');
-        return '1';
+        return 1;
     }
     if (next_x == 1) {
         zero_num++;
@@ -691,7 +688,7 @@ function get_SYN_next_quantity_num(now_quantity_num) {
     if (next_x > 1000) {
         next_x = 1;
     }
-    return String(next_x);
+    return next_x;
 }
 
 export { make_synthesis_div, set_synthesis_button };

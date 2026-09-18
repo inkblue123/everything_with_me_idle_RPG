@@ -5,6 +5,6 @@ import { global } from '../../../GameRun/global_manage.js';
 function make_engrave_div(EGV_value_div) {}
 
 //为雕刻界面中的按钮添加交互逻辑
-function set_engrave_button(EGV_value_div) {}
+function set_engrave_button(Live_plan) {}
 
 export { make_engrave_div, set_engrave_button };

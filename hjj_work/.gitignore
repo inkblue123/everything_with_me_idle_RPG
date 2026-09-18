@@ -1,0 +1,13 @@
+# build / generated artifacts
+everything_with_me_idle/output/
+**/node_modules/
+.npm-cache/
+
+# 以下目录不纳入版本管理（此前被 git add -A 误提交，现从跟踪中移除，文件仍保留在磁盘上）
+worklog/
+raw_src/
+test/
+save_file/
+.claude/
+_devtools/
+.vscode/

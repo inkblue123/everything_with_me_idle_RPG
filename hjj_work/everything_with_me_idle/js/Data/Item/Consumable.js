@@ -9,6 +9,10 @@ function init_Item_Consumable(items) {
     init_food(items);
     //干制品
     init_dry_product(items);
+    //精制调味料
+    init_refined_seasoning(items);
+    //丹药精华
+    init_elixir_essence(items);
     //药材
     init_crude_drug(items);
     //药水
@@ -72,6 +76,8 @@ function init_food(items) {
 
     id = 'grilled_fish'; //烤鱼串
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(白板菜可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 10); //白板基础效果：恢复少量生命
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 10); //物品价值
     id = 'big_grilled_fish'; //大烤鱼串
@@ -113,6 +119,39 @@ function init_dry_product(items) {
     add_Consumable_object(items, id);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 25); //物品价值
+}
+//精制调味料
+function init_refined_seasoning(items) {
+    let id;
+    let secon_type = 'refined_seasoning'; //消耗品大类中的精制调味料小类
+
+    //鱼肉松：作为调味料加入菜品时贡献少量魔力恢复
+    id = 'fish_meat_floss';
+    add_Consumable_object(items, id);
+    items[id].add_season_effect('get_attr', null, 'magic_point', 5);
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Item_price('ordinary_coin', 20); //物品价值
+    //兽肉松：作为调味料加入菜品时贡献少量表层精力恢复
+    id = 'animal_meat_floss';
+    add_Consumable_object(items, id);
+    items[id].add_season_effect('get_attr', null, 'surface_energy_point', 5);
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Item_price('ordinary_coin', 35); //物品价值
+    //浆果果酱：作为调味料加入菜品时贡献少量生命恢复
+    id = 'berry_jam';
+    add_Consumable_object(items, id);
+    items[id].add_season_effect('get_attr', null, 'health_point', 5);
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Item_price('ordinary_coin', 25); //物品价值
+}
+//丹药精华(本期只搬迁、不处理内容)
+function init_elixir_essence(items) {
+    let id;
+    let secon_type = 'elixir_essence'; //消耗品大类中的丹药精华小类
+
+    // id = 'AAAA'; //
+    // add_Consumable_object(items, id);
+    // items[id].init_Item_other(20, secon_type, 0); //堆叠数量，物品小类，章节归属
 }
 //药材
 function init_crude_drug(items) {

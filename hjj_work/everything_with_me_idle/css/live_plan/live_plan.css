@@ -20,7 +20,8 @@
     gap: 2px;
     outline: 2px solid #797691;
     user-select: none;
-    position: relative; /*作为锁定遮罩的定位父元素*/
+    position: relative;
+    /*作为锁定遮罩的定位父元素*/
 }
 
 #Live_plan_value_div {
@@ -90,4 +91,15 @@
 .LP_button {
     width: 100px;
     height: 45px;
+}
+
+/* 生活技能中常用详情组件div */
+.Details_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: auto;
+    outline: 2px solid #797691;
 }

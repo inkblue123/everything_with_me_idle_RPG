@@ -1,7 +1,7 @@
 import { init_normal_buff } from './Buff_normal.js';
 
 var buffs = new Object();
-//初始化敌人库
+//初始化buff库
 function init_buffs() {
     init_normal_buff(buffs);
 }

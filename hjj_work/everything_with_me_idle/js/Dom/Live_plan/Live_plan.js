@@ -159,12 +159,14 @@ function make_Material_handling_div(MH_div) {
         var COK_radio_div = addElement(MH_switch_div, 'div', 'COK_radio_div', 'radio_div switch_radio_div_1');
         addElement_radio(COK_radio_div, 'COK_button', 'MH_switch', 'COK_button', '烹饪');
         var COK_droptable = addElement(MH_switch_div, 'div', 'COK_droptable', 'dropdown_table');
-        var COK_DS_radio_div = addElement(COK_droptable, 'div', 'COK_DS_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(COK_DS_radio_div, 'COK_DS', 'COK_switch', 'COK_DS', '烹饪菜品');
+        var COK_CD_radio_div = addElement(COK_droptable, 'div', 'COK_CD_radio_div', 'radio_div switch_radio_div_2');
+        addElement_radio(COK_CD_radio_div, 'COK_CD', 'COK_switch', 'COK_CD', '烹饪菜品');
         var COK_MD_radio_div = addElement(COK_droptable, 'div', 'COK_MD_radio_div', 'radio_div switch_radio_div_2');
         addElement_radio(COK_MD_radio_div, 'COK_MD', 'COK_switch', 'COK_MD', '制作干制品');
         var COK_MS_radio_div = addElement(COK_droptable, 'div', 'COK_MS_radio_div', 'radio_div switch_radio_div_2');
         addElement_radio(COK_MS_radio_div, 'COK_MS', 'COK_switch', 'COK_MS', '制作调味品');
+        var COK_DS_radio_div = addElement(COK_droptable, 'div', 'COK_DS_radio_div', 'radio_div switch_radio_div_2');
+        addElement_radio(COK_DS_radio_div, 'COK_MS', 'COK_switch', 'COK_DS', '菜品调味');
         var COK_EN_radio_div = addElement(COK_droptable, 'div', 'COK_EN_radio_div', 'radio_div switch_radio_div_2');
         addElement_radio(COK_EN_radio_div, 'COK_EN', 'COK_switch', 'COK_EN', '工作环境详情');
 
@@ -279,7 +281,6 @@ function set_Live_plan_button(Live_plan) {
 
             //停止游戏状态
             global.set_flag('GS_game_statu', 'NULL');
-            // }
             //切换界面
             change_Explore_collection_div(this.id);
         });
@@ -307,7 +308,6 @@ function set_Live_plan_button(Live_plan) {
             show_dropdown_table('MH_switch_div', drop_name);
         });
     });
-    //原料处理界面，左侧选择合成制造的子功能之后，右侧切换成合成制造的对应子功能界面
 
     //为伐木界面中的按钮添加交互逻辑
     let LGI_value_div = Live_plan.querySelector('#LGI_value_div');
@@ -333,24 +333,19 @@ function set_Live_plan_button(Live_plan) {
 
     //为合成制造界面中的按钮添加交互逻辑
     // let SYN_value_div = Live_plan.querySelector('#SYN_value_div');
+    //切换原料处理类子功能时还需要负责对应技能的管理类的交互，所以也一起放入
     set_synthesis_button(Live_plan);
     //为烹饪界面中的按钮添加交互逻辑
-    let COK_value_div = Live_plan.querySelector('#COK_value_div');
-    set_cooking_button(COK_value_div);
+    set_cooking_button(Live_plan);
     //为锻造界面中的按钮添加交互逻辑
-    let FRG_value_div = Live_plan.querySelector('#FRG_value_div');
-    set_forging_button(FRG_value_div);
+    set_forging_button(Live_plan);
     //为炼丹界面中的按钮添加交互逻辑
-    let EXA_value_div = Live_plan.querySelector('#EXA_value_div');
-    set_elixir_alchemy_button(EXA_value_div);
+    set_elixir_alchemy_button(Live_plan);
     //为药浴界面中的按钮添加交互逻辑
-    let HBB_value_div = Live_plan.querySelector('#HBB_value_div');
-    set_herbal_bath_button(HBB_value_div);
+    set_herbal_bath_button(Live_plan);
     //为雕刻界面中的按钮添加交互逻辑
-    let EGV_value_div = Live_plan.querySelector('#EGV_value_div');
-    set_engrave_button(EGV_value_div);
+    set_engrave_button(Live_plan);
     //为炼金术界面中的按钮添加交互逻辑
-    let ACM_value_div = Live_plan.querySelector('#ACM_value_div');
-    set_alchemy_button(ACM_value_div);
+    set_alchemy_button(Live_plan);
 }
 export { create_Live_plan };

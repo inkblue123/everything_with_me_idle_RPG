@@ -57,7 +57,11 @@ function addElement_select(parent_element, id, cls, name, title, ...option_name)
     let newselect = document.createElement('select');
     //初始化select基本信息
     if (id) newselect.id = id;
-    if (cls) newselect.className = cls;
+    if (cls) {
+        newselect.className = cls + ' game_select';
+    } else {
+        newselect.className = 'game_select';
+    }
     if (name) newselect.name = name;
     // newselect.size = 5;
     if (title) {
@@ -80,10 +84,12 @@ function addElement_lazy_select(parent_element, id, cls, name, title, D_option, 
     let newselect = document.createElement('select');
     //初始化select
     if (id) newselect.id = id;
-    if (cls) newselect.className = cls;
+    if (cls) {
+        newselect.className = cls + ' game_select';
+    } else {
+        newselect.className = 'game_select';
+    }
     if (name) newselect.name = name;
-    // newselect.size = 5;
-
     if (title) {
         newselect.setAttribute('aria-label', title);
     } else {
@@ -358,52 +364,52 @@ function start_magic_animation(div_id, text) {
  * @returns {DOMRect} - 元素的边界矩形，获取失败时返回全 0 的 DOMRect
  */
 function getRectEvenHidden(elem) {
-	if (!elem || !elem.nodeType) {
-		console.log('getRectEvenHidden: 输入元素无效');
-		return new DOMRect(0, 0, 0, 0);
-	}
+    if (!elem || !elem.nodeType) {
+        console.log('getRectEvenHidden: 输入元素无效');
+        return new DOMRect(0, 0, 0, 0);
+    }
 
-	// 快路径：元素有 offsetParent 说明自身及所有祖先都不是 display:none，
-	// 元素已经正常渲染，直接返回原生测量结果
-	if (elem.offsetParent !== null) {
-		return elem.getBoundingClientRect();
-	}
+    // 快路径：元素有 offsetParent 说明自身及所有祖先都不是 display:none，
+    // 元素已经正常渲染，直接返回原生测量结果
+    if (elem.offsetParent !== null) {
+        return elem.getBoundingClientRect();
+    }
 
-	// 慢路径：祖先链上存在 display:none 节点，需要临时让它们参与布局
-	// 沿 DOM 树向上收集所有 display:none 的祖先（包括自身）
-	const hiddenNodes = [];
-	let node = elem;
-	while (node && node.nodeType === 1) {
-		if (window.getComputedStyle(node).display === 'none') {
-			hiddenNodes.push(node);
-		}
-		node = node.parentElement;
-	}
+    // 慢路径：祖先链上存在 display:none 节点，需要临时让它们参与布局
+    // 沿 DOM 树向上收集所有 display:none 的祖先（包括自身）
+    const hiddenNodes = [];
+    let node = elem;
+    while (node && node.nodeType === 1) {
+        if (window.getComputedStyle(node).display === 'none') {
+            hiddenNodes.push(node);
+        }
+        node = node.parentElement;
+    }
 
-	// 保存原始 inline style，然后清除 display:none 并设为不可见
-	const savedStyles = hiddenNodes.map(n => ({
-		node: n,
-		display: n.style.display,
-		visibility: n.style.visibility,
-	}));
+    // 保存原始 inline style，然后清除 display:none 并设为不可见
+    const savedStyles = hiddenNodes.map((n) => ({
+        node: n,
+        display: n.style.display,
+        visibility: n.style.visibility,
+    }));
 
-	for (const n of hiddenNodes) {
-		// 清除 inline 的 display:none，使 CSS 类定义的 display 值生效
-		n.style.display = '';
-		// visibility:hidden 确保元素不产生视觉闪现，但仍参与布局计算
-		n.style.visibility = 'hidden';
-	}
+    for (const n of hiddenNodes) {
+        // 清除 inline 的 display:none，使 CSS 类定义的 display 值生效
+        n.style.display = '';
+        // visibility:hidden 确保元素不产生视觉闪现，但仍参与布局计算
+        n.style.visibility = 'hidden';
+    }
 
-	// 同步测量——此时浏览器会立即重算布局，但不会绘制中间状态
-	const rect = elem.getBoundingClientRect();
+    // 同步测量——此时浏览器会立即重算布局，但不会绘制中间状态
+    const rect = elem.getBoundingClientRect();
 
-	// 恢复所有被修改的 inline style
-	for (const s of savedStyles) {
-		s.node.style.display = s.display;
-		s.node.style.visibility = s.visibility;
-	}
+    // 恢复所有被修改的 inline style
+    for (const s of savedStyles) {
+        s.node.style.display = s.display;
+        s.node.style.visibility = s.visibility;
+    }
 
-	return rect;
+    return rect;
 }
 
 //获取指定多选框中已选择按钮的内容

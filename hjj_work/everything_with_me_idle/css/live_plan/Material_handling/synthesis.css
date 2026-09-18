@@ -182,6 +182,16 @@
     outline: 2px solid #797691;
 }
 
+/* 制造界面-配方详情的材料需求，容纳所有需求材料的div */
+#SYN_MK_FD_N_value_div {
+    gap: 2px;
+}
+
+/* 配方筛选的制造界面-配方详情的材料需求，容纳所有需求材料的div */
+#SYN_FM_FD_N_value_div {
+    gap: 2px;
+}
+
 /* 工作环境详情 */
 .SYN_FD_E_div {
     display: flex;
@@ -228,17 +238,6 @@
 .SYN_FD_P_make_button {
     flex: 1;
     font-size: 26px;
-}
-
-/* 详情组件div */
-.Details_div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    height: auto;
-    outline: 2px solid #797691;
 }
 
 /* 需求筛选或者产物筛选父div */

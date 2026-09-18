@@ -36,10 +36,11 @@ function init_game_status(enums) {
         GS_unlock_SYN_RS: false, //合成制造技能的配方研究子功能是否解锁
         GS_unlock_SYN_EN: true, //合成制造技能的工作环境详情子功能是否解锁
         GS_unlock_COK: false, //烹饪技能是否解锁
-        GS_unlock_COK_DS: false, //烹饪技能的烹饪菜品子功能是否解锁
+        GS_unlock_COK_CD: true, //烹饪技能的烹饪菜品子功能是否解锁
         GS_unlock_COK_MD: false, //烹饪技能的制作干制品子功能是否解锁
         GS_unlock_COK_MS: false, //烹饪技能的制作调味品子功能是否解锁
-        GS_unlock_COK_EN: false, //烹饪技能的工作环境详情子功能是否解锁
+        GS_unlock_COK_DS: false, //烹饪技能的菜品烹饪子功能是否解锁
+        GS_unlock_COK_EN: true, //烹饪技能的工作环境详情子功能是否解锁
         GS_unlock_FRG: false, //锻造技能是否解锁
         GS_unlock_EXA: false, //炼丹技能是否解锁
         GS_unlock_HBB: false, //药浴技能是否解锁
@@ -53,7 +54,24 @@ function init_game_status(enums) {
     //这里枚举的技能是会写入GS_game_statu游戏状态的，运行时遇到对应的状态就处理相应的逻辑
     id = 'live_plan_GS';
     add_Enum_Array(enums, id);
-    enums[id] = ['logging', 'fishing', 'mining', 'collect', 'diving', 'archaeology', 'exploration', 'synthesis', 'cooking', 'forging', 'elixir_alchemy', 'herbal_bath', 'engrave', 'alchemy'];
+    enums[id] = [
+        //探索采集类
+        'logging',
+        'fishing',
+        'mining',
+        'collect',
+        'diving',
+        'archaeology',
+        'exploration',
+        //原料处理类
+        'synthesis',
+        'cooking',
+        'forging',
+        'elixir_alchemy',
+        'herbal_bath',
+        'engrave',
+        'alchemy',
+    ];
 }
 //初始化枚举库中与短期游戏状态参数相关的内容
 function init_short_game_status(enums) {

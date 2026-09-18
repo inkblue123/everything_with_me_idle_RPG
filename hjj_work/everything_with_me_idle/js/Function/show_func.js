@@ -40,21 +40,6 @@ function change_Material_handling_div(button_id) {
     }
 }
 
-// 检查一个元素是否是其父元素的最后一个元素子节点
-function is_last_child_of_parent(element) {
-    /**
-     * lastElementChild 会跳过空白文本节点，只匹配元素节点，
-     * 因此即使 DOM 中各元素之间有换行/缩进也不会误判。
-     * @param {HTMLElement} element
-     * @returns {boolean}
-     */
-    // 先确保 element 存在且已挂载在 DOM 中（parentNode 不为 null）
-    if (!element || !element.parentNode) {
-        return false;
-    }
-    // 用 lastElementChild 做恒等比较：只匹配元素，忽略文本/注释节点
-    return element.parentNode.lastElementChild === element;
-}
 // 检查一个元素之后是否还有"实际会显示内容"的兄弟元素。
 // display:none 的兄弟元素不参与布局（跳过）；高度为0的兄弟元素（例如内部子按钮全部隐藏的空下拉框）
 // 会隔开位置，不会紧贴在本元素下边框处绘制内容。
@@ -151,4 +136,44 @@ function show_dropdown_table(in_overflow_div, table_id) {
     }
 }
 
-export { show_dropdown_table, change_Live_plan_div, change_Explore_collection_div, change_Material_handling_div };
+//show_dropdown_table 的快速版本：跳过 height 动画和 setTimeout，同步直接设置动画结束后的最终状态。
+//与 show_dropdown_table 在运行完毕（300ms 动画结束后）的效果一致：
+// - 目标下拉框（table_id，可省略）：展开则折叠，关闭则展开
+// - 容器 in_overflow_div 内的其它 .dropdown_table：一律折叠
+// 差异仅在"最终态归一化"：所有被关闭的下拉框统一 height:''，不复刻原函数对其它下拉框残留的 height:'0px'。
+function show_dropdown_table_fast(in_overflow_div, table_id) {
+    //切换目标下拉框的显示/隐藏状态
+    if (table_id) {
+        const dropdownTable = document.getElementById(table_id);
+        if (dropdownTable) {
+            if (dropdownTable.style.display === 'flex') {
+                //折叠：复位 overflow，直接隐藏
+                dropdownTable.style.overflow = '';
+                dropdownTable.style.display = 'none';
+                dropdownTable.style.height = '';
+            } else {
+                //展开：直接以最终高度显示
+                dropdownTable.style.display = 'flex';
+                dropdownTable.style.height = '';
+                //若该下拉框是父元素中最后一个实际显示的子元素，设置 overflow:visible，
+                //避免其内部最后一个子元素的下边框被 overflow:hidden 裁剪
+                if (is_last_visible_child_of_parent(dropdownTable)) {
+                    dropdownTable.style.overflow = 'visible';
+                }
+            }
+        }
+    }
+    //遍历，并且关闭容器内的其他下拉框
+    const Class_div = document.getElementById(in_overflow_div);
+    let tables = Class_div.querySelectorAll('.dropdown_table');
+    for (let table of tables) {
+        if (table.id !== table_id && table.style.display === 'flex') {
+            //折叠：复位 overflow，直接隐藏
+            table.style.overflow = '';
+            table.style.display = 'none';
+            table.style.height = '';
+        }
+    }
+}
+
+export { show_dropdown_table, show_dropdown_table_fast, change_Live_plan_div, change_Explore_collection_div, change_Material_handling_div };

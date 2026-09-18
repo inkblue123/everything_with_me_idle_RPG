@@ -2,3 +2,498 @@
 #COK_value_div {
     outline: 2px solid #797691;
 }
+
+/* 烹饪每个子界面 */
+.COK_son_div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 2px;
+}
+
+/* 顶部配方标题 */
+.COK_formula_title_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex: 0 0 10%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 顶部配方标题-左 */
+.COK_formula_title_1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    height: 100%;
+    outline: 2px solid #797691;
+}
+
+/* 顶部配方标题-中 */
+.COK_formula_title_2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    height: 100%;
+}
+
+/* 顶部配方标题-右 */
+.COK_formula_title_3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 14px;
+    height: 100%;
+}
+
+/* 容纳所有配方内容div */
+.COK_formula_scroll_box {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    flex: 1 1 auto;
+    outline: 2px solid #797691;
+}
+
+/* 容纳配方div需要gap让子元素的outline生效 */
+.COK_formula_scroll_box .in_overflow_div {
+    gap: 2px;
+}
+
+/* 筛选div */
+.COK_choice_div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex: 0 0 10%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 筛选标题 */
+.COK_choice_title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 1 auto;
+    height: 100%;
+    padding: 0 10px;
+    outline: 2px solid #797691;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* 筛选当前是否可制作div */
+.COK_choice_make_flag_div {
+    flex: 0 1 auto;
+    height: 100%;
+    outline: 2px solid #797691;
+}
+
+/* 筛选当前是否可制作按钮 */
+.COK_choice_make_flag_button {
+    height: 100%;
+}
+
+/* 配方排序div */
+.COK_sort_type_div {
+    display: flex;
+    justify-content: center;
+    flex: 1 1 auto;
+    height: 100%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 配方排序筛选div 内的直接子元素等宽均分（"按照"文本、两个下拉框、排序按钮） */
+/* 筛选标题 */
+.COK_sort_label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 0;
+    height: 100%;
+    outline: 2px solid #797691;
+}
+
+.COK_sort_select {
+    height: 100%;
+    flex: 1 1 0;
+    box-sizing: border-box;
+    font-size: 15px;
+    text-align: center;
+}
+
+/* 筛选标题 */
+.COK_sort_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 0;
+    height: 100%;
+    padding: 0px;
+    outline: 2px solid #797691;
+}
+
+/* 未选定配方时的填充div */
+.COK_no_formula_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex: 0 0 20%;
+    outline: 2px solid #797691;
+}
+
+/* 选定配方详情div */
+.COK_formula_Details_div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex: 0 0 40%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 配方详情上部：占75%高度，放置 需求/状态/工作环境 三个子元素（横向均分由 page_columns_111 提供） */
+#COK_CD_formula_Details_up_div {
+    height: 75%;
+    width: 100%;
+    gap: 2px;
+}
+
+/* 配方详情下部：占25%高度，放置产物详情的4个子元素（grid 四列均分） */
+#COK_CD_formula_Details_down_div {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    height: 25%;
+    width: 100%;
+    gap: 2px;
+}
+
+/* 状态详情（新元素占位） */
+.COK_FD_S_div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    height: 100%;
+    outline: 2px solid #797691;
+}
+
+/* 状态详情-添加调料的滚动区（占剩余空间） */
+.COK_FD_S_scroll_box {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1 1 auto;
+    outline: 2px solid #797691;
+}
+
+/* 需求详情 */
+.COK_FD_N_div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    height: 100%;
+    outline: 2px solid #797691;
+}
+
+/* 需求详情具体内容 */
+.COK_FD_N_scroll_box {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    outline: 2px solid #797691;
+}
+
+/* 烹饪菜品界面-配方详情的材料需求，容纳所有需求材料的div */
+#COK_CD_FD_N_value_div {
+    gap: 2px;
+}
+
+#COK_CD_FD_S_value_div {
+    gap: 2px;
+}
+
+/* 工作环境详情 */
+.COK_FD_E_div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+.COK_FD_E_value_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* 产物详情 */
+.COK_FD_P_div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+.COK_FD_P_quantity_button {
+    flex: 1;
+    font-size: 14px;
+}
+
+.COK_FD_P_value_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+    outline: 2px solid #797691;
+}
+
+.COK_FD_P_make_button {
+    flex: 1;
+    font-size: 26px;
+}
+
+.COK_FD_S_clear_button {
+    /* flex: 1; */
+    font-size: 14px;
+    height: 20px;
+}
+
+/*烹饪时的调料div */
+.Seasoning_div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: auto;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 调料div内的文本（占剩余空间，靠左） */
+.Seasoning_text {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+}
+
+/* 调料加号按钮（正方形） */
+.Seasoning_add_button {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    padding: 0;
+}
+
+/* 调料减号按钮（正方形） */
+.Seasoning_minus_button {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    padding: 0;
+}
+
+/* 顶部说明文本 */
+#COK_EN_title_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+    outline: 2px solid #797691;
+}
+
+/* 工作环境界面的详情 */
+#COK_EN_detail_div {
+    display: flex;
+    width: 100%;
+    height: 90%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 左侧的各种工作环境选择按钮 */
+#COK_EN_left_div {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 100%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 右侧详情 */
+#COK_EN_right_div {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 详情上半部分 */
+#COK_EN_Rup_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 详情上半部分 */
+.COK_EN_Rup_son_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    gap: 2px;
+}
+
+/* 详情上半部分的标题 */
+.COK_EN_Rup_title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    outline: 2px solid #797691;
+}
+
+/* 详情上半部分的名称 */
+.COK_EN_Rup_name {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    aspect-ratio: 1/1;
+    outline: 2px solid #797691;
+}
+
+/* 详情上半部分的描述 */
+.COK_EN_Rup_desc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30%;
+    white-space: pre-wrap;
+    outline: 2px solid #797691;
+}
+
+/* 详情上半部分的描述 */
+#COK_EN_Rup_arrow_div {
+    display: flex;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+}
+
+/* 详情上半部分 */
+#COK_EN_Rin_div {
+    display: flex;
+    flex-direction: column;
+    height: 25%;
+    gap: 2px;
+    outline: 2px solid #797691;
+}
+
+/* 容纳所有配方内容div */
+#COK_EN_Rin_div_scroll_box {
+    flex: 1 1 auto;
+    outline: 2px solid #797691;
+}
+
+/* 容纳所有配方内容div */
+#COK_EN_Rin_value_div {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+/* 详情中部的标题 */
+#COK_EN_Rin_title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    outline: 2px solid #797691;
+}
+
+/* 工作环境详情界面内的一个通用元素 */
+.COK_EN_value {
+    /* 每行两个元素 */
+    width: 50%;
+    text-align: center;
+}
+
+/* 详情下部div */
+#COK_EN_Rdown_div {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height: 15%;
+    outline: 2px solid #797691;
+}
+
+/* 详情独立界面，选择将要创建的工作环境*/
+#COK_EN_add_choice_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+}
+
+/* 详情独立界面，选择将要创建的工作环境的内容 */
+#COK_EN_add_choice_value {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    justify-content: center;
+}
+
+/* 当只有一个子元素时，让它占据两列并居中 */
+#COK_EN_add_choice_value:has(:only-child)> :only-child {
+    grid-column: span 2;
+    text-align: center;
+}

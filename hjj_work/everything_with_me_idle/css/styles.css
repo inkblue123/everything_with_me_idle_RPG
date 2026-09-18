@@ -391,3 +391,17 @@ html {
     border-radius: 2px;
     cursor: pointer;
 }
+
+/* 通用下拉框样式*/
+.game_select {
+    background-color: #efefef;
+    box-shadow: 0 0 0 1px #797691;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+}
+
+/* 下拉框点击反应 */
+.game_select:focus {
+    outline: none;
+}

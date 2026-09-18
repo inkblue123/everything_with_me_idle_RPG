@@ -350,8 +350,8 @@ export class Data_attr_manage {
             this.health_point += value;
             if (this.health_point < 0) {
                 this.health_point = 0;
-            } else if (this.health_point > this.end_data_attr['health_max']) {
-                this.health_point = this.end_data_attr['health_max'];
+            } else if (this.health_point > this.end_data_attr['true_health_max']) {
+                this.health_point = this.end_data_attr['true_health_max'];
             }
         } else if (id == 'magic_point') {
             this.magic_point += value;
@@ -449,6 +449,10 @@ export class Data_attr_manage {
     }
     //计算部分属性，获得真正使用的数值
     updata_need_calculate_end_attr() {
+        //true_health_max 生命上限（基本生命上限 × max_health_ratio 的百分比加成）
+        let base_health_max = this.end_data_attr['health_max']; //基本生命上限
+        let max_health_ratio = this.end_data_attr['max_health_ratio']; //生命上限加成
+        this.end_data_attr['true_health_max'] = calculate_num_attr(base_health_max, 0, max_health_ratio, 0, 0);
         //true_attack 攻击力
         let base_attack = this.end_data_attr['attack']; //基本攻击力
         let attack_ratio = this.end_data_attr['attack_ratio']; //攻击力加成

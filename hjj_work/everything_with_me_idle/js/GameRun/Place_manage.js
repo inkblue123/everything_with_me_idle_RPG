@@ -404,7 +404,7 @@ function show_unlock_live_plan_div() {
     let EC_live_plan_div_id = ['LGI', 'FIS', 'MIN', 'CLT', 'DIV', 'ACL', 'ELT'];
     let MH_live_plan_div_id = ['SYN', 'COK', 'FRG', 'EXA', 'HBB', 'EGV', 'ACM'];
     const main_live_plan_div_id = [...EC_live_plan_div_id, ...MH_live_plan_div_id];
-    let son_live_plan_div_id = ['SYN_MK', 'SYN_FL', 'SYN_RS', 'SYN_EN', 'COK_DS', 'COK_MD', 'COK_MS', 'COK_EN'];
+    let son_live_plan_div_id = Object.keys(enums['live_plan_process_son_skill_min']);
     let global_flag_manage = global.get_global_flag_manage();
     let unlock_skill_num = 0; //解锁技能数
     let unlock_EC_skill_num = 0; //解锁的探索采集技能数
@@ -417,6 +417,11 @@ function show_unlock_live_plan_div() {
         //单选按钮
         let radio_id = all_id[i] + '_radio_div';
         let radio_div = document.getElementById(radio_id);
+        //枚举中可能包含尚未实现界面的子功能，找不到对应元素时输出错误信息并跳过
+        if (radio_div == undefined) {
+            console.log('%s界面元素不存在，跳过', radio_id);
+            continue;
+        }
 
         let status_id = 'GS_unlock_' + all_id[i];
         let status = global_flag_manage.get_flag(status_id);

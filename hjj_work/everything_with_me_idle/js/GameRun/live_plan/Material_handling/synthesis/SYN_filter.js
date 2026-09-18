@@ -419,4 +419,28 @@ function set_a_SYN_FL_show_value(choice_id, click_value, value_attr) {
         }
     }
 }
-export { get_SYN_FL_click_type, delete_SYN_FL_value, get_SYN_FL_show_value, set_a_SYN_FL_show_value };
+
+//更新上中的生活技能界面中的合成制造技能界面的配方筛选的筛选界面的内容
+function updata_SYN_FL_div(updata_type, click_type, click_value) {
+    //获取当前选择的筛选类型
+    let SYN_FL_N_type = get_radio_switch_click_value('SYN_FL_N_type_switch');
+    let SYN_FL_P_type = get_radio_switch_click_value('SYN_FL_P_type_switch');
+    //获取当前选择的筛选内容
+    let SYN_FL_C = get_SYN_FL_click_type(updata_type, click_type, click_value);
+
+    //清空目前的全部内容
+    delete_SYN_FL_value();
+
+    //获取需要展示的所有内容
+    let SYN_FL_show_value = get_SYN_FL_show_value(SYN_FL_N_type, SYN_FL_P_type, SYN_FL_C);
+
+    // 填充当前选择的筛选条件下需要展示的内容
+    set_a_SYN_FL_show_value('N_main_type', SYN_FL_C.SYN_FL_N_M, SYN_FL_show_value.need_main_type); //需求-物品大类
+    set_a_SYN_FL_show_value('N_secon_type', SYN_FL_C.SYN_FL_N_S, SYN_FL_show_value.need_secon_type); //需求-物品小类
+    set_a_SYN_FL_show_value('N_item', SYN_FL_C.SYN_FL_N_I, SYN_FL_show_value.need_item); //需求-具体物品
+    set_a_SYN_FL_show_value('P_main_type', SYN_FL_C.SYN_FL_P_M, SYN_FL_show_value.product_main_type); //产物-物品大类
+    set_a_SYN_FL_show_value('P_secon_type', SYN_FL_C.SYN_FL_P_S, SYN_FL_show_value.product_secon_type); //产物-物品小类
+    set_a_SYN_FL_show_value('P_item', SYN_FL_C.SYN_FL_P_I, SYN_FL_show_value.product_item); //产物-具体物品
+}
+
+export { get_SYN_FL_click_type, delete_SYN_FL_value, get_SYN_FL_show_value, set_a_SYN_FL_show_value, updata_SYN_FL_div };

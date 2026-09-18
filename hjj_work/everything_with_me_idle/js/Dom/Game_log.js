@@ -564,12 +564,12 @@ function set_library_button(Game_log) {
                 //针对图鉴界面的“全部”按钮，额外新增关闭其他下拉框的功能
                 show_dropdown_table('IB_switch_div');
                 //额外关闭所有1级2级分类按钮
-                const radios = document.querySelectorAll('input[name="IB_1_switch"]');
-                for (const radio of radios) {
+                let IB_radios = document.querySelectorAll('input[name="IB_1_switch"]');
+                for (const radio of IB_radios) {
                     radio.checked = false;
                 }
-                radios = document.querySelectorAll('input[name="IB_2_switch"]');
-                for (const radio of radios) {
+                IB_radios = document.querySelectorAll('input[name="IB_2_switch"]');
+                for (const radio of IB_radios) {
                     radio.checked = false;
                 }
             }
@@ -578,8 +578,8 @@ function set_library_button(Game_log) {
             if (open_2_skill_C_id.includes(this.id)) {
                 show_dropdown_table('IB_item_droptable');
                 show_dropdown_table('IB_skill_droptable');
-                radios = document.querySelectorAll('input[name="IB_2_switch"]');
-                for (const radio of radios) {
+                let IB_radios = document.querySelectorAll('input[name="IB_2_switch"]');
+                for (const radio of IB_radios) {
                     radio.checked = false;
                 }
             }

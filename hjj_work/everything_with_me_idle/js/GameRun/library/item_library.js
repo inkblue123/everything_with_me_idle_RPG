@@ -216,8 +216,8 @@ function show_IB_item_consumable_data(item_library_data, item_id) {
                     T_name.innerHTML = attr_obj.attr_id;
                 }
                 let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
-                let sign = attr_obj.attr_value1 > 0 ? '+' : '-';
-                let ch_value = Math.abs(attr_obj.attr_value1);
+                let sign = attr_obj.attr_value > 0 ? '+' : '-';
+                let ch_value = Math.abs(attr_obj.attr_value);
                 let suffix = '';
                 if (enums['need_per_cent_attr'] && enums['need_per_cent_attr'].includes(attr_obj.attr_id)) {
                     suffix = '%';

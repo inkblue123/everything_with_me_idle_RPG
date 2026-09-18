@@ -5,6 +5,6 @@ import { global } from '../../../GameRun/global_manage.js';
 function make_alchemy_div(ACM_value_div) {}
 
 //为炼金术界面中的按钮添加交互逻辑
-function set_alchemy_button(ACM_value_div) {}
+function set_alchemy_button(Live_plan) {}
 
 export { make_alchemy_div, set_alchemy_button };

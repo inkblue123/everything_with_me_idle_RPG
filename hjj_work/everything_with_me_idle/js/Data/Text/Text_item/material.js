@@ -24,10 +24,6 @@ function init_Text_material(texts) {
     //加工零件系列
     init_Text_wood_board(texts); //木板
     init_Text_metal_parts(texts); //金属零件
-    //精制调味料
-    init_Text_refined_seasoning(texts);
-    //丹药精华
-    init_Text_elixir_essence(texts);
 }
 
 //木屑的文本
@@ -323,34 +319,6 @@ function init_Text_metal_parts(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '铁锭';
     texts[id].item_desc = '铁质标准金属锭，延展性与硬度平衡，适合绝大多数铁器制作';
-}
-//精制调味料的文本
-function init_Text_refined_seasoning(texts) {
-    let id;
-
-    id = 'fish_meat_floss';
-    add_text_object(texts, id);
-    texts[id].item_name = '鱼肉松';
-    texts[id].item_desc = '使用鱼为原料制成的调味品，可以在其他菜品烹饪时加入';
-
-    id = 'animal_meat_floss';
-    add_text_object(texts, id);
-    texts[id].item_name = '兽肉松';
-    texts[id].item_desc = '使用兽肉为原料制成的调味品，可以在其他菜品烹饪时加入';
-
-    id = 'berry_jam';
-    add_text_object(texts, id);
-    texts[id].item_name = '浆果果酱';
-    texts[id].item_desc = '使用浆果为原料制成的调味品，可以在其他菜品烹饪时加入';
-}
-//丹药精华的文本
-function init_Text_elixir_essence(texts) {
-    let id;
-
-    // id = 'AAAA';
-    // add_text_object(texts, id);
-    // texts[id].item_name = '物品名称';
-    // texts[id].item_desc = '物品描述';
 }
 
 export { init_Text_material };

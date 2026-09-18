@@ -14,6 +14,16 @@ function init_Synthesis_Formula(formulas) {
 function SYN_Material_L1_Formula(formulas) {
     let id;
 
+    id = 'SYN_test_1';
+    add_Formula_object(formulas, id);
+    formulas[id].init_formula_data(false, 'synthesis', 'SYN_MK', 'SYN_FM'); //初始解锁，合成制造技能，属于 制造 和 配方筛选的制造 子功能
+    formulas[id].add_formula_work_bench('carpentry_bench', 2); //需要木匠台1级
+    formulas[id].add_formula_material('Willow_logs', 5); //橡树原木，5个
+    formulas[id].add_formula_material('Oak_logs', 5); //橡树原木，5个
+    formulas[id].set_formula_product('Oak_board', 2); //橡木板，2个
+    formulas[id].set_formula_exp('make_exp', 1); //制作时获得经验
+    formulas[id].set_formula_research(3, 1); //研究需求：3个物品，1级拆解工具
+
     id = 'SYN_Oak_board_1';
     add_Formula_object(formulas, id);
     formulas[id].init_formula_data(false, 'synthesis', 'SYN_MK', 'SYN_FM'); //初始解锁，合成制造技能，属于 制造 和 配方筛选的制造 子功能

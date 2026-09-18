@@ -118,6 +118,8 @@ function init_game_dom() {
     SYN_MK_radio_div.children[0].checked = true;
     const COK_droptable = document.getElementById('COK_droptable');
     COK_droptable.style.display = 'none';
+    const COK_CD_radio_div = document.getElementById('COK_CD_radio_div');
+    COK_CD_radio_div.children[0].checked = true;
     const FRG_droptable = document.getElementById('FRG_droptable');
     FRG_droptable.style.display = 'none';
     const EXA_droptable = document.getElementById('EXA_droptable');

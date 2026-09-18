@@ -5,6 +5,6 @@ import { global } from '../../../GameRun/global_manage.js';
 function make_forging_div(FRG_value_div) {}
 
 //为锻造界面中的按钮添加交互逻辑
-function set_forging_button(FRG_value_div) {}
+function set_forging_button(Live_plan) {}
 
 export { make_forging_div, set_forging_button };
