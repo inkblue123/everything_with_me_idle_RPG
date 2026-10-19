@@ -281,11 +281,12 @@ function goto_new_place_get(next_place) {
     //新地点有buff
     if (!is_Empty_Object(places[next_place].buff)) {
         let P_buff = player.get_player_buff_manage();
+        let buff_manage = global.get_buff_manage();
         for (let id of places[next_place].buff) {
             if (is_Empty_Object(buffs[id])) {
                 console.log('%s地点有未知buff：%s', next_place, id);
             } else {
-                P_buff.set_buff_attr(id);
+                buff_manage.set_buff(P_buff, id);
             }
         }
     }
@@ -296,6 +297,7 @@ function leave_old_place_delete(old_place) {
         return;
     }
     let P_buff = player.get_player_buff_manage();
+    let buff_manage = global.get_buff_manage();
 
     //旧地点有固定场地buff，离开时要去掉
     if (!is_Empty_Object(places[old_place].buff)) {
@@ -303,7 +305,7 @@ function leave_old_place_delete(old_place) {
             if (is_Empty_Object(buffs[id])) {
                 console.log('%s地点有未知buff：%s', old_place, id);
             } else {
-                P_buff.delete_buff_attr(id);
+                buff_manage.delete_buff(P_buff, id);
             }
         }
     }
@@ -311,7 +313,7 @@ function leave_old_place_delete(old_place) {
     if (!is_Empty_Object(places[old_place].leave_need_delete)) {
         for (let obj of places[old_place].leave_need_delete) {
             if (obj.type == 'buff') {
-                P_buff.delete_buff_attr(obj.id);
+                buff_manage.delete_buff(P_buff, obj.id);
             }
         }
     }

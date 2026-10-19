@@ -27,7 +27,7 @@ function init_normal_buff_tip(buff_obj) {
         return false;
     }
     let label = addElement(Tooltip, 'div', null, 'lable_down');
-    label.innerHTML = buffs[buff_id].name; //物品名称
+    label.innerHTML = buff_obj.name; //读实例的名字（菜品本体buff可能带调味前缀）
     let text = addElement(Tooltip, 'div', null, 'lable_down');
     text.innerHTML = buffs[buff_id].desc; //物品描述
     return true;

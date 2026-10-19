@@ -1,4 +1,4 @@
-import { is_Empty_Object } from '../../Function/Function.js';
+import { is_Empty_Object, get_item_show_name } from '../../Function/Function.js';
 import { addElement, get_radio_switch_click_value } from '../../Function/Dom_function.js';
 
 import { texts } from '../../Data/Text/Text.js';
@@ -241,7 +241,7 @@ function make_player_attack_game_log(new_log_div, log_obj) {
 function make_get_item_game_log(new_log_div, log_obj) {
     let item_obj = log_obj.log_value[0];
     let id = item_obj.id;
-    let item_name = items[id].name;
+    let item_name = get_item_show_name(item_obj); //调味过的菜品带名称前缀
     let num = item_obj.num;
     let equip_rarity = item_obj.equip_rarity;
     if (items[id].main_type == 'equipment') {

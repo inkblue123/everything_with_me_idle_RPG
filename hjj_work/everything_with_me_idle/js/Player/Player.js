@@ -34,8 +34,11 @@ export class Player_Object {
         this.player_attributes = new Player_attributes();
         this.player_attributes.init();
         //玩家buff
-        this.player_buff_manage = new Player_Buff_Manage();
+        this.player_buff_manage = new Player_Buff_Manage(this);
         this.player_buff_manage.init();
+        //把玩家登记为buff全局结算层的目标来源（玩家是「登记型」来源，启动时注册一次）
+        let buff_manage = global.get_buff_manage();
+        buff_manage.register_buff_holder('player', this.player_buff_manage);
         //玩家背包
         this.player_backpack = new Player_backpack();
         this.player_backpack.init();
@@ -221,7 +224,7 @@ export class Player_Object {
         //玩家属性
         player_save.Player_attr_save = this.player_attributes.save_Player_attributes();
         //玩家buff
-        player_save.Player_buff_manage_save = this.player_buff_manage.save_Player_Buff_attr();
+        player_save.Player_buff_manage_save = this.player_buff_manage.save_buff();
         //玩家背包物品
         player_save.Player_backpack_save = this.player_backpack.save_Player_backpack();
         //玩家装备栏
@@ -238,7 +241,7 @@ export class Player_Object {
     //加载玩家对象存档
     load_player_class(player_save) {
         this.player_attributes.load_Player_attributes(player_save.Player_attr_save);
-        this.player_buff_manage.load_Player_Buff_attr(player_save.Player_buff_manage_save);
+        this.player_buff_manage.load_buff(player_save.Player_buff_manage_save);
         this.player_backpack.load_Player_backpack(player_save.Player_backpack_save);
         this.player_worn.load_Player_worn(player_save.Player_worn_save);
         this.player_skills.load_Player_skills(player_save.Player_skills_save);

@@ -386,6 +386,44 @@ function get_merge_use_attr(base_attr, ex_data) {
     }
     return ret;
 }
+//按消耗品实例的调味情况算名称前缀（见 plan §16 D18）
+//调味数 = 份数最多的那个调料小类的份数（max m_c）
+//  0     → 不加前缀
+//  1~3   → 美味的
+//  4     → 重口味的
+//  5以上 → 糟糕的
+function get_seasoning_name_prefix(ex_data) {
+    if (is_Empty_Object(ex_data) || is_Empty_Object(ex_data.seasoning)) {
+        return '';
+    }
+    let max_num = 0;
+    for (let seasoning_type in ex_data.seasoning) {
+        let num = to_num(ex_data.seasoning[seasoning_type]);
+        if (num > max_num) {
+            max_num = num;
+        }
+    }
+    if (max_num <= 0) {
+        return '';
+    }
+    if (max_num <= 3) {
+        return '美味的';
+    }
+    if (max_num == 4) {
+        return '重口味的';
+    }
+    return '糟糕的';
+}
+//取一个物品实例的显示名：调味过的消耗品在原名前带上前缀
+//物品模板上的 name 是按 id 固定的一份字符串，而前缀只存在于实例的 ex_data 里，
+//所以凡是展示"某个具体物品实例"的名字，都要走这里，而不是直接读 items[id].name
+function get_item_show_name(item_obj) {
+    if (is_Empty_Object(item_obj) || is_Empty_Object(items[item_obj.id])) {
+        return '';
+    }
+    let prefix = get_seasoning_name_prefix(item_obj.ex_data);
+    return prefix + items[item_obj.id].name;
+}
 
 export {
     check_Equipment,
@@ -403,4 +441,6 @@ export {
     get_random_text,
     to_num,
     get_merge_use_attr,
+    get_seasoning_name_prefix,
+    get_item_show_name,
 };

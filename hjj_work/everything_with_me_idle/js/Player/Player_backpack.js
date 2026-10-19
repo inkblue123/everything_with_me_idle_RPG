@@ -1,5 +1,5 @@
 'use strict';
-import { is_Empty_Object, get_uniqueArr, get_item_id_key } from '../Function/Function.js';
+import { is_Empty_Object, get_uniqueArr, get_item_id_key, get_item_show_name } from '../Function/Function.js';
 import { add_show_Tooltip, add_click_Equipment_worn, addElement, addElement_radio, add_click_use_consumable, get_radio_switch_click_value } from '../Function/Dom_function.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
@@ -624,7 +624,7 @@ function addBP_item(item_obj) {
     let id = item_obj.id;
     let maxStack = items[id].maxStack;
     let player_item_num = item_obj.num;
-    let name = items[id].name;
+    let name = get_item_show_name(item_obj); //调味过的菜品带名称前缀
 
     while (player_item_num) {
         let BP_value_div = document.getElementById('BP_value_div');
@@ -683,7 +683,7 @@ function addBP_goods(item_obj) {
         return;
     }
     let id = item_obj.id;
-    let name = items[id].name;
+    let name = get_item_show_name(item_obj); //调味过的菜品带名称前缀
     let aitem_data = new Object();
     aitem_data = JSON.parse(JSON.stringify(item_obj));
     aitem_data.num = can_show_num;

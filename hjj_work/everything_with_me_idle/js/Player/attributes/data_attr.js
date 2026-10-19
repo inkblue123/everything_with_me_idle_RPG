@@ -425,7 +425,7 @@ export class Data_attr_manage {
                 }
             } else {
                 this.end_data_attr[key] -= value;
-                if (this.end_data_attr[key] === 0) {
+                if (is_num_equal(this.end_data_attr[key], 0)) {
                     delete this.end_data_attr[key]; // 清理值为0的键
                 }
             }
@@ -492,4 +492,14 @@ export class Data_attr_manage {
         let move_speed_ratio = this.end_data_attr['move_speed_ratio']; //移动速度加成
         this.end_data_attr['true_move_speed'] = calculate_num_attr(base_move_speed, 0, move_speed_ratio, 0, 0);
     }
+}
+
+//抹掉浮点尘埃后，判断两个数是否相等
+//【只用在 partial_update_end_attr 里「某个键的贡献是不是已经归零」这一处判断】
+//为什么需要它：end_data_attr 里一个键的值，是多个来源（玩家基础 / 装备 / 被动技能 / 主动技能 / buff）
+//的滚动和；每次某个来源变化，做的都是「减去旧值 + 加上新值」。浮点下 (S + a) - a 不一定等于 S，
+//所以反复加减之后会漂移出 1e-16 级的残值，让 === 0 判不出来，那个键就永远删不掉。
+//精度：和 calculate_num_attr 保持一致，都看到小数点后 2 位
+function is_num_equal(a, b) {
+    return Math.round(a * 100) / 100 === Math.round(b * 100) / 100;
 }

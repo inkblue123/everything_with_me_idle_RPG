@@ -1,5 +1,5 @@
 import { add_show_Tooltip, addElement, addElement_radio, get_radio_switch_click_value } from '../../Function/Dom_function.js';
-import { is_Empty_Object, get_uniqueArr } from '../../Function/Function.js';
+import { is_Empty_Object, get_uniqueArr, get_item_show_name } from '../../Function/Function.js';
 import { show_dropdown_table } from '../../Function/show_func.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
@@ -592,7 +592,7 @@ function add_store_div_goods(good_item) {
     }
 
     //物品名称
-    let name = items[good_item.id].name;
+    let name = get_item_show_name(good_item); //调味过的菜品带名称前缀
     aitem_div.innerHTML = name + ' x ' + can_show_num;
 
     //给商店中的物品添加鼠标移动上去显示提示的效果

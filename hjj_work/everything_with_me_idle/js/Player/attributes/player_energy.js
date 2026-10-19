@@ -207,20 +207,21 @@ export class Player_energy_manage {
     //判断玩家此刻是否应该获得精力相关的buff
     get_or_delete_energy_buff(front_surface_energy_ratio, after_surface_energy_ratio) {
         let P_buff = player.get_player_buff_manage();
+        let buff_manage = global.get_buff_manage();
         if (front_surface_energy_ratio < 25 && 25 < after_surface_energy_ratio) {
-            P_buff.delete_buff_attr('extreme_fatigue');
-            P_buff.set_buff_attr('fatigue');
+            buff_manage.delete_buff(P_buff, 'extreme_fatigue');
+            buff_manage.set_buff(P_buff, 'fatigue');
         } else if (front_surface_energy_ratio < 50 && 50 < after_surface_energy_ratio) {
-            P_buff.delete_buff_attr('fatigue');
+            buff_manage.delete_buff(P_buff, 'fatigue');
         } else if (front_surface_energy_ratio < 100.5 && 100.5 < after_surface_energy_ratio) {
-            P_buff.set_buff_attr('energetic');
+            buff_manage.set_buff(P_buff, 'energetic');
         } else if (after_surface_energy_ratio < 25 && 25 < front_surface_energy_ratio) {
-            P_buff.delete_buff_attr('fatigue');
-            P_buff.set_buff_attr('extreme_fatigue');
+            buff_manage.delete_buff(P_buff, 'fatigue');
+            buff_manage.set_buff(P_buff, 'extreme_fatigue');
         } else if (after_surface_energy_ratio < 50 && 50 < front_surface_energy_ratio) {
-            P_buff.set_buff_attr('fatigue');
+            buff_manage.set_buff(P_buff, 'fatigue');
         } else if (after_surface_energy_ratio < 100.5 && 100.5 < front_surface_energy_ratio) {
-            P_buff.delete_buff_attr('energetic');
+            buff_manage.delete_buff(P_buff, 'energetic');
         }
     }
     //获取当前表层精力拥有量百分比

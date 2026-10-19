@@ -67,6 +67,18 @@ function work_bench_name(texts) {
     texts[id].work_bench_desc[0] = '0级拆解工具描述，实际上不应该看到这个';
     texts[id].work_bench_desc[1] = '空手进行配方拆解，仅能处理最基础的物品';
     texts[id].work_bench_desc[2] = '2级拆解工具描述';
+
+    //烹饪技能的工作环境（Enum_live_plan.js 的 all_COK_work_bench）
+    //工作台的等级描述 work_bench_desc 目前只有合成制造的升级界面在用，烹饪侧不读，故暂不设置
+    id = 'bonfire';
+    add_text_object(texts, id);
+    texts[id].work_bench_name = '篝火';
+    id = 'drying_device';
+    add_text_object(texts, id);
+    texts[id].work_bench_name = '晾晒装置';
+    id = 'seasoning_tool';
+    add_text_object(texts, id);
+    texts[id].work_bench_name = '调味工具';
 }
 //初始化文本数据库中没有明确分类的文本
 function init_Text_other(texts) {

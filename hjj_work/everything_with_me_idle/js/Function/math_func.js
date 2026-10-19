@@ -119,6 +119,12 @@ function get_random_enemy_distance(place_x, place_y) {
     }
     return get_random(min, max);
 }
+//把数值保留 2 位小数
+//用途：抹掉浮点运算留下的尘埃（例如 10% 的加成会算出 110.00000000000001）
+//注意：这是「抹尘」不是显示格式化——游戏里真正使用的数值就是保留 2 位之后的值
+function round_two_decimals(value) {
+    return Math.round(value * 100) / 100;
+}
 //计算常规数值型的属性的加成结果
 function calculate_num_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr_ratio2) {
     //基本数值
@@ -146,7 +152,7 @@ function calculate_num_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr_r
         end_attr = end_attr * (100 / (100 - attr_ratio2));
     }
 
-    return end_attr;
+    return round_two_decimals(end_attr);
 }
 //计算攻速型的属性的加成结果
 function calculate_speed_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr_ratio2) {
@@ -177,7 +183,7 @@ function calculate_speed_attr(base_attr, attr_num1, attr_ratio1, attr_num2, attr
     if (end_attr < 0.25) {
         end_attr = 0.25;
     }
-    return end_attr;
+    return round_two_decimals(end_attr);
 }
 
 //攻击技能效果计算函数
@@ -354,6 +360,7 @@ export {
     skill_levelup_exp_algorithm,
     skill_rewards_algorithm,
     format_numbers,
+    round_two_decimals,
     calculate_num_attr,
     calculate_speed_attr,
     seconds_time_to_ch,

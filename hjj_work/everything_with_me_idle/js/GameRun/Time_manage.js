@@ -1,4 +1,5 @@
 import { is_Empty_Object } from '../Function/Function.js';
+import { round_two_decimals } from '../Function/math_func.js';
 
 //帧率和时间库
 export class Time_manage {
@@ -76,7 +77,7 @@ export class Time_manage {
         //最高优先级游戏速度修改
         if (!is_Empty_Object(this.game_speed_num_component['global'])) {
             if (this.game_speed_num_component['global'] != 1) {
-                this.game_speed = this.game_speed_num_component['global'];
+                this.game_speed = round_two_decimals(this.game_speed_num_component['global']);
                 return;
             }
         }
@@ -97,6 +98,7 @@ export class Time_manage {
         } else {
             this.game_speed = num * (100 / (100 - ratio));
         }
+        this.game_speed = round_two_decimals(this.game_speed); //清除浮点
     }
     //一帧开始，更新相关时间
     updata_FPS_start() {

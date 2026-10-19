@@ -1,4 +1,4 @@
-import { is_Empty_Object, get_item_obj, get_item_id_key, get_merge_use_attr } from '../Function/Function.js';
+import { is_Empty_Object, get_item_obj, get_item_id_key, get_merge_use_attr, get_seasoning_name_prefix } from '../Function/Function.js';
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { global } from './global_manage.js';
@@ -54,21 +54,33 @@ export class Consumable_Manage {
         let use_type = items[id].use_type;
         if (use_type == 'once_use') {
             //一次性使用，要判断使用的效果能否生效
-            for (let attr_obj of items[id].use_attr) {
-                if (attr_obj.attr_type == 'get_attr') {
-                    //给予属性类型的效果，如果当前该属性满了，就不能使用
-                    if (enums['need_judge_max_attr'].includes(attr_obj.attr_id)) {
-                        let P_attr = player.get_player_attributes();
-                        if (P_attr.judge_player_attr_max(attr_obj.attr_id)) {
-                            flag = false;
+            //归并模板效果与实例调味效果一起看（原来只看模板，调料带来的效果不参与判定）
+            let use_attr_merge = get_merge_use_attr(items[id].use_attr, item_obj.ex_data);
+            //只要带了持续效果（get_buff），满血也允许使用——玩家吃这道菜往往就是为了拿buff，不该被满血拦住
+            let has_buff_effect = false;
+            for (let attr_obj of use_attr_merge) {
+                if (attr_obj.attr_type == 'get_buff') {
+                    has_buff_effect = true;
+                    break;
+                }
+            }
+            if (!has_buff_effect) {
+                for (let attr_obj of use_attr_merge) {
+                    if (attr_obj.attr_type == 'get_attr') {
+                        //给予属性类型的效果，如果当前该属性满了，就不能使用
+                        if (enums['need_judge_max_attr'].includes(attr_obj.attr_id)) {
+                            let P_attr = player.get_player_attributes();
+                            if (P_attr.judge_player_attr_max(attr_obj.attr_id)) {
+                                flag = false;
+                            } else {
+                                // flag = true;
+                            }
                         } else {
                             // flag = true;
                         }
-                    } else {
-                        // flag = true;
+                    } else if (attr_obj.attr_type == 'get_item') {
+                        //给予物品的效果，如果当前背包空间满了，就不能使用
                     }
-                } else if (attr_obj.attr_type == 'get_item') {
-                    //给予物品的效果，如果当前背包空间满了，就不能使用
                 }
             }
         } else if (use_type == 'sustain_use') {
@@ -97,7 +109,51 @@ export class Consumable_Manage {
         }
         //归并食用效果：白板模板 use_attr ∪ 实例调味 ex_data.bonus(同attr相加)，一次结算
         let use_attr_merge = get_merge_use_attr(items[id].use_attr, item_obj.ex_data);
+        //get_buff 行先按 buff_id 聚成一条 buff，再一次性施加：
+        //同 buff_id 的多行（例如「每秒回血 + 每秒回蓝」）若逐行施加，后一行会把前一行整条替换掉，只剩最后一条效果
+        let buff_effect_map = new Object(); //buff_id -> { effects:[效果行], time_value:时长 }
         for (let attr_obj of use_attr_merge) {
+            if (attr_obj.attr_type != 'get_buff') {
+                continue;
+            }
+            if (is_Empty_Object(attr_obj.buff_id)) {
+                console.log('消耗品的get_buff效果行没有指定buff_id，无法施加：attr_id=%s', attr_obj.attr_id);
+                continue;
+            }
+            if (is_Empty_Object(buff_effect_map[attr_obj.buff_id])) {
+                let buff_group = new Object();
+                buff_group.effects = new Array();
+                buff_group.time_value = undefined;
+                buff_effect_map[attr_obj.buff_id] = buff_group;
+            }
+            let buff_group = buff_effect_map[attr_obj.buff_id];
+            buff_group.effects.push(get_buff_effect_by_use_attr(attr_obj));
+            //效果行自带时长时记下来（调料经「调味配平」算出的时长就是走这里）
+            if (attr_obj.buff_time !== undefined && attr_obj.buff_time !== null) {
+                buff_group.time_value = attr_obj.buff_time;
+            }
+        }
+        for (let buff_id in buff_effect_map) {
+            let buff_group = buff_effect_map[buff_id];
+            let runtime_data = new Object();
+            runtime_data.effects = buff_group.effects;
+            //行里给了时长就用它（调料经「调味配平」算出的时长），没给则用buff条目的默认值
+            if (buff_group.time_value !== undefined) {
+                runtime_data.time_value = buff_group.time_value;
+            }
+            //只有"菜品本体buff"（id 与菜品 id 相同）才带名称前缀；「调料效果」那条全局buff不带
+            if (buff_id == id) {
+                runtime_data.name_prefix = get_seasoning_name_prefix(item_obj.ex_data);
+            }
+            let buff_manage = global.get_buff_manage();
+            let buff_holder = player.get_player_buff_manage();
+            buff_manage.set_buff(buff_holder, buff_id, runtime_data);
+        }
+        for (let attr_obj of use_attr_merge) {
+            if (attr_obj.attr_type == 'get_buff') {
+                //已在上面按 buff_id 聚合后施加
+                continue;
+            }
             get_consumable_use_data(attr_obj);
         }
         //更新图鉴
@@ -260,6 +316,36 @@ export class Consumable_Manage {
     }
 }
 
+//把消耗品的 get_buff 效果行转换成 buff 的效果行（自动判定；效果行可用 buff_dispatch 显式覆盖）
+//判定口径见 docs/plan_consumable_attribute.md §16.3-3：
+//  attr_id 落在「会有满的概念的属性」（血 / 蓝 / 表层精力 / 深层精力）→ 速率型：逐帧结算，不需要还原
+//  其余一律按属性型 → 施加时加成一次，移除时按 start_data 还原
+function get_buff_effect_by_use_attr(attr_obj) {
+    let dispatch;
+    if (enums['need_judge_max_attr'].includes(attr_obj.attr_id)) {
+        dispatch = 'resource';
+    } else {
+        dispatch = 'attr';
+    }
+    if (attr_obj.buff_dispatch !== undefined) {
+        dispatch = attr_obj.buff_dispatch;
+    }
+    let when = 'on_apply';
+    let revert = true;
+    if (dispatch == 'resource') {
+        when = 'tick';
+        revert = false;
+    }
+    let effect_obj = new Object();
+    effect_obj.out = 'value';
+    effect_obj.when = when;
+    effect_obj.dispatch = dispatch;
+    effect_obj.target = attr_obj.attr_id;
+    effect_obj.value = attr_obj.buff_value;
+    effect_obj.per_layer = false;
+    effect_obj.revert = revert;
+    return effect_obj;
+}
 //生效一个消耗品的属性
 function get_consumable_use_data(attr_obj) {
     if (attr_obj.attr_type == 'get_attr') {
@@ -269,8 +355,18 @@ function get_consumable_use_data(attr_obj) {
         //给予物品的效果，如果当前背包空间满了，就不能使用
         console.log('没有开发给予物品的消耗品的逻辑');
     } else if (attr_obj.attr_type == 'get_buff') {
-        //给予buff的效果尚未接通(buff系统升级规划于roadmap #1)。本期仅识别、不崩、打清晰日志，不实际生效
-        console.log('消耗品效果类型get_buff尚未接通，跳过：attr_id=%s', attr_obj.attr_id);
+        //给予buff：施加时把效果行传进去；时长由 buff 数据库条目决定
+        //（调料在调味配平落地后，才由调用方额外覆盖 time_value）
+        if (is_Empty_Object(attr_obj.buff_id)) {
+            console.log('消耗品的get_buff效果行没有指定buff_id，无法施加：attr_id=%s', attr_obj.attr_id);
+            return;
+        }
+        let buff_manage = global.get_buff_manage();
+        let buff_holder = player.get_player_buff_manage();
+        let buff_effect = get_buff_effect_by_use_attr(attr_obj);
+        let runtime_data = new Object();
+        runtime_data.effects = [buff_effect];
+        buff_manage.set_buff(buff_holder, attr_obj.buff_id, runtime_data);
     } else if (attr_obj.attr_type == 'get_formula') {
         let P_formula = player.get_player_formulas_manage();
         P_formula.Player_get_formula(attr_obj.attr_id, 'know');

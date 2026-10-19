@@ -56,6 +56,9 @@ function game_loop() {
 function updata_game_data() {
     //玩家数值更新
     player.run_player_normal();
+    //buff全局结算层：把本帧各目标产出的动作请求统一生效（无状态，收完就清）
+    let buff_manage = global.get_buff_manage();
+    buff_manage.run_buff_scheduler();
     //判断这一帧是否有事件会触发
     let place_manage = global.get_place_manage();
     place_manage.updata_now_place_condition_event();
@@ -112,6 +115,9 @@ function updata_game_div() {
     P_attr.updata_HP_MP_ENP_div();
     //玩家属性显示更新
     updata_attribute_show();
+    //buff界面显示更新
+    let buff_manage = global.get_buff_manage();
+    buff_manage.run_buff_show_scheduler();
 }
 //更新需要定时变化的游戏内容
 function updata_timing_game_data() {

@@ -48,6 +48,26 @@
 
 此规则只约束**新增 / 修改**的样式，不要求回头清理存量代码里已有的选择器。
 
+### 函数调用风格：不要在一行里链式调用两层「取用函数」
+
+项目里常见「先取对象、再调它的方法」的写法，例如 `run_manage.js`：
+
+```js
+let place_manage = global.get_place_manage();
+place_manage.updata_now_place_condition_event();
+```
+
+**AI 新增 / 修改代码时不要写成一行里套两层调用**，例如 ❌ `global.get_buff_manage().run_buff_scheduler();`，应写成：
+
+```js
+let buff_manage = global.get_buff_manage();
+buff_manage.run_buff_scheduler();
+```
+
+- 同一个函数里要调多次时，变量**只声明一次**（放在函数体靠前处），后面复用。
+- 这条只约束**新增 / 修改**的代码，**不要求**回头清理存量写法。
+- 存量已知的例外（暂不改）：`js/Function/control_function.js` 里两处 `global.get_global_flag_manage().get_flag(...)`。
+
 ## 2. 新增功能优先"添加新文件"，而不是"改动旧文件"
 
 只要条件允许，新功能应优先：
@@ -82,3 +102,27 @@ git add -A
 git commit -m "baseline before spec work"
 ```
 任何改动都可一键回滚到基线，最大程度保护现有代码。
+
+## 7. 验证脚本（改动游戏逻辑后应当跑）
+
+`_devtools/` 下有一套**零依赖**的验证脚本。它**不属于游戏本体**（在 `everything_with_me_idle/` 之外，不参与运行、不被任何游戏代码 import），存在的目的是在没有浏览器的条件下验证不该靠肉眼确认的逻辑：
+
+```
+node _devtools/buff_check/import_smoke.mjs     # 真实模块图冒烟：全仓 188 个 .js 逐个 import，抓断裂的 import / 导出
+node _devtools/buff_check/run_check.mjs        # buff 系统回归：133 条断言（用桩测纯逻辑）
+node _devtools/buff_check/run_check_real.mjs   # 真实运行时接缝：53 条断言（真实属性 / 真实钳制 / 真实属性派生链路）
+node _devtools/data_check/check.mjs            # 数据完整性：物品 / 文本 / 分类 / 配方 / 工作台 逐条体检
+node _devtools/dish_check/run_check.mjs        # 菜品 / 调料 get_buff 接通验证：22 条断言（真实属性 + 真实 buff 容器）
+```
+
+退出码 `0` = 全通过，`1` = 有问题。
+
+**改过 `js/Player/Player_buff.js`、`js/Data/Buff/`、`js/Data/Text/Text_buff.js` 之后，前三个都跑一遍。**
+
+**改过 `js/Data/` 下的物品 / 配方 / 文本数据之后，跑 `data_check/check.mjs`。** 它的**【红】硬错误**（引用断裂、缺必配文本、字段非法）必须修；**【黄】完成度清单**是待办清单，不影响退出码。
+
+**改过消耗品效果结算或 buff 施加入口（`js/GameRun/consumable_manage.js`、`js/GameRun/buff_manage.js`）之后，跑 `dish_check/run_check.mjs`，再加前三个。**
+
+⚠️ **通过不等于没问题**：这些脚本**不覆盖 DOM/CSS 与存档读档**，也跑不了完整的 `global.init()` / `player.init()`（那需要界面已建好）。`run_check.mjs` 用的是桩，`run_check_real.mjs` 只初始化 buff 链条需要的真实部件。覆盖范围、白名单机制、以及写用例时的帧序约定，见 `_devtools/README.md`。
+
+前提：Node ≥ 22.7（游戏源码是 `.js` 且仓内无 `package.json`，靠 Node 的模块语法自动识别当 ESM 跑；本机 v24.18 实测可用）。

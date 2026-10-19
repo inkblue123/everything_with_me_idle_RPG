@@ -78,27 +78,52 @@ function init_food(items) {
     add_Consumable_object(items, id);
     items[id].init_Consumable('once_use'); //一次性使用(白板菜可直接食用)
     items[id].add_use_attr('get_attr', null, 'health_point', 10); //白板基础效果：恢复少量生命
+    //白板持续效果：吃下后持续回血。时长取自菜品buff『烤鱼串』的 time_value，这里只给每秒数值
+    items[id].add_use_attr('get_buff', null, 'health_point', id, 1);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 10); //物品价值
     id = 'big_grilled_fish'; //大烤鱼串
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(白板菜可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 15); //白板基础效果：恢复少量生命
+    //白板持续效果：时长取自菜品buff，这里只给每秒数值
+    items[id].add_use_attr('get_buff', null, 'health_point', id, 1);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 15); //物品价值
     id = 'roasted_crab'; //烤螃蟹
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(白板菜可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 10); //白板基础效果：恢复少量生命
+    items[id].add_use_attr('get_buff', null, 'health_point', id, 0.5);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 8); //物品价值
     id = 'cooked_mussel'; //熟蚌肉
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(白板菜可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 8); //白板基础效果：恢复少量生命
+    items[id].add_use_attr('get_buff', null, 'health_point', id, 0.5);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 5); //物品价值
     id = 'cooked_animal_meat'; //熟兽肉
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(白板菜可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 12); //白板基础效果：恢复少量生命
+    items[id].add_use_attr('get_buff', null, 'health_point', id, 1);
+    items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Item_price('ordinary_coin', 10); //物品价值
+    id = 'grilled_mushrooms'; //烤蘑菇
+    add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(白板菜可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 10); //白板基础效果：恢复少量生命
+    items[id].add_use_attr('get_buff', null, 'health_point', id, 1);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 10); //物品价值
 
     id = 'termite_mushroom_soup'; //鸡枞汤
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(白板菜可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 30); //白板基础效果：恢复较多生命
+    items[id].add_use_attr('get_buff', null, 'health_point', id, 1);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 130); //物品价值
 }
@@ -109,14 +134,24 @@ function init_dry_product(items) {
 
     id = 'fish_jerky'; //鱼肉干
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(干制品可直接食用)
+    //干制品只给立刻恢复、不给持续恢复：见 idea5「干制品不再给持续恢复，靠堆叠当简易药水」
+    items[id].add_use_attr('get_attr', null, 'health_point', 20);
+    items[id].add_use_attr('get_attr', null, 'magic_point', 5);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 30); //物品价值
     id = 'animal_jerky'; //兽肉干
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(干制品可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 20);
+    items[id].add_use_attr('get_attr', null, 'surface_energy_point', 15);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 35); //物品价值
     id = 'berry_dried_fruit'; //浆果果干
     add_Consumable_object(items, id);
+    items[id].init_Consumable('once_use'); //一次性使用(干制品可直接食用)
+    items[id].add_use_attr('get_attr', null, 'health_point', 15);
+    items[id].add_use_attr('get_attr', null, 'surface_energy_point', 10);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 25); //物品价值
 }
@@ -128,23 +163,27 @@ function init_refined_seasoning(items) {
     //鱼肉松：作为调味料加入菜品时贡献少量魔力恢复
     id = 'fish_meat_floss';
     add_Consumable_object(items, id);
-    items[id].add_season_effect('get_attr', null, 'magic_point', 5);
+    items[id].add_season_effect('get_attr', null, 'magic_point', 5); //立刻恢复
+    //限时效果：这里的每秒数值是"单独使用"时的值，实际入菜时由「调味配平」按时长重分布
+    items[id].add_season_effect('get_buff', null, 'magic_point', 'seasoning_effect', 2);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 20); //物品价值
     //兽肉松：作为调味料加入菜品时贡献少量表层精力恢复
     id = 'animal_meat_floss';
     add_Consumable_object(items, id);
-    items[id].add_season_effect('get_attr', null, 'surface_energy_point', 5);
+    items[id].add_season_effect('get_attr', null, 'surface_energy_point', 5); //立刻恢复
+    items[id].add_season_effect('get_buff', null, 'surface_energy_point', 'seasoning_effect', 2);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 35); //物品价值
     //浆果果酱：作为调味料加入菜品时贡献少量生命恢复
     id = 'berry_jam';
     add_Consumable_object(items, id);
-    items[id].add_season_effect('get_attr', null, 'health_point', 5);
+    items[id].add_season_effect('get_attr', null, 'health_point', 5); //立刻恢复
+    items[id].add_season_effect('get_buff', null, 'health_point', 'seasoning_effect', 2);
     items[id].init_Item_other(20, secon_type, 2); //堆叠数量，物品小类，章节归属
     items[id].init_Item_price('ordinary_coin', 25); //物品价值
 }
-//丹药精华(本期只搬迁、不处理内容)
+//丹药精华
 function init_elixir_essence(items) {
     let id;
     let secon_type = 'elixir_essence'; //消耗品大类中的丹药精华小类

@@ -195,6 +195,8 @@ function get_COK_CD_seasoning() {
     }
     return seasoning_arr;
 }
+//调料小类没有配置基础时长时的兜底时长（秒），避免配平时除零
+const seasoning_time_default = 10;
 //只折算"单份"调味 ex_data(描述单份剂量n的加成 + 调料小类次数)，不做库存校验、不读背包数量
 //返回 null：当前未选任何调味料(或当前界面没有调料区)
 function get_COK_CD_seasoning_ex_data() {
@@ -203,57 +205,121 @@ function get_COK_CD_seasoning_ex_data() {
     if (COK_min != 'COK_CD') {
         return null;
     }
-
-    let seasoning_arr = get_COK_CD_seasoning(); //所选调味料 [{id, num:n}]，n 为单份剂量
-    if (seasoning_arr.length == 0) {
+    //所选调味料 [{id, num:n}]，n 为单份剂量
+    let seasoning_arr = get_COK_CD_seasoning();
+    return get_seasoning_ex_data_by_arr(seasoning_arr);
+}
+//按所选调料折算单份调味 ex_data（纯函数：不读界面、不读背包，便于单独验证）
+//seasoning_arr：[{id, num:n}]，n 为单份剂量
+//
+//这里是「调味配平」的落点：整道菜的调料buff只能有一个时长，所以把各调料的效果按总量守恒重分布到那个时长上
+//  小类份数 m_c = 该小类所有调料份数之和
+//  小类时长 T_c = 小类基础时长 × m_c
+//  最终时长 T   = max(T_c)
+//  某调料单独使用时的总量 Q = 每秒数值 × 小类基础时长 × 份数
+//  配平后每秒数值 v' = Q / T
+//性质一：同一种调料放 n 份时 v' ≡ v（每秒数值不变、时间翻倍），即 idea5 的"重复调味品只加时间不堆叠效果"
+//性质二：T ≥ T_c 恒成立，故 v' ≤ v —— 配平只稀释、不放大
+function get_seasoning_ex_data_by_arr(seasoning_arr) {
+    if (is_Empty_Object(seasoning_arr) || seasoning_arr.length == 0) {
         return null; //未选调味料，产出白板
     }
 
-    let bonus_map = new Object(); //单份总加成(attr_type_attr_id -> 效果行)，用于同attr相加归并
-    let seasoning_count = new Object(); //单份"调料小类"次数
-
+    //第一遍：累计每种调料的份数，以及每个"调料小类"的份数
+    let seasoning_num_map = new Object(); //调料id -> 份数
+    let seasoning_count = new Object(); //调料小类 -> 份数
     for (let seasoning of seasoning_arr) {
         let id = seasoning.id;
-        let n = parseInt(seasoning.num); //单份剂量
-
-        //按该调味料的调味字段折算单份贡献(每次n倍，同attr相加归并)
-        let season_effect = items[id].season_effect;
-        if (!is_Empty_Object(season_effect)) {
-            for (let effect of season_effect) {
-                let attr_type = effect.attr_type;
-                let attr_id = effect.attr_id;
-                let key = attr_type + '_' + attr_id;
-                if (is_Empty_Object(bonus_map[key])) {
-                    //克隆效果行并初始化
-                    let row = new Object();
-                    row.attr_type = attr_type;
-                    row.use_ratio = effect.use_ratio;
-                    row.attr_id = attr_id;
-                    if (attr_type == 'get_attr') {
-                        //获得属性效果：剂量n倍折算属性数值
-                        row.attr_value = to_num(effect.attr_value) * n;
-                    } else {
-                        //其他效果类型(如get_buff)暂不做剂量折算，先原样带入(语义待buff系统升级时确定)
-                        for (let field in effect) {
-                            if (field != 'attr_type' && field != 'use_ratio' && field != 'attr_id') {
-                                row[field] = effect[field];
-                            }
-                        }
-                    }
-                    bonus_map[key] = row;
-                } else if (attr_type == 'get_attr') {
-                    //同attr相加
-                    bonus_map[key].attr_value += to_num(effect.attr_value) * n;
-                }
-            }
+        let n = parseInt(seasoning.num);
+        if (is_Empty_Object(items[id]) || n <= 0) {
+            continue;
         }
-        //按"调料小类"记录单份次数
+        if (is_Empty_Object(seasoning_num_map[id])) {
+            seasoning_num_map[id] = 0;
+        }
+        seasoning_num_map[id] += n;
         for (let seasoning_type of enums['all_seasoning']) {
             if (items[id].secon_type.includes(seasoning_type)) {
                 if (is_Empty_Object(seasoning_count[seasoning_type])) {
                     seasoning_count[seasoning_type] = 0;
                 }
                 seasoning_count[seasoning_type] += n;
+            }
+        }
+    }
+
+    //配平后的时长 T
+    let base_time_map = enums['seasoning_base_time'];
+    let seasoning_time = 0;
+    for (let seasoning_type in seasoning_count) {
+        let base_time = to_num(base_time_map[seasoning_type]);
+        let type_time = base_time * seasoning_count[seasoning_type];
+        if (type_time > seasoning_time) {
+            seasoning_time = type_time;
+        }
+    }
+    if (seasoning_time <= 0) {
+        console.log('调味配平：所选调料的小类都没有配置基础时长，暂按%s秒计算', seasoning_time_default);
+        seasoning_time = seasoning_time_default;
+    }
+
+    //第二遍：折算每条效果行
+    let bonus_map = new Object(); //单份总加成(key -> 效果行)，用于同目标相加归并
+    for (let id in seasoning_num_map) {
+        let n = seasoning_num_map[id];
+        //该调料所属小类的基础时长
+        let base_time = 0;
+        for (let seasoning_type of enums['all_seasoning']) {
+            if (items[id].secon_type.includes(seasoning_type)) {
+                base_time = to_num(base_time_map[seasoning_type]);
+                break;
+            }
+        }
+        let season_effect = items[id].season_effect;
+        if (is_Empty_Object(season_effect)) {
+            continue;
+        }
+        for (let effect of season_effect) {
+            let attr_type = effect.attr_type;
+            let attr_id = effect.attr_id;
+            if (attr_type == 'get_attr') {
+                //即时效果：按剂量线性折算，同目标相加归并
+                let key = attr_type + '_' + attr_id;
+                if (is_Empty_Object(bonus_map[key])) {
+                    let row = new Object();
+                    row.attr_type = attr_type;
+                    row.use_ratio = effect.use_ratio;
+                    row.attr_id = attr_id;
+                    row.attr_value = 0;
+                    bonus_map[key] = row;
+                }
+                bonus_map[key].attr_value += to_num(effect.attr_value) * n;
+            } else if (attr_type == 'get_buff') {
+                //限时效果：按配平后的时长重分布（总量守恒），同目标相加归并
+                let key = attr_type + '_' + attr_id + '_' + effect.buff_id;
+                if (is_Empty_Object(bonus_map[key])) {
+                    let row = new Object();
+                    row.attr_type = attr_type;
+                    row.use_ratio = effect.use_ratio;
+                    row.attr_id = attr_id;
+                    row.buff_id = effect.buff_id;
+                    row.buff_value = 0;
+                    row.buff_time = seasoning_time; //时长由配平决定，随效果行带入实例
+                    bonus_map[key] = row;
+                }
+                let total = to_num(effect.buff_value) * base_time * n; //这一份单独使用时的总量
+                let value = Math.round((total / seasoning_time) * 100) / 100; //量化到两位小数
+                bonus_map[key].buff_value = Math.round((bonus_map[key].buff_value + value) * 100) / 100;
+            } else {
+                //其他效果类型暂不做折算，先原样带入(语义待确定)
+                let key = attr_type + '_' + attr_id;
+                if (is_Empty_Object(bonus_map[key])) {
+                    let row = new Object();
+                    for (let field in effect) {
+                        row[field] = effect[field];
+                    }
+                    bonus_map[key] = row;
+                }
             }
         }
     }
@@ -272,4 +338,5 @@ export {
     updata_COK_formula_Seasoning_div,
     get_COK_CD_seasoning,
     get_COK_CD_seasoning_ex_data,
+    get_seasoning_ex_data_by_arr,
 };

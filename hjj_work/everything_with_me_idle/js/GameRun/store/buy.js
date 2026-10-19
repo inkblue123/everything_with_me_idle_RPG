@@ -1,5 +1,5 @@
 import { add_show_Tooltip, addElement, addElement_radio } from '../../Function/Dom_function.js';
-import { is_Empty_Object, get_uniqueArr, get_item_id_key } from '../../Function/Function.js';
+import { is_Empty_Object, get_uniqueArr, get_item_id_key, get_item_show_name } from '../../Function/Function.js';
 import { format_numbers } from '../../Function/math_func.js';
 import { items } from '../../Data/Item/Item.js';
 import { places } from '../../Data/Place/Place.js';
@@ -357,7 +357,7 @@ export class Buy_Manage {
             }
 
             let aitem_div = addElement(normalbuy_value_div, 'div', null, 'sell_buy_value');
-            let name = items[id].name;
+            let name = get_item_show_name(buy_good_obj); //调味过的菜品带名称前缀
             aitem_div.innerHTML = name + ' x' + buy_good_obj.num;
             if (items[id].main_type == 'equipment') {
                 //根据装备稀有度调整文字颜色

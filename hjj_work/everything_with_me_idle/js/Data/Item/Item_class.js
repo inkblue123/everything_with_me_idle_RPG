@@ -311,8 +311,11 @@ class Consumable extends Item {
             obj.attr_value = value1; //属性值
         } else if (attr_type == 'get_buff') {
             //使用后获得buff
-            obj.buff_time = value1; //buff时间
-            obj.buff_value = value2; //buff每秒数值
+            //buff_id：施加哪条buff；菜品本体的持续效果一般填该菜品自己的 id
+            //buff_value：数值——资源类（血/蓝/精力）为每秒点数，属性类为加成值
+            //时长不在这里填：本体效果取菜品buff条目的 time_value，调料效果由调味配平算出
+            obj.buff_id = value1; //施加哪条buff
+            obj.buff_value = value2; //数值
         } else if (attr_type == 'get_item') {
             //使用后获得物品
             obj.item_num = value1; //物品数量
@@ -335,8 +338,11 @@ class Consumable extends Item {
             obj.attr_value = value1; //属性值
         } else if (attr_type == 'get_buff') {
             //使用后获得buff
-            obj.buff_time = value1; //buff时间
-            obj.buff_value = value2; //buff每秒数值
+            //buff_id：施加哪条buff；菜品本体的持续效果一般填该菜品自己的 id
+            //buff_value：数值——资源类（血/蓝/精力）为每秒点数，属性类为加成值
+            //时长不在这里填：本体效果取菜品buff条目的 time_value，调料效果由调味配平算出
+            obj.buff_id = value1; //施加哪条buff
+            obj.buff_value = value2; //数值
         } else if (attr_type == 'get_item') {
             //使用后获得物品
             obj.item_num = value1; //物品数量

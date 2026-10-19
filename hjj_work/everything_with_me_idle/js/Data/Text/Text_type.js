@@ -331,6 +331,9 @@ function material_type(texts) {
     id = 'all_mushroom';
     add_text_object(texts, id);
     texts[id].type_name = '任意蘑菇';
+    id = 'all_seasoning';
+    add_text_object(texts, id);
+    texts[id].type_name = '任意调味料';
 }
 //主动技能类型
 function active_type(texts) {

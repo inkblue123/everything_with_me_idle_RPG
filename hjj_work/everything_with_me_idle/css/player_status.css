@@ -321,11 +321,16 @@
 
 /* buff展示单元格 */
 .buff_show {
+    display: flex;
     width: calc((100% - 20px) / 5);
     height: auto;
+    min-height: 2em;
     background-color: rgb(255, 255, 255);
     font-size: 15px;
     white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+    outline: 2px solid #797691;
 }
 
 /* 容纳切换属性和装备栏按钮的div */

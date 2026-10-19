@@ -21,6 +21,60 @@ function COK_L1_Formula(formulas) {
     formulas[id].set_formula_exp('make_exp', 1); //制作时获得经验
     formulas[id].set_formula_research(3, 1); //研究需求：3个物品，1级拆解工具
 
+    id = 'COK_big_grilled_fish_1';
+    add_Formula_object(formulas, id);
+    formulas[id].init_formula_data(true, 'cooking', 'COK_CD'); //初始解锁，烹饪技能，属于 烹饪菜品 子功能
+    formulas[id].add_formula_work_bench('carpentry_bench', 1); //需要木匠台1级
+    formulas[id].add_formula_material('creek_fish', 3); //溪鱼，3个
+    formulas[id].set_formula_product('big_grilled_fish', 1); //大烤鱼串，1个
+    formulas[id].set_formula_exp('make_exp', 1); //制作时获得经验
+    formulas[id].set_formula_research(3, 1); //研究需求：3个物品，1级拆解工具
+
+    id = 'COK_roasted_crab_1';
+    add_Formula_object(formulas, id);
+    formulas[id].init_formula_data(true, 'cooking', 'COK_CD'); //初始解锁，烹饪技能，属于 烹饪菜品 子功能
+    formulas[id].add_formula_work_bench('carpentry_bench', 1); //需要木匠台1级
+    formulas[id].add_formula_material('river_crab', 1); //河蟹，1个
+    formulas[id].set_formula_product('roasted_crab', 1); //烤螃蟹，1个
+    formulas[id].set_formula_exp('make_exp', 1); //制作时获得经验
+    formulas[id].set_formula_research(3, 1); //研究需求：3个物品，1级拆解工具
+
+    id = 'COK_cooked_mussel_1';
+    add_Formula_object(formulas, id);
+    formulas[id].init_formula_data(true, 'cooking', 'COK_CD'); //初始解锁，烹饪技能，属于 烹饪菜品 子功能
+    formulas[id].add_formula_work_bench('carpentry_bench', 1); //需要木匠台1级
+    formulas[id].add_formula_material('river_mussel', 1); //河蚌，1个
+    formulas[id].set_formula_product('cooked_mussel', 1); //熟蚌肉，1个
+    formulas[id].set_formula_exp('make_exp', 1); //制作时获得经验
+    formulas[id].set_formula_research(3, 1); //研究需求：3个物品，1级拆解工具
+
+    id = 'COK_cooked_animal_meat_1';
+    add_Formula_object(formulas, id);
+    formulas[id].init_formula_data(true, 'cooking', 'COK_CD'); //初始解锁，烹饪技能，属于 烹饪菜品 子功能
+    formulas[id].add_formula_work_bench('carpentry_bench', 1); //需要木匠台1级
+    formulas[id].add_formula_material('animal_raw_meat', 2); //野兽生肉，2个
+    formulas[id].set_formula_product('cooked_animal_meat', 1); //熟兽肉，1个
+    formulas[id].set_formula_exp('make_exp', 1); //制作时获得经验
+    formulas[id].set_formula_research(3, 1); //研究需求：3个物品，1级拆解工具
+
+    id = 'COK_grilled_mushrooms_1';
+    add_Formula_object(formulas, id);
+    formulas[id].init_formula_data(true, 'cooking', 'COK_CD'); //初始解锁，烹饪技能，属于 烹饪菜品 子功能
+    formulas[id].add_formula_work_bench('carpentry_bench', 1); //需要木匠台1级
+    formulas[id].add_formula_material('all_mushroom', 2); //任意蘑菇，2个
+    formulas[id].set_formula_product('grilled_mushrooms', 1); //烤蘑菇，1个
+    formulas[id].set_formula_exp('make_exp', 1); //制作时获得经验
+    formulas[id].set_formula_research(3, 1); //研究需求：3个物品，1级拆解工具
+
+    id = 'COK_termite_mushroom_soup_1';
+    add_Formula_object(formulas, id);
+    formulas[id].init_formula_data(true, 'cooking', 'COK_CD'); //初始解锁，烹饪技能，属于 烹饪菜品 子功能
+    formulas[id].add_formula_work_bench('carpentry_bench', 1); //需要木匠台1级
+    formulas[id].add_formula_material('termite_mushroom', 3); //鸡枞，3个
+    formulas[id].set_formula_product('termite_mushroom_soup', 1); //鸡枞汤，1个
+    formulas[id].set_formula_exp('make_exp', 1); //制作时获得经验
+    formulas[id].set_formula_research(3, 1); //研究需求：3个物品，1级拆解工具
+
     // id = 'COK_red_berry_1';
     // add_Formula_object(formulas, id);
     // formulas[id].init_formula_data(true, 'cooking', 'COK_CD'); //初始解锁，烹饪技能，属于 烹饪菜品 子功能

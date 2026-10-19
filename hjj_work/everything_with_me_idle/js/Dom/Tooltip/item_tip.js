@@ -1,9 +1,10 @@
 import { addElement } from '../../Function/Dom_function.js';
-import { get_object_only_key, is_Empty_Object, get_merge_use_attr } from '../../Function/Function.js';
+import { get_object_only_key, is_Empty_Object, get_merge_use_attr, get_item_show_name } from '../../Function/Function.js';
 import { seconds_time_to_ch } from '../../Function/math_func.js';
 import { enums } from '../../Data/Enum/Enum.js';
 import { items } from '../../Data/Item/Item.js';
 import { formulas } from '../../Data/Formula/Formula.js';
+import { buffs } from '../../Data/Buff/Buff.js';
 import { texts } from '../../Data/Text/Text.js';
 import { global } from '../../GameRun/global_manage.js';
 import { TOOLTIP_WIDTH } from './Tooltip.js';
@@ -44,7 +45,7 @@ function show_item_name_description(item_obj) {
         let equip_rarity = item_obj.equip_rarity;
         label.style.color = enums[equip_rarity].rarity_color;
     }
-    label.innerHTML = items[id].name; //物品名称
+    label.innerHTML = get_item_show_name(item_obj); //物品名称（调味过的菜品带名称前缀）
     let text = addElement(Tooltip, 'div', null, 'lable_down');
     text.innerHTML = items[id].desc; //物品描述
     return true;
@@ -358,19 +359,84 @@ function show_consumable_use_data(item_obj) {
     } else if (use_type == 'once_use') {
         //一次性使用消耗品：展示其食用效果(白板模板 use_attr 合并调味 ex_data.bonus，同attr相加)
         let use_attr_merge = get_merge_use_attr(items[id].use_attr, item_obj.ex_data);
-        let use_attr_div = addElement(Tooltip, 'div', null, 'page_table_111');
-        for (let attr_obj of use_attr_merge) {
-            if (attr_obj.attr_type == 'get_attr') {
-                let TLV_div = addElement(use_attr_div, 'div', null, 'table_value');
-                // 属性名称
-                let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
-                T_name.innerHTML = texts[attr_obj.attr_id].attr_name;
-                //属性数值
-                let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
-                T_value.innerHTML = get_table_attr_value_ch(attr_obj.attr_id, attr_obj.attr_value, item_obj);
-            }
+        //立即给予属性的效果
+        let attr_rows = use_attr_merge.filter((row) => row.attr_type == 'get_attr');
+        if (attr_rows.length > 0) {
+            show_once_use_attr_data(Tooltip, attr_rows, item_obj);
+        }
+        //给予buff的效果：单独成一块展示（不与上面的属性效果挤在同一张表里）
+        let buff_rows = use_attr_merge.filter((row) => row.attr_type == 'get_buff');
+        if (buff_rows.length > 0) {
+            show_once_use_buff_data(Tooltip, buff_rows, item_obj);
         }
     }
+}
+//追加展示一次性使用消耗品「立刻给予属性」的效果（表格形式）
+function show_once_use_attr_data(Tooltip, attr_rows, item_obj) {
+    let use_attr_div = addElement(Tooltip, 'div', null, 'page_table_111');
+    for (let attr_obj of attr_rows) {
+        let TLV_div = addElement(use_attr_div, 'div', null, 'table_value');
+        // 属性名称
+        let T_name = addElement(TLV_div, 'div', null, 'TLV_left');
+        T_name.innerHTML = texts[attr_obj.attr_id].attr_name;
+        //属性数值
+        let T_value = addElement(TLV_div, 'div', null, 'TLV_right');
+        T_value.innerHTML = get_table_attr_value_ch(attr_obj.attr_id, attr_obj.attr_value, item_obj);
+    }
+}
+//追加展示一次性使用消耗品「给予buff」的效果
+function show_once_use_buff_data(Tooltip, buff_rows, item_obj) {
+    //标题里的时长：整块只有一种时长时写出具体值，多种时长混在一起时用泛称
+    let title_time_list = new Array();
+    for (let attr_obj of buff_rows) {
+        let time_ch = get_use_buff_time_ch(attr_obj);
+        if (!title_time_list.includes(time_ch)) {
+            title_time_list.push(time_ch);
+        }
+    }
+    let title_ch = '获得持续buff';
+    if (title_time_list.length == 1) {
+        title_ch = '获得持续' + title_time_list[0] + '的buff';
+    }
+    let buff_title_div = addElement(Tooltip, 'div', null, 'lable_up');
+    buff_title_div.innerHTML = title_ch;
+    //效果逐条拼成一段文本
+    let buff_ch = '';
+    for (let attr_obj of buff_rows) {
+        //数值：资源类是每秒数值，属性类是持续期间的加成值
+        let value_ch = get_table_attr_value_ch(attr_obj.attr_id, attr_obj.buff_value, item_obj);
+        let row_ch = texts[attr_obj.attr_id].attr_name + '：';
+        if (enums['need_judge_max_attr'].includes(attr_obj.attr_id)) {
+            row_ch = row_ch + '每秒' + value_ch;
+        } else {
+            row_ch = row_ch + value_ch;
+        }
+        //整块只有一个时长时，时长已经在标题里写过了，行里就不再重复
+        if (title_time_list.length != 1) {
+            row_ch = row_ch + '，持续' + get_use_buff_time_ch(attr_obj);
+        }
+        if (buff_ch != '') {
+            buff_ch = buff_ch + '<br>';
+        }
+        buff_ch = buff_ch + row_ch;
+    }
+    let buff_div = addElement(Tooltip, 'div', null, 'lable_down');
+    buff_div.innerHTML = buff_ch;
+}
+//取一条 get_buff 效果行对应的持续时长文本
+//优先用效果行自带的 buff_time（调料经「调味配平」算出的时长就在行里），行里没有才回落到 buff 条目的设定
+function get_use_buff_time_ch(attr_obj) {
+    if (attr_obj.buff_time !== undefined && attr_obj.buff_time !== null) {
+        if (attr_obj.buff_time == 'infinite') {
+            return '无限';
+        }
+        return seconds_time_to_ch(attr_obj.buff_time);
+    }
+    let buff_obj = buffs[attr_obj.buff_id];
+    if (!is_Empty_Object(buff_obj) && buff_obj.time_value != 'infinite') {
+        return seconds_time_to_ch(buff_obj.time_value);
+    }
+    return '无限';
 }
 //追加展示消耗品的持续使用需求
 function show_sustain_use_data(item_obj) {}

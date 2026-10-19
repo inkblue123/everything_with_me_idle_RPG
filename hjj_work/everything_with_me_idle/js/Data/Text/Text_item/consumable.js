@@ -85,6 +85,10 @@ function init_Text_food(texts) {
     add_text_object(texts, id);
     texts[id].item_name = '熟兽肉';
     texts[id].item_desc = '使用兽肉简单烹饪而成的菜品';
+    id = 'grilled_mushrooms';
+    add_text_object(texts, id);
+    texts[id].item_name = '烤蘑菇';
+    texts[id].item_desc = '使用蘑菇简单烹饪而成的菜品';
     id = 'termite_mushroom_soup';
     add_text_object(texts, id);
     texts[id].item_name = '鸡枞汤';

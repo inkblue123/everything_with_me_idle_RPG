@@ -141,6 +141,13 @@ function make_test_div(TS_div) {
             TS2_GotoVillageHome_lable.innerHTML = '移动到村中住所';
             var TS2_GotoVillageHome_value = addElement(TS2_GotoVillageHome_div, 'div', 'TS2_GotoVillageHome_value', 'OP_V_div');
             var TS2_GotoVillageHome_button = addElement_botton(TS2_GotoVillageHome_value, 'TS2_GotoVillageHome_button', 'OP_button', undefined, '移动到村中住所');
+            //测试2-燃烧buff测试
+            var TS2_BurnBuff_div = addElement(TS_value2_div, 'div', 'TS2_BurnBuff_div', 'OP_TLV_div');
+            var TS2_BurnBuff_lable = addElement(TS2_BurnBuff_div, 'div', 'TS2_BurnBuff_lable', 'OP_T2_div');
+            TS2_BurnBuff_lable.innerHTML = '燃烧buff测试';
+            var TS2_BurnBuff_value = addElement(TS2_BurnBuff_div, 'div', 'TS2_BurnBuff_value', 'OP_V_div');
+            var TS2_GiveBurnBuff_button = addElement_botton(TS2_BurnBuff_value, 'TS2_GiveBurnBuff_button', 'OP_button', undefined, '施加燃烧');
+            var TS2_DeleteBurnBuff_button = addElement_botton(TS2_BurnBuff_value, 'TS2_DeleteBurnBuff_button', 'OP_button', undefined, '清除燃烧');
         }
     }
 }
@@ -246,14 +253,16 @@ function set_test_button(Game_log) {
         let TS1_GivePlayerbuff_button = Game_log.querySelector('#TS1_GivePlayerbuff_button');
         TS1_GivePlayerbuff_button.onclick = function () {
             let P_buff = player.get_player_buff_manage();
-            // P_buff.set_buff_attr('fatigue');//疲劳
-            P_buff.set_buff_attr('extreme_fatigue'); //极度疲劳
+            let buff_manage = global.get_buff_manage();
+            // buff_manage.set_buff(P_buff, 'fatigue');//疲劳
+            buff_manage.set_buff(P_buff, 'extreme_fatigue'); //极度疲劳
         };
         //清空buff
         let TS1_DeletePlayerbuff_button = Game_log.querySelector('#TS1_DeletePlayerbuff_button');
         TS1_DeletePlayerbuff_button.onclick = function () {
             let P_buff = player.get_player_buff_manage();
-            P_buff.reset_buff_attr(); //清空所有buff
+            let buff_manage = global.get_buff_manage();
+            buff_manage.reset_buff(P_buff); //清空所有buff
         };
         //导出存档对象
         let TS1_GetObjectSave_button = Game_log.querySelector('#TS1_GetObjectSave_button');
@@ -321,6 +330,20 @@ function set_test_button(Game_log) {
         let TS2_GotoVillageHome_button = Game_log.querySelector('#TS2_GotoVillageHome_button');
         TS2_GotoVillageHome_button.onclick = function () {
             goto_village_home();
+        };
+        //施加燃烧
+        let TS2_GiveBurnBuff_button = Game_log.querySelector('#TS2_GiveBurnBuff_button');
+        TS2_GiveBurnBuff_button.onclick = function () {
+            let P_buff = player.get_player_buff_manage();
+            let buff_manage = global.get_buff_manage();
+            buff_manage.set_buff(P_buff, 'burn'); //连点即叠层
+        };
+        //清除燃烧
+        let TS2_DeleteBurnBuff_button = Game_log.querySelector('#TS2_DeleteBurnBuff_button');
+        TS2_DeleteBurnBuff_button.onclick = function () {
+            let P_buff = player.get_player_buff_manage();
+            let buff_manage = global.get_buff_manage();
+            buff_manage.delete_buff(P_buff, 'burn');
         };
     }
 }

@@ -130,11 +130,11 @@ function make_SYN_FL_value_div(SYN_FL_value_div) {
 
     let SYN_FL_N_main_type_choice_scroll_box = addElement(SYN_FL_N_main_type_choice_div, 'div', 'SYN_FL_N_main_type_choice_scroll_box', 'overflow_y_div SYN_FL_scroll_box', '');
     var SYN_FL_N_main_type_choice_value = addElement(SYN_FL_N_main_type_choice_scroll_box, 'div', 'SYN_FL_N_main_type_choice_value', 'in_overflow_div');
-    for (let i = 0; i < 10; i++) {
-        let id = 'test' + i;
-        var Details_div = addElement(SYN_FL_N_main_type_choice_value, 'div', id, 'radio_div SYN_FL_item_type_button');
-        addElement_radio(Details_div, '', 'SYN_FL_N_M_switch', 'main_type' + i, '材料' + i);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //     let id = 'test' + i;
+    //     var Details_div = addElement(SYN_FL_N_main_type_choice_value, 'div', id, 'radio_div SYN_FL_item_type_button');
+    //     addElement_radio(Details_div, 'SYN_test_', 'SYN_FL_N_M_switch', 'main_type' + i, '材料' + i);
+    // }
 
     let SYN_FL_N_main_type_set_button = addElement_botton(SYN_FL_N_main_type_choice_div, 'SYN_FL_N_main_type_set_button', 'SYN_FL_delete_or_set_button', 'none', '确认筛选');
 
@@ -146,10 +146,10 @@ function make_SYN_FL_value_div(SYN_FL_value_div) {
 
     let SYN_FL_N_secon_type_choice_scroll_box = addElement(SYN_FL_N_secon_type_choice_div, 'div', 'SYN_FL_N_secon_type_choice_scroll_box', 'overflow_y_div SYN_FL_scroll_box', '');
     var SYN_FL_N_secon_type_choice_value = addElement(SYN_FL_N_secon_type_choice_scroll_box, 'div', 'SYN_FL_N_secon_type_choice_value', 'in_overflow_div');
-    for (let i = 0; i < 10; i++) {
-        var Details_div = addElement(SYN_FL_N_secon_type_choice_value, 'div', '', 'radio_div SYN_FL_item_type_button');
-        addElement_radio(Details_div, '', 'SYN_FL_N_S_switch', 'secon_type' + i, '材料' + i);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //     var Details_div = addElement(SYN_FL_N_secon_type_choice_value, 'div', '', 'radio_div SYN_FL_item_type_button');
+    //     addElement_radio(Details_div, '', 'SYN_FL_N_S_switch', 'secon_type' + i, '材料' + i);
+    // }
     let SYN_FL_N_secon_type_set_button = addElement_botton(SYN_FL_N_secon_type_choice_div, 'SYN_FL_N_secon_type_set_button', 'SYN_FL_delete_or_set_button', 'none', '确认筛选');
 
     //具体需求材料筛选
@@ -160,10 +160,10 @@ function make_SYN_FL_value_div(SYN_FL_value_div) {
 
     let SYN_FL_N_item_choice_scroll_box = addElement(SYN_FL_N_item_choice_div, 'div', 'SYN_FL_N_item_choice_scroll_box', 'overflow_y_div SYN_FL_scroll_box', '');
     var SYN_FL_N_item_choice_value = addElement(SYN_FL_N_item_choice_scroll_box, 'div', 'SYN_FL_N_item_choice_value', 'in_overflow_div SYN_FL_item_choice_value');
-    for (let i = 0; i < 10; i++) {
-        var Details_div = addElement(SYN_FL_N_item_choice_value, 'div', '', 'radio_div SYN_FL_item_button');
-        addElement_radio(Details_div, '', 'SYN_FL_N_I_switch', 'item_id' + i, '材料' + i);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //     var Details_div = addElement(SYN_FL_N_item_choice_value, 'div', '', 'radio_div SYN_FL_item_button');
+    //     addElement_radio(Details_div, '', 'SYN_FL_N_I_switch', 'item_id' + i, '材料' + i);
+    // }
     let SYN_FL_N_item_set_button = addElement_botton(SYN_FL_N_item_choice_div, 'SYN_FL_N_item_set_button', 'SYN_FL_delete_or_set_button', 'none', '确认筛选');
 
     //产物筛选部分
@@ -189,10 +189,10 @@ function make_SYN_FL_value_div(SYN_FL_value_div) {
 
     let SYN_FL_P_main_type_choice_scroll_box = addElement(SYN_FL_P_main_type_choice_div, 'div', 'SYN_FL_P_main_type_choice_scroll_box', 'overflow_y_div SYN_FL_scroll_box', '');
     var SYN_FL_P_main_type_choice_value = addElement(SYN_FL_P_main_type_choice_scroll_box, 'div', 'SYN_FL_P_main_type_choice_value', 'in_overflow_div');
-    for (let i = 0; i < 10; i++) {
-        var Details_div = addElement(SYN_FL_P_main_type_choice_value, 'div', '', 'radio_div SYN_FL_item_type_button');
-        addElement_radio(Details_div, '', 'SYN_FL_P_M_switch', 'main_type' + i, '材料' + i);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //     var Details_div = addElement(SYN_FL_P_main_type_choice_value, 'div', '', 'radio_div SYN_FL_item_type_button');
+    //     addElement_radio(Details_div, '', 'SYN_FL_P_M_switch', 'main_type' + i, '材料' + i);
+    // }
     let SYN_FL_P_main_type_set_button = addElement_botton(SYN_FL_P_main_type_choice_div, 'SYN_FL_P_main_type_set_button', 'SYN_FL_delete_or_set_button', 'none', '确认筛选');
 
     //产物小类筛选
@@ -203,10 +203,10 @@ function make_SYN_FL_value_div(SYN_FL_value_div) {
 
     let SYN_FL_P_secon_type_choice_scroll_box = addElement(SYN_FL_P_secon_type_choice_div, 'div', 'SYN_FL_P_secon_type_choice_scroll_box', 'overflow_y_div SYN_FL_scroll_box', '');
     var SYN_FL_P_secon_type_choice_value = addElement(SYN_FL_P_secon_type_choice_scroll_box, 'div', 'SYN_FL_P_secon_type_choice_value', 'in_overflow_div ');
-    for (let i = 0; i < 10; i++) {
-        var Details_div = addElement(SYN_FL_P_secon_type_choice_value, 'div', '', 'radio_div SYN_FL_item_type_button');
-        addElement_radio(Details_div, '', 'SYN_FL_P_S_switch', 'secon_type' + i, '材料' + i);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //     var Details_div = addElement(SYN_FL_P_secon_type_choice_value, 'div', '', 'radio_div SYN_FL_item_type_button');
+    //     addElement_radio(Details_div, '', 'SYN_FL_P_S_switch', 'secon_type' + i, '材料' + i);
+    // }
     let SYN_FL_P_secon_type_set_button = addElement_botton(SYN_FL_P_secon_type_choice_div, 'SYN_FL_P_secon_type_set_button', 'SYN_FL_delete_or_set_button', 'none', '确认筛选');
 
     //具体产物筛选
@@ -217,10 +217,10 @@ function make_SYN_FL_value_div(SYN_FL_value_div) {
 
     let SYN_FL_P_item_choice_scroll_box = addElement(SYN_FL_P_item_choice_div, 'div', 'SYN_FL_P_item_choice_scroll_box', 'overflow_y_div SYN_FL_scroll_box', '');
     var SYN_FL_P_item_choice_value = addElement(SYN_FL_P_item_choice_scroll_box, 'div', 'SYN_FL_P_item_choice_value', 'in_overflow_div SYN_FL_item_choice_value');
-    for (let i = 0; i < 15; i++) {
-        var Details_div = addElement(SYN_FL_P_item_choice_value, 'div', '', 'radio_div SYN_FL_item_button');
-        addElement_radio(Details_div, '', 'SYN_FL_P_I_switch', 'item_id' + i, '材料' + i);
-    }
+    // for (let i = 0; i < 15; i++) {
+    //     var Details_div = addElement(SYN_FL_P_item_choice_value, 'div', '', 'radio_div SYN_FL_item_button');
+    //     addElement_radio(Details_div, '', 'SYN_FL_P_I_switch', 'item_id' + i, '材料' + i);
+    // }
     let SYN_FL_P_item_set_button = addElement_botton(SYN_FL_P_item_choice_div, 'SYN_FL_P_item_set_button', 'SYN_FL_delete_or_set_button', 'none', '确认筛选');
 }
 //合成制造第三个子界面，配方筛选的制造界面

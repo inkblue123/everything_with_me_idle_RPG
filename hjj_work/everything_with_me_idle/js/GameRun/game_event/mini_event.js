@@ -138,8 +138,9 @@ export class Mini_event {
             } else if (thing_type == 'delete_buff') {
                 //清除指定buff
                 let P_buff = player.get_player_buff_manage();
+                let buff_manage = global.get_buff_manage();
                 for (let buff_id of thing_obj[thing_type]) {
-                    P_buff.delete_buff_attr(buff_id);
+                    buff_manage.delete_buff(P_buff, buff_id);
                 }
             } else if (thing_type == 'save_game') {
                 //保存游戏
@@ -219,7 +220,8 @@ function get_process_data(event_id, process_id) {
     if (!is_Empty_Object(process.buff)) {
         for (let buff_id of process.buff) {
             let P_buff = player.get_player_buff_manage();
-            P_buff.set_buff_attr(buff_id);
+            let buff_manage = global.get_buff_manage();
+            buff_manage.set_buff(P_buff, buff_id);
         }
     }
     //不应该有移动地点的流程

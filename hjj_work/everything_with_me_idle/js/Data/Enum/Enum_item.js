@@ -129,12 +129,15 @@ function init_store_item_type(enums) {
 function init_item_all_type(enums) {
     let id;
 
+    //注意：登记在这里的每个合集，都必须在 Text_type.js 里有一项 texts[合集id].type_name，
+    //否则 Data.js 的 Text_attr_init 会崩——它要为「采集时获得任意XX的概率」这类属性读这个名字
     id = 'all_secon_type'; //带有“任意”字样的小类合集有哪些
     add_Enum_Array(enums, id);
     enums[id] = [
         'all_wood', //任意木头
         'all_grass', //任意草
         'all_mushroom', //任意蘑菇
+        'all_seasoning', //任意调味料
     ];
     id = 'all_wood'; //任意木头
     add_Enum_Array(enums, id);
@@ -160,6 +163,13 @@ function init_item_all_type(enums) {
     enums[id] = [
         'refined_seasoning', //精致调味料
     ];
+    //调料小类的基础时长（秒）。用于「调味配平」：
+    //小类时长 = 基础时长 × 该小类在这份菜里的份数，取各小类的最大值作为整道菜调料buff的时长
+    id = 'seasoning_base_time';
+    add_Enum_Object(enums, id);
+    enums[id] = {
+        refined_seasoning: 10, //精制调味料
+    };
 }
 
 export { init_Enum_item };

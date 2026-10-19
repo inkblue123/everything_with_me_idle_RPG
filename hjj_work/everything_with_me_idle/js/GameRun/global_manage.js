@@ -3,6 +3,7 @@ import { Time_manage } from './Time_manage.js';
 import { Random_manage } from './random_manage.js';
 import { Enemy_manage } from './enemy_manage.js';
 import { Combat_manage } from './combat_manage.js';
+import { Buff_manage } from './buff_manage.js';
 import { Exp_manage } from './exp_manage.js';
 import { Map_manage } from './map_manage.js';
 import { Consumable_Manage } from './consumable_manage.js';
@@ -20,6 +21,7 @@ class Global_manage {
         this.enemy_manage; //场地内敌人类
         this.random_manage; //随机数管理类
         this.combat_manage; //战斗管理类
+        this.buff_manage; //buff全局结算层（调度台）
         this.exp_manage; //技能经验管理类
         this.game_event_manage; //游戏事件管理类
         this.global_flag_manage; //游戏状态管理类
@@ -35,6 +37,8 @@ class Global_manage {
         //初始化
         this.time_manage = new Time_manage(); //帧率和时间类
         this.time_manage.init();
+        this.buff_manage = new Buff_manage(); //buff全局结算层（调度台）
+        this.buff_manage.init();
         this.global_flag_manage = new Global_flag_manage(); //游戏状态管理类
         this.global_flag_manage.init();
         this.live_plan_manage = new Live_plan_manage(); //生活技能管理类
@@ -74,6 +78,9 @@ class Global_manage {
     }
     get_combat_manage() {
         return this.combat_manage;
+    }
+    get_buff_manage() {
+        return this.buff_manage;
     }
     get_exp_manage() {
         return this.exp_manage;
