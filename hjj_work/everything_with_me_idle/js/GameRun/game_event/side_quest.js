@@ -1,4 +1,4 @@
-import { is_Empty_Object, get_monitor_ch } from '../../Function/Function.js';
+import { is_Empty_Object, is_flag_condition_id, get_IE_condition_ch } from '../../Function/Function.js';
 import { addElement } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
 import { texts } from '../../Data/Text/Text.js';
@@ -32,6 +32,10 @@ class Side_quest {
     init_monitor_target() {
         this.monitor_target = game_events[this.event_id].finish_condition;
         for (let id in this.monitor_target) {
+            //状态型条件（形如 GS_xxx）不需要初始化监控数值，判定时直接读游戏状态
+            if (is_flag_condition_id(id)) {
+                continue;
+            }
             if (typeof this.monitor_target[id] == 'number') {
                 this.monitor_data[id] = 0;
             } else if (typeof this.monitor_target[id] == 'boolean') {
@@ -71,6 +75,12 @@ class Side_quest {
             console.log('错误，当前%s支线中没有%s监控行为', this.event_id, id);
             return false;
         }
+        //状态型条件（形如 GS_xxx）：直接读当前游戏状态，与目标值比较
+        if (is_flag_condition_id(id)) {
+            let global_flag_manage = global.get_global_flag_manage();
+            let current = global_flag_manage.get_flag(id);
+            return current == this.monitor_target[id];
+        }
         if (typeof this.monitor_data[id] == 'number') {
             //数字型目标，当前数值达到目标值就算达成
             if (this.monitor_data[id] >= this.monitor_target[id]) {
@@ -90,36 +100,14 @@ class Side_quest {
             return;
         }
     }
-    //获取某条监控行为呈现到div布局中的文本
-    get_monitor_ch(id) {
-        if (is_Empty_Object(this.monitor_target[id])) {
-            console.log('错误，当前%s支线中没有%s监控行为', this.event_id, id);
-            return false;
-        }
-        return get_monitor_ch(id, this.monitor_data, this.monitor_target);
-    }
     //获取支线任务是否完成
     judge_quest_finish() {
-        let finish_flag = true;
         for (let id in this.monitor_target) {
-            if (typeof this.monitor_data[id] == 'number') {
-                //数字类型目标，数值小于目标值时没有完成
-                if (this.monitor_data[id] < this.monitor_target[id]) {
-                    finish_flag = false;
-                    break;
-                }
-            } else if (typeof this.monitor_data[id] == 'boolean') {
-                //布尔类型目标，当前值与目标值不同时没有完成
-                if (this.monitor_data[id] != this.monitor_target[id]) {
-                    finish_flag = false;
-                    break;
-                }
-            } else {
-                console.log('未知类型的监控行为目标数值，无法设定初始值');
-                return;
+            if (!this.get_monitor_flag(id)) {
+                return false;
             }
         }
-        return finish_flag;
+        return true;
     }
 }
 //支线任务管理类
@@ -185,6 +173,20 @@ export class Side_quest_manage {
         }
         //有支线任务的监控数据发生了变化，更新重要事件界面
         this.updata_side_quest_IE_div();
+    }
+    //只判定一遍支线是否完成（供每帧调用：状态型条件没有行为广播，只能靠轮询发现变化）
+    check_side_quest_finish() {
+        //先收集完成的支线，避免在遍历过程中删除对象
+        let finish_event_ids = new Array();
+        for (let event_id in this.Side_quest_objs) {
+            let side_quest = this.Side_quest_objs[event_id];
+            if (side_quest.judge_quest_finish()) {
+                finish_event_ids.push(event_id);
+            }
+        }
+        for (let event_id of finish_event_ids) {
+            this.end_side_quest(event_id, 'finish');
+        }
     }
     //结束一个当前拥有的指定支线任务
     end_side_quest(event_id, end_type) {
@@ -280,7 +282,7 @@ export class Side_quest_manage {
                     monitor_flag_div.innerHTML = '☐';
                 }
                 //获取指定监控数据的文本
-                monitor_desc_div.innerHTML = side_quest.get_monitor_ch(monitor_id);
+                monitor_desc_div.innerHTML = get_IE_condition_ch(side_quest.event_id, monitor_id, side_quest.monitor_data, side_quest.monitor_target);
             }
         }
     }
@@ -305,7 +307,7 @@ export class Side_quest_manage {
                     monitor_flag_div.innerHTML = '☐';
                 }
                 //获取指定监控数据的文本
-                monitor_desc_div.innerHTML = side_quest.get_monitor_ch(monitor_id);
+                monitor_desc_div.innerHTML = get_IE_condition_ch(side_quest.event_id, monitor_id, side_quest.monitor_data, side_quest.monitor_target);
             }
         }
     }

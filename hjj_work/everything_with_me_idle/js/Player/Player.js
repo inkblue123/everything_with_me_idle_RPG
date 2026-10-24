@@ -113,6 +113,8 @@ export class Player_Object {
             if (library_updata_type == 'new') {
                 //首次点亮新物品的图鉴，检查是否有学习中的配方因此完全学会
                 this.player_formulas_manage.check_updata_study_formula_by_library();
+                //首次点亮新物品的图鉴，检查是否有配方因此集齐了全部材料、自动解锁
+                this.player_formulas_manage.check_auto_know_unlock_formulas();
             }
         }
     }

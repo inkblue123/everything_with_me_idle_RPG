@@ -69,6 +69,16 @@
     gap: 2px;
 }
 
+/* 配方列表为空时的占位提示：列表容器已有描边，这里不再加outline */
+.SYN_formula_empty_tip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
 /* 一个配方的摘要 */
 .formula_value {
     display: flex;

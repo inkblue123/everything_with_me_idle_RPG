@@ -19,6 +19,7 @@ function init_mini_event(game_events) {
     game_events[id].add_process_button_thing('process1', 'b2', 'get_item', 'copper_coin', 325); //给予物品
     game_events[id].add_process_button_thing('process1', 'b2', 'get_item', 'normal_board', 25); //给予物品
     game_events[id].add_process_button_thing('process1', 'b2', 'set_global_flag', 'GS_unlock_SYN', true); //解锁合成制造
+    game_events[id].add_process_button_thing('process1', 'b2', 'set_global_flag', 'GS_unlock_COK', true); //解锁烹饪
     game_events[id].add_process_button_thing('process1', 'b2', 'get_formula', 'SYN_carpentry_bench_2'); //解锁配方
     game_events[id].add_process_button_thing('process1', 'b2', 'get_work_bench', 'village_home', 'carpentry_bench', 2); //解锁配方
     game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
@@ -127,7 +128,7 @@ function init_mini_event(game_events) {
     game_events[id].add_process_button_thing('first', 'b1', 'delete_buff', 'get_up_buff');
     game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
 
-    id = 'unlock_collect_logging'; //解锁采集和伐木技能
+    id = 'unlock_collect_logging'; //和村口老奶对话，解锁采集和伐木技能
     add_Mini_event_obj(game_events, id);
     //该迷你事件出现的条件
     game_events[id].set_conditions_appear('event_flag', 'unlock_collect_logging', false);
@@ -215,6 +216,58 @@ function init_mini_event(game_events) {
     game_events[id].add_process_button_click('process2', 'b3', 'next_process', 'end');
     game_events[id].add_process_button_thing('process2', 'b3', 'get_formula', 'SYN_disassembly_tool_1'); //获得1级拆解工具配方
     game_events[id].game_log_flag = false; //这个迷你事件在完成时不产生游戏日志
+
+    id = 'VM_smithy_study_mining'; //向铁匠铺老板询问如何挖矿
+    add_Mini_event_obj(game_events, id);
+    //该迷你事件出现的条件
+    game_events[id].set_conditions_appear('event_flag', 'VM_smithy_study_mining', false); //事件没做过
+    game_events[id].set_conditions_appear('event_flag', 'unlock_collect_logging', true); //完成了前置任务
+    game_events[id].set_conditions_appear('event_flag', 'GS_unlock_MIN', false); //还没解锁挖矿
+    //该迷你事件的所有流程
+    game_events[id].set_new_process('first', 'text1');
+    game_events[id].add_process_button('first', 'b1', 'text2'); //首个流程添加一个按钮b1
+    game_events[id].add_process_button_click('first', 'b1', 'next_process', 'process1'); //b1按钮点击之后进入下一流程
+    game_events[id].set_new_process('process1', 'text3'); //判定点
+    game_events[id].add_process_button('process1', 'b2', 'text4'); //力量够时出现的按钮
+    game_events[id].add_process_button_attr_condition('process1', 'b2', 'power', '>=', 15); //玩家力量达到15才满足显示条件
+    game_events[id].add_process_button_always_show('process1', 'b2'); //始终显示，不满足时呈现为不可点击
+    game_events[id].add_process_button_click('process1', 'b2', 'next_process', 'process2');
+    game_events[id].add_process_button('process1', 'b3', 'text5'); //力量不够时出现的按钮
+    game_events[id].add_process_button_attr_condition('process1', 'b3', 'power', '<', 15); //玩家力量低于15才满足显示条件
+    game_events[id].add_process_button_always_show('process1', 'b3'); //始终显示，不满足时呈现为不可点击
+    game_events[id].add_process_button_click('process1', 'b3', 'next_process', 'process3');
+    game_events[id].set_new_process('process2', 'text6'); //力量测试通过
+    game_events[id].add_process_button('process2', 'b4', 'text7');
+    game_events[id].add_process_button_click('process2', 'b4', 'next_process', 'end');
+    game_events[id].add_process_button_thing('process2', 'b4', 'get_item', 'iron_pickaxe', 1); //给一把铁镐
+    game_events[id].add_process_button_thing('process2', 'b4', 'set_global_flag', 'GS_unlock_MIN', true); //解锁挖矿技能
+    game_events[id].set_new_process('process3', 'text8'); //力量测试不通过
+    game_events[id].add_process_button('process3', 'b5', 'text9');
+    game_events[id].add_process_button_click('process3', 'b5', 'next_process', 'end');
+
+    id = 'VM_smithy_power_test_retry'; //铁匠铺老板的力量测试（第一次失败后可反复重试）
+    add_Mini_event_obj(game_events, id);
+    //该迷你事件出现的条件
+    game_events[id].set_conditions_appear('event_flag', 'VM_smithy_study_mining', true); //第一次对话已经完成
+    game_events[id].set_conditions_appear('event_flag', 'GS_unlock_MIN', false); //还没解锁挖矿
+    //该迷你事件的所有流程，从判定点开始，不再重复寒暄
+    game_events[id].set_new_process('first', 'text1'); //判定点
+    game_events[id].add_process_button('first', 'b1', 'text2'); //力量够时出现的按钮
+    game_events[id].add_process_button_attr_condition('first', 'b1', 'power', '>=', 15); //玩家力量达到15才满足显示条件
+    game_events[id].add_process_button_always_show('first', 'b1'); //始终显示，不满足时呈现为不可点击
+    game_events[id].add_process_button_click('first', 'b1', 'next_process', 'process1');
+    game_events[id].add_process_button('first', 'b2', 'text3'); //力量不够时出现的按钮
+    game_events[id].add_process_button_attr_condition('first', 'b2', 'power', '<', 15); //玩家力量低于15才满足显示条件
+    game_events[id].add_process_button_always_show('first', 'b2'); //始终显示，不满足时呈现为不可点击
+    game_events[id].add_process_button_click('first', 'b2', 'next_process', 'process2');
+    game_events[id].set_new_process('process1', 'text4'); //力量测试通过
+    game_events[id].add_process_button('process1', 'b3', 'text5');
+    game_events[id].add_process_button_click('process1', 'b3', 'next_process', 'end');
+    game_events[id].add_process_button_thing('process1', 'b3', 'get_item', 'iron_pickaxe', 1); //给一把铁镐
+    game_events[id].add_process_button_thing('process1', 'b3', 'set_global_flag', 'GS_unlock_MIN', true); //解锁挖矿技能
+    game_events[id].set_new_process('process2', 'text6'); //力量测试不通过，事件不完成，可以随时再来
+    game_events[id].add_process_button('process2', 'b4', 'text7');
+    game_events[id].add_process_button_click('process2', 'b4', 'leave'); //离开：结束事件但不写完成标记
 }
 
 export { init_mini_event };

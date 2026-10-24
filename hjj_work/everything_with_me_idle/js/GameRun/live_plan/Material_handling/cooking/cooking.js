@@ -91,7 +91,7 @@ export class Cooking_manage {
         let COK_min = get_COK_min_name();
         if (COK_min == 'COK_RS') {
             //如果当前展示的烹饪子功能是配方研究，走研究逻辑
-            updata_live_plan_research();
+            // updata_live_plan_research();
             return;
         }
 

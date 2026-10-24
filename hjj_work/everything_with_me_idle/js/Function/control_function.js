@@ -50,16 +50,25 @@ function control_show_mini_event_process(event_id, process_id, click_button_id) 
     //添加按钮
     let game_event_manage = global.get_game_event_manage();
     for (let button_id in process.button) {
-        //判断按钮的出现条件
-        if (!game_event_manage.check_mini_event_button_condition(event_id, process_id, button_id)) {
+        let button_obj = process.button[button_id];
+        //判断按钮的显示条件
+        let condition_flag = game_event_manage.check_mini_event_button_condition(event_id, process_id, button_id);
+        //不满足显示条件、又不要求始终显示，直接不生成按钮
+        if (!condition_flag && button_obj.always_show != true) {
             continue;
         }
-        //满足出现条件，在控制界面中添加按钮
-        let control_button = addElement_botton(player_Control_div, null, 'player_Control_button');
-        control_button.innerHTML = texts[event_id][process.button[button_id].text];
-        control_button.addEventListener('click', function () {
-            game_event_manage.updata_mini_event(event_id, process_id, button_id);
-        });
+        let control_button;
+        if (condition_flag) {
+            //满足显示条件，正常生成可点击的按钮
+            control_button = addElement_botton(player_Control_div, null, 'player_Control_button');
+            control_button.addEventListener('click', function () {
+                game_event_manage.updata_mini_event(event_id, process_id, button_id);
+            });
+        } else {
+            //要求始终显示但显示条件不满足：半透明、不可点击
+            control_button = addElement_botton(player_Control_div, null, 'player_Control_button player_Control_button_disabled');
+        }
+        control_button.innerHTML = texts[event_id][button_obj.text];
     }
 }
 //展示使用消耗品的界面

@@ -118,17 +118,17 @@ function init_Text_refined_seasoning(texts) {
     id = 'fish_meat_floss';
     add_text_object(texts, id);
     texts[id].item_name = '鱼肉松';
-    texts[id].item_desc = '使用鱼为原料制成的调味品，可以在其他菜品烹饪时加入';
+    texts[id].item_desc = '使用鱼为原料制成的调味品，可以在其他菜品烹饪时加入，使菜品获得魔力恢复效果';
 
     id = 'animal_meat_floss';
     add_text_object(texts, id);
     texts[id].item_name = '兽肉松';
-    texts[id].item_desc = '使用兽肉为原料制成的调味品，可以在其他菜品烹饪时加入';
+    texts[id].item_desc = '使用兽肉为原料制成的调味品，可以在其他菜品烹饪时加入，使菜品获得精力恢复效果';
 
     id = 'berry_jam';
     add_text_object(texts, id);
     texts[id].item_name = '浆果果酱';
-    texts[id].item_desc = '使用浆果为原料制成的调味品，可以在其他菜品烹饪时加入';
+    texts[id].item_desc = '使用浆果为原料制成的调味品，可以在其他菜品烹饪时加入，使菜品获得生命恢复效果';
 }
 //丹药精华的文本
 function init_Text_elixir_essence(texts) {

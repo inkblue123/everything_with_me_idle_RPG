@@ -77,6 +77,9 @@ export class Mini_event {
         } else if (click_button.click_type == 'chat') {
             //如果这个按钮是对话按钮
             this.handle_button_chat(event_id, now_process_id, button_id);
+        } else if (click_button.click_type == 'leave') {
+            //如果这个按钮是离开按钮，结束事件但不标记完成，事件下次仍可进入
+            this.end_mini_event(event_id, 'leave');
         }
     }
     //处理按下按钮之后要做的事情
@@ -192,24 +195,64 @@ export class Mini_event {
     //判断当前是否满足迷你事件中的一个按钮的出现条件
     check_mini_event_button_condition(event_id, process_id, button_id) {
         let button = game_events[event_id].process[process_id].button[button_id];
-        //如果这个按钮没有设置出现条件，默认出现
+        //如果这个按钮没有设置显示条件，默认出现
         if (is_Empty_Object(button.condition)) {
             return true;
         }
-        //目前只支持判定指定按钮是否按下过
-        let flag = true;
-        for (let condition_name in button.condition) {
-            let condition_status = button.condition[condition_name];
-            //防止未定义的判定
-            if (this.mini_event_button_flag[condition_name] == undefined) {
-                this.mini_event_button_flag[condition_name] = false;
+        //逐条判断显示条件，按 type 分派，任何一条不满足都按不满足处理
+        for (let condition of button.condition) {
+            let flag = false;
+            if (condition.type == 'button') {
+                //事件内条件：某按钮是否被按过
+                flag = this.check_button_pressed_condition(condition);
+            } else if (condition.type == 'attr') {
+                //玩家属性达标条件
+                flag = this.check_button_attr_condition(condition);
+            } else {
+                console.log('按钮%s的显示条件使用了未知类型%s，该条件按不满足处理', button_id, condition.type);
+                return false;
             }
-            if (this.mini_event_button_flag[condition_name] != condition_status) {
-                flag = false;
-                break;
+            if (!flag) {
+                return false;
             }
         }
-        return flag;
+        return true;
+    }
+    //判断“某按钮是否被按过”的显示条件
+    check_button_pressed_condition(condition) {
+        //防止未定义的判定
+        if (this.mini_event_button_flag[condition.key] == undefined) {
+            this.mini_event_button_flag[condition.key] = false;
+        }
+        return this.mini_event_button_flag[condition.key] == condition.value;
+    }
+    //判断“玩家属性达标”的显示条件，任何异常情况都按不满足处理
+    check_button_attr_condition(condition) {
+        let attr_id = condition.key;
+        let P_attr = player.get_player_attributes();
+        let current = P_attr.get_data_attr(attr_id);
+        if (current == undefined) {
+            console.log('按钮属性显示条件%s读取不到玩家属性值，该条件按不满足处理', attr_id);
+            return false;
+        }
+        //按比较方向判断当前值是否满足要求，缺省为等值比较
+        let direction = condition.direction == undefined ? '=' : condition.direction;
+        let value = condition.value;
+        if (direction == '=') {
+            return current == value;
+        } else if (direction == '!=') {
+            return current != value;
+        } else if (direction == '>') {
+            return current > value;
+        } else if (direction == '>=') {
+            return current >= value;
+        } else if (direction == '<') {
+            return current < value;
+        } else if (direction == '<=') {
+            return current <= value;
+        }
+        console.log('按钮属性显示条件%s使用了未知的比较方向%s，该条件按不满足处理', attr_id, direction);
+        return false;
     }
 }
 //迷你事件的流程中存在需要处理的数据，在这里获得

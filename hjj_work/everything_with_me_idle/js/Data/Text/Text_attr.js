@@ -189,6 +189,14 @@ function init_no_normal_attr_name_collect(texts) {
     // add_text_object(texts, id);
     // texts[id].attr_name = '采集时获得任意草的概率';
 }
+//不是很常规的属性-挖矿方面的
+function init_no_normal_attr_name_mining(texts) {
+    let id;
+    //装备提供的直接加算挖矿伤害（不是百分比），与 MIN_damage_<武器子类> 的百分比加成区分开
+    id = 'MIN_damage_add';
+    add_text_object(texts, id);
+    texts[id].attr_name = '挖矿伤害';
+}
 //初始化文本数据库中属性名称相关的文本
 function init_Text_attr(texts) {
     //玩家身上的常规属性
@@ -197,6 +205,8 @@ function init_Text_attr(texts) {
     init_no_normal_attr_name_combat(texts);
     //不是很常规的属性-伐木方面的
     init_no_normal_attr_name_logging(texts);
+    //不是很常规的属性-挖矿方面的
+    init_no_normal_attr_name_mining(texts);
     //不是很常规的属性-钓鱼方面的
     init_no_normal_attr_name_fishing(texts);
     //不是很常规的属性-采集方面的

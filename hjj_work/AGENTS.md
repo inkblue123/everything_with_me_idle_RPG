@@ -108,11 +108,14 @@ git commit -m "baseline before spec work"
 `_devtools/` 下有一套**零依赖**的验证脚本。它**不属于游戏本体**（在 `everything_with_me_idle/` 之外，不参与运行、不被任何游戏代码 import），存在的目的是在没有浏览器的条件下验证不该靠肉眼确认的逻辑：
 
 ```
-node _devtools/buff_check/import_smoke.mjs     # 真实模块图冒烟：全仓 188 个 .js 逐个 import，抓断裂的 import / 导出
-node _devtools/buff_check/run_check.mjs        # buff 系统回归：133 条断言（用桩测纯逻辑）
+node _devtools/buff_check/import_smoke.mjs     # 真实模块图冒烟：全仓 189 个 .js 逐个 import，抓断裂的 import / 导出
+node _devtools/buff_check/run_check.mjs        # buff 系统回归：138 条断言（用桩测纯逻辑）
 node _devtools/buff_check/run_check_real.mjs   # 真实运行时接缝：53 条断言（真实属性 / 真实钳制 / 真实属性派生链路）
 node _devtools/data_check/check.mjs            # 数据完整性：物品 / 文本 / 分类 / 配方 / 工作台 逐条体检
-node _devtools/dish_check/run_check.mjs        # 菜品 / 调料 get_buff 接通验证：22 条断言（真实属性 + 真实 buff 容器）
+node _devtools/dish_check/run_check.mjs        # 菜品 / 调料 get_buff 接通验证：67 条断言（真实属性 + 真实 buff 容器）
+node _devtools/formula_check/run_check.mjs     # 配方列表产物提示：8 条断言（DOM 桩，白板口径 + 工作环境产物只打日志）
+node _devtools/formula_check/auto_know_unlock_check.mjs  # 配方集齐材料自动解锁：17 条断言（真实数据层 + 假图鉴/假日志）
+node _devtools/event_check/run_check.mjs       # 事件系统：50 条断言（属性按钮条件 / leave 不完成 / 正常完成 / 支线状态条件 / 铁匠铺事件接线）
 ```
 
 退出码 `0` = 全通过，`1` = 有问题。
@@ -123,6 +126,49 @@ node _devtools/dish_check/run_check.mjs        # 菜品 / 调料 get_buff 接通
 
 **改过消耗品效果结算或 buff 施加入口（`js/GameRun/consumable_manage.js`、`js/GameRun/buff_manage.js`）之后，跑 `dish_check/run_check.mjs`，再加前三个。**
 
+**改过配方列表的产物提示（`js/Function/Dom_function.js` 的 `add_formula_product_tooltip`、`COK_function.js` / `SYN_function.js` 的列表行）之后，跑 `formula_check/run_check.mjs`。**
+
+**改过配方解锁逻辑（`js/Player/Player_formula.js`、`Formula` 的 `auto_know_unlock_flag` / `initial_flag` 数据）之后，跑 `formula_check/auto_know_unlock_check.mjs`，再加 `data_check/check.mjs`。**
+
+**改过事件系统（`js/Data/Game_event/`、`js/GameRun/game_event/`）或支线完成条件之后，跑 `event_check/run_check.mjs`，再加 `data_check/check.mjs`。**
+
 ⚠️ **通过不等于没问题**：这些脚本**不覆盖 DOM/CSS 与存档读档**，也跑不了完整的 `global.init()` / `player.init()`（那需要界面已建好）。`run_check.mjs` 用的是桩，`run_check_real.mjs` 只初始化 buff 链条需要的真实部件。覆盖范围、白名单机制、以及写用例时的帧序约定，见 `_devtools/README.md`。
 
 前提：Node ≥ 22.7（游戏源码是 `.js` 且仓内无 `package.json`，靠 Node 的模块语法自动识别当 ESM 跑；本机 v24.18 实测可用）。
+
+## 8. 文档收尾清单（功能完成 / 告一段落时必做）
+
+文档会越写越多，"一次性总结"治不住；根治靠下面四条，**每次功能完成都要执行**。文档入口是 `docs/README.md`。
+
+### 8.1 做完一个功能，按顺序做四件事
+
+1. 从 `docs/roadmap.md` **删掉**该条目；
+2. 在 `docs/SPEC.md` 补写"**现在是什么样**"（行为、数据结构、接口、已知副作用）——**不写历史过程**；
+3. 若有计划文档：结论压缩成 SPEC 的几句，原文移入 `docs/archive/`，并在文件头加"已归档、不再更新"；
+4. 在 `docs/archive/roadmap_done.md` 记一行（条目 / 完成日期 / 验收结论 / 证据位置），并更新 `docs/README.md` 的"当前状态速览"。
+
+### 8.2 一份事实只写一处
+
+| 内容 | 唯一落点 |
+|---|---|
+| 现状（已存在的东西） | `docs/SPEC.md`（大了拆 `docs/spec/<系统>.md`） |
+| 待办（还没做） | `docs/roadmap.md` |
+| 历史（设计过程、实施记录、决策理由） | `docs/archive/`（只读） |
+| 玩家可见的改动 | `everything_with_me_idle/Version.txt`（一句话，不写实现细节） |
+
+其他地方**只写链接**，不复制内容。发现同一事实写在两处时，删掉较弱的那份。
+
+### 8.3 长度预算（超了就拆，不靠压缩）
+
+- `docs/README.md` ≤ **80** 行
+- `docs/roadmap.md` ≤ **120** 行
+- `docs/SPEC.md` ≤ **400** 行；超了把某个系统拆到 `docs/spec/<系统>.md`（每页 ≤ **150** 行），SPEC 只留一行链接
+- 单个系统的计划文档在实施完成后 **30 天内**归档，不得长期留在 `docs/` 根目录
+
+### 8.4 新开一个系统时的路径约定
+
+- 待办 → `docs/roadmap.md` 加一条（目标 / 范围 / 验收标准）
+- 设计拆解（**预期跨 3 个以上文件才需要**）→ `docs/plan/<系统>.md`；简单改动不建计划文档
+- 完工 → `docs/spec/<系统>.md`（或 SPEC 一节）+ 计划文档进 `docs/archive/`
+
+> 取向：**允许文件变多，不允许单份变长**；文件多靠 `docs/README.md` 索引兜住。

@@ -1,7 +1,11 @@
 # 消耗品「调味 / 实例属性」框架规划稿
 
+> **📦 已归档（2026-10-22）**：本文件是**历史记录**，不再更新。要看消耗品/菜品的**现状**，请看 `docs/SPEC.md` §4.4（buff）与 §4.5（配方）；
+> 要看**还剩什么没做**（调料产出、干制品、变味规则、二次调味），请看 `docs/roadmap.md` #3~#7。
+> 路径变更：本文件原位于 `docs/plan_consumable_attribute.md`，现移到 `docs/archive/`；文内及游戏代码注释里出现的旧路径按此对应。
+>
 > 性质：给**下一会话**看的**实现前置规划**。本稿只做**定义与规划**，不做任何实现。
-> 对应 `docs/roadmap.md` #4「消耗品的独特属性数据结构」（目标原文：_保存菜品的调料属性和调料使用情况_；验收：_消耗品能携带并保存其独特属性，存档读档后不丢失_）。
+> 对应 `docs/roadmap.md` #4「消耗品的独特属性数据结构」（**已于 2026-09-10 完成**，见 `docs/archive/roadmap_done.md`）。
 > 生成方式：grill-with-docs 盘问会话（2026-09-09）逐轮收敛所得。
 
 ---
@@ -706,6 +710,21 @@ bonus 两行        → set_buff(holder, 'seasoning_effect',
 
 验证：`dish_check` 新增用例 8（满血可用 + "摘掉 buff 行后满血仍不可用"的反例），共 30 条断言全绿。
 提示窗那部分是纯 DOM 渲染，**无头脚本覆盖不到，需人工在浏览器确认**。
+
+### 17.4 收尾修复（2026-10-21）
+
+`Version.txt`「有待解决的问题」里与 buff / 烹饪界面有关的三条，本轮处理：
+
+| 文件 | 改动 |
+|---|---|
+| `js/GameRun/buff_manage.js` | **修提示窗残留**：`init_buff_show_div()` 用 `replaceChildren()` 整体重建面板，鼠标正悬停的那格被删掉时浏览器**不补发 `mouseleave`**，提示窗会留在屏幕上。新增实例字段 `this.hovering_buff_id`（`add_buff_show_div()` 给每个图标挂 `mouseenter` / `mouseleave` 维护，**用箭头函数**，否则 `this` 是图标而不是调度台）+ `close_stale_buff_tooltip(buff_holder)`（`refresh_buff_show()` 开头调用）：**只有那个 buff 已从两个容器里消失、且提示窗正显示 buff** 时才 `CloseTip()`。物品 / 技能等其它提示窗不受影响 |
+| `js/Dom/Live_plan/Live_plan.js` | **修单选框 id 撞车**（用户改）：第 169 行「菜品调味」radio 的 id 由 `COK_MS` 改成 `COK_DS`。切换逻辑按 `this.id` 判断，重名时点它会去初始化「制作调味品」面板、之后切不回来 |
+| `_devtools/buff_check/run_check.mjs` | DOM 桩的 `makeEl` 补 `listeners` + `addEventListener`；`add_buff_show_div` 变成实例方法后，脚本用一行转发挂到 `__BM_display`；新增**验收 19**（5 条：图标挂上监听 / buff 还在时不动提示窗 / 消失后关掉 / 记录清空不重复关 / 鼠标已离开时不动）。断言数 133 → **138** |
+
+**文档同步**：`docs/SPEC.md` §4.4（补「消耗品/菜品来源的施加传参」与读档丢弃规则、17 条 buff 条目清单、提示窗残留机制；把「消耗品 get_buff 接通 / 施加传参」从「尚未做的机制」里移出）、`docs/SPEC.md` §7 版本号、
+`docs/roadmap.md` #1、`AGENTS.md` §7、`_devtools/README.md`（断言数与字段名）、`docs/plan_buff_system.md` 末注的断言数。
+
+**本轮明确没做**：烹饪「排序」按钮仍然没有监听器（`#COK_CD_sort_button` 只在 `Dom/.../cooking.js:69` 创建，排序实际只靠两个下拉的 `change`）——用户 2026-10-21 定案**不动**，`Version.txt` 里该条保留。
 
 ---
 

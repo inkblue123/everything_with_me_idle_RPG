@@ -28,6 +28,12 @@ function init_village_NPC(places) {
     places[id].add_condition_behavior('VM_woodshop_study_fishing');
     places[id].add_condition_behavior('VM_woodshop_get_disassembly_tool'); //合成制造达到2级后出现的"木工老板似乎有点事"事件
     //有条件出现的见面对话，按优先级排列
+
+    id = 'village_smithy_owner'; //铁匠铺老板
+    add_NPC_Place(places, id, area);
+    //有条件出现的事件入口
+    places[id].add_condition_behavior('VM_smithy_study_mining'); //询问如何挖矿（力量测试）
+    places[id].add_condition_behavior('VM_smithy_power_test_retry'); //力量测试失败后的重试事件
 }
 //村外后山区域的npc
 function init_village_backhill_NPC(places) {

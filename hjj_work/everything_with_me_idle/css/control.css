@@ -84,6 +84,12 @@
     align-items: center;
 }
 
+/* 始终显示但显示条件不满足的按钮：半透明、不可点击 */
+.player_Control_button_disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* 展示有限刷怪区域敌人剩余数量的div */
 #remain_enemy_div {
     /* box-sizing: border-box; */

@@ -32,6 +32,14 @@ function village_NPC_place_text(texts) {
     // texts[id].text1 = '';
     // texts[id].text3 = '';
     // texts[id].text2 = '';
+
+    id = 'village_smithy_owner';
+    add_text_object(texts, id);
+    texts[id].place_name = '铁匠铺老板';
+    texts[id].place_desc = ''; //这个文本目前用不到
+    //默认见面语句
+    texts[id].default_meet_chat = '炉火正旺，有事就说吧';
+    //条件见面语句
 }
 //村外后山区域的npc文本
 function village_backhill_NPC_place_text(texts) {

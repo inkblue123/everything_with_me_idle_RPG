@@ -129,6 +129,10 @@ class Ore_manage {
     get_max_HP() {
         return this.health_max;
     }
+    //获取这个矿石的当前血量
+    get_now_HP() {
+        return this.health_point;
+    }
 
     //获取当前状态下，这个矿石应该掉落的主要奖励
     get_drop_reward() {
@@ -271,8 +275,12 @@ export class Mining_manage {
                 this.show_new_ore_div();
             }
         }
+        //进地点先结算一次矿石复活，避免把"其实已经好了"的矿当成等待中
+        this.settle_ore_state();
         //调整挖矿状态
         this.updata_now_MIN_status('set_new_place');
+        //刷新界面：缓存里可能是活矿、等待中的矿，或第一次来刚刷出的新矿
+        this.refresh_mining_panel();
     }
     //地点变化时，对挖矿界面特殊更新
     // 上层管理类会调用，必须定义，必须使用这个名称
@@ -307,6 +315,8 @@ export class Mining_manage {
     //开始挖矿，更新挖矿技能的数值
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_live_plan_data() {
+        //先结算矿石复活：站在矿点上等矿时也要照常计时，不能因为"没在挖"就停摆
+        this.settle_ore_state();
         //当前没有挖矿
         if (this.now_MIN_status == MIN_status.NO_MIN) {
             return;
@@ -343,52 +353,147 @@ export class Mining_manage {
     //生活技能切换，切换到了挖矿界面，初始化挖矿界面
     // 上层管理类会调用，必须定义，必须使用这个名称
     init_live_plan_game_div() {
-        //挖矿目前不需要初始化界面
+        //切回挖矿界面时先结算矿的状态并刷新，避免显示切走之前的旧画面
+        this.settle_ore_state();
+        this.refresh_mining_panel();
     }
     //开始挖矿，更新挖矿技能的界面
     // 上层管理类会调用，必须定义，必须使用这个名称
     updata_live_plan_div() {
-        //当前没有挖矿
-        if (this.now_MIN_status == MIN_status.NO_MIN) {
+        //先结算矿石复活，再按真实状态渲染（没在挖矿时也要让等待进度条走起来）
+        this.settle_ore_state();
+        this.refresh_mining_panel();
+    }
+    //结算矿石复活：矿已经死了、且复活时间已到，就换成新矿
+    //开始/停止/切界面/移动/定时器都先走这一步，避免"内部状态"和"界面"各说各话
+    settle_ore_state() {
+        //矿石对象还没初始化，交给 set_new_place 处理
+        if (this.ore_manage.statu === undefined) {
             return;
         }
+        if (this.ore_manage.get_ore_statu()) {
+            return;
+        }
+        let place_obj = places[this.now_place];
+        if (!place_obj || !place_obj.MIN_reborn_time) {
+            return;
+        }
+        let death_time = this.ore_manage.death_time;
+        if (death_time && global.get_game_now_time() - death_time < place_obj.MIN_reborn_time * 1000) {
+            return;
+        }
+        //到时间了（或存档里没有死亡时间），刷新一个新矿（reborn_ore 内部会写缓存并刷新界面）
+        this.reborn_ore();
+    }
+    //当前是否处于"正在挖矿"的状态（含正在等待新矿）
+    is_mining_running() {
+        return this.now_MIN_status == MIN_status.ENERGY_MIN
+            || this.now_MIN_status == MIN_status.NO_ENERGY_MIN
+            || this.now_MIN_status == MIN_status.REST_MIN
+            || this.now_MIN_status == MIN_status.R_ORE_MIN;
+    }
+    //矿石复活进度条要显示的百分比（0~100，超时按 100 算）
+    get_reborn_render_ratio() {
+        let place_obj = places[this.now_place];
+        let death_time = this.ore_manage.death_time;
+        if (!place_obj || !place_obj.MIN_reborn_time || !death_time) {
+            return '0%';
+        }
+        let ratio_num = ((global.get_game_now_time() - death_time) / (place_obj.MIN_reborn_time * 1000)) * 100;
+        if (ratio_num < 0) {
+            ratio_num = 0;
+        }
+        if (ratio_num > 100) {
+            ratio_num = 100;
+        }
+        return ratio_num + '%';
+    }
+    //清空掉落物列表，等待新矿时展示"无"
+    clear_MIN_drop_table() {
+        let MIN_drop_table_value_div = document.getElementById('MIN_drop_table_value_div');
+        if (!MIN_drop_table_value_div) {
+            return;
+        }
+        MIN_drop_table_value_div.replaceChildren();
+        let drop_value = addElement(MIN_drop_table_value_div, 'div', null, 'drop_value');
+        drop_value.innerHTML = '无';
+    }
+    //按当前状态渲染挖矿面板：矿活着 / 等待新矿 / 当前地点不能挖矿
+    refresh_mining_panel() {
+        let ore_head = document.getElementById('ore_head');
+        if (!ore_head) {
+            return;
+        }
+        let place_obj = places[this.now_place];
+        let can_mining = place_obj && place_obj.live_plan_flag[2];
         let ore_statu = this.ore_manage.get_ore_statu();
-        if (ore_statu) {
-            //矿石活着
-            let ore_head = document.getElementById('ore_head');
-            if (ore_head.dataset.statu != String(ore_statu)) {
-                //这一帧矿石复活，展示新矿石的信息
-                this.show_new_ore_div();
-                ore_head.dataset.statu = String(ore_statu);
-            }
-            //实时更新矿石的生命进度条
-            let ore_blood_bar = document.getElementById('ore_blood_bar');
-            let now_HP_ratio = this.ore_manage.get_HP_ratio();
-            if (ore_blood_bar.dataset.HP_ratio != now_HP_ratio) {
-                ore_blood_bar.children[0].children[0].style.width = now_HP_ratio; //血条
-                ore_blood_bar.dataset.HP_ratio = now_HP_ratio;
-            }
-            //实时更新玩家攻击进度条
-            let player_mining_bar = document.getElementById('MIN_D_bar');
-            let now_attack_ratio = this.get_attack_ratio();
-            if (player_mining_bar.dataset.attack_ratio != now_attack_ratio) {
-                player_mining_bar.children[0].children[0].style.width = now_attack_ratio;
-                player_mining_bar.dataset.HP_ratio = now_attack_ratio;
-            }
+        let ore_blood_bar = document.getElementById('ore_blood_bar');
+        let ore_blood_number = document.getElementById('ore_blood_number');
+        let ore_reborn_bar = document.getElementById('MIN_MR_bar');
+        let replace_button = document.getElementById('MIN_replace_button');
+        let MIN_S_button = document.getElementById('MIN_S_button');
+        let MIN_E_button = document.getElementById('MIN_E_button');
+
+        //等待新矿又没在挖矿时，进度条只有每秒一次的定时刷新，
+        //用一个 1 秒的线性过渡把两次刷新之间的空档补平，看起来是连续推进的；
+        //正在挖矿（含排队等新矿）时是逐帧刷新，不能用过渡，否则会一直追不上目标值。
+        let ore_reborn_current = ore_reborn_bar.children[0].children[0];
+        if (can_mining && !ore_statu && !this.is_mining_running()) {
+            ore_reborn_current.style.transition = 'width 1s linear';
         } else {
-            //矿石死了
-            let ore_head = document.getElementById('ore_head');
-            if (ore_head.dataset.statu != String(ore_statu)) {
-                //这一帧矿石死了，清空界面
-                delete_mining_div('ore_death');
+            ore_reborn_current.style.transition = 'none';
+        }
+
+        if (!can_mining) {
+            //当前地点不能挖矿，没有目标
+            if (ore_head.dataset.statu != 'none') {
+                ore_head.innerHTML = '没有目标';
+                ore_head.dataset.statu = 'none';
             }
-            //实时更新矿石复活进度条
-            let ore_reborn_bar = document.getElementById('MIN_MR_bar');
-            let ore_reborn_ratio = this.get_ore_reborn_ratio();
-            if (ore_reborn_bar.dataset.attack_ratio != ore_reborn_ratio) {
-                ore_reborn_bar.children[0].children[0].style.width = ore_reborn_ratio;
-                ore_reborn_bar.dataset.HP_ratio = ore_reborn_ratio;
+            ore_blood_bar.children[0].children[0].style.width = '0%';
+            ore_blood_number.innerHTML = '';
+            ore_reborn_bar.children[0].children[0].style.width = '0%';
+            replace_button.disabled = true;
+            replace_button.innerHTML = '更换目标';
+        } else if (ore_statu) {
+            //矿石活着：名称、掉落表、血条、血量数字
+            if (ore_head.dataset.statu != 'true') {
+                this.show_new_ore_div();
             }
+            ore_blood_bar.children[0].children[0].style.width = this.ore_manage.get_HP_ratio();
+            ore_blood_number.innerHTML = this.ore_manage.get_now_HP() + ' / ' + this.ore_manage.get_max_HP();
+            ore_reborn_bar.children[0].children[0].style.width = '0%';
+            replace_button.disabled = false;
+            replace_button.innerHTML = '更换目标';
+        } else {
+            //矿石死了，正在等新矿
+            if (ore_head.dataset.statu != 'false') {
+                ore_head.innerHTML = '正在寻找新矿';
+                ore_head.dataset.statu = 'false';
+                this.clear_MIN_drop_table();
+            }
+            ore_blood_bar.children[0].children[0].style.width = '0%';
+            ore_blood_number.innerHTML = '';
+            ore_reborn_bar.children[0].children[0].style.width = this.get_reborn_render_ratio();
+            replace_button.disabled = true;
+            replace_button.innerHTML = '正在寻找新矿';
+        }
+
+        //开始/停止挖矿按钮，按当前是否正在挖矿切换
+        let running = this.is_mining_running();
+        MIN_S_button.style.display = running ? 'none' : '';
+        MIN_E_button.style.display = running ? '' : 'none';
+
+        //玩家攻击进度条：只在真正挖矿时推进；等待新矿、休息、停止时一律归零
+        //（等待期间 now_round_time 仍在累加，不归零会把进度条撑出边框）
+        let player_mining_bar = document.getElementById('MIN_D_bar');
+        let attack_ratio = '0%';
+        if (ore_statu && (this.now_MIN_status == MIN_status.ENERGY_MIN || this.now_MIN_status == MIN_status.NO_ENERGY_MIN)) {
+            attack_ratio = this.get_attack_ratio();
+        }
+        if (player_mining_bar.dataset.attack_ratio != attack_ratio) {
+            player_mining_bar.children[0].children[0].style.width = attack_ratio;
+            player_mining_bar.dataset.attack_ratio = attack_ratio;
         }
     }
     //重置一轮挖矿的参数
@@ -400,21 +505,12 @@ export class Mining_manage {
     //停止挖矿状态
     // 上层管理类会调用，必须定义，必须使用这个名称
     stop_game_statu() {
+        //先结算矿石复活，避免"矿其实已经好了却按旧状态切换"
+        this.settle_ore_state();
         //调整挖矿状态
         this.updata_now_MIN_status('stop_game_statu');
-
-        //重置按钮
-        const MIN_S_button = document.getElementById('MIN_S_button');
-        const MIN_E_button = document.getElementById('MIN_E_button');
-        MIN_S_button.style.display = '';
-        MIN_E_button.style.display = 'none';
-        //重置玩家攻击进度条
-        let player_mining_bar = document.getElementById('MIN_D_bar');
-        player_mining_bar.children[0].children[0].style.width = '0%';
-        //重置矿石复活进度条
-        let ore_reborn_bar = document.getElementById('MIN_MR_bar');
-        ore_reborn_bar.children[0].children[0].style.width = '0%';
-
+        //刷新界面：等待新矿时进度条保留（内部进度本来就不清空），按钮与攻击条一起同步
+        this.refresh_mining_panel();
         //重置回合
         this.reset_round();
     }
@@ -451,8 +547,12 @@ export class Mining_manage {
 
     //按下了“开始挖矿”按钮，这里初始化挖矿参数，
     player_start_mining() {
+        //先结算一次矿石复活，再按结算后的状态切换
+        this.settle_ore_state();
         //调整挖矿状态
         this.updata_now_MIN_status('player_start_mining');
+        //立刻刷新界面，不等下一帧
+        this.refresh_mining_panel();
 
         //开始挖矿的日志
         let global_flag_manage = global.get_global_flag_manage();
@@ -495,6 +595,8 @@ export class Mining_manage {
         let MIN_damage = this.get_MIN_damage();
         //挖到矿石身上
         this.ore_manage.attack_ore(MIN_damage);
+        //显示这次挖矿的伤害数字
+        this.show_damage_number(MIN_damage);
 
         //记录挖矿中的参数，用于结算挖矿技能的经验
         let global_flag_manage = global.get_global_flag_manage();
@@ -526,15 +628,18 @@ export class Mining_manage {
 
     //主动更换挖矿目标时的矿石复活逻辑
     ore_replace_reborn() {
-        if (this.ore_manage.get_ore_statu()) {
-            //矿石活着
-            //直接让当前矿石死亡，进入复活逻辑
-            this.ore_manage.start_rebron();
-            //调整挖矿状态
-            this.updata_now_MIN_status('ore_replace_reborn');
-        } else {
+        if (!this.ore_manage.get_ore_statu()) {
             //矿石死了，正在复活，不能重复更换
+            return;
         }
+        //直接让当前矿石死亡，进入复活逻辑
+        this.ore_manage.start_rebron();
+        //调整挖矿状态
+        this.updata_now_MIN_status('ore_replace_reborn');
+        //立刻写一次地点缓存，避免暂停/离开时丢掉死亡时间
+        this.updata_MIN_place_data();
+        //立刻刷新界面：进度条从 0 开始，更换按钮置灰，不等下一帧
+        this.refresh_mining_panel();
     }
     //矿石死亡时的复活逻辑
     ore_death_reborn() {
@@ -542,20 +647,9 @@ export class Mining_manage {
         if (!places[this.now_place].live_plan_flag[2]) {
             return;
         }
-        //矿石活着，不需要复活
-        if (this.ore_manage.get_ore_statu()) {
-            return;
-        }
-        this.now_time = global.get_game_now_time();
-        let reborn_time = places[this.now_place].MIN_reborn_time; //当前地点规定的矿石复活时间
-        let ore_death_time = this.ore_manage.death_time; //上一个矿石死亡的时间
-
-        //没到复活时间
-        if (this.now_time - ore_death_time < reborn_time * 1000) {
-            return;
-        }
-        //刷新复活一个矿石
-        this.reborn_ore();
+        //结算复活并刷新界面：暂停期间矿好了也要立刻显示，不能等玩家再点开始
+        this.settle_ore_state();
+        this.refresh_mining_panel();
     }
     //刷新复活一个矿石
     reborn_ore() {
@@ -575,6 +669,9 @@ export class Mining_manage {
         this.show_new_ore_div();
         //调整挖矿状态
         this.updata_now_MIN_status('reborn_ore');
+        //立刻写一次地点缓存，并刷新界面（暂停期间复活也要立刻显示新矿）
+        this.updata_MIN_place_data();
+        this.refresh_mining_panel();
     }
     //更新当前地点的缓存数据
     updata_MIN_place_data() {
@@ -592,11 +689,22 @@ export class Mining_manage {
     }
     //获取挖矿攻击进度比例
     get_attack_ratio() {
-        if (this.now_MIN_status == MIN_status.REST_MIN) {
+        //休息、等待新矿、或者间隔还没算出来时，攻击进度条一律归零
+        if (this.now_MIN_status == MIN_status.REST_MIN
+            || this.now_MIN_status == MIN_status.R_ORE_MIN
+            || this.now_MIN_status == MIN_status.R_ORE_NO_MIN
+            || !this.true_MIN_interval) {
             return '0%';
-        } else {
-            return (this.now_round_time / (this.true_MIN_interval * 1000)) * 100 + '%';
         }
+        let ratio_num = (this.now_round_time / (this.true_MIN_interval * 1000)) * 100;
+        //封顶 100%：暂停/等待期间 now_round_time 不会重置，不封顶会把进度条撑出边框
+        if (ratio_num < 0) {
+            ratio_num = 0;
+        }
+        if (ratio_num > 100) {
+            ratio_num = 100;
+        }
+        return ratio_num + '%';
     }
     //获取矿石复活进度比例
     get_ore_reborn_ratio() {
@@ -611,6 +719,10 @@ export class Mining_manage {
         let MIN_attack = this.player_end_attr['MIN_attack'];
         //直接加算增幅
         let attack_add = 0;
+        //装备等来源提供的直接加算挖矿伤害（不是百分比）
+        if (!is_Empty_Object(this.player_end_attr['MIN_damage_add'])) {
+            attack_add += this.player_end_attr['MIN_damage_add'];
+        }
 
         //获取所有直接乘算增幅
         let damage_add = 0;
@@ -707,10 +819,33 @@ export class Mining_manage {
         //矿石的血条回满
         let ore_blood_bar = document.getElementById('ore_blood_bar');
         ore_blood_bar.children[0].children[0].style.width = '100%';
+        //矿石的血量数字回满
+        let ore_blood_number = document.getElementById('ore_blood_number');
+        ore_blood_number.innerHTML = this.ore_manage.get_now_HP() + ' / ' + this.ore_manage.get_max_HP();
         //矿石复活进度条归零
         let ore_reborn_bar = document.getElementById('MIN_MR_bar');
         let ore_reborn_ratio = this.get_ore_reborn_ratio();
         ore_reborn_bar.children[0].children[0].style.width = '0%';
+    }
+
+    //显示一次挖矿伤害数字：向上飘动并淡出，动画结束后移除节点
+    show_damage_number(damage) {
+        let ore_head = document.getElementById('ore_head');
+        if (!ore_head) {
+            return;
+        }
+        let number_div = document.createElement('div');
+        number_div.className = 'MIN_damage_number';
+        //伤害取整展示，避免小数刷屏
+        number_div.innerHTML = Math.round(damage);
+        //左右随机偏移，连续攻击时数字不会完全重叠
+        let offset_x = get_random(-25, 25);
+        number_div.style.left = 'calc(50% + ' + offset_x + 'px)';
+        ore_head.appendChild(number_div);
+        //动画时长与 CSS 里的 .MIN_damage_number 保持一致
+        setTimeout(function () {
+            number_div.remove();
+        }, 800);
     }
 
     //实时监测精力，恢复好就切换到其他挖矿状态
@@ -891,6 +1026,9 @@ function delete_mining_div(delete_flag) {
     //矿石的血条
     let ore_blood_bar = document.getElementById('ore_blood_bar');
     ore_blood_bar.children[0].children[0].style.width = '100%';
+    //矿石的血量数字清空
+    let ore_blood_number = document.getElementById('ore_blood_number');
+    ore_blood_number.innerHTML = '';
     //矿石的掉落物
     let MIN_drop_table_value_div = document.getElementById('MIN_drop_table_value_div');
     MIN_drop_table_value_div.replaceChildren(); //清空现有展示的物品

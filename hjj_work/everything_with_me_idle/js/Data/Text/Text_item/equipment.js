@@ -201,10 +201,10 @@ function init_Text_fishing_tool(texts) {
 function init_Text_mining_tool(texts) {
     let id;
 
-    // id = 'AAA';
-    // add_text_object(texts, id);
-    // texts[id].item_name = '物品名称';
-    // texts[id].item_desc = '物品描述';
+    id = 'iron_pickaxe';
+    add_text_object(texts, id);
+    texts[id].item_name = '铁镐';
+    texts[id].item_desc = '铁匠铺老板给的老铁镐，镐头沉、抡起来费劲，但比空手挖矿有力得多';
 }
 //采集工具
 function init_Text_collect_tool(texts) {

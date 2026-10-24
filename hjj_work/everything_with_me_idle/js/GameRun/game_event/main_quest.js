@@ -1,4 +1,4 @@
-import { is_Empty_Object, get_monitor_ch } from '../../Function/Function.js';
+import { is_Empty_Object, get_IE_condition_ch } from '../../Function/Function.js';
 import { addElement } from '../../Function/Dom_function.js';
 import { game_events } from '../../Data/Game_event/Game_Event.js';
 import { texts } from '../../Data/Text/Text.js';
@@ -196,7 +196,7 @@ export class Main_quest_manage {
                 monitor_flag_div.innerHTML = '☐';
             }
             //获取指定监控数据的文本
-            monitor_desc_div.innerHTML = get_monitor_ch(id, this.monitor_data, this.monitor_target);
+            monitor_desc_div.innerHTML = get_IE_condition_ch(this.main_quest_id, id, this.monitor_data, this.monitor_target);
         }
     }
     //更新脑海-重要事件界面中关于主线任务的信息
@@ -221,7 +221,7 @@ export class Main_quest_manage {
                 monitor_flag_div.innerHTML = '☐';
             }
             //获取指定监控数据的文本
-            monitor_desc_div.innerHTML = get_monitor_ch(id, this.monitor_data, this.monitor_target);
+            monitor_desc_div.innerHTML = get_IE_condition_ch(this.main_quest_id, id, this.monitor_data, this.monitor_target);
         }
     }
     //清空脑海-重要事件界面中关于主线任务的信息

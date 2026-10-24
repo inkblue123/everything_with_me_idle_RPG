@@ -387,11 +387,14 @@ function init_mining_tool(items) {
     let secon_type = 'mining_tool';
     let attack_interval = 4; //挖矿工具的攻击间隔为+4
 
-    // id = 'test_shield';
-    // add_Equipment_object(items, id);
-    // items[id].name = '测试盾牌';
-    // items[id].init_Equipment(['shield']); //武器小类，堆叠数量，是否属于特制装备，攻击间隔
-    // // items[id].init_Item_price('ordinary_coin', 60); //物品价值
+    id = 'iron_pickaxe'; //铁镐
+    add_Equipment_object(items, id);
+    items[id].init_Item_other(1, secon_type, 2); //堆叠数量，物品小类，章节归属
+    items[id].init_Equipment(false, attack_interval); //是否属于特制装备，攻击间隔
+    items[id].init_Item_price('ordinary_coin', 50); //物品价值
+    items[id].set_attr_level('L0', 'attack', secon_type); //调用L0级的攻击属性预设
+    items[id].equip_attr['ordinary']['MIN_damage_add'] = 3; //挖矿伤害+3，直接加算，不是百分比
+    items[id].auto_set_all_rarity_attr(); //将“普通”稀有度的属性自动填充到其他全部稀有度里
 }
 //采集工具
 function init_collect_tool(items) {

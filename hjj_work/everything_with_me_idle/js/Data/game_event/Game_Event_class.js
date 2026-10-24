@@ -12,6 +12,7 @@ export class Game_Event {
         this.conditions_appear = new Array(); //事件出现条件
         this.finish_condition = new Object(); //事件完成条件
         this.finish_reward = new Object(); //事件完成奖励
+        this.condition_text = new Object(); //达成条件的专属文案（条件id -> 文本键），优先于全局条件文案
         this.init_event_name_desc(id);
     }
     //设置该事件的出现条件
@@ -80,6 +81,11 @@ export class Game_Event {
                 this.finish_reward['start_event'].push(args[i]);
             }
         }
+    }
+    //为某个达成条件设置专属文案，文本内容写在 texts[任务id][文本键] 里
+    //显示优先级：任务专属文案 > 全局条件文案（texts[条件id].condition_name）> 自动生成的描述
+    set_condition_text(condition_id, text_key) {
+        this.condition_text[condition_id] = text_key;
     }
     //调用文本数据库中的地点名称和描述
     init_event_name_desc(id) {
@@ -162,16 +168,45 @@ export class Mini_event extends Game_Event {
         }
     }
     //设置一个按钮的出现条件
+    //显示条件统一存在 button.condition 数组里，每项用 type 区分：
+    //type='button'：key 是按钮id，value 是期望的“是否已被按过”
+    //type='attr'：由 add_process_button_attr_condition 写入
     add_process_button_condition(process_id, button_id, ...condition_value) {
         let button_obj = this.process[process_id].button[button_id];
         if (button_obj.condition == undefined) {
-            button_obj.condition = new Object();
+            button_obj.condition = new Array();
         }
         for (let i = 0; i < condition_value.length; i += 2) {
-            let condition_id = condition_value[i];
-            let condition_status = condition_value[i + 1];
-            button_obj.condition[condition_id] = condition_status;
+            let condition_obj = new Object();
+            condition_obj.type = 'button'; //事件内条件：某按钮是否被按过
+            condition_obj.key = condition_value[i]; //按钮id
+            condition_obj.value = condition_value[i + 1]; //期望的“是否已被按过”
+            button_obj.condition.push(condition_obj);
         }
+    }
+    //设置一个按钮的属性出现条件：玩家属性满足条件时按钮才满足显示条件
+    //与 add_process_button_condition 写进同一个 button.condition 数组，type='attr'
+    //attr_id：玩家属性id（如 'power' 力量）
+    //direction：比较方向，=、>、>=、<、<=，缺省为等值比较
+    //value：条件要求的值
+    add_process_button_attr_condition(process_id, button_id, attr_id, direction, value) {
+        let button_obj = this.process[process_id].button[button_id];
+        if (button_obj.condition == undefined) {
+            button_obj.condition = new Array();
+        }
+        let condition_obj = new Object();
+        condition_obj.type = 'attr'; //玩家属性达标条件
+        condition_obj.key = attr_id; //玩家属性id
+        condition_obj.value = value; //条件要求的值
+        if (direction != undefined) {
+            condition_obj.direction = direction; //比较方向
+        }
+        button_obj.condition.push(condition_obj);
+    }
+    //设置一个按钮始终显示：显示条件不满足时仍然生成按钮，但呈现为不可点击
+    add_process_button_always_show(process_id, button_id) {
+        let button_obj = this.process[process_id].button[button_id];
+        button_obj.always_show = true;
     }
     //设置一个按钮按下之后要做的事
     add_process_button_thing(process_id, button_id, thing_type, ...thing_value) {

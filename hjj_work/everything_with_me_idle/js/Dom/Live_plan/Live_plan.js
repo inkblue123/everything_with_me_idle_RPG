@@ -166,7 +166,7 @@ function make_Material_handling_div(MH_div) {
         var COK_MS_radio_div = addElement(COK_droptable, 'div', 'COK_MS_radio_div', 'radio_div switch_radio_div_2');
         addElement_radio(COK_MS_radio_div, 'COK_MS', 'COK_switch', 'COK_MS', '制作调味品');
         var COK_DS_radio_div = addElement(COK_droptable, 'div', 'COK_DS_radio_div', 'radio_div switch_radio_div_2');
-        addElement_radio(COK_DS_radio_div, 'COK_MS', 'COK_switch', 'COK_DS', '菜品调味');
+        addElement_radio(COK_DS_radio_div, 'COK_DS', 'COK_switch', 'COK_DS', '菜品调味');
         var COK_EN_radio_div = addElement(COK_droptable, 'div', 'COK_EN_radio_div', 'radio_div switch_radio_div_2');
         addElement_radio(COK_EN_radio_div, 'COK_EN', 'COK_switch', 'COK_EN', '工作环境详情');
 

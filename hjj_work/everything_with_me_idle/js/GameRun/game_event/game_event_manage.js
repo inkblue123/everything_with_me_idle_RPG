@@ -235,6 +235,10 @@ export class Game_event_manage {
     end_mini_event(event_id, flag) {
         this.mini_event_manage.end_mini_event(event_id, flag);
     }
+    //只判定一遍支线是否完成（供每帧调用：状态型条件没有行为广播，靠这里发现变化）
+    check_side_quest_finish() {
+        this.side_quest_manage.check_side_quest_finish();
+    }
 
     //初始化脑海-重要事件界面的信息
     init_IE_div() {

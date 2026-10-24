@@ -1,6 +1,8 @@
 import { items } from '../Data/Item/Item.js';
 import { texts } from '../Data/Text/Text.js';
 import { enums } from '../Data/Enum/Enum.js';
+import { game_events } from '../Data/Game_event/Game_Event.js';
+import { global } from '../GameRun/global_manage.js';
 import { get_random } from '../Function/math_func.js';
 
 //将属性补正数值转义成简写字母
@@ -93,51 +95,70 @@ function get_object_only_key(obj) {
     }
     return keys[0];
 }
-//获取监控行为的文本
-function get_monitor_ch(id, monitor_data, monitor_target) {
-    if (is_Empty_Object(monitor_target[id]) || is_Empty_Object(monitor_data[id])) {
-        console.log('错误，输入参数中没有%s监控行为', id);
+//判断一条条件id是不是“游戏状态型”（形如 GS_xxx / UGS_xxx / SGS_xxx / OP_xxx）
+//状态型条件不走行为监控，判定时直接读当前游戏状态，所以没有 monitor_data
+function is_flag_condition_id(id) {
+    let flag_prefixes = ['GS_', 'UGS_', 'SGS_', 'OP_'];
+    for (let prefix of flag_prefixes) {
+        if (id.startsWith(prefix)) {
+            return true;
+        }
+    }
+    return false;
+}
+//获取某个任务某条达成条件在脑海-重要事件界面里的显示文本（事件系统唯一的条件文案入口）
+//优先级：任务专属文案（texts[任务id][文本键]）> 全局条件文案（texts[条件id].condition_name）> 按条件自动生成
+//分支：状态型条件（GS_/UGS_/SGS_/OP_）直接读当前游戏状态；其余条件用传入的 monitor_data
+function get_IE_condition_ch(event_id, condition_id, monitor_data, monitor_target) {
+    let data = monitor_data;
+    //状态型条件没有监控数据，直接读游戏状态得到一个布尔值
+    if (is_flag_condition_id(condition_id)) {
+        let global_flag_manage = global.get_global_flag_manage();
+        data = new Object();
+        data[condition_id] = global_flag_manage.get_flag(condition_id) == monitor_target[condition_id];
+    }
+    //验空验错
+    if (is_Empty_Object(monitor_target[condition_id]) || is_Empty_Object(data[condition_id])) {
+        console.log('错误，输入参数中没有%s监控行为', condition_id);
         return;
     }
-    let end_ch; //最终输出文本
-    let condition_name = ''; //监控行为的文本
-    let preset_flag = false; //是否有预设文本
-    if (!is_Empty_Object(texts[id])) {
-        if (!is_Empty_Object(texts[id].condition_name)) {
-            //这个条件有预设名称，直接使用该文本
-            condition_name = texts[id].condition_name;
+    let condition_name = ''; //条件的展示文本
+    let preset_flag = false; //是否已有预设文本
+    //1.任务专属文案
+    let event = game_events[event_id];
+    if (!is_Empty_Object(event) && !is_Empty_Object(event.condition_text)) {
+        let text_key = event.condition_text[condition_id];
+        if (!is_Empty_Object(text_key)) {
+            if (!is_Empty_Object(texts[event_id]) && !is_Empty_Object(texts[event_id][text_key])) {
+                //任务给这个条件配了专属文案，文本内容在任务自己的文本对象里
+                condition_name = texts[event_id][text_key];
+                preset_flag = true;
+            } else {
+                console.log('事件%s的条件%s设置了专属文案，但文本库中没有%s这个键', event_id, condition_id, text_key);
+            }
+        }
+    }
+    //2.全局条件文案
+    if (preset_flag == false && !is_Empty_Object(texts[condition_id])) {
+        if (!is_Empty_Object(texts[condition_id].condition_name)) {
+            condition_name = texts[condition_id].condition_name;
             preset_flag = true;
         }
     }
+    //3.按条件自动生成
     if (preset_flag == false) {
-        //这个条件没有预设文本，尝试根据条件内容组合出文本
-        condition_name = make_condition_name(id);
+        condition_name = make_condition_name(condition_id);
     }
-
-    if (typeof monitor_data[id] == 'number') {
-        //数字型目标，一般是累计数量，需要在文本后面加一个进度
-        //例如：4个防具部位都有穿着的情况下受击（0/10）
-        //其中“4个防具部位都有穿着的情况下受击”是这条监控行为的文本
-        //后面跟着的部分表示完成的进度
-        let after_text = ' (' + monitor_data[id] + '/' + monitor_target[id] + ')';
-        end_ch = condition_name + after_text;
-    } else if (typeof monitor_data[id] == 'boolean') {
-        //布尔型目标，一般是完成某个事件
-        //例如：完成新手战斗测试
-        //前面需要加个“完成”字样
+    //数字型条件补进度；布尔型条件无预设时补“完成”前缀
+    if (typeof data[condition_id] == 'number') {
+        return condition_name + ' (' + data[condition_id] + '/' + monitor_target[condition_id] + ')';
+    } else if (typeof data[condition_id] == 'boolean') {
         if (preset_flag) {
-            //有预设优先使用预设
-            end_ch = condition_name;
-        } else {
-            //没有预设使用组合，在前面补齐动词
-            end_ch = '完成' + condition_name;
+            return condition_name;
         }
-    } else {
-        console.log('非数字且非布尔类型的监控行为目标数值，异常');
-        return;
+        return '完成' + condition_name;
     }
-
-    return end_ch;
+    console.log('非数字且非布尔类型的监控行为目标数值，异常');
 }
 //根据监控行为的id，尝试组合出文本
 function make_condition_name(monitor_id) {
@@ -433,7 +454,8 @@ export {
     attr_correct_handle,
     is_overlap,
     get_object_only_key,
-    get_monitor_ch,
+    get_IE_condition_ch,
+    is_flag_condition_id,
     get_dataset_value,
     set_dataset_value,
     get_item_id_key,

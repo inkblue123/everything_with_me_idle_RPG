@@ -28,6 +28,11 @@ function init_game() {
         //用存档对象里的内容加载游戏
         player.load_player_class(save_obj.player_save);
         global.load_global_manage(save_obj.global_save);
+        //读档完成后，按图鉴历史补齐“集齐材料自动解锁”的配方
+        //注意：这里是跨存档版本的数据补齐接口，以后做正式的存档版本迁移时，应把这类
+        //     “按历史数据回填状态”的逻辑统一收拢到版本迁移流程里，而不是散在读档各处
+        let P_formulas = player.get_player_formulas_manage();
+        P_formulas.check_auto_know_unlock_formulas();
     } else {
         //没有存档文件，进行新游戏初始化
         new_game_init();
@@ -122,6 +127,9 @@ function load_save(save_str) {
     //用存档对象里的内容加载游戏
     player.load_player_class(save_obj.player_save);
     global.load_global_manage(save_obj.global_save);
+    //读档完成后，按图鉴历史补齐“集齐材料自动解锁”的配方（跨存档版本迁移的接口点，说明见 init_game）
+    let P_formulas = player.get_player_formulas_manage();
+    P_formulas.check_auto_know_unlock_formulas();
     //重新启动游戏循环
     start_game_loop();
 }

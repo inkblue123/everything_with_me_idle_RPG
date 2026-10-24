@@ -62,6 +62,9 @@ function updata_game_data() {
     //判断这一帧是否有事件会触发
     let place_manage = global.get_place_manage();
     place_manage.updata_now_place_condition_event();
+    //支线任务的状态型完成条件（如“解锁挖矿”）没有行为广播，需要每帧判定一次
+    let game_event_manage = global.get_game_event_manage();
+    game_event_manage.check_side_quest_finish();
 
     let now_GS = global.get_flag('GS_game_statu');
     if (now_GS == 'combat') {

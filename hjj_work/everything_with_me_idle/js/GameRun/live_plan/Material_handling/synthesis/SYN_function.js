@@ -1,4 +1,4 @@
-import { addElement, addElement_radio, add_show_Tooltip, get_radio_switch_click_value, crtElement } from '../../../../Function/Dom_function.js';
+import { addElement, addElement_radio, add_show_Tooltip, add_formula_product_tooltip, get_radio_switch_click_value, crtElement } from '../../../../Function/Dom_function.js';
 import { is_Empty_Object, get_item_obj, is_overlap, get_dataset_value, set_dataset_value } from '../../../../Function/Function.js';
 
 import { enums } from '../../../../Data/Enum/Enum.js';
@@ -40,6 +40,8 @@ function add_SYN_formula(SYN_min, formula_id) {
     formula_value_l.innerHTML = material_ch;
     let formula_value_r = addElement(formula_value, 'div', null, 'formula_value_r');
     formula_value_r.innerHTML = product_ch;
+    //鼠标移到产物上时展示该产物的物品详情（白板）
+    add_formula_product_tooltip(formula_value_r, formula_id);
     //判断配方能否制作
     let make_flag = check_now_SYN_formula(formula_id, now_quantity_num);
     if (P_SYN_formulas[formula_id].status == 'study') {

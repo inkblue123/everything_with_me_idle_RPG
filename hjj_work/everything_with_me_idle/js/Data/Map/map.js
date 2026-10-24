@@ -10,6 +10,8 @@ function init_maps() {
     init_village_map(maps);
     //初始化村外后山区域的地图信息
     init_village_backhill_map(maps);
+    //初始化村外后山洞穴区域的地图信息
+    init_backhill_cave_map(maps);
 }
 //初始化测试区域的地图信息
 function init_test_map(maps) {
@@ -90,6 +92,9 @@ function init_village_map(maps) {
     place_id = 'village_woodshop_owner'; //木工坊老板
     maps[area_id].add_place_data(place_id, false);
     maps[area_id].add_place_event_tip_show(place_id, 'VM_woodshop');
+    place_id = 'village_smithy_owner'; //铁匠铺老板
+    maps[area_id].add_place_data(place_id, false);
+    maps[area_id].add_place_event_tip_show(place_id, 'VM_smithy');
     //区域内其他地点
     place_id = 'village_home_bed'; //村中住所-床上
     maps[area_id].add_place_data(place_id, false);
@@ -196,6 +201,38 @@ function init_village_backhill_map(maps) {
     maps[area_id].add_place_event_tip_show(place_id, 'alp_cave_inlet');
     // place_id = 'alp_cave_inlet'; //猎人小屋
     // maps[area_id].add_place_data(place_id, true, 250, 340);
+}
+//初始化村外后山洞穴区域的地图信息
+function init_backhill_cave_map(maps) {
+    let area_id;
+    let place_id;
+
+    //区域
+    area_id = 'backhill_cave'; //村外后山洞穴
+    add_Map_object(maps, area_id);
+    maps[area_id].set_area_data(770, 550); //区域地图大小
+
+    //区域内普通地点
+    place_id = 'cave_inlet'; //洞穴入口
+    maps[area_id].add_place_data(place_id, true, 470, 140);
+    maps[area_id].add_place_event_tip_show(place_id, 'cave_inlet');
+    //洞内只有入口与溶洞相通；两个洞口各自用跨区按钮走回后山
+    maps[area_id].add_place_button_line(place_id, 'karst_cave', 'forest_edge');
+    place_id = 'karst_cave'; //溶洞
+    maps[area_id].add_place_data(place_id, true, 70, 140);
+    maps[area_id].add_place_event_tip_show(place_id, 'karst_cave');
+    place_id = 'alp_cave_inlet'; //高山洞穴入口
+    maps[area_id].add_place_data(place_id, true, 470, 430);
+    maps[area_id].add_place_event_tip_show(place_id, 'alp_cave_inlet');
+    maps[area_id].add_place_button_line(place_id, 'forest_core');
+
+    //该区域和其他区域相连的地点
+    place_id = 'forest_edge'; //外层森林
+    maps[area_id].add_place_data(place_id, true, 670, 140);
+    maps[area_id].add_place_event_tip_show(place_id, 'forest_edge');
+    place_id = 'forest_core'; //内层森林
+    maps[area_id].add_place_data(place_id, true, 670, 430);
+    maps[area_id].add_place_event_tip_show(place_id, 'forest_core');
 }
 
 export { maps, init_maps };

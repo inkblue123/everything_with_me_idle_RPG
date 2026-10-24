@@ -1,5 +1,5 @@
 import { addElement, addElement_botton, addElement_radio, add_show_Tooltip, get_radio_switch_click_value } from '../../../../Function/Dom_function.js';
-import { is_Empty_Object, get_dataset_value, set_dataset_value } from '../../../../Function/Function.js';
+import { is_Empty_Object, get_item_obj, get_dataset_value, set_dataset_value } from '../../../../Function/Function.js';
 
 import { get_COK_formula_switch_type, COK_switch_type_handle, add_COK_formula, get_COK_min_name, get_now_quantity_num } from './COK_function.js';
 
@@ -27,6 +27,13 @@ function updata_COK_CD_div() {
     let COK_CD_type = get_COK_formula_switch_type('COK_CD');
     //获取在这个过滤条件下应该展示的配方id
     let formula_arr = COK_switch_type_handle(COK_CD_type);
+    //玩家一条烹饪配方都没学会时显示占位提示，避免看到空白列表不知道是怎么回事
+    //（只是被“当前可制造”等筛选条件过滤成空的情况不算，那种保持原来的空白表现）
+    let P_COK_formulas = player.get_player_skill_formulas('COK');
+    if (formula_arr.length == 0) {
+        let empty_tip_div = addElement(COK_CD_formula_value_div, 'div', null, 'COK_formula_empty_tip');
+        empty_tip_div.innerHTML = '未学会任何烹饪配方';
+    }
     //展示这些配方
     for (let formula_id of formula_arr) {
         add_COK_formula('COK_CD', formula_id);
@@ -111,6 +118,9 @@ function updata_COK_formula_Seasoning_div(previous_selection) {
         let Seasoning_div = addElement(FD_S_value_div, 'div', null, 'Seasoning_div');
         let Seasoning_text = addElement(Seasoning_div, 'div', null, 'Seasoning_text');
         Seasoning_text.innerHTML = get_seasoning_text(item_name, use_num);
+        //鼠标移到调料名上时展示这个调料的物品详情
+        let seasoning_item_obj = get_item_obj(item_id, item_num);
+        add_show_Tooltip(Seasoning_text, 'item', seasoning_item_obj);
         //保存这个调料的物品id和已选数量（已选数量表示"一份菜品上加几个"，即每份剂量n）
         set_dataset_value(Seasoning_div, 'item_id', item_id);
         set_dataset_value(Seasoning_div, 'use_num', use_num);

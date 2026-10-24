@@ -31,10 +31,12 @@ function set_Tooltip_func(Tooltip) {
         //tip_value支持传入函数(值提供者)：在鼠标移入的这一刻才求值，使提示内容能跟随实时状态变化
         if (typeof value == 'function') {
             value = value();
-        }
-        //值提供者求值为空，视为当前没有可展示的内容，保持隐藏，不弹出提示窗
-        if (value == undefined) {
-            return;
+            //值提供者求值为空，视为当前没有可展示的内容，保持隐藏，不弹出提示窗
+            //注意：这条判空只对"值提供者"成立。有些提示窗本来就不需要数据（导入存档 / 删除存档 / 地图事件提示），
+            //它们传的是 null 或者干脆不传 value，不能因此被拦掉（2026-10-21 修：原来放在 if 外面，把这三种提示窗误拦了）
+            if (value == undefined) {
+                return;
+            }
         }
         this.type = type;
         let Tooltip_type = enums['Tooltip_type'][type];

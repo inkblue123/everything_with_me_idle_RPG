@@ -4,6 +4,7 @@
 > **它不是改造指令**，不包含任何"应该改成什么样"的施工要求。
 > 未实现的功能请写在 `docs/roadmap.md`。
 > 现有代码（`everything_with_me_idle/`）是**基线 / 只读**，请遵守 `AGENTS.md`。
+> 文档入口与维护规则见 `docs/README.md`（本文件预算 ≤ 400 行，超了按系统拆到 `docs/spec/`）。
 
 ---
 
@@ -143,14 +144,15 @@ buff 系统已从「三元组效果行 + 枚举白名单分派」改造为「**�
         `set_buff()` 里按 §4.2-1 的六步流程排好了注释位置：**只有第 ④ 步（同类叠层/替换）与第 ⑥ 步（构建入容器）有代码**，
         ① 抵抗力 / ② 净化 / ③ 系列覆盖 / ⑤ 免疫四步**只有注释、没有 if**（没有 `buff_level` / `series` 等字段支撑）；
         ② **效果分派与落地**：`apply_buff_effects(buff_holder)` 逐 `data_type` 算出增量（`flag` 解真假，其余取 `now_data - last_data`），
-        按 `dispatch` 走 5 路分派，再调用它自己持有的 5 个生效函数
+        按 `dispatch` 走 5 路分派，再调用**同文件的 5 个模块级生效函数**
         （`change_data_attr(target, …)` / `updata_end_attr_buff(target)` / `global_set_flag(target, …)` /
-        `set_game_speed_num(target, …)` / `set_game_speed_ratio(target, …)`，统一带 `target` 参数）；
+        `set_game_speed_num(target, …)` / `set_game_speed_ratio(target, …)`，统一带 `target` 参数）。
+        这 5 个函数**不碰调度台的实例状态**（`this`），所以是模块级函数、不是方法（2026-10-21 移出类）；分派入口仍是方法；
         ③ **动作通道**：收集本帧各目标推上来的**动作请求** → 统一执行 → 清空。
         ④ **界面刷新调度与绘制**：`run_buff_show_scheduler()` 遍历「目标来源清单」拿到的所有 buff 容器，对每个调 `this.refresh_buff_show(holder)`；
         `refresh_buff_show(holder)` 先看 `holder.buff_show_kind`，**只有 `'player'` 才继续画**（其余目标直接跳过），
-        再用本文件里的 7 个绘制函数（`buff_id_sort` / `getArrayDifferences` / `get_buff_stack_dataset` / `get_buff_time_text` /
-        `get_buff_show_text` / `add_buff_show_div` / `updata_buff_show_div`）把面板画出来。
+        再用本文件里的绘制函数（`buff_id_sort` / `getArrayDifferences` / `get_buff_stack_dataset` / `get_buff_time_text` /
+        `get_buff_show_text` / `updata_buff_show_div` 是模块级函数；`add_buff_show_div` 与 `refresh_buff_show` / `init_buff_show_div` 是调度台的方法）把面板画出来。
         **玩家面板的三个渲染缓存挂在调度台上**（`player_buff_div_init_flag` / `player_game_time_buff_sort_id` / `player_combat_round_buff_sort_id`），
         它们不再是目标侧字段。
         ⚠️ 面板被隐藏时会把 `player_buff_div_init_flag = false`，使面板重新显示时整体重建；所以**调度台必须每帧遍历到玩家**，
@@ -225,15 +227,41 @@ buff 系统已从「三元组效果行 + 枚举白名单分派」改造为「**�
     ⚠️ 数据层目前还没有「动作名」这个字段、调度台的动作表也是空的，所以现在推过去只会得到一条「尚未实现」的日志——
     **位置已打通，动作一个都还没实现**。
 -   **尚未做的机制**（只有位置、没有实现）：抵抗力 / 净化 / 系列覆盖 / 免疫四步（获得流程里只留注释）、公式表、钩子派发、
-    回合型（`combat_round_buff` 仍是空壳）、敌人侧 buff、区域目标、消耗品 `get_buff` 接通、施加时传参。
+    回合型（`combat_round_buff` 仍是空壳）、敌人侧 buff、区域目标。
+-   **消耗品（菜品 / 调料）来源的 buff**（2026-09-29 接通）：消耗品的 `use_attr` / `season_effect` 里写
+    `{attr_type:'get_buff', attr_id, buff_id, buff_value}`，食用时由 `GameRun/consumable_manage.js` 先按 `buff_id` 聚合成一条
+    （否则后一行会把前一行整条替换掉），再调 `set_buff(buff_holder, id, runtime_data)`。`runtime_data` 只认三个字段：
+    `effects`（按 `attr_id` 自动判定的 buff 效果行：资源键 → `tick + resource + revert:false`，其余 → `on_apply + attr + revert:true`，
+    可用行上的 `buff_dispatch` 覆盖）、`time_value`（行上带 `buff_time` 时用它，调料走「调味配平」算出的结果；否则用 buff 条目的值）、
+    `name_prefix`（菜品本体 buff 专用：名称前缀拼在实例的 `name` 上）。
+    ⚠️ 传参带来的效果行不在静态 buff 表里，实例工厂 `create_buff_instance()` 会**补登记 `target_dispatch`**——
+    不补登记的话这些效果会打一条「XX效果没有定义生效方式」并**静默失效**。
+    ⚠️ **可叠层 buff 已有实例时走加层路径，不应用 `runtime_data`**。
+    ⚠️ 这类实例带 `from_runtime_data = true`，**读档时不恢复**（按「持续时间已结束」处理）：效果行只存在于实例上，
+    数据库模板里那份是对不上的占位值。读档前的 `reset_buff` 已把贡献撤销干净，`on_apply` / `revert` 效果会在读档后的下一帧重新生效一次。
 -   **展示**：左上 buff 界面**只对可叠层 buff** 在名称后紧跟 `x{层数}`（如 `燃烧x3`，随后才是持续时间行；现有不可叠层的 buff 显示不变）。
     剩余时间由 `get_buff_time_text()` 格式化：**≤10 秒**保留 1 位小数（`9.5秒`）/ **≤60 秒**整数秒（`45秒`）/ **≤1 小时**`n分钟`（`59分钟`）/ **超过 1 小时**`n小时`（`2小时`）；
     一律**向下取整**（含边界：恰好 10 秒 → `10.0秒`、恰好 60 秒 → `60秒`、恰好 1 小时 → `60分钟`）；`infinite` 不显示时间行。
     层数与**格式化后的时间文本**都存进 `dataset`（`buff_stack` / `buff_have_time`）并参与刷新判断——时间文本放进 dataset 是因为
     1 位小数档需要比"整数秒"更细的比较粒度，否则小数位不会刷新。
+    **提示窗残留**：buff 面板是靠 `replaceChildren()` 整体重建的，鼠标正悬停的那一格被删掉时浏览器**不会**补发 `mouseleave`，
+    提示窗会一直留在屏幕上。所以调度台用字段 `this.hovering_buff_id` 记录"鼠标停在哪个 buff 上"（`add_buff_show_div()` 给图标挂 `mouseenter` / `mouseleave`，
+    **必须用箭头函数**，否则 `addEventListener` 里的 `this` 是图标本身而不是调度台），
+    `refresh_buff_show()` 每帧开头调 `close_stale_buff_tooltip()`：**只有那个 buff 已经从两个容器里消失、且提示窗正显示 buff** 时才 `CloseTip()`。
+    物品 / 技能等其他提示窗不受影响。
 
-**当前唯一的 buff 条目**：`burn`（燃烧）—— `scope:'combat'`、可叠层、`layer_time_ratio: 0.75`、`stack_expire:'reduce_layer'`、
-效果行为 `value + tick + resource + health_point + per_layer`（每秒每层 1 点）。测试入口在 `Game_log_test.js` **测试 2** 的「燃烧 buff 测试」（施加燃烧 / 清除燃烧）。
+**现有 buff 条目（17 条）**
+
+-   **常规 9 条**（`Data/Buff/Buff_normal.js`）：`test_buff1` / `test_buff2` / `test_buff3`（测试）、`sleep_1` / `get_up_buff`（睡眠 / 起床）、
+    `fatigue` / `extreme_fatigue` / `energetic`（疲劳 / 极度疲劳 / 精力充沛）、`burn`（燃烧）。
+    `burn` 是唯一带层数与作用域的：`scope:'combat'`、可叠层、`layer_time_ratio: 0.75`、`stack_expire:'reduce_layer'`，
+    效果行是 `value + tick + resource + health_point + per_layer`（每秒每层 1 点）；测试入口在 `Game_log_test.js` **测试 2** 的「燃烧 buff 测试」。
+-   **菜品 7 条**（`Data/Buff/Buff_dish.js`，2026-09-29 新增）：`grilled_fish` / `big_grilled_fish` / `roasted_crab` / `cooked_mussel` /
+    `cooked_animal_meat` / `grilled_mushrooms` / `termite_mushroom_soup`。**id 与菜品物品 id 相同**（同 id 覆盖刷新、不同菜品共存），
+    时长写在各条目里，效果行在食用时由实例带入（条目里那份只是占位的默认值）。
+-   **调料效果 1 条**（`seasoning_effect`）：全局唯一，承载一份菜的全部调料限时效果；时长与效果行都由食用时传入。
+-   **展示**：可叠层的 buff 在名称后紧跟 `x{层数}`；菜品本体 buff 的实例名带「美味的 / 重口味的 / 糟糕的」前缀（读实例 `name`，不读数据库模板），
+    「调料效果」这条不带前缀。
 
 **不再使用的旧机制**
 
@@ -244,6 +272,69 @@ buff 系统已从「三元组效果行 + 枚举白名单分派」改造为「**�
 **已知限制**：`stack` 会被写进存档（存的是整个对象），**`load_init()` 现在会把它读回来**（2026.09.24 起），
 且**不按层数重算剩余时间**（存档里的 `buff_have_time` 本身就是按存档时的层数算出来的）；存档里没有 `stack` 字段的旧存档按 1 层处理。
 `record` / `charges` / `caster` / 施加参数带来的自定义时长数值等字段**尚未纳入存档**——等真有那些 buff 时再加。
+
+### 4.5 配方解锁（2026-10-21 起）
+
+配方状态只有三种（`Player_formula.js` 的 `Player_formula.status`）：`unknow`（还没学会，玩家字典里没有这个 key，配方列表不显示）/ `study`（**已研究**，知道需求但不能制造）/ `know`（完全掌握，可制造）。
+
+现有 5 条解锁途径：
+
+1. **初始解锁**：`Formula.initial_flag = true`，由 `player_get_initial_formulas()` 直接写 `know`；读档时也会补一遍（防旧存档缺初始配方）。
+2. **研究**：配方研究界面花「`research.need_num` 个该配方产物 + 当前地点 `disassembly_tool` 等级」，成功后写 `study`；研究**不能**对 `know`/`study` 的配方进行。
+3. **图鉴补齐**（老机制）：`study` 的配方，每种材料都在物品图鉴点亮过时升为 `know`（`check_updata_study_formula_by_library()`，只在“首次点亮某个新物品”时跑）。
+4. **迷你事件**：`game_events` 的 `get_formula` thing，直接写 `know`（例如 `SYN_carpentry_bench_2`、`SYN_disassembly_tool_1`）。
+5. **消耗品（配方书）**：`use_attr` 里 `attr_type == 'get_formula'`，按使用进度阈值给 `know`（木工入门手册 1/2）。
+
+**新增：集齐材料自动解锁**（`auto_know_unlock_flag`）。`Formula` 新增字段 `auto_know_unlock_flag`，**默认 `false`**，由 `set_auto_know_unlock()` 逐条开启。开启后：玩家**还没拥有**（`unknow`）该配方、且配方所需的每种材料都已在物品图鉴点亮过（复用 `Library_manage.is_formula_all_materials_unlocked()`，**不看需求数量**，`study` 状态不处理），就直接写 `know`。
+
+-   触发点两处：`Player_get_item()` 里“首次点亮新物品图鉴”后（紧跟老机制）；读档末尾（`load.js` 的 `init_game()` / `load_save()`，用于按历史图鉴补齐旧存档，接口上已注明以后要收拢进存档版本迁移）。
+-   批量解锁走 `Player_get_formulas(ids)`：逐条写状态 + 逐条写 `get_formula` 游戏日志，**只在最后刷新一次**生活技能界面。
+-   旧存档缺 `library_save`（`item_library_data` 为 `undefined`）时直接跳过，不抛错。
+-   首批开启的只有**烹饪 7 条**（烤鱼串 / 大烤鱼串 / 烤螃蟹 / 熟蚌肉 / 熟兽肉 / 烤蘑菇 / 鸡枞汤），且这 7 条的 `initial_flag` 已改为 `false`——**烹饪配方不再开局全送**，要靠采集/钓鱼/战斗拿到对应食材才会解锁。合成制造 20 条**一条都没开启**，仍靠木工手册与事件解锁。
+-   已知副作用：因为不看数量，获得 1 条溪鱼会同时解锁「烤鱼串（1 条）」和「大烤鱼串（3 条）」；烹饪配方理论上仍可研究，但研究要求背包里有该配方产物、而产物只能靠该配方自己做，实际摸不到。
+-   配方列表为空时插一行占位提示（只看「玩家一条该技能配方都没有」，被“当前可制造”等筛选条件过滤成空时不显示，保持原来的空白表现）：
+    -   烹饪菜品列表（`COK_CD_formula_value_div`）→ `.COK_formula_empty_tip`，文本「尚未学会任何烹饪配方，获得新的食材可能解锁新配方」；
+    -   合成制造的「制造」（`SYN_MK_formula_value_div`）与「配方筛选」（`SYN_FM_formula_value_div`）→ `.SYN_formula_empty_tip`，文本「未学会任何制作配方」。
+    两个 class 都**不加 `outline`**（外层列表容器本身已有 2px 描边），它们是子元素、不涉及 `gap`。
+-   验证：`node _devtools/formula_check/auto_know_unlock_check.mjs`（17 条断言，覆盖数据标记、只看材料不看数量、任意蘑菇集合口径、未标记配方不受影响、重复调用幂等、缺图鉴数据不抛错、批量只刷新一次）。
+
+### 4.6 事件系统（2026-10-22 补记）
+
+事件库只有一份 `game_events`（`js/Data/Game_event/`），按 `type` 分五类：`main_quest` / `side_quest` / `challenge` / `mini_event` / `achievement`（成就类已定义但无实例）。**迷你事件没有重入锁**：`check_mini_event_start()` 里的 `isrepeat` 全仓从未被赋值，`undefined == false` 不成立，所以判断恒通过。
+
+**完成 / 未完成**：`end_mini_event(event_id, flag)` 只有 `flag == 'finish'` 时才写完成标记（`important_nodes.mini_event[event_id] = true`）、广播 `record_event_finish_end` 并写 `finish_event` 日志；其他值只写短期状态 `SGS_<event_id>`。事件出现条件写成 `event_flag <自身id> == false` 时，完成后就会自动消失。
+
+**迷你事件的两个原语**（2026-10-22 新增，只影响用到它们的事件）：
+
+-   **按钮显示条件（统一结构）**：`button.condition` 是一个数组，每项带 `type`：
+
+    | type | 写入方法 | 含义 |
+    |---|---|---|
+    | `'button'` | `add_process_button_condition(process, btn, 'b2', false, ...)` | 事件内条件：某个按钮是否被按过 |
+    | `'attr'` | `add_process_button_attr_condition(process, btn, 'power', '>=', 15)` | 玩家属性达标（读 `get_player_attributes().get_data_attr()` 的**最终值**，含装备加成） |
+
+    判定统一由 `check_mini_event_button_condition()` 按 `type` 分派、**全部满足**才为真；未知 `type` 按不满足处理并打日志。
+
+-   **始终显示**：`add_process_button_always_show(process, btn)` 设 `button.always_show = true`。渲染时：显示条件满足 → 正常可点；不满足但 `always_show` 为真 → 仍然生成按钮，加 `.player_Control_button_disabled`（`opacity: .5` + `cursor: not-allowed`）且**不挂点击监听**；不满足且未设 `always_show` → 不生成。
+
+-   **点击类型 `leave`**：`add_process_button_click(process_id, button_id, 'leave')`。点击后调用 `end_mini_event(id, 'leave')` → 结束事件、回到地点、**不写完成标记**，所以事件按钮下次仍会出现。用于"这次没通过，以后再来"。
+
+**支线状态型完成条件**（2026-10-22 新增）：`set_finish_condition()` 的 key 以 `GS_` / `UGS_` / `SGS_` / `OP_` 开头时，判定直接读当前游戏状态（`is_flag_condition_id()`），不走 `monitor_data`。这类条件没有行为广播，由 `run_manage.js` 每帧调 `Game_event_manage.check_side_quest_finish()` 发现变化。
+
+**达成条件的显示文案**：脑海-重要事件面板里「每条条件一行」的文字，全部由**唯一入口** `get_IE_condition_ch(event_id, 条件id, monitor_data, monitor_target)`（`js/Function/Function.js`，普通函数、不是类成员）解析，分支都在它内部处理：
+
+-   **状态型条件**（`GS_*` 等）：直接读当前游戏状态，不需要 `monitor_data`；
+-   文案按三级优先级取：
+
+1. **任务专属文案**：事件用 `set_condition_text(条件id, 文本键)` 配，内容写在 `texts[任务id][文本键]`；同一条条件被多个任务共用时可以各写各的。
+2. **全局条件文案**：`texts[条件id].condition_name`（例如 `GS_unlock_MIN` → 「解锁挖矿」）。
+3. **自动生成**：`make_condition_name()`（`PKL_*` / `EE_*`）；数字型条件补 ` (当前/目标)`，布尔型无预设时补「完成」。
+
+主线 / 支线 / 挑战的渲染与增量更新共 6 处都直接调用这个函数。`Game_Event` 只承载 `condition_text` 数据与 `set_condition_text()` 配置入口。**☑/☐ 仍绑定真实条件**，自定义文案只改文字、不改判定；文本键写错时回退到下一级并打日志。
+
+**铁匠铺力量测试**（同批落地）：NPC 地点 `village_smithy_owner`（挂在 `VM_smithy`）下有两个迷你事件——`VM_smithy_study_mining`（首次对话，前置 `unlock_collect_logging` 完成）与 `VM_smithy_power_test_retry`（首次失败后的重试）。两处判定点都放**两个始终显示的按钮**：力量 ≥15 时"试试"可点、另一个半透明不可点；低于 15 时反过来。通过 → 给 `Oak_logs`×1 占位 + 置 `GS_unlock_MIN` → 事件完成；首次事件不论通过与否都会完成，重试事件失败时用 `leave` 退出、不完成。支线 `study_mining` 的完成条件已从"击杀 10 个训练草人"改为 `GS_unlock_MIN`。
+
+**已知限制**：支线的状态型条件靠每帧轮询发现变化（开销是每帧几个布尔比较）。没有更好的触发点是因为 `set_flag` 写入点极多，直接回调会形成反向依赖与递归风险。改进方向记在 `docs/roadmap.md`。
 
 ## 5. 界面布局（`Dom/`）
 
@@ -261,6 +352,10 @@ buff 系统已从「三元组效果行 + 枚举白名单分派」改造为「**�
 
 -   **探索采集**（Explore_collection）：伐木 logging / 挖矿 mining / 采集 collect / 钓鱼 fishing / 潜水 diving / 考古 archaeology / 探索 exploration
 -   **原料处理**（Material_handling）：合成制造 SYN / 烹饪 COK / 锻造 forging / 镌刻 engrave / 炼丹 EXA / 草药浴 herbal_bath / 蒸馏 EGV / 炼金 alchemy / 仙丹 ACM
+
+**配方列表的产物提示窗**（2026-10-21 起）：烹饪菜品列表（`COK_CD_formula_value_div`）与合成制造的「制造」「配方筛选」两个列表（`SYN_MK_*` / `SYN_FM_*`）里，每条配方右侧的**产物文本**（`.formula_value_r`）都挂了物品详情提示窗：
+`Dom_function.js` 的 `add_formula_product_tooltip(product_div, formula_id)` 按配方造一个**白板产物对象**（不带调料等实例数据），直接用现成的 `formula_product` 提示类型（= `item`，与背包/商店同一套渲染）。
+产物不是物品（例如工作台升级）或数据缺失时**只打一条日志、不挂提示窗**。左侧的材料文本本轮**没有**加提示。
 
 ## 6. 存档结构
 
@@ -281,4 +376,6 @@ buff 系统已从「三元组效果行 + 枚举白名单分派」改造为「**�
 
 ## 7. 当前版本
 
-见 `everything_with_me_idle/Version.txt`（开发日志）。截至 2026.08.27 为 **V0.3.1**，近期方向：buff 系统兼容性升级、烹饪技能开发、商店回购、地图事件提示、下拉框通用化等。
+见 `everything_with_me_idle/Version.txt`（开发日志）。截至 2026.10.22 为 **V0.3.10**。
+
+**阶段状态**：烹饪系统已告一段落——配方侧（集齐材料自动解锁）与界面侧（空列表提示）闭环，剩余产出链（调料 / 干制品 / 工作台）已转为 `docs/roadmap.md` #3~#5，调味规则转 #6/#7；本阶段收尾记录见 `docs/archive/cooking_2026-10.md`。下一阶段方向：开发其他系统的内容。

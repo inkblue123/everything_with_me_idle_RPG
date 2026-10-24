@@ -25,7 +25,7 @@ function mini_event_text(texts) {
     texts[id].text2 = '倒也不能说桌椅完全没用，将有用的东西都拿出来吧';
     texts[id].text3 =
         '        你将确实不能用的家具拆解或者丢弃，还能用的部分保留下来，全部清理干净后获得了一些木材，住所虽然更空了，但是也有一些可以置物的家具和可用的工具<br>        另外在清理的过程中你在一些隐秘夹层和缝隙里发现了钱币，有些钱币看起来放了很久很久，应该是生活时遗漏的，有些钱币用纸巾包起来了，应该是特意保存的<br>        总之，这就是你现在拥有的全部了';
-    texts[id].text4 = '获得1银币和325铜币，获得35普通木板，解锁“合成制造”技能';
+    texts[id].text4 = '获得1银币和325铜币，获得35普通木板，解锁“合成制造”技能，解锁“烹饪”技能';
     // texts[id].text3 =
     //     '        来搬东西的人应该只会像刚刚你搜的那样寻找明面上的储藏空间，不会掘地三尺不会搜查每个夹层，想到这里你再寻找了一遍住所，终于在床垫里、在柜子背后找到了一些钱币<br>        有些钱币看起来放了很久很久，应该是生活时遗漏的，有些钱币用纸巾包起来了，应该是特意保存的，无论如何，这就是你现在拥有的全部了';
     // texts[id].text4 = '获得“1银币”和“325铜币”';
@@ -155,6 +155,32 @@ function mini_event_text(texts) {
     texts[id].text5 =
         '        木工坊老板：正相反，我会在店里对你出售更多东西，这些交给村里的粗人算是白白浪费，卖你倒是刚好<br>        木工坊老板：另外我还有一个非常好用的工具分享给你，在“合成制造”中准备好这个拆解工具，你就能尝试分析一些产物是怎么制造的，甚至可以得知它们的制造配方';
     texts[id].text6 = '（学会了合成制造技能的工作环境--拆解工具1级的配方）<br>（木工坊将出售更多物品）';
+
+    id = 'VM_smithy_study_mining';
+    add_text_object(texts, id);
+    texts[id].event_name = '向铁匠铺老板询问如何挖矿';
+    texts[id].button_name = '向铁匠铺老板询问如何挖矿';
+    texts[id].text1 = '        铁匠铺老板：挖矿？这活可不是谁都能干的，得有把子力气才行';
+    texts[id].text2 = '我想试试，不试怎么知道能不能行';
+    texts[id].text3 = '        铁匠铺老板：嘴上说说不算，过来，让我瞧瞧你的力气够不够';
+    texts[id].text4 = '（“力量”属性大于等于15）';
+    texts[id].text5 = '（“力量”属性小于15）';
+    texts[id].text6 = '        铁匠铺老板：嗯，是块干活的料。挖矿这事是真要硬力气才能坚持下来的，也莫怪我为难你，这把家伙先拿去用，我再告诉你这挖矿的诀窍在哪…………';
+    texts[id].text7 = '（学会了生活技能-挖矿，获得铁镐）';
+    texts[id].text8 = '        铁匠铺老板：你这身板还不行，回去把力量练上来再来找我';
+    texts[id].text9 = '（离开）';
+
+    id = 'VM_smithy_power_test_retry';
+    add_text_object(texts, id);
+    texts[id].event_name = '铁匠铺的力量测试';
+    texts[id].button_name = '铁匠铺的力量测试';
+    texts[id].text1 = '        铁匠铺老板：又来试力气了？来吧，让我看看你长进多少';
+    texts[id].text2 = '（“力量”属性大于等于15）';
+    texts[id].text3 = '（“力量”属性小于15）';
+    texts[id].text4 = '        铁匠铺老板：嗯，是块干活的料。挖矿这事是真要硬力气才能坚持下来的，也莫怪我为难你，这把家伙先拿去用，我再告诉你这挖矿的诀窍在哪…………';
+    texts[id].text5 = '（学会了生活技能-挖矿，获得铁镐）';
+    texts[id].text6 = '        铁匠铺老板：还差得远，回去练练再来，我这儿随时等着';
+    texts[id].text7 = '（离开）';
 }
 //支线任务的文本
 function side_quest_text(texts) {
@@ -166,6 +192,7 @@ function side_quest_text(texts) {
     id = 'study_mining';
     add_text_object(texts, id);
     texts[id].event_name = '学习如何挖矿';
+    texts[id].condition_text1 = '去集市找铁匠铺老板学会挖矿'; //达成条件的任务专属文案
 }
 
 //事件完成条件的文本
@@ -192,6 +219,9 @@ function event_finish_condition_text(texts) {
     id = 'EE_VM_woodshop_study_fishing';
     add_text_object(texts, id);
     texts[id].condition_name = '向木工坊老板询问如何钓鱼';
+    id = 'GS_unlock_MIN';
+    add_text_object(texts, id);
+    texts[id].condition_name = '解锁挖矿';
 }
 //事件完成奖励的文本
 function event_finish_reward_text(texts) {

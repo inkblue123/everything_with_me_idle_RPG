@@ -8,6 +8,7 @@ import { add_show_Tooltip, addElement } from '../Function/Dom_function.js';
 //性质：无状态、不进存档（与 combat_manage 一致）
 //注意：buff 容器与累加器不在这里，仍在各目标身上（玩家侧是 player.player_buff_manage）
 //      —— data_attr.js 的 Summary_buff_attr() 是从目标侧取 get_end_data_attr() 的
+
 export class Buff_manage {
     constructor() {
         this.request_queue = new Array(); //本帧各目标推送上来的动作请求
@@ -37,6 +38,8 @@ export class Buff_manage {
         this.player_buff_div_init_flag = false; //左上buff界面是否初始化
         this.player_game_time_buff_sort_id; //游戏时间buff的id排序情况
         this.player_combat_round_buff_sort_id; //战斗回合时间buff的id排序情况
+
+        this.hovering_buff_id = null; //鼠标当前停在哪个buff图标上（存buff id）
     }
     init() {}
     //把一个目标的 buff 容器登记进某类来源
@@ -98,6 +101,8 @@ export class Buff_manage {
             //这个目标还没有 buff 界面，跳过（敌人将来在这里接自己的缓存与画法）
             return;
         }
+        //鼠标停着的那个buff图标如果已经消失，提示窗收不到mouseleave，会留在屏幕上
+        this.close_stale_buff_tooltip(buff_holder);
         const buff_show_scroll_box = document.getElementById('buff_show_scroll_box');
         if (buff_show_scroll_box.style.display == 'none') {
             //左上没有展示玩家buff界面，可以不用更新
@@ -144,9 +149,34 @@ export class Buff_manage {
         let key_arr = buff_id_sort(buff_objs);
         //将所有buff添加到buff界面
         for (let buff_id of key_arr) {
-            add_buff_show_div(buff_objs[buff_id], buff_show_div);
+            this.add_buff_show_div(buff_objs[buff_id], buff_show_div);
         }
         return key_arr;
+    }
+    //关闭「图标已经被删掉、提示窗却还开着」的buff提示窗
+    //背景：buff面板是靠 replaceChildren() 整体重建的，鼠标正悬停的那一格被删掉时，
+    //      浏览器不会给它补发mouseleave，于是提示窗再也不关（见 Version.txt 的待解决问题）
+    //只处理buff提示窗，物品/技能等其他提示窗不受影响
+    close_stale_buff_tooltip(buff_holder) {
+        if (this.hovering_buff_id == null) {
+            //鼠标没有停在buff图标上，没有残留风险
+            return;
+        }
+        //提示窗正在显示的那个buff还在容器里，就什么都不用做
+        let game_time_buff = buff_holder.game_time_buff;
+        if (game_time_buff != undefined && game_time_buff[this.hovering_buff_id] != undefined) {
+            return;
+        }
+        let combat_round_buff = buff_holder.combat_round_buff;
+        if (combat_round_buff != undefined && combat_round_buff[this.hovering_buff_id] != undefined) {
+            return;
+        }
+        //这个buff已经不在任何容器里了，提示窗留着也没有意义
+        let tooltip = document.getElementById('tooltip');
+        if (tooltip != null && tooltip.type == 'buff') {
+            tooltip.CloseTip();
+        }
+        this.hovering_buff_id = null;
     }
     //──────── 效果分派与落地 ────────
     //「按效果目标分派」的执行端：目标侧只把本帧变化的 data_type 记下来，
@@ -177,7 +207,7 @@ export class Buff_manage {
             end_buff_obj.last_data = end_buff_obj.now_data;
             //根据效果的分发方式，调用对应的接口，让它们生效
             if (dispatch == 'resource') {
-                this.change_data_attr(buff_holder.target, data_type, end_data);
+                change_data_attr(buff_holder.target, data_type, end_data);
             } else if (dispatch == 'attr') {
                 if (is_Empty_Object(buff_holder.end_data_attr[data_type])) {
                     buff_holder.end_data_attr[data_type] = 0;
@@ -185,44 +215,18 @@ export class Buff_manage {
                 buff_holder.end_data_attr[data_type] += end_data;
                 updata_end_attr_flag = true;
             } else if (dispatch == 'flag') {
-                this.global_set_flag(buff_holder.target, data_type, end_data);
+                global_set_flag(buff_holder.target, data_type, end_data);
             } else if (dispatch == 'game_speed_num') {
-                this.set_game_speed_num(buff_holder.target, end_data);
+                set_game_speed_num(buff_holder.target, end_data);
             } else if (dispatch == 'game_speed_ratio') {
-                this.set_game_speed_ratio(buff_holder.target, end_data);
+                set_game_speed_ratio(buff_holder.target, end_data);
             } else {
                 console.log('%s效果没有定义生效方式', data_type);
             }
         }
         if (updata_end_attr_flag) {
-            this.updata_end_attr_buff(buff_holder.target);
+            updata_end_attr_buff(buff_holder.target);
         }
-    }
-    //──────── 5 个生效函数（原本在目标侧，现统一由调度台持有并调用）────────
-    //第一个参数统一是 target，这样同一套调用形式既能作用于玩家、也能作用于以后的其他目标
-    //（target 用不到的几项也保留这个参数，将来按目标能力裁剪 dispatch 时要在同一处判断）
-    //改变目标属性接口
-    change_data_attr(target, data_type, end_data) {
-        let P_attr = target.get_player_attributes();
-        P_attr.change_data_attr(data_type, end_data);
-    }
-    //更新目标最终属性中buff部分接口
-    updata_end_attr_buff(target) {
-        target.updata_end_attr('buff');
-    }
-    //修改游戏状态（全局量，与目标无关）
-    global_set_flag(target, data_type, end_data) {
-        global.set_flag(data_type, end_data);
-    }
-    //修改游戏速度，加算部分（全局量，与目标无关）
-    set_game_speed_num(target, end_data) {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed_num('buff', end_data);
-    }
-    //修改游戏速度，乘算部分（全局量，与目标无关）
-    set_game_speed_ratio(target, end_data) {
-        let time_manage = global.get_time_manage();
-        time_manage.set_game_speed_ratio('buff', end_data);
     }
     //──────── 获得 / 移除 / 清空 ────────
     //buff 的增删清空都在这里决策；目标侧只提供容器、实例工厂（create_buff_instance）与记账收尾（flush_end_buff_change）
@@ -328,6 +332,65 @@ export class Buff_manage {
         }
         action(request, this);
     }
+    //向buff展示界面添加一个buff
+    add_buff_show_div(buff_obj, show_div) {
+        let buff_id = buff_obj.id;
+        //初始文本
+        let ch = get_buff_show_text(buff_obj);
+        if (ch === undefined) {
+            return;
+        }
+        let have_time = get_buff_time_text(buff_obj); //存格式化后的文本，1位小数才能逐帧刷新
+
+        let div_id = 'buffid_' + buff_id;
+        let abuff_div = addElement(show_div, 'div', div_id, 'buff_show');
+        abuff_div.innerHTML = ch;
+        abuff_div.dataset.buff_have_time = have_time;
+        abuff_div.dataset.buff_stack = get_buff_stack_dataset(buffs[buff_id].stackable, buff_obj.stack);
+        let tip_value = JSON.parse(JSON.stringify(buff_obj));
+        add_show_Tooltip(abuff_div, 'buff', tip_value);
+        //记录鼠标停在哪个buff图标上（配合 close_stale_buff_tooltip 收掉残留的提示窗）
+        //mouseleave 只在鼠标自己移开时才触发；图标被删掉时不会触发，所以记录要留到刷新时再判断
+        //这里必须用箭头函数：addEventListener 传普通 function 时，里面的 this 是那个图标，不是调度台
+        const hover_id = buff_id;
+        abuff_div.addEventListener('mouseenter', () => {
+            this.hovering_buff_id = hover_id;
+        });
+        abuff_div.addEventListener('mouseleave', () => {
+            //只有记录的仍是自己才清除，避免「先进入新图标、后离开旧图标」的顺序把记录冲掉
+            if (this.hovering_buff_id == hover_id) {
+                this.hovering_buff_id = null;
+            }
+        });
+    }
+}
+//──────── 5 个生效函数（原本在目标侧，现统一放在调度台所在的这个文件里）────────
+//第一个参数统一是 target，这样同一套调用形式既能作用于玩家、也能作用于以后的其他目标
+//（target 用不到的几项也保留这个参数，将来按目标能力裁剪 dispatch 时要在同一处判断）
+//它们不碰调度台的实例状态，只是"把效果作用到目标身上"的适配层，所以做成模块级函数，
+//由 Buff_manage.apply_buff_effects() 调用
+//改变目标属性接口
+function change_data_attr(target, data_type, end_data) {
+    let P_attr = target.get_player_attributes();
+    P_attr.change_data_attr(data_type, end_data);
+}
+//更新目标最终属性中buff部分接口
+function updata_end_attr_buff(target) {
+    target.updata_end_attr('buff');
+}
+//修改游戏状态（全局量，与目标无关）
+function global_set_flag(target, data_type, end_data) {
+    global.set_flag(data_type, end_data);
+}
+//修改游戏速度，加算部分（全局量，与目标无关）
+function set_game_speed_num(target, end_data) {
+    let time_manage = global.get_time_manage();
+    time_manage.set_game_speed_num('buff', end_data);
+}
+//修改游戏速度，乘算部分（全局量，与目标无关）
+function set_game_speed_ratio(target, end_data) {
+    let time_manage = global.get_time_manage();
+    time_manage.set_game_speed_ratio('buff', end_data);
 }
 //对buffid进行排序，以buff的剩余有效时间
 function buff_id_sort(buff_objs) {
@@ -414,24 +477,7 @@ function get_buff_show_text(buff_obj) {
     }
     return ch;
 }
-//向buff展示界面添加一个buff
-function add_buff_show_div(buff_obj, show_div) {
-    let buff_id = buff_obj.id;
-    //初始文本
-    let ch = get_buff_show_text(buff_obj);
-    if (ch === undefined) {
-        return;
-    }
-    let have_time = get_buff_time_text(buff_obj); //存格式化后的文本，1位小数才能逐帧刷新
 
-    let div_id = 'buffid_' + buff_id;
-    let abuff_div = addElement(show_div, 'div', div_id, 'buff_show');
-    abuff_div.innerHTML = ch;
-    abuff_div.dataset.buff_have_time = have_time;
-    abuff_div.dataset.buff_stack = get_buff_stack_dataset(buffs[buff_id].stackable, buff_obj.stack);
-    let tip_value = JSON.parse(JSON.stringify(buff_obj));
-    add_show_Tooltip(abuff_div, 'buff', tip_value);
-}
 //更新buff展示界面的一个buff组件的内容
 function updata_buff_show_div(buff_obj) {
     let buff_id = buff_obj.id;

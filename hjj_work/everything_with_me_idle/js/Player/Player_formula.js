@@ -113,6 +113,61 @@ export class Player_formulas_manage {
             this.updata_formula_value();
         }
     }
+    //检查所有开启了自动解锁的配方，把材料已全部在图鉴点亮的配方直接解锁为完全了解
+    //触发时机：玩家获得新物品点亮图鉴后（即时）、读档后（补齐历史数据）
+    check_auto_know_unlock_formulas() {
+        let library_manage = global.get_library_manage();
+        //旧存档可能没有图鉴数据，此时无法判断材料是否点亮过，直接跳过
+        if (is_Empty_Object(library_manage.item_library_data)) {
+            return;
+        }
+        //收集本次需要自动解锁的配方id
+        let auto_unlock_formula_ids = new Array();
+        for (let formula_id in formulas) {
+            //只处理在配方数据里明确开启了自动解锁的配方
+            if (formulas[formula_id].auto_know_unlock_flag != true) {
+                continue;
+            }
+            //已经拥有（study/know）的配方不再处理，避免重复解锁、重复写日志
+            if (this.get_formula_study_status(formula_id) != 'unknow') {
+                continue;
+            }
+            //配方所需的每种材料都在图鉴点亮过，加入待解锁列表
+            if (library_manage.is_formula_all_materials_unlocked(formula_id)) {
+                auto_unlock_formula_ids.push(formula_id);
+            }
+        }
+        //没有需要解锁的配方，不刷新界面
+        if (auto_unlock_formula_ids.length == 0) {
+            return;
+        }
+        this.Player_get_formulas(auto_unlock_formula_ids);
+    }
+    //批量学会多个配方，只在最后统一刷新一次生活技能界面
+    Player_get_formulas(formula_ids) {
+        let get_num = 0; //实际学会的配方数量
+        let global_flag_manage = global.get_global_flag_manage();
+        for (let id of formula_ids) {
+            if (is_Empty_Object(formulas[id])) {
+                console.log('不存在%s配方', id);
+                continue;
+            }
+            //获取这个配方属于哪个技能
+            let skill_name = formulas[id].skill + '_formulas';
+            //在对应技能的配方下写入完全了解状态
+            this[skill_name][id] = new Player_formula(id);
+            this[skill_name][id].status = 'know';
+            //添加学会配方的日志，与单条解锁保持一致的日志类型
+            global_flag_manage.set_game_log('get_formula', id, 'know');
+            get_num++;
+        }
+        //一个配方都没学会，不刷新界面
+        if (get_num == 0) {
+            return;
+        }
+        //批量解锁完成，统一刷新一次生活技能界面
+        this.updata_formula_value();
+    }
     //获得当前玩家配方情况
     get_player_skill_formulas(skill_name) {
         let MH_live_plan_name = ['synthesis', 'cooking', 'forging', 'elixir_alchemy', 'herbal_bath', 'engrave', 'alchemy'];

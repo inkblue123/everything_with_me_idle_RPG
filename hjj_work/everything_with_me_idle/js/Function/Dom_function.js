@@ -1,11 +1,12 @@
 import { items } from '../Data/Item/Item.js';
 import { enums } from '../Data/Enum/Enum.js';
 import { texts } from '../Data/Text/Text.js';
+import { formulas } from '../Data/Formula/Formula.js';
 import { P_skills } from '../Data/Skill/Skill.js';
 import { global } from '../GameRun/global_manage.js';
 import { player } from '../Player/Player.js';
 import { updata_player_EQP, updata_player_active } from './Updata_func.js';
-import { get_item_id_key, is_Empty_Object } from './Function.js';
+import { get_item_id_key, get_item_obj, is_Empty_Object } from './Function.js';
 // 创造一个dom元素，赋值id，className，style.display，style.backgroundColor
 function crtElement(elem, id, cls, sty_display, sty_BGC) {
     let newdom = document.createElement(elem);
@@ -429,6 +430,36 @@ function get_radio_switch_click_value(radio_switch_id) {
     }
 }
 
+//给配方列表里的“产物”文本挂物品详情提示窗
+//列表展示的是白板产物（不带调料等实例数据），内容是静态的，所以直接把物品对象交给提示窗，不需要值提供者
+//产物不是物品（例如工作环境）或数据缺失时：只打一条日志，不挂提示窗
+function add_formula_product_tooltip(product_div, formula_id) {
+    let product_obj = get_formula_list_product_obj(formula_id);
+    if (product_obj == null) {
+        return;
+    }
+    add_show_Tooltip(product_div, 'formula_product', product_obj);
+}
+//按配方造一个白板产物对象，供配方列表的产物提示窗展示
+//返回 null 表示没有可展示的物品详情
+function get_formula_list_product_obj(formula_id) {
+    if (is_Empty_Object(formulas[formula_id])) {
+        console.log('配方列表产物预览：配方%s未定义，异常', formula_id);
+        return null;
+    }
+    let product_id = formulas[formula_id].product.id;
+    if (is_Empty_Object(items[product_id])) {
+        //产物不是物品（例如工作环境）：列表里理论上不会出现，真出现了只提示、不做更多操作
+        console.log('配方列表产物预览：配方%s的产物%s不是物品（可能是工作环境），不展示物品提示', formula_id, product_id);
+        return null;
+    }
+    let product_num = formulas[formula_id].product.num;
+    if (items[product_id].main_type == 'equipment') {
+        return get_item_obj(product_id, product_num, formulas[formula_id].product.equip_rarity);
+    }
+    return get_item_obj(product_id, product_num);
+}
+
 export {
     crtElement,
     addElement,
@@ -438,6 +469,7 @@ export {
     addElement_lazy_select,
     empty_dom,
     add_show_Tooltip,
+    add_formula_product_tooltip,
     add_click_Equipment_worn,
     add_click_Equipment_worn_remove,
     add_click_Active_skill_worn,

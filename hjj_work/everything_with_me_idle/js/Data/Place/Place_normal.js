@@ -66,6 +66,7 @@ function init_village_normal_place(places) {
     add_normal_Place(places, id, area);
     places[id].add_connect_normal_place('village_market');
     places[id].add_connect_store_place('VM_smithy_showcase');
+    places[id].add_place_NPC('village_smithy_owner'); //铁匠铺老板
 }
 //村外后山区域的普通地点
 function init_village_backhill_normal_place(places) {
