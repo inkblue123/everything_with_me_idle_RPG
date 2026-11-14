@@ -25,6 +25,7 @@ function game_loop() {
     updata_game_data();
     //更新这一帧的新的游戏画面
     updata_game_div();
+
     //检测执行定时任务
     updata_timing_game_data();
 
